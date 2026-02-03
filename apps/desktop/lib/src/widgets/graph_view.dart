@@ -1,0 +1,987 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plough/plough.dart' as plough;
+import 'package:core_graph_flutter/core_graph.dart' as core_graph;
+import 'package:core_themes/core_themes.dart';
+import 'package:presentation_components/presentation_components.dart';
+import '../models/layout_config.dart';
+import '../providers/graph_providers.dart';
+import '../providers/selection_providers.dart';
+import '../providers/node_display_providers.dart';
+import '../providers/link_creation_providers.dart';
+import 'app_node_renderer.dart';
+import 'node_display_settings_panel.dart';
+import '../events/selection_events.dart';
+
+// Helper to convert core_graph EntityKind to plough GraphIdType
+// plough.GraphIdType _getPloughIdType(core_graph.EntityKind kind) { ... } // Keep helper if needed elsewhere
+
+/// A custom graph view widget for App that wraps plough's GraphView.
+///
+/// It takes App's graph data model (`core_graph.Graph`) and layout configuration
+/// (`AppLayoutConfig`) and translates them for the underlying Plough view.
+class AppGraphView extends ConsumerStatefulWidget {
+  final core_graph.Graph appGraph;
+  final AppLayoutConfig layoutConfig;
+
+  const AppGraphView({
+    super.key,
+    required this.appGraph,
+    required this.layoutConfig,
+  });
+
+  @override
+  ConsumerState<AppGraphView> createState() => _AppGraphViewState();
+}
+
+class _AppGraphViewState extends ConsumerState<AppGraphView> {
+  late TransformationController _transformationController;
+  Offset? _lastPanPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    _transformationController = TransformationController();
+  }
+
+  @override
+  void dispose() {
+    _transformationController.dispose();
+    super.dispose();
+  }
+
+  // Handler for scrolling entire graph area by background drag
+  void _handleBackgroundPanStart(Offset position) {
+    _lastPanPosition = position;
+    debugPrint('[AppGraphView] Background pan start: $position');
+  }
+
+  void _handleBackgroundPanUpdate(Offset position, Offset delta) {
+    if (_lastPanPosition == null) return;
+
+    // Move entire graph area using TransformationController
+    final currentTransform = _transformationController.value;
+    final newTransform =
+        Matrix4.identity()
+          ..setFrom(currentTransform)
+          ..setEntry(0, 3, currentTransform.entry(0, 3) + delta.dx)
+          ..setEntry(1, 3, currentTransform.entry(1, 3) + delta.dy);
+
+    _transformationController.value = newTransform;
+    _lastPanPosition = position;
+
+    debugPrint('[AppGraphView] Background pan update: delta=$delta');
+  }
+
+  void _handleBackgroundPanEnd(Offset position) {
+    _lastPanPosition = null;
+    debugPrint('[AppGraphView] Background pan end: $position');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('[AppGraphView.build] Rebuilding AppGraphView');
+
+    // Get selection state
+    final selectionState = ref.watch(selectionStateNotifierProvider);
+
+    // Get graph view cache
+    final cache = ref.watch(graphViewCacheProvider);
+
+    // Check if graph has changed
+    final currentGraphHashCode = widget.appGraph.hashCode;
+    final graphChanged = cache.lastAppGraphHashCode != currentGraphHashCode;
+
+    // Create new PloughGraph only if graph has changed
+    plough.Graph ploughGraph;
+    if (graphChanged || cache.ploughGraph == null) {
+      debugPrint('[AppGraphView.build] Creating new PloughGraph');
+      ploughGraph = _convertAppGraphToPlough(widget.appGraph);
+      cache.ploughGraph = ploughGraph;
+      cache.lastAppGraphHashCode = currentGraphHashCode;
+    } else {
+      debugPrint('[AppGraphView.build] Reusing cached PloughGraph');
+      ploughGraph = cache.ploughGraph!;
+    }
+
+    final layoutStrategy = _convertLayoutConfigToStrategy(widget.layoutConfig);
+
+    // Create new behavior only if not yet created
+    if (cache.behavior == null) {
+      debugPrint('[AppGraphView.build] Creating new GraphViewBehavior');
+      cache.behavior = _createCustomBehavior();
+    }
+    final behavior = cache.behavior!;
+
+    // Reflect external selection changes to graph
+    // Only reflect to graph if not from UI selection change
+    if (selectionState.lastSource != SelectionSource.ui) {
+      debugPrint(
+        '[AppGraphView.effect] Updating graph selection from external source: ${selectionState.selectedEntityId?.value}',
+      );
+
+      if (selectionState.selectedEntityId == null) {
+        // Deselect - clear current selection
+        // Note: Plough library doesn't have direct selection clear method,
+        // so deselect currently selected nodes if any
+        for (final node in ploughGraph.nodes) {
+          if (ploughGraph.getNode(node.id)?.isSelected ?? false) {
+            ploughGraph.deselectNode(node.id);
+          }
+        }
+      } else {
+        // Node selection
+        final nodeId = selectionState.selectedEntityId!.value;
+        for (final node in ploughGraph.nodes) {
+          if (node.id.value == nodeId) {
+            ploughGraph.selectNode(node.id);
+          }
+        }
+      }
+    } else {
+      debugPrint(
+        '[AppGraphView.effect] Skipping UI-initiated selection update',
+      );
+    }
+
+    if (ploughGraph.nodes.isEmpty && ploughGraph.links.isEmpty) {
+      return const Center(child: Text("Graph is empty"));
+    }
+
+    // Create new GraphView only if instance not yet created or
+    // graph has changed
+    if (cache.graphView == null || graphChanged) {
+      debugPrint('[AppGraphView.build] Creating new GraphView');
+      cache.graphView = plough.GraphView(
+        graph: ploughGraph,
+        layoutStrategy: layoutStrategy,
+        behavior: behavior,
+        allowSelection: true,
+        allowMultiSelection: false,
+        // Enable scrolling entire graph area by background drag
+        gestureMode: plough.GraphGestureMode.nodeEdgeOnly,
+        onBackgroundPanStart: _handleBackgroundPanStart,
+        onBackgroundPanUpdate: _handleBackgroundPanUpdate,
+        onBackgroundPanEnd: _handleBackgroundPanEnd,
+      );
+    } else {
+      debugPrint('[AppGraphView.build] Reusing cached GraphView');
+    }
+
+    // Wrap cached GraphView with InteractiveViewer and add dot grid background and zoom slider
+    return GestureDetector(
+      onTap: () {
+        print('[DEBUG] 🏠 Main Stack tapped!');
+      },
+      child: Stack(
+        children: [
+          // Integrated approach based on experimental implementation
+          Positioned.fill(
+            child: _EnhancedInteractiveViewer(
+              transformationController: _transformationController,
+              child: Stack(
+                children: [
+                  // Dot grid background (not using IgnorePointer like experimental implementation)
+                  _DotGridBackground(
+                    transformationController: _transformationController,
+                  ),
+                  // Graph view area - fill entire screen
+                  Positioned.fill(child: cache.graphView!),
+                  // Link creation arrow overlay
+                  Positioned.fill(
+                    child: _LinkCreationArrowOverlay(
+                      transformationController: _transformationController,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Converts App's graph data model to Plough's graph data model.
+  plough.Graph _convertAppGraphToPlough(core_graph.Graph coreGraph) {
+    final ploughGraph = plough.Graph();
+    final Map<String, plough.GraphNode> ploughNodes = {};
+
+    // Helper function to extract properties from PropertySet using toMap()
+    Map<String, Object> extractProperties(core_graph.PropertySet propertySet) {
+      return Map<String, Object>.fromEntries(
+        // Use the toMap method confirmed by the API rule
+        propertySet.toMap().entries.map(
+          (entry) => MapEntry(
+            entry.key,
+            entry.value ?? '', // Use empty string for null values
+          ),
+        ),
+      );
+    }
+
+    // Convert nodes
+    for (final coreNode in coreGraph.nodes.values) {
+      final properties = extractProperties(coreNode.properties);
+
+      // Add node labels to properties
+      properties['labels'] = coreNode.labels.toList();
+
+      // Set default label if needed
+      if (!properties.containsKey('label')) {
+        if (properties.containsKey('name')) {
+          properties['label'] = properties['name']!;
+        } else {
+          properties['label'] = coreNode.id.value;
+        }
+      }
+      if (!properties.containsKey('description')) {
+        properties['description'] = '';
+      }
+
+      final ploughNode = plough.GraphNode(
+        id: plough.GraphId(
+          type: plough.GraphIdType.node,
+          value: coreNode.id.value,
+        ),
+        properties: properties,
+      );
+      ploughGraph.addNode(ploughNode);
+      ploughNodes[ploughNode.id.value] = ploughNode;
+    }
+
+    // Convert links
+    for (final coreLink in coreGraph.links.values) {
+      final sourceNode = ploughNodes[coreLink.sourceId.value];
+      final targetNode = ploughNodes[coreLink.targetId.value];
+
+      if (sourceNode != null && targetNode != null) {
+        final properties = extractProperties(coreLink.properties);
+
+        // Set default label if needed
+        if (!properties.containsKey('label')) {
+          properties['label'] = coreLink.type;
+        }
+
+        final ploughLink = plough.GraphLink(
+          id: plough.GraphId(
+            type: plough.GraphIdType.link,
+            value: coreLink.id.value,
+          ),
+          source: sourceNode,
+          target: targetNode,
+          direction: plough.GraphLinkDirection.bidirectional,
+          properties: properties,
+        );
+        ploughGraph.addLink(ploughLink);
+      } else {
+        debugPrint(
+          'Warning: Could not create plough link for ${coreLink.id.value}. Source or target node not found.',
+        );
+      }
+    }
+
+    return ploughGraph;
+  }
+
+  /// Converts App's layout configuration to Plough's layout strategy.
+  plough.GraphLayoutStrategy _convertLayoutConfigToStrategy(
+    AppLayoutConfig config,
+  ) {
+    return switch (config) {
+      ForceDirectedLayoutConfig() => plough.GraphForceDirectedLayoutStrategy(),
+      TreeLayoutConfig(:final direction) => plough.GraphTreeLayoutStrategy(
+        direction: direction,
+      ),
+      RandomLayoutConfig(:final seed) => plough.GraphRandomLayoutStrategy(
+        seed: seed,
+      ),
+    };
+  }
+
+  /// Create custom behavior to directly control selection state changes
+  plough.GraphViewBehavior _createCustomBehavior() {
+    final themeConfig = ref.read(activeThemeProvider);
+
+    // Function to handle selection state changes
+    void handleSelectionChange(String? entityId) {
+      debugPrint(
+        '[_createCustomBehavior.handleSelectionChange] entityId: $entityId',
+      );
+
+      if (entityId == null) {
+        // Deselect
+        ref
+            .read(selectedGraphEntityIdProvider.notifier)
+            .setSelectedEntityId(null, source: SelectionSource.ui);
+      } else {
+        // Entity selection
+        final coreId = core_graph.EntityId.fromString(entityId);
+        ref
+            .read(selectedGraphEntityIdProvider.notifier)
+            .setSelectedEntityId(coreId, source: SelectionSource.ui);
+      }
+    }
+
+    return _AppGraphBehavior(
+      themeConfig: themeConfig,
+      selectionChangeCallback: handleSelectionChange,
+      ref: ref,
+    );
+  }
+}
+
+/// Custom behavior class - directly control selection state changes
+class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
+  final ThemeConfig themeConfig;
+  final void Function(String?) selectionChangeCallback;
+  final WidgetRef ref;
+  String? _lastSelectedId;
+
+  _AppGraphBehavior({
+    required this.themeConfig,
+    required this.selectionChangeCallback,
+    required this.ref,
+  });
+
+  // Handle selection change events
+  @override
+  void onSelectionChange(plough.GraphSelectionChangeEvent event) {
+    // Get current selection state
+    final String? currentId =
+        event.currentSelectionIds.isEmpty
+            ? null
+            : event.currentSelectionIds.first.value;
+
+    // Do nothing if same ID is selected
+    if (_lastSelectedId == currentId) {
+      debugPrint(
+        '[_AppGraphBehavior] Skipping duplicate selection: $_lastSelectedId',
+      );
+      return;
+    }
+
+    debugPrint(
+      '[_AppGraphBehavior] Selection changed: $_lastSelectedId -> $currentId',
+    );
+
+    // Update last selected ID
+    _lastSelectedId = currentId;
+
+    // Call callback
+    selectionChangeCallback(currentId);
+  }
+
+  // Handle drag start events
+  @override
+  void onDragStart(plough.GraphDragStartEvent event) {
+    final linkCreationState = ref.read(linkCreationModeProvider);
+
+    if (linkCreationState.isActive) {
+      // In link creation mode: set the source node when dragging starts
+      debugPrint(
+        '[_AppGraphBehavior.onDragStart] Link creation mode: drag start',
+      );
+
+      // Get entity ID at the start of the drag
+      if (event.entityIds.isNotEmpty) {
+        final sourceEntityId = event.entityIds.first;
+        debugPrint(
+          '[_AppGraphBehavior.onDragStart] Source node: $sourceEntityId',
+        );
+        ref
+            .read(linkCreationModeProvider.notifier)
+            .setSourceNode(
+              core_graph.EntityId.fromString(sourceEntityId.value),
+            );
+      }
+    } else {
+      // Normal mode: default behavior
+      super.onDragStart(event);
+    }
+  }
+
+  // Handle drag update events
+  @override
+  void onDragUpdate(plough.GraphDragUpdateEvent event) {
+    final linkCreationState = ref.read(linkCreationModeProvider);
+
+    if (linkCreationState.isActive) {
+      // In link creation mode: detect the target node when dragging updates
+      debugPrint(
+        '[_AppGraphBehavior.onDragUpdate] Link creation mode: drag update',
+      );
+
+      // Update the pointer position during drag
+      final pointerPosition = event.details.localPosition;
+      ref
+          .read(linkCreationDragPositionProvider.notifier)
+          .updatePosition(pointerPosition);
+
+      // Get the entity ID during drag (target node candidate)
+      if (event.entityIds.isNotEmpty) {
+        final targetEntityId = event.entityIds.first;
+        final sourceNodeId = linkCreationState.sourceNodeId;
+
+        // If different from the source node, set as the target node
+        if (sourceNodeId != null &&
+            targetEntityId.value != sourceNodeId.value) {
+          ref
+              .read(linkCreationModeProvider.notifier)
+              .setTargetNode(
+                core_graph.EntityId.fromString(targetEntityId.value),
+              );
+          debugPrint(
+            '[_AppGraphBehavior.onDragUpdate] Target node: $targetEntityId',
+          );
+        }
+      } else {
+        // If off the node, clear the target
+        ref.read(linkCreationModeProvider.notifier).setTargetNode(null);
+      }
+    } else {
+      // Normal mode: default behavior
+      super.onDragUpdate(event);
+    }
+  }
+
+  // Handle drag end events
+  @override
+  void onDragEnd(plough.GraphDragEndEvent event) async {
+    final linkCreationState = ref.read(linkCreationModeProvider);
+
+    if (linkCreationState.isActive && linkCreationState.sourceNodeId != null) {
+      // In link creation mode: attempt to create a link when dragging ends
+      debugPrint('[_AppGraphBehavior.onDragEnd] Link creation mode: drag end');
+
+      if (linkCreationState.targetNodeId != null &&
+          linkCreationState.targetNodeId != linkCreationState.sourceNodeId) {
+        // If a target node is set, create the link
+        await _createLink(
+          linkCreationState.sourceNodeId!,
+          linkCreationState.targetNodeId!,
+        );
+      }
+
+      ref.read(linkCreationModeProvider.notifier).cancel();
+    } else {
+      // Normal mode: default behavior
+      super.onDragEnd(event);
+    }
+  }
+
+  /// Create a link between two nodes
+  Future<void> _createLink(
+    core_graph.EntityId sourceId,
+    core_graph.EntityId targetId,
+  ) async {
+    try {
+      debugPrint(
+        '[_AppGraphBehavior._createLink] Creating link from $sourceId to $targetId',
+      );
+
+      // Get the GraphStorage of the active stack
+      final storage = ref.read(activeStackGraphStorageProvider);
+      if (storage == null) {
+        debugPrint('[_AppGraphBehavior._createLink] No active graph storage');
+        return;
+      }
+
+      // Create GraphContext
+      final graphContext = core_graph.GraphContext(storage: storage);
+
+      // Wait for initialization
+      try {
+        await graphContext.initialize();
+      } catch (e) {
+        debugPrint(
+          '[_AppGraphBehavior._createLink] Failed to initialize GraphContext: $e',
+        );
+        return;
+      }
+
+      // Create link
+      final description = core_graph.EntityDescription(
+        type: 'Link',
+        propertyTypes: {
+          'type': const core_graph.TextPropertyType(isRequired: true),
+        },
+      );
+
+      final newLink = await graphContext.createLink(
+        sourceId: sourceId,
+        targetId: targetId,
+        type: 'connected',
+        description: description,
+      );
+
+      debugPrint('[_AppGraphBehavior._createLink] Link created: ${newLink.id}');
+
+      // Reload the graph
+      final activeGraph = ref.read(core_graph.activeGraphProvider);
+      if (activeGraph != null) {
+        final updatedLinks = await graphContext.queryLinks(
+          core_graph.GraphQuery<core_graph.Link>(entityType: core_graph.Link),
+        );
+
+        // Update the active graph
+        var newGraph = activeGraph;
+        for (final link in updatedLinks.items) {
+          newGraph = newGraph.addLink(link);
+        }
+        ref.read(core_graph.activeGraphProvider.notifier).setGraph(newGraph);
+      }
+
+      // Close GraphContext
+      await graphContext.close();
+    } catch (e) {
+      debugPrint('[_AppGraphBehavior._createLink] Error creating link: $e');
+    }
+  }
+
+  @override
+  plough.GraphNodeViewBehavior createNodeViewBehavior() {
+    return plough.GraphNodeViewBehavior.defaultBehavior(
+      nodeRendererBuilder: (context, graph, node, child) {
+        // Helper to access providers using ConsumerWidget
+        return _NodeRendererWrapper(node: node);
+      },
+    );
+  }
+
+  @override
+  plough.GraphLinkViewBehavior createLinkViewBehavior() {
+    // Return basic link behavior
+    return plough.GraphLinkViewBehavior(
+      builder: (
+        context,
+        graph,
+        link,
+        sourceView,
+        targetView,
+        routing,
+        geometry,
+        child,
+      ) {
+        return plough.GraphDefaultLinkRenderer(
+          link: link,
+          sourceView: sourceView,
+          targetView: targetView,
+          routing: routing,
+          geometry: geometry,
+          color: Colors.grey,
+        );
+      },
+    );
+  }
+}
+
+/// Node renderer wrapper class
+///
+/// Helper class to use ConsumerWidget in plough's nodeRendererBuilder
+class _NodeRendererWrapper extends ConsumerWidget {
+  final plough.GraphNode node;
+
+  const _NodeRendererWrapper({required this.node});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Get node display settings
+    final displayContent = ref.watch(nodeDisplayContentProvider);
+    final nodeSize = ref.watch(nodeSizeProvider);
+
+    // Get color scheme
+    final appColorScheme = ref.watch(effectiveColorSchemeProvider);
+
+    // Use custom node renderer
+    return AppNodeRenderer(
+      node: node,
+      displayContent: displayContent,
+      nodeSize: nodeSize,
+      colorScheme: appColorScheme,
+    );
+  }
+}
+
+/// Node display settings button widget
+class _NodeDisplaySettingsButton extends ConsumerStatefulWidget {
+  const _NodeDisplaySettingsButton();
+
+  @override
+  ConsumerState<_NodeDisplaySettingsButton> createState() =>
+      _NodeDisplaySettingsButtonState();
+}
+
+class _NodeDisplaySettingsButtonState
+    extends ConsumerState<_NodeDisplaySettingsButton> {
+  bool _isVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    // Get color scheme
+    final colorScheme = ref.watch(effectiveColorSchemeProvider);
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // Settings panel
+        if (_isVisible)
+          Positioned(
+            top: 0,
+            right: 56, // Position to the right of button
+            child: DraggableNodeDisplaySettingsPanel(
+              onClose: () {
+                setState(() {
+                  _isVisible = false;
+                });
+              },
+            ),
+          ),
+
+        // Settings button
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: colorScheme.uiAreas.panel.background.withValues(alpha: 0.9),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.base.shadow,
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            onPressed: () {
+              setState(() {
+                _isVisible = !_isVisible;
+              });
+            },
+            icon: Icon(
+              AppIcons.display,
+              size: 20,
+              color: colorScheme.base.foreground,
+            ),
+            tooltip: 'Node display settings',
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Enhanced InteractiveViewer based on experimental implementation
+class _EnhancedInteractiveViewer extends StatefulWidget {
+  final Widget child;
+  final TransformationController transformationController;
+
+  const _EnhancedInteractiveViewer({
+    required this.child,
+    required this.transformationController,
+  });
+
+  @override
+  State<_EnhancedInteractiveViewer> createState() =>
+      _EnhancedInteractiveViewerState();
+}
+
+class _EnhancedInteractiveViewerState
+    extends State<_EnhancedInteractiveViewer> {
+  Offset? _dragStartOffset;
+  int _interactionCount = 0;
+  int _buildCount = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    _buildCount++;
+    print('[DEBUG] _EnhancedInteractiveViewer build count: $_buildCount');
+
+    // Avoid conflicts between InteractiveViewer and GestureDetector, keep it simple
+    return InteractiveViewer(
+      transformationController: widget.transformationController,
+      // Safe settings to isolate issues
+      constrained: true,
+      minScale: 0.5, // Changed from 0.1 to 0.5 to avoid freeze
+      maxScale: 3.0, // Changed from 5.0 to 3.0
+      panEnabled: true,
+      scaleEnabled: true,
+      // Add gesture handling
+      onInteractionStart: _handleInteractionStart,
+      onInteractionUpdate: _handleInteractionUpdate,
+      onInteractionEnd: _handleInteractionEnd,
+      // Pass child directly
+      child: widget.child,
+    );
+  }
+
+  void _handleInteractionStart(ScaleStartDetails details) {
+    _interactionCount++;
+    _dragStartOffset = details.localFocalPoint;
+    print(
+      '[DEBUG] ✅🚀 INTERACTIVE VIEWER START #$_interactionCount: ${details.localFocalPoint}',
+    );
+    print('[DEBUG] ✅👆 Pointers: ${details.pointerCount}');
+  }
+
+  void _handleInteractionUpdate(ScaleUpdateDetails details) {
+    if (_dragStartOffset != null) {
+      final move = details.localFocalPoint - _dragStartOffset!;
+      _dragStartOffset = details.localFocalPoint;
+      print('[DEBUG] ✅📍 INTERACTIVE VIEWER UPDATE: move=$move');
+      print('[DEBUG] ✅📏 Scale: ${details.scale}');
+
+      // Clearly show that drag is actually detected
+      if (move.distance > 1.0) {
+        print(
+          '[DEBUG] ✅🎯 INTERACTIVE VIEWER DRAG! Distance: ${move.distance}',
+        );
+      }
+    }
+  }
+
+  void _handleInteractionEnd(ScaleEndDetails details) {
+    print('[DEBUG] ✅🏁 INTERACTIVE VIEWER END');
+    _dragStartOffset = null;
+  }
+}
+
+/// Widget to draw dot grid background
+class _DotGridBackground extends ConsumerStatefulWidget {
+  final TransformationController transformationController;
+
+  const _DotGridBackground({required this.transformationController});
+
+  @override
+  ConsumerState<_DotGridBackground> createState() => _DotGridBackgroundState();
+}
+
+class _DotGridBackgroundState extends ConsumerState<_DotGridBackground> {
+  late Matrix4 _transformationMatrix;
+
+  @override
+  void initState() {
+    super.initState();
+    _transformationMatrix = widget.transformationController.value;
+    widget.transformationController.addListener(_onTransformationChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.transformationController.removeListener(_onTransformationChanged);
+    super.dispose();
+  }
+
+  void _onTransformationChanged() {
+    print('[DEBUG] Background: TransformationController changed');
+    print(
+      '[DEBUG] Background: New matrix: ${widget.transformationController.value}',
+    );
+    setState(() {
+      _transformationMatrix = widget.transformationController.value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Get theme via @packages/core/themes/
+    final appColorScheme = ref.watch(effectiveColorSchemeProvider);
+
+    print('[DEBUG] Background: Building with matrix: $_transformationMatrix');
+
+    // Ensure background responds to hit test
+    return Container(
+      // Set graph view background color - set color to ensure hit test passes
+      color: appColorScheme.appSpecific.graph.background,
+      width: double.infinity,
+      height: double.infinity,
+      child: GestureDetector(
+        onTap: () {
+          print('[DEBUG] 🎨🎯 BACKGROUND TAPPED SUCCESSFULLY!');
+        },
+        onPanStart: (details) {
+          print('[DEBUG] 🎨🚀 BACKGROUND PAN START: ${details.localPosition}');
+        },
+        onPanUpdate: (details) {
+          print('[DEBUG] 🎨📍 BACKGROUND PAN UPDATE: ${details.localPosition}');
+        },
+        onPanEnd: (details) {
+          print('[DEBUG] 🎨🏁 BACKGROUND PAN END');
+        },
+        behavior:
+            HitTestBehavior
+                .opaque, // Important: pass hit test even for transparent areas
+        child: CustomPaint(
+          painter: _DotGridPainter(
+            transformation: _transformationMatrix,
+            appColorScheme: appColorScheme,
+          ),
+          size: Size.infinite,
+        ),
+      ),
+    );
+  }
+}
+
+/// CustomPainter to draw dot grid
+class _DotGridPainter extends CustomPainter {
+  final Matrix4 transformation;
+  final AppColorScheme appColorScheme;
+
+  const _DotGridPainter({
+    required this.transformation,
+    required this.appColorScheme,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Get zoom scale and offset from transformation matrix
+    final scale = transformation.getMaxScaleOnAxis();
+    final translation = transformation.getTranslation();
+    final offsetX = translation.x;
+    final offsetY = translation.y;
+
+    // Basic dot settings
+    const baseSpacing = 40.0; // Basic dot spacing
+    const baseDotSize = 1.5; // Basic dot size
+
+    // Adjust spacing and dot size based on zoom
+    final spacing = baseSpacing * scale;
+    final dotSize = (baseDotSize * scale).clamp(0.5, 4.0);
+
+    // Dot color (theme-aware)
+    // Use grid line color for better visibility
+    final dotColor = appColorScheme.appSpecific.graph.gridLine.withValues(
+      alpha: 0.3,
+    );
+
+    final paint =
+        Paint()
+          ..color = dotColor
+          ..style = PaintingStyle.fill;
+
+    // Calculate drawing range (for performance optimization)
+    final startX = (-offsetX / spacing).floor() * spacing;
+    final startY = (-offsetY / spacing).floor() * spacing;
+    final endX = startX + (size.width / scale + spacing * 2);
+    final endY = startY + (size.height / scale + spacing * 2);
+
+    // Draw dots
+    for (double x = startX; x <= endX; x += spacing) {
+      for (double y = startY; y <= endY; y += spacing) {
+        // Convert world coordinates to screen coordinates
+        final screenX = x * scale + offsetX;
+        final screenY = y * scale + offsetY;
+
+        // Draw only if within screen
+        if (screenX >= -dotSize &&
+            screenX <= size.width + dotSize &&
+            screenY >= -dotSize &&
+            screenY <= size.height + dotSize) {
+          canvas.drawCircle(Offset(screenX, screenY), dotSize, paint);
+        }
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _DotGridPainter oldDelegate) {
+    return transformation != oldDelegate.transformation ||
+        appColorScheme != oldDelegate.appColorScheme;
+  }
+}
+
+/// Widget to draw link creation arrow overlay
+class _LinkCreationArrowOverlay extends ConsumerWidget {
+  final TransformationController transformationController;
+
+  const _LinkCreationArrowOverlay({required this.transformationController});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final linkCreationState = ref.watch(linkCreationModeProvider);
+    final dragPosition = ref.watch(linkCreationDragPositionProvider);
+
+    // Only show overlay if in link creation mode and dragging
+    if (!linkCreationState.isActive ||
+        linkCreationState.sourceNodeId == null ||
+        dragPosition == null) {
+      return const SizedBox.expand();
+    }
+
+    return CustomPaint(
+      painter: _LinkCreationArrowPainter(
+        sourceNodeId: linkCreationState.sourceNodeId!,
+        dragPosition: dragPosition,
+        transformationMatrix: transformationController.value,
+      ),
+    );
+  }
+}
+
+/// Custom painter for link creation arrow
+class _LinkCreationArrowPainter extends CustomPainter {
+  final core_graph.EntityId sourceNodeId;
+  final Offset dragPosition;
+  final Matrix4 transformationMatrix;
+
+  _LinkCreationArrowPainter({
+    required this.sourceNodeId,
+    required this.dragPosition,
+    required this.transformationMatrix,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // TODO: Get source node position from graph and draw arrow
+    // For now, just draw a simple line from center to drag position
+    final paint =
+        Paint()
+          ..color = Colors.blue.withValues(alpha: 0.7)
+          ..strokeWidth = 2.0
+          ..style = PaintingStyle.stroke;
+
+    // Draw line from center to drag position
+    canvas.drawLine(
+      Offset(size.width / 2, size.height / 2),
+      dragPosition,
+      paint,
+    );
+
+    // Draw arrowhead at drag position
+    _drawArrowhead(canvas, dragPosition, paint);
+  }
+
+  void _drawArrowhead(Canvas canvas, Offset position, Paint paint) {
+    const arrowSize = 10.0;
+    const arrowAngle = 0.5; // radians
+
+    final arrowPaint =
+        Paint()
+          ..color = Colors.blue.withValues(alpha: 0.7)
+          ..strokeWidth = 2.0
+          ..style = PaintingStyle.fill;
+
+    // Draw triangle arrowhead
+    final path = Path();
+    path.moveTo(position.dx, position.dy);
+    path.lineTo(
+      position.dx - arrowSize * (1 + arrowAngle),
+      position.dy - arrowSize,
+    );
+    path.lineTo(
+      position.dx - arrowSize * (1 - arrowAngle),
+      position.dy - arrowSize,
+    );
+    path.close();
+
+    canvas.drawPath(path, arrowPaint);
+  }
+
+  @override
+  bool shouldRepaint(_LinkCreationArrowPainter oldDelegate) {
+    return oldDelegate.sourceNodeId != sourceNodeId ||
+        oldDelegate.dragPosition != dragPosition ||
+        oldDelegate.transformationMatrix != transformationMatrix;
+  }
+}

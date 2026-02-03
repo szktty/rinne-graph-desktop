@@ -1,0 +1,755 @@
+{
+  "@@locale": "ja",
+  "@@context": "App Application",
+  
+  "common_button_save": "保存",
+  "@common_button_save": {
+    "description": "共通の保存ボタンのラベル"
+  },
+  
+  "common_button_cancel": "キャンセル",
+  "@common_button_cancel": {
+    "description": "共通のキャンセルボタンのラベル"
+  },
+  
+  "common_button_ok": "OK",
+  "@common_button_ok": {
+    "description": "共通のOKボタンのラベル"
+  },
+  
+  "common_button_close": "閉じる",
+  "@common_button_close": {
+    "description": "共通の閉じるボタンのラベル"
+  },
+  
+  "common_button_delete": "削除",
+  "@common_button_delete": {
+    "description": "共通の削除ボタンのラベル"
+  },
+  
+  "common_status_loading": "読み込み中...",
+  "@common_status_loading": {
+    "description": "データ読み込み中の状態表示"
+  },
+  
+  "common_status_saving": "保存中...",
+  "@common_status_saving": {
+    "description": "データ保存中の状態表示"
+  },
+  
+  "app_concept_stack": "スタック",
+  "@app_concept_stack": {
+    "description": "Arizal固有概念：データベースの単位"
+  },
+  
+  "app_concept_entity": "エンティティ",
+  "@app_concept_entity": {
+    "description": "Arizal固有概念：グラフの要素"
+  },
+  
+  "app_concept_node": "ノード",
+  "@app_concept_node": {
+    "description": "Arizal固有概念：グラフのノード"
+  },
+  
+  "app_concept_edge": "エッジ",
+  "@app_concept_edge": {
+    "description": "Arizal固有概念：グラフのエッジ"
+  },
+  
+  "app_concept_graph": "グラフ",
+  "@app_concept_graph": {
+    "description": "Arizal固有概念：グラフ構造"
+  },
+  
+  "database_term_query": "クエリ",
+  "@database_term_query": {
+    "description": "データベース専門用語：検索クエリ"
+  },
+  
+  "database_term_property": "プロパティ",
+  "@database_term_property": {
+    "description": "データベース専門用語：属性"
+  },
+  
+  "database_term_relation": "リレーション",
+  "@database_term_relation": {
+    "description": "データベース専門用語：関係"
+  },
+  
+  "error_network_connection": "ネットワーク接続エラー",
+  "@error_network_connection": {
+    "description": "ネットワーク接続に失敗した場合のエラーメッセージ"
+  },
+  
+  "error_file_not_found": "ファイルが見つかりません",
+  "@error_file_not_found": {
+    "description": "ファイルが存在しない場合のエラーメッセージ"
+  },
+  
+  "validation_required_field": "この項目は必須です",
+  "@validation_required_field": {
+    "description": "必須項目が入力されていない場合のバリデーションメッセージ"
+  },
+
+  "validation_must_be_integer": "値は整数である必要があります",
+  "@validation_must_be_integer": {
+    "description": "整数型バリデーションエラー"
+  },
+
+  "validation_must_be_decimal": "値は小数である必要があります",
+  "@validation_must_be_decimal": {
+    "description": "小数型バリデーションエラー"
+  },
+
+  "validation_must_be_boolean": "値は真偽値である必要があります",
+  "@validation_must_be_boolean": {
+    "description": "真偽値型バリデーションエラー"
+  },
+
+  "validation_must_be_date": "値は日付である必要があります",
+  "@validation_must_be_date": {
+    "description": "日付型バリデーションエラー"
+  },
+
+  "validation_must_be_string": "値は文字列である必要があります",
+  "@validation_must_be_string": {
+    "description": "文字列型バリデーションエラー"
+  },
+
+  "validation_must_be_email": "値は有効なメールアドレスである必要があります",
+  "@validation_must_be_email": {
+    "description": "メールアドレス型バリデーションエラー"
+  },
+
+  "validation_min_value": "値は{min}以上である必要があります",
+  "@validation_min_value": {
+    "description": "最小値バリデーションエラー",
+    "placeholders": {
+      "min": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "validation_max_value": "値は{max}以下である必要があります",
+  "@validation_max_value": {
+    "description": "最大値バリデーションエラー",
+    "placeholders": {
+      "max": {
+        "type": "String",
+        "example": "100"
+      }
+    }
+  },
+
+  "validation_min_length": "値は{minLength}文字以上である必要があります",
+  "@validation_min_length": {
+    "description": "最小文字数バリデーションエラー",
+    "placeholders": {
+      "minLength": {
+        "type": "String",
+        "example": "3"
+      }
+    }
+  },
+
+  "validation_max_length": "値は{maxLength}文字以下である必要があります",
+  "@validation_max_length": {
+    "description": "最大文字数バリデーションエラー",
+    "placeholders": {
+      "maxLength": {
+        "type": "String",
+        "example": "50"
+      }
+    }
+  },
+
+  "validation_pattern_mismatch": "値は指定された形式と一致する必要があります",
+  "@validation_pattern_mismatch": {
+    "description": "パターンマッチングバリデーションエラー"
+  },
+
+  "validation_entity_id_empty": "エンティティIDが空です",
+  "@validation_entity_id_empty": {
+    "description": "エンティティIDが空の場合のエラー"
+  },
+
+  "validation_required_property_missing": "必須プロパティが不足しています: {propertyName}",
+  "@validation_required_property_missing": {
+    "description": "必須プロパティが不足している場合のエラー",
+    "placeholders": {
+      "propertyName": {
+        "type": "String",
+        "example": "name"
+      }
+    }
+  },
+
+  "validation_invalid_properties": "無効なプロパティ: {propertyList}",
+  "@validation_invalid_properties": {
+    "description": "無効なプロパティがある場合のエラー",
+    "placeholders": {
+      "propertyList": {
+        "type": "String",
+        "example": "age, email"
+      }
+    }
+  },
+
+  "validation_source_id_empty": "開始ノードIDが空です",
+  "@validation_source_id_empty": {
+    "description": "リンクの開始ノードIDが空の場合のエラー"
+  },
+
+  "validation_target_id_empty": "終了ノードIDが空です",
+  "@validation_target_id_empty": {
+    "description": "リンクの終了ノードIDが空の場合のエラー"
+  },
+
+  "validation_field_required": "この項目は必須です",
+  "@validation_field_required": {
+    "description": "フォーム項目が必須の場合のエラー"
+  },
+
+  "validation_invalid_format": "形式が正しくありません",
+  "@validation_invalid_format": {
+    "description": "入力形式が正しくない場合のエラー"
+  },
+
+  "validation_value_too_short": "値が短すぎます",
+  "@validation_value_too_short": {
+    "description": "入力値が短すぎる場合のエラー"
+  },
+
+  "validation_value_too_long": "値が長すぎます",
+  "@validation_value_too_long": {
+    "description": "入力値が長すぎる場合のエラー"
+  },
+
+  "validation_invalid_characters": "使用できない文字が含まれています",
+  "@validation_invalid_characters": {
+    "description": "使用できない文字が含まれている場合のエラー"
+  },
+
+  "validation_duplicate_value": "この値は既に使用されています",
+  "@validation_duplicate_value": {
+    "description": "重複する値が入力された場合のエラー"
+  },
+
+  "common_search": "検索",
+  "@common_search": {
+    "description": "検索機能の共通ラベル"
+  },
+
+  "common_filter": "フィルター",
+  "@common_filter": {
+    "description": "フィルター機能の共通ラベル"
+  },
+
+  "common_condition": "条件",
+  "@common_condition": {
+    "description": "検索条件の共通ラベル"
+  },
+
+  "common_create": "作成",
+  "@common_create": {
+    "description": "新規作成の共通ラベル"
+  },
+
+  "common_edit": "編集",
+  "@common_edit": {
+    "description": "編集の共通ラベル"
+  },
+
+  "common_import": "インポート",
+  "@common_import": {
+    "description": "データインポートの共通ラベル"
+  },
+
+  "common_export": "エクスポート",
+  "@common_export": {
+    "description": "データエクスポートの共通ラベル"
+  },
+
+  "common_settings": "設定",
+  "@common_settings": {
+    "description": "設定の共通ラベル"
+  },
+
+  "common_help": "ヘルプ",
+  "@common_help": {
+    "description": "ヘルプの共通ラベル"
+  },
+
+  "menu_file": "ファイル",
+  "@menu_file": {
+    "description": "ファイルメニューのラベル"
+  },
+
+  "menu_edit": "編集",
+  "@menu_edit": {
+    "description": "編集メニューのラベル"
+  },
+
+  "menu_view": "表示",
+  "@menu_view": {
+    "description": "表示メニューのラベル"
+  },
+
+  "menu_window": "ウインドウ",
+  "@menu_window": {
+    "description": "ウインドウメニューのラベル"
+  },
+
+  "menu_graph": "グラフ",
+  "@menu_graph": {
+    "description": "グラフメニューのラベル"
+  },
+
+  "menu_help": "ヘルプ",
+  "@menu_help": {
+    "description": "ヘルプメニューのラベル"
+  },
+
+  "menu_settings": "設定...",
+  "@menu_settings": {
+    "description": "設定メニュー項目のラベル"
+  },
+
+  "menu_new_stack": "新規スタック...",
+  "@menu_new_stack": {
+    "description": "新規スタック作成メニュー項目"
+  },
+
+  "menu_create_sample_stack": "サンプルスタックを作成...",
+  "@menu_create_sample_stack": {
+    "description": "サンプルスタック作成メニュー項目"
+  },
+
+  "menu_open_stack": "スタックを開く...",
+  "@menu_open_stack": {
+    "description": "スタックを開くメニュー項目"
+  },
+
+  "menu_recent_stacks": "最近使用したスタック",
+  "@menu_recent_stacks": {
+    "description": "最近使用したスタックメニュー項目"
+  },
+
+  "menu_save": "保存",
+  "@menu_save": {
+    "description": "保存メニュー項目"
+  },
+
+  "menu_close_stack": "スタックを閉じる",
+  "@menu_close_stack": {
+    "description": "スタックを閉じるメニュー項目"
+  },
+
+  "menu_stack_info": "スタック情報を表示...",
+  "@menu_stack_info": {
+    "description": "スタック情報表示メニュー項目"
+  },
+
+  "menu_show_in_finder": "Finderで表示",
+  "@menu_show_in_finder": {
+    "description": "Finderで表示メニュー項目"
+  },
+
+  "menu_page_setup": "ページ設定...",
+  "@menu_page_setup": {
+    "description": "ページ設定メニュー項目"
+  },
+
+  "menu_print": "印刷...",
+  "@menu_print": {
+    "description": "印刷メニュー項目"
+  },
+
+  "menu_undo": "取り消す",
+  "@menu_undo": {
+    "description": "取り消しメニュー項目"
+  },
+
+  "menu_redo": "やり直す",
+  "@menu_redo": {
+    "description": "やり直しメニュー項目"
+  },
+
+  "menu_cut": "切り取り",
+  "@menu_cut": {
+    "description": "切り取りメニュー項目"
+  },
+
+  "menu_copy": "コピー",
+  "@menu_copy": {
+    "description": "コピーメニュー項目"
+  },
+
+  "menu_paste": "貼り付け",
+  "@menu_paste": {
+    "description": "貼り付けメニュー項目"
+  },
+
+  "menu_select_all": "すべて選択",
+  "@menu_select_all": {
+    "description": "すべて選択メニュー項目"
+  },
+
+  "menu_find": "検索...",
+  "@menu_find": {
+    "description": "検索メニュー項目"
+  },
+
+  "menu_replace": "置換...",
+  "@menu_replace": {
+    "description": "置換メニュー項目"
+  },
+
+  "menu_spelling_grammar": "スペルと文法",
+  "@menu_spelling_grammar": {
+    "description": "スペルと文法メニュー"
+  },
+
+  "menu_show_spelling_grammar": "スペルと文法を表示",
+  "@menu_show_spelling_grammar": {
+    "description": "スペルと文法を表示メニュー項目"
+  },
+
+  "menu_check_spelling_while_typing": "書類の入力中にスペルをチェック",
+  "@menu_check_spelling_while_typing": {
+    "description": "入力中スペルチェックメニュー項目"
+  },
+
+  "menu_substitutions": "置換",
+  "@menu_substitutions": {
+    "description": "置換メニュー"
+  },
+
+  "menu_smart_substitutions": "スマート置換",
+  "@menu_smart_substitutions": {
+    "description": "スマート置換メニュー項目"
+  },
+
+  "menu_smart_quotes": "スマート引用符",
+  "@menu_smart_quotes": {
+    "description": "スマート引用符メニュー項目"
+  },
+
+  "menu_smart_dashes": "スマートダッシュ",
+  "@menu_smart_dashes": {
+    "description": "スマートダッシュメニュー項目"
+  },
+
+  "menu_transformations": "変換",
+  "@menu_transformations": {
+    "description": "変換メニュー"
+  },
+
+  "menu_make_uppercase": "大文字に",
+  "@menu_make_uppercase": {
+    "description": "大文字変換メニュー項目"
+  },
+
+  "menu_make_lowercase": "小文字に",
+  "@menu_make_lowercase": {
+    "description": "小文字変換メニュー項目"
+  },
+
+  "menu_capitalize": "先頭を大文字に",
+  "@menu_capitalize": {
+    "description": "先頭大文字変換メニュー項目"
+  },
+
+  "menu_pathfinder": "パスファインダー...",
+  "@menu_pathfinder": {
+    "description": "パスファインダーメニュー項目"
+  },
+
+  "menu_background_tasks": "バックグラウンドタスク...",
+  "@menu_background_tasks": {
+    "description": "バックグラウンドタスクメニュー項目"
+  },
+
+  "menu_show_hide_sidebar": "サイドバーを表示/隠す",
+  "@menu_show_hide_sidebar": {
+    "description": "サイドバー表示切り替えメニュー項目"
+  },
+
+  "menu_show_hide_detail_panel": "詳細パネルを表示/隠す",
+  "@menu_show_hide_detail_panel": {
+    "description": "詳細パネル表示切り替えメニュー項目"
+  },
+
+  "menu_show_hide_toolbar": "ツールバーを表示/隠す",
+  "@menu_show_hide_toolbar": {
+    "description": "ツールバー表示切り替えメニュー項目"
+  },
+
+  "menu_graph_view": "グラフビュー",
+  "@menu_graph_view": {
+    "description": "グラフビューメニュー項目"
+  },
+
+  "menu_table_view": "テーブルビュー",
+  "@menu_table_view": {
+    "description": "テーブルビューメニュー項目"
+  },
+
+  "menu_zoom_in": "拡大",
+  "@menu_zoom_in": {
+    "description": "拡大メニュー項目"
+  },
+
+  "menu_zoom_out": "縮小",
+  "@menu_zoom_out": {
+    "description": "縮小メニュー項目"
+  },
+
+  "menu_actual_size": "実際のサイズ",
+  "@menu_actual_size": {
+    "description": "実際のサイズメニュー項目"
+  },
+
+  "menu_fullscreen": "全画面表示",
+  "@menu_fullscreen": {
+    "description": "全画面表示メニュー項目"
+  },
+
+  "menu_theme_color": "テーマカラー",
+  "@menu_theme_color": {
+    "description": "テーマカラーメニュー"
+  },
+
+  "menu_create_node": "ノードを作成",
+  "@menu_create_node": {
+    "description": "ノード作成メニュー項目"
+  },
+
+  "menu_create_link": "リンクを作成",
+  "@menu_create_link": {
+    "description": "リンク作成メニュー項目"
+  },
+
+  "menu_edit_properties": "プロパティを編集",
+  "@menu_edit_properties": {
+    "description": "プロパティ編集メニュー項目"
+  },
+
+  "menu_add_bookmark": "ブックマークに追加",
+  "@menu_add_bookmark": {
+    "description": "ブックマーク追加メニュー項目"
+  },
+
+  "menu_manage_bookmarks": "ブックマークを管理...",
+  "@menu_manage_bookmarks": {
+    "description": "ブックマーク管理メニュー項目"
+  },
+
+  "menu_save_chart_as_image": "チャートを画像で保存...",
+  "@menu_save_chart_as_image": {
+    "description": "チャート画像保存メニュー項目"
+  },
+
+  "menu_delete": "削除",
+  "@menu_delete": {
+    "description": "削除メニュー項目"
+  },
+
+  "menu_app_help": "Arizalヘルプ",
+  "@menu_app_help": {
+    "description": "Arizalヘルプメニュー項目"
+  },
+
+  "menu_welcome": "ようこそ",
+  "@menu_welcome": {
+    "description": "ようこそメニュー項目"
+  },
+
+  "menu_check_updates": "Check for updates...",
+  "@menu_check_updates": {
+    "description": "アップデート確認メニュー項目"
+  },
+
+  "menu_release_notes": "リリースノート",
+  "@menu_release_notes": {
+    "description": "リリースノートメニュー項目"
+  },
+
+  "menu_keyboard_shortcuts": "キーボードショートカット",
+  "@menu_keyboard_shortcuts": {
+    "description": "キーボードショートカットメニュー項目"
+  },
+
+  "menu_send_feedback": "フィードバックを送信",
+  "@menu_send_feedback": {
+    "description": "フィードバック送信メニュー項目"
+  },
+
+  "settings_language_title": "言語設定",
+  "@settings_language_title": {
+    "description": "言語設定画面のタイトル"
+  },
+  
+  "demo_title": "ローカライズデモ",
+  "@demo_title": {
+    "description": "デモ画面のタイトル"
+  },
+  
+  "demo_description": "このデモでは、Arizalアプリケーションのローカライズ機能を確認できます。",
+  "@demo_description": {
+    "description": "デモ画面の説明文"
+  },
+  
+  "demo_language_switch": "言語切り替え",
+  "@demo_language_switch": {
+    "description": "言語切り替えセクションのタイトル"
+  },
+  
+  "demo_common_buttons": "共通ボタン",
+  "@demo_common_buttons": {
+    "description": "共通ボタンセクションのタイトル"
+  },
+  
+  "demo_app_concepts": "Arizal概念",
+  "@demo_app_concepts": {
+    "description": "Arizal概念セクションのタイトル"
+  },
+  
+  "demo_database_terms": "データベース用語",
+  "@demo_database_terms": {
+    "description": "データベース用語セクションのタイトル"
+  },
+  
+  "demo_error_messages": "エラーメッセージ",
+  "@demo_error_messages": {
+    "description": "エラーメッセージセクションのタイトル"
+  },
+
+  "activity_graph_navigation": "グラフナビゲーション",
+  "@activity_graph_navigation": {
+    "description": "アクティビティバー：グラフナビゲーション画面"
+  },
+
+  "activity_advanced_search": "高度な検索",
+  "@activity_advanced_search": {
+    "description": "アクティビティバー：高度な検索"
+  },
+
+  "activity_settings": "設定",
+  "@activity_settings": {
+    "description": "アクティビティバー：設定画面"
+  },
+
+  "activity_stack_collection": "スタックコレクション",
+  "@activity_stack_collection": {
+    "description": "アクティビティバー：スタックコレクション画面"
+  },
+
+  "activity_entity_editor": "エンティティエディタ",
+  "@activity_entity_editor": {
+    "description": "アクティビティバー：エンティティエディタ画面"
+  },
+
+  "activity_welcome": "ウェルカム",
+  "@activity_welcome": {
+    "description": "アクティビティバー：ウェルカム画面"
+  },
+
+  "activity_label_list": "ラベル一覧",
+  "@activity_label_list": {
+    "description": "アクティビティバー：ラベル一覧"
+  },
+
+  "activity_property_list": "プロパティ一覧",
+  "@activity_property_list": {
+    "description": "アクティビティバー：プロパティ一覧"
+  },
+
+  "activity_ai_test": "AIテスト",
+  "@activity_ai_test": {
+    "description": "アクティビティバー：AIテスト画面"
+  },
+
+  "screenshot_graph_navigation": "グラフナビゲーション画面",
+  "@screenshot_graph_navigation": {
+    "description": "スクリーンショット：グラフナビゲーション画面の説明"
+  },
+
+  "screenshot_settings_dialog": "設定画面（ダイアログ）",
+  "@screenshot_settings_dialog": {
+    "description": "スクリーンショット：設定画面の説明"
+  },
+
+  "screenshot_stack_collection": "スタックコレクション画面",
+  "@screenshot_stack_collection": {
+    "description": "スクリーンショット：スタックコレクション画面の説明"
+  },
+
+  "screenshot_entity_editor": "エンティティエディタ画面",
+  "@screenshot_entity_editor": {
+    "description": "スクリーンショット：エンティティエディタ画面の説明"
+  },
+
+  "screenshot_welcome": "ウェルカム画面",
+  "@screenshot_welcome": {
+    "description": "スクリーンショット：ウェルカム画面の説明"
+  },
+
+  "screenshot_metadata_editor": "メタデータ管理画面",
+  "@screenshot_metadata_editor": {
+    "description": "スクリーンショット：メタデータ管理画面の説明"
+  },
+
+  "screenshot_background_tasks": "バックグラウンドタスクテスト画面",
+  "@screenshot_background_tasks": {
+    "description": "スクリーンショット：バックグラウンドタスクテスト画面の説明"
+  },
+
+  "error_file_not_found": "ファイルが存在しません",
+  "@error_file_not_found_csv": {
+    "description": "CSVインポート：ファイルが見つからない場合のエラー"
+  },
+
+  "error_csv_empty": "CSVファイルが空です",
+  "@error_csv_empty": {
+    "description": "CSVインポート：ファイルが空の場合のエラー"
+  },
+
+  "error_csv_no_data": "データ行がありません",
+  "@error_csv_no_data": {
+    "description": "CSVインポート：データ行がない場合のエラー"
+  },
+
+  "error_csv_node_creation": "ノード作成エラー",
+  "@error_csv_node_creation": {
+    "description": "CSVインポート：ノード作成時のエラー"
+  },
+
+  "error_csv_link_creation": "リンク作成エラー",
+  "@error_csv_link_creation": {
+    "description": "CSVインポート：リンク作成時のエラー"
+  },
+
+  "error_csv_invalid_mapping": "CSVマッピング設定が不正です。ノードまたはリンクの設定が必要です。",
+  "@error_csv_invalid_mapping": {
+    "description": "CSVインポート：マッピング設定が不正な場合のエラー"
+  },
+
+  "error_csv_import_failed": "インポート中にエラーが発生しました",
+  "@error_csv_import_failed": {
+    "description": "CSVインポート：一般的なインポートエラー"
+  },
+
+  "error_id_column_not_found": "IDカラムが見つかりません",
+  "@error_id_column_not_found": {
+    "description": "CSVインポート：IDカラムが見つからない場合のエラー"
+  },
+
+  "command_welcome_wait_closed": "ウェルカムが閉じられるまで待機",
+  "@command_welcome_wait_closed": {
+    "description": "コマンド：ウェルカムダイアログが閉じられるまで待機"
+  }
+}

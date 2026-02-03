@@ -1,0 +1,29 @@
+name: core_graph_common
+resolution: workspace
+description: Core graph database functionality (Pure Dart, no Flutter dependencies)
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  # External packages
+  rinne_graph:
+    git:
+      url: https://github.com/szktty/rinne-graph.git
+      ref: develop
+  email_validator: ^3.0.0
+  uuid: ^4.5.1
+  meta: ^1.16.0
+  lints: ^5.0.0
+  collection: ^1.19.1
+  sqflite_common_ffi: ^2.3.0+1
+  path: ^1.9.0
+
+  # Internal packages
+  core_foundation_common:
+    path: ../foundation_common
+dev_dependencies:
+  test: ^1.25.2
+  lints: ^5.1.1

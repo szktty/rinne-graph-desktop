@@ -1,0 +1,167 @@
+name: rinne_graph_desktop
+publish_to: none
+environment:
+  sdk: ^3.7.0
+  flutter: '>=3.38.0'
+
+workspace:
+  - apps/desktop
+  - packages/app
+  - packages/core/events
+  - packages/core/exchange
+  - packages/core/foundation_flutter
+  - packages/core/foundation_common
+  - packages/core/graph_common
+  - packages/core/graph_flutter
+  - packages/core/localization
+  - packages/core/samples
+  - packages/core/settings
+  - packages/core/app_config
+  - packages/core/stack_flutter
+  - packages/core/stack_common
+  - packages/core/themes
+  - packages/core/undo
+  - packages/core/workflow
+  - packages/features/archive
+  - packages/features/charts
+  - packages/features/record_editor
+
+  - packages/features/import_export
+  - packages/features/metadata_editor
+  - packages/features/pathfinder
+  - packages/features/settings
+  - packages/features/stack_management
+  - packages/features/updates
+  - packages/features/welcome
+  - packages/presentation/components
+  - packages/presentation/workflow
+
+dev_dependencies:
+  # melos: ^6.3.0
+  melos: ^7.0.0-dev.9
+  build_runner: ^2.4.15
+  path: ^1.9.1
+  very_good_analysis: ^9.0.0
+
+  flutter:
+    sdk: flutter
+  core_themes: any
+  presentation_components: any
+  core_graph_flutter: any
+  core_stack_flutter: any
+melos:
+  sdkPath: .fvm/flutter_sdk
+
+  ide:
+    intellij:
+      # Disabling IntelliJ's automatic configuration.
+      # This is to support different build configurations for environments.
+      enabled: false
+
+  command:
+    bootstrap:
+      environment:
+        sdk: ^3.7.0
+        flutter: '>=3.38.0'
+      dependencies:
+        freezed_annotation: ^2.4.4
+        intl: ^0.19.0
+        json_annotation: ^4.9.0
+        go_router: ^14.6.3
+        flutter_riverpod: ^2.6.1
+        riverpod_annotation: ^2.6.1
+        shared_preferences: ^2.2.2
+        lucide_icons_flutter: ^3.0.5
+        flutter_desktop_context_menu: ^0.2.0
+        macos_ui: ^2.1.9
+        uuid: ^4.5.1
+        email_validator: ^3.0.0
+        path_provider: ^2.1.5
+        appkit_ui_element_colors: ^1.0.1
+        textfield_tags: ^3.0.1
+        file_picker: ^10.1.0
+        searchfield: ^1.3.3
+
+      dev_dependencies:
+        build_runner: ^2.4.14
+        custom_lint: ^0.7.0
+        riverpod_generator: ^2.6.2
+        riverpod_lint: ^2.3.13
+        freezed: ^2.5.7
+        json_serializable: ^6.8.0
+        test: ^1.25.2
+        kiri_check: ^1.0.0
+        flutter_gen_runner: ^5.8.0
+        very_good_analysis: ^9.0.0
+        flutter_lints: ^5.0.0
+
+  scripts:
+    build_runner:
+      exec: dart pub run build_runner build --delete-conflicting-outputs
+      packageFilters:
+        dependsOn: 'build_runner'
+      description: "run build_runner in projects including build_runner"
+
+    gen:
+      description: Run build_runner and l10n generation commands.
+      steps:
+        # - gen:l10n
+        - gen:build
+
+    gen:all:
+      description: Run build_runner in all relevant packages.
+      run: dart run build_runner build --delete-conflicting-outputs
+      exec:
+        orderDependents: true
+        packageFilters:
+          scope: "core_app_config,core_events,core_exchange,core_foundation_common,core_foundation_flutter,core_graph_common,core_graph_flutter,core_localization,core_samples,core_settings,core_stack_common,core_stack_flutter,core_themes,core_undo,core_workflow,features_archive,features_charts,features_import_export,features_metadata_editor,features_pathfinder,features_record_editor,features_settings,features_stack_management,features_updates,features_welcome,presentation_components,presentation_workflow,app,desktop"
+
+    test:
+      description: Run tests in all packages.
+      run: flutter test --reporter=compact
+      exec:
+        concurrency: 4
+      packageFilters:
+        dirExists: test
+
+    analyze:
+      description: Run static analysis.
+      run: flutter analyze
+      exec:
+        concurrency: 4
+
+    format:
+      description: Format code.
+      run: dart format .
+      exec:
+        concurrency: 4
+
+    format:check:
+      description: Check code formatting (for CI).
+      run: dart format --set-exit-if-changed .
+      exec:
+        concurrency: 4
+
+    clean:
+      description: Clean build cache.
+      run: flutter clean
+      exec:
+        concurrency: 4
+
+    fix:
+      description: Apply automatic fixes.
+      run: dart fix --apply
+      exec:
+        concurrency: 4
+
+    deps:outdated:
+      description: Check for outdated dependencies.
+      run: flutter pub outdated
+      exec:
+        concurrency: 1
+flutter:
+  uses-material-design: true
+
+dependencies:
+  path_provider: ^2.1.5
+  multi_split_view: ^3.6.0

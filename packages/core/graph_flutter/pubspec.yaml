@@ -1,0 +1,33 @@
+name: core_graph_flutter
+resolution: workspace
+description: Core graph database functionality with Flutter integration
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=3.38.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Internal packages
+  core_graph_common:
+    path: ../graph_flutter_common
+  core_foundation_flutter:
+    path: ../foundation_flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  test: ^1.25.2
+  lints: ^5.1.1
+  build_runner: ^2.4.14
+  riverpod_generator: ^2.6.2
+
+flutter:

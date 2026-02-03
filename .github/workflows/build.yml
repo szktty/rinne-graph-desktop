@@ -1,0 +1,126 @@
+name: Build
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+
+  format:
+    name: Code Formatting Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Read Flutter version from .fvmrc
+        id: fvm
+        shell: bash
+        run: |
+          FLUTTER_VERSION=$(jq -r '.flutter' .fvmrc)
+          echo "flutter_version=$FLUTTER_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm.outputs.flutter_version }}
+          cache: true
+
+      - name: Link Flutter to .fvm/flutter_sdk
+        run: |
+          mkdir -p .fvm
+          ln -s $(dirname $(dirname $(which flutter))) .fvm/flutter_sdk
+
+      - name: Install Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap workspace
+        run: melos bootstrap
+
+      - name: Check code formatting
+        run: dart format --set-exit-if-changed .
+
+  build-macos:
+    name: Build macOS (Debug)
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Read Flutter version from .fvmrc
+        id: fvm_version
+        shell: bash
+        run: |
+          FLUTTER_VERSION=$(jq -r '.flutter' .fvmrc)
+          echo "flutter_version=$FLUTTER_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm_version.outputs.flutter_version }}
+          cache: true
+
+      - name: Link Flutter to .fvm/flutter_sdk
+        run: |
+          mkdir -p .fvm
+          ln -s $(dirname $(dirname $(which flutter))) .fvm/flutter_sdk
+
+      - name: Install Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap workspace
+        run: melos bootstrap
+
+      - name: Generate version.json
+        shell: bash
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          BUILD_DATE=$(date -u +"%Y-%m-%d")
+          FLUTTER_VERSION=${{ steps.fvm_version.outputs.flutter_version }}
+
+          # Ensure the assets directory exists
+          mkdir -p apps/desktop/assets
+
+          # Extract year, month, day from current date (YYMMDD format)
+          YEAR=$(date -u +"%y")
+          MONTH=$(date -u +"%m")
+          DAY=$(date -u +"%d")
+
+          cat > apps/desktop/assets/version.json << EOF
+          {
+            "stage": "Development",
+            "major": 0,
+            "year": $YEAR,
+            "month": $MONTH,
+            "day": $DAY,
+            "build": 0,
+            "commitHash": "$COMMIT_HASH",
+            "buildDate": "$BUILD_DATE",
+            "flutterVersion": "$FLUTTER_VERSION"
+          }
+          EOF
+
+          echo "Generated version.json:"
+          cat apps/desktop/assets/version.json
+
+      - name: Build macOS app (Debug)
+        run: |
+          cd apps/desktop
+          flutter build macos --debug
+
+      - name: Check build output
+        run: |
+          if [ -d "apps/desktop/build/macos/Build/Products/Debug/RinneGraph.app" ]; then
+            echo "✓ Build successful"
+            ls -lh apps/desktop/build/macos/Build/Products/Debug/
+          else
+            echo "✗ Build failed - app not found"
+            exit 1
+          fi
+

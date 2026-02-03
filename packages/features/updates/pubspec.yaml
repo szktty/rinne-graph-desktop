@@ -1,0 +1,36 @@
+name: features_updates
+resolution: workspace
+description: "Update checking functionality for App"
+version: 0.0.1
+homepage:
+publish_to: 'none'
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=3.38.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  core_foundation_flutter:
+    path: ../../core/foundation_flutter
+  core_themes:
+    path: ../../core/themes
+  presentation_components:
+    path: ../../presentation/components
+  package_info_plus: ^8.3.0
+  figma_squircle: ^0.6.3
+  http: ^1.5.0
+  url_launcher: ^6.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.14
+  riverpod_generator: ^2.6.2
+
+flutter:
+  uses-material-design: true

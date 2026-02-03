@@ -1,0 +1,21 @@
+name: core_exchange
+resolution: workspace
+description: "Core package for data import/export functionality in App"
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  csv: ^6.0.0
+  path: ^1.9.0
+  meta: ^1.16.0
+  core_stack_common:
+    path: ../stack_common
+
+dev_dependencies:
+  test: ^1.25.2
+  lints: ^5.1.1
+
+

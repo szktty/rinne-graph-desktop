@@ -1,0 +1,1135 @@
+[
+  {
+    "id": "person-ryoma",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "坂本龍馬",
+      "$description": "海援隊隊長。",
+      "$birth_date": "1836-01-03",
+      "$death_date": "1867-12-10",
+      "$death_cause": "暗殺"
+    }
+  },
+  {
+    "id": "person-kaishu",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "勝海舟",
+      "$description": "軍艦奉行。",
+      "$birth_date": "1823-03-12",
+      "$death_date": "1899-01-19"
+    }
+  },
+  {
+    "id": "person-saigo",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "西郷隆盛",
+      "$description": "明治維新の指導者。",
+      "$birth_date": "1828-01-23",
+      "$death_date": "1877-09-24"
+    }
+  },
+  {
+    "id": "person-katsura",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "桂小五郎",
+      "$description": "明治維新の指導者。",
+      "$birth_date": "1833-08-11",
+      "$death_date": "1877-05-26"
+    }
+  },
+  {
+    "id": "person-nakaoka",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "中岡慎太郎",
+      "$description": "陸援隊隊長。",
+      "$death_cause": "暗殺"
+    }
+  },
+  {
+    "id": "person-goto",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "後藤象二郎",
+      "$description": "大政奉還を推進。"
+    }
+  },
+  {
+    "id": "person-iwasaki",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "岩崎弥太郎",
+      "$description": "三菱財閥創業者。"
+    }
+  },
+  {
+    "id": "person-oryo",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "お龍"
+    }
+  },
+  {
+    "id": "person-takechi",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "武市半平太",
+      "$description": "土佐勤王党の盟主。"
+    }
+  },
+  {
+    "id": "person-yoshida",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "吉田松陰",
+      "$description": "思想家、教育者。",
+      "$birth_date": "1830-09-20",
+      "$death_date": "1859-11-21",
+      "$death_cause": "処刑"
+    }
+  },
+  {
+    "id": "person-shinsaku",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "高杉晋作",
+      "$description": "奇兵隊を創設。",
+      "$birth_date": "1839-09-27",
+      "$death_date": "1867-05-17",
+      "$death_cause": "病死"
+    }
+  },
+  {
+    "id": "person-okubo",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "大久保利通",
+      "$description": "明治政府の中心人物。",
+      "$birth_date": "1830-09-26",
+      "$death_date": "1878-05-14"
+    }
+  },
+  {
+    "id": "person-kondo",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "近藤勇",
+      "$birth_date": "1834-11-05",
+      "$death_date": "1868-05-17",
+      "$death_cause": "処刑"
+    }
+  },
+  {
+    "id": "person-hijikata",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "土方歳三",
+      "$birth_date": "1835-05-31",
+      "$death_date": "1869-06-20",
+      "$death_cause": "戦死"
+    }
+  },
+  {
+    "id": "person-yoshinobu",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "徳川慶喜"
+    }
+  },
+  {
+    "id": "person-okita",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "沖田総司",
+      "$description": "天才剣士と称される。",
+      "$death_cause": "病死"
+    }
+  },
+  {
+    "id": "person-saito",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "斎藤一",
+      "$description": "左利きとの説がある。"
+    }
+  },
+  {
+    "id": "person-nagakura",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "永倉新八",
+      "$description": "新選組屈指の剣腕。"
+    }
+  },
+  {
+    "id": "person-harada",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "原田左之助",
+      "$description": "槍の名手。"
+    }
+  },
+  {
+    "id": "person-todo",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "藤堂平助",
+      "$description": "最年少幹部の一人。"
+    }
+  },
+  {
+    "id": "person-inoue",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "井上源三郎",
+      "$description": "近藤・土方と同郷。"
+    }
+  },
+  {
+    "id": "person-serizawa",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "芹沢鴨",
+      "$death_cause": "暗殺"
+    }
+  },
+  {
+    "id": "person-ito",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "伊東甲子太郎",
+      "$description": "後に御陵衛士を結成。"
+    }
+  },
+  {
+    "id": "person-nariakira",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "島津斉彬",
+      "$description": "富国強兵を推進。"
+    }
+  },
+  {
+    "id": "person-komatsu",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "小松帯刀",
+      "$description": "薩長同盟に尽力。"
+    }
+  },
+  {
+    "id": "person-atsuhime",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "篤姫 (天璋院)",
+      "$description": "第13代将軍徳川家定の正室。"
+    }
+  },
+  {
+    "id": "person-omura",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "大村益次郎",
+      "$description": "近代日本の軍制の創設者。",
+      "$death_cause": "暗殺"
+    }
+  },
+  {
+    "id": "person-inoue-kaoru",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "井上馨",
+      "$description": "長州ファイブの一人。"
+    }
+  },
+  {
+    "id": "person-kido",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "木戸孝允",
+      "$description": "維新の三傑の一人。"
+    }
+  },
+  {
+    "id": "person-kusaka",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "久坂玄瑞",
+      "$description": "松下村塾の秀才。",
+      "$death_cause": "戦死"
+    }
+  },
+  {
+    "id": "person-ii",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "井伊直弼",
+      "$description": "幕府の大老。安政の大獄を主導。",
+      "$birth_date": "1815-11-29",
+      "$death_date": "1860-03-24",
+      "$death_cause": "暗殺"
+    }
+  },
+  {
+    "id": "person-abe",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "阿部正弘",
+      "$description": "ペリー来航時の老中首座。"
+    }
+  },
+  {
+    "id": "person-oguri",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "小栗忠順",
+      "$description": "勘定奉行。横須賀製鉄所を建設。"
+    }
+  },
+  {
+    "id": "person-komei",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "孝明天皇",
+      "$description": "明治天皇の父。",
+      "$birth_date": "1831-07-22",
+      "$death_date": "1867-01-30"
+    }
+  },
+  {
+    "id": "person-meiji",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "明治天皇",
+      "$birth_date": "1852-11-03",
+      "$death_date": "1912-07-30"
+    }
+  },
+  {
+    "id": "person-iwakura",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "岩倉具視",
+      "$description": "倒幕派の中心人物。",
+      "$birth_date": "1825-10-26",
+      "$death_date": "1883-07-20"
+    }
+  },
+  {
+    "id": "person-sanjo",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "三条実美",
+      "$description": "尊王攘夷派の急進派。",
+      "$birth_date": "1837-03-13",
+      "$death_date": "1891-02-18"
+    }
+  },
+  {
+    "id": "person-matsudaira",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "松平春嶽",
+      "$description": "四賢侯の一人。",
+      "$birth_date": "1828-10-10",
+      "$death_date": "1890-06-02"
+    }
+  },
+  {
+    "id": "person-katamori",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "松平容保",
+      "$description": "京都守護職。",
+      "$birth_date": "1836-02-15",
+      "$death_date": "1893-12-05"
+    }
+  },
+  {
+    "id": "person-enomoto",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "榎本武揚",
+      "$description": "オランダに留学し、開陽丸で帰国。",
+      "$birth_date": "1836-10-05",
+      "$death_date": "1908-10-26"
+    }
+  },
+  {
+    "id": "person-john-manjiro",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "ジョン万次郎",
+      "$description": "咸臨丸で渡米。",
+      "$birth_date": "1827-01-27",
+      "$death_date": "1898-11-12"
+    }
+  },
+  {
+    "id": "person-yamaoka",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "山岡鉄舟",
+      "$description": "幕末の三舟の一人。",
+      "$birth_date": "1836-07-23",
+      "$death_date": "1888-07-19"
+    }
+  },
+  {
+    "id": "org-kaientai",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "海援隊",
+      "$description": "坂本龍馬が率いた浪士結社。貿易なども行う。"
+    }
+  },
+  {
+    "id": "org-rikuguntai",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "陸援隊",
+      "$description": "中岡慎太郎が率いた浪士結社。"
+    }
+  },
+  {
+    "id": "org-tosa",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "土佐藩",
+      "$description": "坂本龍馬、中岡慎太郎らの出身藩。"
+    }
+  },
+  {
+    "id": "org-satsuma",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "薩摩藩",
+      "$description": "西郷隆盛、大久保利通らの出身藩。"
+    }
+  },
+  {
+    "id": "org-choshu",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "長州藩",
+      "$description": "桂小五郎、高杉晋作らの出身藩。"
+    }
+  },
+  {
+    "id": "org-bakufu",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "江戸幕府",
+      "$description": "徳川将軍家を中心とした武家政権。"
+    }
+  },
+  {
+    "id": "org-shinsengumi",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "新選組",
+      "$description": "京都の治安維持を担当した幕府の警察組織。"
+    }
+  },
+  {
+    "id": "org-kinnoto",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "土佐勤王党",
+      "$description": "武市半平太が結成した尊王攘夷を掲げる組織。"
+    }
+  },
+  {
+    "id": "org-goryo-eji",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "御陵衛士",
+      "$description": "伊東甲子太郎が新選組を離脱して結成した組織。"
+    }
+  },
+  {
+    "id": "org-aizu",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "会津藩",
+      "$description": "松平容保が藩主。京都守護職を務める。"
+    }
+  },
+  {
+    "id": "org-chotei",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "朝廷",
+      "$description": "天皇を中心とする日本の伝統的な政権。"
+    }
+  },
+  {
+    "id": "event-satcho",
+    "labels": ["$Event"],
+    "properties": {
+      "$name": "薩長同盟",
+      "$year": 1866,
+      "$description": "薩摩藩と長州藩の軍事同盟。"
+    }
+  },
+  {
+    "id": "event-taisei",
+    "labels": ["$Event"],
+    "properties": {
+      "$name": "大政奉還",
+      "$year": 1867,
+      "$description": "徳川慶喜が政権を朝廷に返上した出来事。"
+    }
+  },
+  {
+    "id": "event-teradaya",
+    "labels": ["$Event"],
+    "properties": {
+      "$name": "寺田屋事件",
+      "$year": 1862,
+      "$description": "薩摩藩士による同士討ち事件。龍馬も標的となった。"
+    }
+  },
+  {
+    "id": "event-omi",
+    "labels": ["$Event"],
+    "properties": {
+      "$name": "近江屋事件",
+      "$year": 1867,
+      "$description": "坂本龍馬と中岡慎太郎が暗殺された事件。"
+    }
+  },
+  {
+    "id": "event-kobe",
+    "labels": ["$Event"],
+    "properties": {
+      "$name": "神戸海軍操練所",
+      "$year": 1863,
+      "$description": "勝海舟が設立した海軍士官養成機関。"
+    }
+  },
+  {
+    "id": "event-ikedaya",
+    "labels": ["$Event"],
+    "properties": {
+      "$name": "池田屋事件",
+      "$year": 1864,
+      "$description": "新選組が尊王攘夷派を襲撃した事件。"
+    }
+  },
+  {
+    "id": "event-kinmon",
+    "labels": ["$Event"],
+    "properties": {
+      "$name": "禁門の変",
+      "$year": 1864,
+      "$description": "池田屋事件をきっかけに長州藩が京都で起こした戦闘。"
+    }
+  },
+  {
+    "id": "event-sakuradamon",
+    "labels": ["$Event"],
+    "properties": {
+      "$name": "桜田門外の変",
+      "$year": 1860,
+      "$description": "井伊直弼が暗殺された事件。"
+    }
+  },
+  {
+    "id": "event-ansei",
+    "labels": ["$Event"],
+    "properties": {
+      "$name": "安政の大獄",
+      "$year": 1858,
+      "$description": "井伊直弼による反対派への弾圧。"
+    }
+  },
+  {
+    "id": "event-toba-fushimi",
+    "labels": ["$Event"],
+    "properties": {
+      "$name": "鳥羽・伏見の戦い",
+      "$year": 1868,
+      "$description": "戊辰戦争の初戦。新政府軍が旧幕府軍に勝利。"
+    }
+  },
+  {
+    "id": "event-edo-kaijo",
+    "labels": ["$Event"],
+    "properties": {
+      "$name": "江戸城無血開城",
+      "$year": 1868,
+      "$description": "勝海舟と西郷隆盛の交渉により、江戸城が戦火を交えずに明け渡された。"
+    }
+  },
+  {
+    "id": "org-fukui",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "福井藩",
+      "$description": "松平春嶽が藩主を務めた藩。"
+    }
+  },
+  {
+    "id": "org-kiheitai",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "奇兵隊",
+      "$description": "高杉晋作が創設した長州藩の軍事組織。"
+    }
+  },
+  {
+    "id": "org-mitsubishi",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "三菱",
+      "$description": "岩崎弥太郎が創設した会社。"
+    }
+  },
+  {
+    "id": "org-shingun",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "新政府軍",
+      "$description": "戊辰戦争における倒幕派の軍事勢力。薩摩藩、長州藩などが中心。"
+    }
+  },
+  {
+    "id": "org-kyubakufu",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "旧幕府軍",
+      "$description": "戊辰戦争における幕府側の軍事勢力。会津藩、新選組などが中心。"
+    }
+  },
+  {
+    "id": "person-ogata",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "緒方洪庵",
+      "$birth_date": "1810-08-13",
+      "$death_date": "1863-07-25"
+    }
+  },
+  {
+    "id": "person-fukuzawa",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "福沢諭吉",
+      "$description": "慶應義塾の創立者。"
+    }
+  },
+  {
+    "id": "person-sano",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "佐野常民",
+      "$description": "日本赤十字社の創設者。"
+    }
+  },
+  {
+    "id": "person-otori",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "大鳥圭介",
+      "$description": "徳川幕府の陸軍奉行。"
+    }
+  },
+  {
+    "id": "person-tezuka",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "手塚良仙",
+      "$description": "手塚治虫の曽祖父。"
+    }
+  },
+  {
+    "id": "org-tekijuku",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "適塾",
+      "$description": "緒方洪庵が開いた蘭学の私塾。"
+    }
+  },
+  {
+    "id": "loc-osaka",
+    "labels": ["$Location"],
+    "properties": {
+      "$name": "大阪",
+      "$description": "適塾の所在地。"
+    }
+  },
+  {
+    "id": "status-1",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "土佐藩郷士"
+    }
+  },
+  {
+    "id": "status-2",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "幕臣"
+    }
+  },
+  {
+    "id": "status-3",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "薩摩藩士"
+    }
+  },
+  {
+    "id": "status-4",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "長州藩士"
+    }
+  },
+  {
+    "id": "status-5",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "土佐藩士"
+    }
+  },
+  {
+    "id": "status-6",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "土佐藩参政"
+    }
+  },
+  {
+    "id": "status-7",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "土佐藩出身の実業家"
+    }
+  },
+  {
+    "id": "status-8",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "坂本龍馬の妻"
+    }
+  },
+  {
+    "id": "status-9",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "新選組局長"
+    }
+  },
+  {
+    "id": "status-10",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "新選組副長"
+    }
+  },
+  {
+    "id": "status-11",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "江戸幕府第15代将軍"
+    }
+  },
+  {
+    "id": "status-12",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "新選組一番組組長"
+    }
+  },
+  {
+    "id": "status-13",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "新選組三番組組長"
+    }
+  },
+  {
+    "id": "status-14",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "新選組二番組組長"
+    }
+  },
+  {
+    "id": "status-15",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "新選組十番組組長"
+    }
+  },
+  {
+    "id": "status-16",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "新選組八番組組長"
+    }
+  },
+  {
+    "id": "status-17",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "新選組六番組組長"
+    }
+  },
+  {
+    "id": "status-18",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "新選組初代局長の一人"
+    }
+  },
+  {
+    "id": "status-19",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "新選組参謀"
+    }
+  },
+  {
+    "id": "status-20",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "薩摩藩第11代藩主"
+    }
+  },
+  {
+    "id": "status-21",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "薩摩藩家老"
+    }
+  },
+  {
+    "id": "status-22",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "島津斉彬の養女"
+    }
+  },
+  {
+    "id": "status-23",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "桂小五郎としての活動が知られる"
+    }
+  },
+  {
+    "id": "status-24",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "彦根藩主"
+    }
+  },
+  {
+    "id": "status-25",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "備後福山藩主"
+    }
+  },
+  {
+    "id": "status-26",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "第121代天皇"
+    }
+  },
+  {
+    "id": "status-27",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "第122代天皇"
+    }
+  },
+  {
+    "id": "status-28",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "公家"
+    }
+  },
+  {
+    "id": "status-29",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "福井藩主"
+    }
+  },
+  {
+    "id": "status-30",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "会津藩主"
+    }
+  },
+  {
+    "id": "status-31",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "土佐出身の通訳"
+    }
+  },
+  {
+    "id": "status-32",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "蘭学者"
+    }
+  },
+  {
+    "id": "status-33",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "医師"
+    }
+  },
+  {
+    "id": "status-34",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "教育者"
+    }
+  },
+  {
+    "id": "status-35",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "政治家"
+    }
+  },
+  {
+    "id": "status-36",
+    "labels": ["$Status"],
+    "properties": {
+      "$name": "蘭方医"
+    }
+  },
+  {
+    "id": "person-glover",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "トーマス・ブレーク・グラバー",
+      "$description": "スコットランド出身の商人。長崎でグラバー商会を設立し、武器や弾薬を販売。薩長同盟を支援し、坂本龍馬とも交流があった。"
+    }
+  },
+  {
+    "id": "person-satow",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "アーネスト・サトウ",
+      "$description": "イギリスの外交官、通訳。駐日英国公使館の通訳官として、坂本龍馬と会談し、日本の政治情勢を分析した。"
+    }
+  },
+  {
+    "id": "person-seishu",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "華岡青洲",
+      "$description": "江戸時代の外科医。世界で初めて全身麻酔を用いた手術に成功した。",
+      "$birth_date": "1760-10-23",
+      "$death_date": "1835-11-21"
+    }
+  },
+  {
+    "id": "person-kae",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "加恵",
+      "$description": "華岡青洲の妻。麻酔薬「通仙散」の開発に協力した。"
+    }
+  },
+  {
+    "id": "person-otsugi",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "於継",
+      "$description": "華岡青洲の母。麻酔薬「通仙散」の開発に協力した。"
+    }
+  },
+  {
+    "id": "person-sasaki",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "佐々木只三郎",
+      "$description": "京都見廻組与頭。坂本龍馬暗殺の実行犯の指揮者とされる。"
+    }
+  },
+  {
+    "id": "person-nobuo",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "今井信郎",
+      "$description": "元京都見廻組隊士。龍馬暗殺の実行犯の一人とされ、後に自白した。"
+    }
+  },
+  {
+    "id": "org-mimawarigumi",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "京都見廻組",
+      "$description": "江戸幕府が設置した治安維持組織。主に御家人で構成された。"
+    }
+  },
+  {
+    "id": "person-hachihei",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "坂本八平",
+      "$description": "坂本龍馬の父。"
+    }
+  },
+  {
+    "id": "person-sachi",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "坂本幸",
+      "$description": "坂本龍馬の母。"
+    }
+  },
+  {
+    "id": "person-iyo",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "坂本伊與",
+      "$description": "坂本龍馬の継母。"
+    }
+  },
+  {
+    "id": "person-gonbei",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "坂本権平",
+      "$description": "坂本龍馬の兄。"
+    }
+  },
+  {
+    "id": "person-chizu",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "坂本千鶴",
+      "$description": "坂本龍馬の長姉。"
+    }
+  },
+  {
+    "id": "person-ei",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "坂本栄",
+      "$description": "坂本龍馬の次姉。"
+    }
+  },
+  {
+    "id": "person-otome",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "坂本乙女",
+      "$description": "坂本龍馬の三姉。龍馬に大きな影響を与えた。"
+    }
+  },
+  {
+    "id": "person-shosaku",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "楢崎将作",
+      "$description": "お龍の父。医師。"
+    }
+  },
+  {
+    "id": "person-sada",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "楢崎貞",
+      "$description": "お龍の母。"
+    }
+  },
+  {
+    "id": "person-saitani",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "才谷梅太郎",
+      "$description": "坂本龍馬が使用した偽名。"
+    }
+  },
+  {
+    "id": "person-narasaki-ryo",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "楢崎龍",
+      "$description": "お龍の本名。"
+    }
+  },
+  {
+    "id": "org-keio",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "慶應義塾",
+      "$description": "福沢諭吉が創設した私塾・大学。"
+    }
+  },
+  {
+    "id": "org-meirokusha",
+    "labels": ["$Organization"],
+    "properties": {
+      "$name": "明六社",
+      "$description": "森有礼、福沢諭吉らが結成した日本初の近代的な学術団体。"
+    }
+  },
+  {
+    "id": "person-mori",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "森有礼",
+      "$description": "薩摩藩士、外交官、政治家。明六社の設立者で初代文部大臣。"
+    }
+  },
+  {
+    "id": "person-nishi",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "西周",
+      "$description": "思想家、啓蒙家、教育者。明六社の主要メンバー。"
+    }
+  },
+  {
+    "id": "person-shibusawa",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "渋沢栄一",
+      "$description": "実業家。「日本資本主義の父」と呼ばれる。"
+    }
+  },
+  {
+    "id": "person-okuma",
+    "labels": ["$Person"],
+    "properties": {
+      "$name": "大隈重信",
+      "$description": "政治家。早稲田大学の創設者。"
+    }
+  },
+  {
+    "id": "work-gakumon",
+    "labels": ["$Work"],
+    "properties": {
+      "$name": "学問のすゝめ",
+      "$description": "福沢諭吉の代表的な著作の一つ。"
+    }
+  },
+  {
+    "id": "work-bunmeiron",
+    "labels": ["$Work"],
+    "properties": {
+      "$name": "文明論之概略",
+      "$description": "福沢諭吉の代表的な著作の一つ。"
+    }
+  }
+]

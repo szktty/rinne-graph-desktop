@@ -1,0 +1,14 @@
+{
+  "metadata": {
+    "name": "幕末龍馬相関図",
+    "description": "坂本龍馬を中心とした幕末の人物相関データ",
+    "author": "App Team",
+    "version": "1.1.0",
+    "tags": ["history", "japan", "meiji", "ryoma"]
+  },
+  "schema": "schema.json",
+  "files": [
+    "nodes.json",
+    "links.json"
+  ]
+}

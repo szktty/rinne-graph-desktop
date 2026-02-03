@@ -1,0 +1,65 @@
+import 'package:core_stack_flutter/core_stack.dart';
+
+/// Class for managing stack template manifest information
+class StackTemplateManifest {
+  const StackTemplateManifest({
+    required this.id,
+    required this.displayName,
+    required this.fullAssetPath,
+    this.description,
+    this.tags = const [],
+    this.category = 'template',
+  });
+
+  /// Unique identifier for the stack template
+  final String id;
+
+  /// Display name
+  final String displayName;
+
+  /// Full asset path for the asset template
+  final String fullAssetPath;
+
+  /// Description
+  final String? description;
+
+  /// Tags
+  final List<String> tags;
+
+  /// Category
+  final String category;
+
+  /// Converts to AssetStackTemplateManifest
+  AssetStackTemplateManifest toAssetStackTemplateManifest() {
+    return AssetStackTemplateManifest(
+      fullAssetPath: fullAssetPath,
+      displayName: displayName,
+      description: description,
+      tags: tags,
+    );
+  }
+
+  /// Creates a template manifest from JSON
+  factory StackTemplateManifest.fromJson(Map<String, dynamic> json) {
+    return StackTemplateManifest(
+      id: json['id'] as String,
+      displayName: json['displayName'] as String,
+      fullAssetPath: json['fullAssetPath'] as String,
+      description: json['description'] as String?,
+      tags: (json['tags'] as List<dynamic>?)?.cast<String>() ?? [],
+      category: json['category'] as String? ?? 'template',
+    );
+  }
+
+  /// Converts the template manifest to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'displayName': displayName,
+      'fullAssetPath': fullAssetPath,
+      if (description != null) 'description': description,
+      'tags': tags,
+      'category': category,
+    };
+  }
+}

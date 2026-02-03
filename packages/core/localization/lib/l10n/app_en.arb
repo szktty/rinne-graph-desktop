@@ -1,0 +1,755 @@
+{
+  "@@locale": "en",
+  "@@context": "App Application",
+  
+  "common_button_save": "Save",
+  "@common_button_save": {
+    "description": "Common save button label"
+  },
+  
+  "common_button_cancel": "Cancel",
+  "@common_button_cancel": {
+    "description": "Common cancel button label"
+  },
+  
+  "common_button_ok": "OK",
+  "@common_button_ok": {
+    "description": "Common OK button label"
+  },
+  
+  "common_button_close": "Close",
+  "@common_button_close": {
+    "description": "Common close button label"
+  },
+  
+  "common_button_delete": "Delete",
+  "@common_button_delete": {
+    "description": "Common delete button label"
+  },
+  
+  "common_status_loading": "Loading...",
+  "@common_status_loading": {
+    "description": "Data loading status message"
+  },
+  
+  "common_status_saving": "Saving...",
+  "@common_status_saving": {
+    "description": "Data saving status message"
+  },
+  
+  "app_concept_stack": "Stack",
+  "@app_concept_stack": {
+    "description": "App concept: database unit"
+  },
+  
+  "app_concept_entity": "Entity",
+  "@app_concept_entity": {
+    "description": "App concept: graph element"
+  },
+  
+  "app_concept_node": "Node",
+  "@app_concept_node": {
+    "description": "App concept: graph node"
+  },
+  
+  "app_concept_edge": "Edge",
+  "@app_concept_edge": {
+    "description": "App concept: graph edge"
+  },
+  
+  "app_concept_graph": "Graph",
+  "@app_concept_graph": {
+    "description": "App concept: graph structure"
+  },
+  
+  "database_term_query": "Query",
+  "@database_term_query": {
+    "description": "Database term: search query"
+  },
+  
+  "database_term_property": "Property",
+  "@database_term_property": {
+    "description": "Database term: attribute"
+  },
+  
+  "database_term_relation": "Relation",
+  "@database_term_relation": {
+    "description": "Database term: relationship"
+  },
+  
+  "error_network_connection": "Network connection error",
+  "@error_network_connection": {
+    "description": "Error message for network connection failure"
+  },
+  
+  "error_file_not_found": "File not found",
+  "@error_file_not_found": {
+    "description": "Error message when file does not exist"
+  },
+  
+  "validation_required_field": "This field is required",
+  "@validation_required_field": {
+    "description": "Validation message for required fields"
+  },
+
+  "validation_must_be_integer": "Value must be an integer",
+  "@validation_must_be_integer": {
+    "description": "Integer type validation error"
+  },
+
+  "validation_must_be_decimal": "Value must be a decimal number",
+  "@validation_must_be_decimal": {
+    "description": "Decimal type validation error"
+  },
+
+  "validation_must_be_boolean": "Value must be a boolean",
+  "@validation_must_be_boolean": {
+    "description": "Boolean type validation error"
+  },
+
+  "validation_must_be_date": "Value must be a date",
+  "@validation_must_be_date": {
+    "description": "Date type validation error"
+  },
+
+  "validation_must_be_string": "Value must be a string",
+  "@validation_must_be_string": {
+    "description": "String type validation error"
+  },
+
+  "validation_must_be_email": "Value must be a valid email address",
+  "@validation_must_be_email": {
+    "description": "Email type validation error"
+  },
+
+  "validation_min_value": "Value must be at least {min}",
+  "@validation_min_value": {
+    "description": "Minimum value validation error",
+    "placeholders": {
+      "min": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "validation_max_value": "Value must be at most {max}",
+  "@validation_max_value": {
+    "description": "Maximum value validation error",
+    "placeholders": {
+      "max": {
+        "type": "String",
+        "example": "100"
+      }
+    }
+  },
+
+  "validation_min_length": "Value must be at least {minLength} characters",
+  "@validation_min_length": {
+    "description": "Minimum length validation error",
+    "placeholders": {
+      "minLength": {
+        "type": "String",
+        "example": "3"
+      }
+    }
+  },
+
+  "validation_max_length": "Value must be at most {maxLength} characters",
+  "@validation_max_length": {
+    "description": "Maximum length validation error",
+    "placeholders": {
+      "maxLength": {
+        "type": "String",
+        "example": "50"
+      }
+    }
+  },
+
+  "validation_pattern_mismatch": "Value must match the specified pattern",
+  "@validation_pattern_mismatch": {
+    "description": "Pattern matching validation error"
+  },
+
+  "validation_entity_id_empty": "Entity ID cannot be empty",
+  "@validation_entity_id_empty": {
+    "description": "Error when entity ID is empty"
+  },
+
+  "validation_required_property_missing": "Required property missing: {propertyName}",
+  "@validation_required_property_missing": {
+    "description": "Error when required property is missing",
+    "placeholders": {
+      "propertyName": {
+        "type": "String",
+        "example": "name"
+      }
+    }
+  },
+
+  "validation_invalid_properties": "Invalid properties: {propertyList}",
+  "@validation_invalid_properties": {
+    "description": "Error when properties are invalid",
+    "placeholders": {
+      "propertyList": {
+        "type": "String",
+        "example": "age, email"
+      }
+    }
+  },
+
+  "validation_source_id_empty": "Source node ID cannot be empty",
+  "@validation_source_id_empty": {
+    "description": "Error when link source node ID is empty"
+  },
+
+  "validation_target_id_empty": "Target node ID cannot be empty",
+  "@validation_target_id_empty": {
+    "description": "Error when link target node ID is empty"
+  },
+
+  "validation_field_required": "This field is required",
+  "@validation_field_required": {
+    "description": "Error when form field is required"
+  },
+
+  "validation_invalid_format": "Invalid format",
+  "@validation_invalid_format": {
+    "description": "Error when input format is incorrect"
+  },
+
+  "validation_value_too_short": "Value is too short",
+  "@validation_value_too_short": {
+    "description": "Error when input value is too short"
+  },
+
+  "validation_value_too_long": "Value is too long",
+  "@validation_value_too_long": {
+    "description": "Error when input value is too long"
+  },
+
+  "validation_invalid_characters": "Contains invalid characters",
+  "@validation_invalid_characters": {
+    "description": "Error when input contains invalid characters"
+  },
+
+  "validation_duplicate_value": "This value is already in use",
+  "@validation_duplicate_value": {
+    "description": "Error when duplicate value is entered"
+  },
+
+  "common_search": "Search",
+  "@common_search": {
+    "description": "Common label for search functionality"
+  },
+
+  "common_filter": "Filter",
+  "@common_filter": {
+    "description": "Common label for filter functionality"
+  },
+
+  "common_condition": "Condition",
+  "@common_condition": {
+    "description": "Common label for search conditions"
+  },
+
+  "common_create": "Create",
+  "@common_create": {
+    "description": "Common label for create action"
+  },
+
+  "common_edit": "Edit",
+  "@common_edit": {
+    "description": "Common label for edit action"
+  },
+
+  "common_import": "Import",
+  "@common_import": {
+    "description": "Common label for data import"
+  },
+
+  "common_export": "Export",
+  "@common_export": {
+    "description": "Common label for data export"
+  },
+
+  "common_settings": "Settings",
+  "@common_settings": {
+    "description": "Common label for settings"
+  },
+
+  "common_help": "Help",
+  "@common_help": {
+    "description": "Common label for help"
+  },
+
+  "menu_file": "File",
+  "@menu_file": {
+    "description": "File menu label"
+  },
+
+  "menu_edit": "Edit",
+  "@menu_edit": {
+    "description": "Edit menu label"
+  },
+
+  "menu_view": "View",
+  "@menu_view": {
+    "description": "View menu label"
+  },
+
+  "menu_window": "Window",
+  "@menu_window": {
+    "description": "Window menu label"
+  },
+
+  "menu_graph": "Graph",
+  "@menu_graph": {
+    "description": "Graph menu label"
+  },
+
+  "menu_help": "Help",
+  "@menu_help": {
+    "description": "Help menu label"
+  },
+
+  "menu_settings": "Settings...",
+  "@menu_settings": {
+    "description": "Settings menu item label"
+  },
+
+  "menu_new_stack": "New Stack...",
+  "@menu_new_stack": {
+    "description": "New stack creation menu item"
+  },
+
+  "menu_create_sample_stack": "Create Sample Stack...",
+  "@menu_create_sample_stack": {
+    "description": "Sample stack creation menu item"
+  },
+
+  "menu_open_stack": "Open Stack...",
+  "@menu_open_stack": {
+    "description": "Open stack menu item"
+  },
+
+  "menu_recent_stacks": "Recent Stacks",
+  "@menu_recent_stacks": {
+    "description": "Recent stacks menu item"
+  },
+
+  "menu_save": "Save",
+  "@menu_save": {
+    "description": "Save menu item"
+  },
+
+  "menu_close_stack": "Close Stack",
+  "@menu_close_stack": {
+    "description": "Close stack menu item"
+  },
+
+  "menu_stack_info": "Show Stack Info...",
+  "@menu_stack_info": {
+    "description": "Show stack info menu item"
+  },
+
+  "menu_show_in_finder": "Show in Finder",
+  "@menu_show_in_finder": {
+    "description": "Show in Finder menu item"
+  },
+
+  "menu_page_setup": "Page Setup...",
+  "@menu_page_setup": {
+    "description": "Page setup menu item"
+  },
+
+  "menu_print": "Print...",
+  "@menu_print": {
+    "description": "Print menu item"
+  },
+
+  "menu_undo": "Undo",
+  "@menu_undo": {
+    "description": "Undo menu item"
+  },
+
+  "menu_redo": "Redo",
+  "@menu_redo": {
+    "description": "Redo menu item"
+  },
+
+  "menu_cut": "Cut",
+  "@menu_cut": {
+    "description": "Cut menu item"
+  },
+
+  "menu_copy": "Copy",
+  "@menu_copy": {
+    "description": "Copy menu item"
+  },
+
+  "menu_paste": "Paste",
+  "@menu_paste": {
+    "description": "Paste menu item"
+  },
+
+  "menu_select_all": "Select All",
+  "@menu_select_all": {
+    "description": "Select all menu item"
+  },
+
+  "menu_find": "Find...",
+  "@menu_find": {
+    "description": "Find menu item"
+  },
+
+  "menu_replace": "Replace...",
+  "@menu_replace": {
+    "description": "Replace menu item"
+  },
+
+  "menu_spelling_grammar": "Spelling and Grammar",
+  "@menu_spelling_grammar": {
+    "description": "Spelling and Grammar menu"
+  },
+
+  "menu_show_spelling_grammar": "Show Spelling and Grammar",
+  "@menu_show_spelling_grammar": {
+    "description": "Show spelling and grammar menu item"
+  },
+
+  "menu_check_spelling_while_typing": "Check Spelling While Typing",
+  "@menu_check_spelling_while_typing": {
+    "description": "Check spelling while typing menu item"
+  },
+
+  "menu_substitutions": "Substitutions",
+  "@menu_substitutions": {
+    "description": "Substitutions menu"
+  },
+
+  "menu_smart_substitutions": "Smart Substitutions",
+  "@menu_smart_substitutions": {
+    "description": "Smart substitutions menu item"
+  },
+
+  "menu_smart_quotes": "Smart Quotes",
+  "@menu_smart_quotes": {
+    "description": "Smart quotes menu item"
+  },
+
+  "menu_smart_dashes": "Smart Dashes",
+  "@menu_smart_dashes": {
+    "description": "Smart dashes menu item"
+  },
+
+  "menu_transformations": "Transformations",
+  "@menu_transformations": {
+    "description": "Transformations menu"
+  },
+
+  "menu_make_uppercase": "Make Uppercase",
+  "@menu_make_uppercase": {
+    "description": "Make uppercase menu item"
+  },
+
+  "menu_make_lowercase": "Make Lowercase",
+  "@menu_make_lowercase": {
+    "description": "Make lowercase menu item"
+  },
+
+  "menu_capitalize": "Capitalize",
+  "@menu_capitalize": {
+    "description": "Capitalize menu item"
+  },
+
+  "menu_pathfinder": "Pathfinder...",
+  "@menu_pathfinder": {
+    "description": "Pathfinder menu item"
+  },
+
+  "menu_background_tasks": "Background Tasks...",
+  "@menu_background_tasks": {
+    "description": "Background tasks menu item"
+  },
+
+  "menu_show_hide_sidebar": "Show/Hide Sidebar",
+  "@menu_show_hide_sidebar": {
+    "description": "Show/hide sidebar menu item"
+  },
+
+  "menu_show_hide_detail_panel": "Show/Hide Detail Panel",
+  "@menu_show_hide_detail_panel": {
+    "description": "Show/hide detail panel menu item"
+  },
+
+  "menu_show_hide_toolbar": "Show/Hide Toolbar",
+  "@menu_show_hide_toolbar": {
+    "description": "Show/hide toolbar menu item"
+  },
+
+  "menu_graph_view": "Graph View",
+  "@menu_graph_view": {
+    "description": "Graph view menu item"
+  },
+
+  "menu_table_view": "Table View",
+  "@menu_table_view": {
+    "description": "Table view menu item"
+  },
+
+  "menu_zoom_in": "Zoom In",
+  "@menu_zoom_in": {
+    "description": "Zoom in menu item"
+  },
+
+  "menu_zoom_out": "Zoom Out",
+  "@menu_zoom_out": {
+    "description": "Zoom out menu item"
+  },
+
+  "menu_actual_size": "Actual Size",
+  "@menu_actual_size": {
+    "description": "Actual size menu item"
+  },
+
+  "menu_fullscreen": "Enter Full Screen",
+  "@menu_fullscreen": {
+    "description": "Enter full screen menu item"
+  },
+
+  "menu_theme_color": "Theme Color",
+  "@menu_theme_color": {
+    "description": "Theme color menu"
+  },
+
+  "menu_create_node": "Create Node",
+  "@menu_create_node": {
+    "description": "Create node menu item"
+  },
+
+  "menu_create_link": "Create Link",
+  "@menu_create_link": {
+    "description": "Create link menu item"
+  },
+
+  "menu_edit_properties": "Edit Properties",
+  "@menu_edit_properties": {
+    "description": "Edit properties menu item"
+  },
+
+  "menu_add_bookmark": "Add Bookmark",
+  "@menu_add_bookmark": {
+    "description": "Add bookmark menu item"
+  },
+
+  "menu_manage_bookmarks": "Manage Bookmarks...",
+  "@menu_manage_bookmarks": {
+    "description": "Manage bookmarks menu item"
+  },
+
+  "menu_save_chart_as_image": "Save Chart as Image...",
+  "@menu_save_chart_as_image": {
+    "description": "Save chart as image menu item"
+  },
+
+  "menu_delete": "Delete",
+  "@menu_delete": {
+    "description": "Delete menu item"
+  },
+
+  "menu_app_help": "App Help",
+  "@menu_app_help": {
+    "description": "App help menu item"
+  },
+
+  "menu_welcome": "Welcome",
+  "@menu_welcome": {
+    "description": "Welcome menu item"
+  },
+
+  "menu_check_updates": "Check for Updates...",
+  "@menu_check_updates": {
+    "description": "Check for updates menu item"
+  },
+
+  "menu_release_notes": "Release Notes",
+  "@menu_release_notes": {
+    "description": "Release notes menu item"
+  },
+
+  "menu_keyboard_shortcuts": "Keyboard Shortcuts",
+  "@menu_keyboard_shortcuts": {
+    "description": "Keyboard shortcuts menu item"
+  },
+
+  "menu_send_feedback": "Send Feedback",
+  "@menu_send_feedback": {
+    "description": "Send feedback menu item"
+  },
+
+  "settings_language_title": "Language Settings",
+  "@settings_language_title": {
+    "description": "Language settings screen title"
+  },
+  
+  "demo_title": "Localization Demo",
+  "@demo_title": {
+    "description": "Demo screen title"
+  },
+  
+  "demo_description": "This demo showcases the localization features of the App application.",
+  "@demo_description": {
+    "description": "Demo screen description"
+  },
+  
+  "demo_language_switch": "Language Switch",
+  "@demo_language_switch": {
+    "description": "Language switch section title"
+  },
+  
+  "demo_common_buttons": "Common Buttons",
+  "@demo_common_buttons": {
+    "description": "Common buttons section title"
+  },
+  
+  "demo_app_concepts": "App Concepts",
+  "@demo_app_concepts": {
+    "description": "App concepts section title"
+  },
+  
+  "demo_database_terms": "Database Terms",
+  "@demo_database_terms": {
+    "description": "Database terms section title"
+  },
+  
+  "demo_error_messages": "Error Messages",
+  "@demo_error_messages": {
+    "description": "Error messages section title"
+  },
+
+  "activity_graph_navigation": "Graph Navigation",
+  "@activity_graph_navigation": {
+    "description": "Activity bar: Graph Navigation screen"
+  },
+
+  "activity_advanced_search": "Advanced Search",
+  "@activity_advanced_search": {
+    "description": "Activity bar: Advanced Search"
+  },
+
+  "activity_settings": "Settings",
+  "@activity_settings": {
+    "description": "Activity bar: Settings screen"
+  },
+
+  "activity_stack_collection": "Stack Collection",
+  "@activity_stack_collection": {
+    "description": "Activity bar: Stack Collection screen"
+  },
+
+  "activity_entity_editor": "Entity Editor",
+  "@activity_entity_editor": {
+    "description": "Activity bar: Entity Editor screen"
+  },
+
+  "activity_welcome": "Welcome",
+  "@activity_welcome": {
+    "description": "Activity bar: Welcome screen"
+  },
+
+  "activity_label_list": "Label List",
+  "@activity_label_list": {
+    "description": "Activity bar: Label List"
+  },
+
+  "activity_property_list": "Property List",
+  "@activity_property_list": {
+    "description": "Activity bar: Property List"
+  },
+
+  "activity_ai_test": "AI Test",
+  "@activity_ai_test": {
+    "description": "Activity bar: AI Test screen"
+  },
+
+  "screenshot_graph_navigation": "Graph Navigation Screen",
+  "@screenshot_graph_navigation": {
+    "description": "Screenshot: Graph Navigation screen description"
+  },
+
+  "screenshot_settings_dialog": "Settings Screen (Dialog)",
+  "@screenshot_settings_dialog": {
+    "description": "Screenshot: Settings screen description"
+  },
+
+  "screenshot_stack_collection": "Stack Collection Screen",
+  "@screenshot_stack_collection": {
+    "description": "Screenshot: Stack Collection screen description"
+  },
+
+  "screenshot_entity_editor": "Entity Editor Screen",
+  "@screenshot_entity_editor": {
+    "description": "Screenshot: Entity Editor screen description"
+  },
+
+  "screenshot_welcome": "Welcome Screen",
+  "@screenshot_welcome": {
+    "description": "Screenshot: Welcome screen description"
+  },
+
+  "screenshot_metadata_editor": "Metadata Management Screen",
+  "@screenshot_metadata_editor": {
+    "description": "Screenshot: Metadata Management screen description"
+  },
+
+  "screenshot_background_tasks": "Background Tasks Test Screen",
+  "@screenshot_background_tasks": {
+    "description": "Screenshot: Background Tasks Test screen description"
+  },
+
+  "error_file_not_found": "File not found",
+  "@error_file_not_found_csv": {
+    "description": "CSV import: File not found error"
+  },
+
+  "error_csv_empty": "CSV file is empty",
+  "@error_csv_empty": {
+    "description": "CSV import: Empty file error"
+  },
+
+  "error_csv_no_data": "No data rows",
+  "@error_csv_no_data": {
+    "description": "CSV import: No data rows error"
+  },
+
+  "error_csv_node_creation": "Node creation error",
+  "@error_csv_node_creation": {
+    "description": "CSV import: Node creation error"
+  },
+
+  "error_csv_link_creation": "Link creation error",
+  "@error_csv_link_creation": {
+    "description": "CSV import: Link creation error"
+  },
+
+  "error_csv_invalid_mapping": "Invalid CSV mapping configuration. Node or Link configuration is required.",
+  "@error_csv_invalid_mapping": {
+    "description": "CSV import: Invalid mapping configuration error"
+  },
+
+  "error_csv_import_failed": "An error occurred during import",
+  "@error_csv_import_failed": {
+    "description": "CSV import: General import error"
+  },
+
+  "error_id_column_not_found": "ID column not found",
+  "@error_id_column_not_found": {
+    "description": "CSV import: ID column not found error"
+  },
+
+  "command_welcome_wait_closed": "Wait for welcome to close",
+  "@command_welcome_wait_closed": {
+    "description": "Command: Wait for welcome dialog to close"
+  }
+}

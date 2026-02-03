@@ -1,0 +1,166 @@
+import 'dart:io';
+import 'package:core_stack_flutter/core_stack.dart';
+import '../models/stack_template_manifest.dart';
+import 'stack_template_installer.dart';
+
+/// Stack template management service
+class StackTemplateService {
+  /// Gets a list of available stack template manifests
+  static List<StackTemplateManifest> getAvailableStackTemplates() {
+    return [
+      const StackTemplateManifest(
+        id: 'team_sample',
+        displayName: 'Software Development Team Sample',
+        fullAssetPath: 'packages/core_samples/assets/team',
+        description: 'Template data for a small software development team',
+        tags: ['template', 'development', 'team', 'software'],
+        category: 'business',
+      ),
+      const StackTemplateManifest(
+        id: 'meiji_sample',
+        displayName: 'Bakumatsu Ryoma Relationship Chart',
+        fullAssetPath: 'packages/core_samples/assets/meiji',
+        description:
+            'Template data for Bakumatsu historical figures centered around Sakamoto Ryoma',
+        tags: ['template', 'history', 'japan', 'meiji', 'ryoma'],
+        category: 'history',
+      ),
+      const StackTemplateManifest(
+        id: 'simple_graph_sample',
+        displayName: 'Simple Graph Sample',
+        fullAssetPath: 'packages/core_samples/assets/simple_graph',
+        description:
+            'A sample stack with a simple graph structure. Shows basic node and link relationships without list-type properties.',
+        tags: ['template', 'simple', 'basic', 'graph'],
+        category: 'basic',
+      ),
+    ];
+  }
+
+  /// Converts to a list of AssetStackTemplateManifest
+  static List<AssetStackTemplateManifest> getAssetStackTemplateManifests() {
+    return getAvailableStackTemplates()
+        .map((template) => template.toAssetStackTemplateManifest())
+        .toList();
+  }
+
+  /// Gets stack templates by category
+  static List<StackTemplateManifest> getStackTemplatesByCategory(
+    String category,
+  ) {
+    return getAvailableStackTemplates()
+        .where((template) => template.category == category)
+        .toList();
+  }
+
+  /// Gets stack template by ID
+  static StackTemplateManifest? getStackTemplateById(String id) {
+    try {
+      return getAvailableStackTemplates().firstWhere(
+        (template) => template.id == id,
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Generates a stack from a stack template using a manifest-based API
+  ///
+  /// [template] The manifest of the stack template to generate
+  /// [outputDirectory] Output directory
+  /// [stackName] Name of the stack to generate (retrieved from template if omitted)
+  ///
+  /// Returns: The directory path of the generated stack, or null if failed
+  static Future<String?> generateStackFromTemplate({
+    required StackTemplateManifest template,
+    required Directory outputDirectory,
+    String? stackName,
+  }) async {
+    final installer = StackTemplateInstaller();
+    return installer.generateStackFromTemplate(
+      templateAssetPath: template.fullAssetPath,
+      outputDirectory: outputDirectory,
+      stackName: stackName ?? template.displayName,
+    );
+  }
+
+  // Old method name for backward compatibility
+  @Deprecated('Use getAvailableStackTemplates instead')
+  static List<StackTemplateManifest> getAvailableSampleStacks() {
+    return getAvailableStackTemplates();
+  }
+
+  @Deprecated('Use getAssetStackTemplateManifests instead')
+  static List<AssetStackTemplateManifest> getAssetStackManifests() {
+    return getAssetStackTemplateManifests();
+  }
+
+  @Deprecated('Use getStackTemplatesByCategory instead')
+  static List<StackTemplateManifest> getSampleStacksByCategory(
+    String category,
+  ) {
+    return getStackTemplatesByCategory(category);
+  }
+
+  @Deprecated('Use getStackTemplateById instead')
+  static StackTemplateManifest? getSampleStackById(String id) {
+    return getStackTemplateById(id);
+  }
+
+  /// Old method name for backward compatibility
+  ///
+  /// [manifest] The manifest of the sample stack to generate
+  /// [outputDirectory] Output directory
+  /// [stackName] Name of the stack to generate (retrieved from manifest if omitted)
+  ///
+  /// Returns: The directory path of the generated stack, or null if failed
+  @Deprecated('Use generateStackFromTemplate instead')
+  static Future<String?> createStackFromManifest({
+    required StackTemplateManifest manifest,
+    required Directory outputDirectory,
+    String? stackName,
+  }) async {
+    return generateStackFromTemplate(
+      template: manifest,
+      outputDirectory: outputDirectory,
+      stackName: stackName,
+    );
+  }
+
+  /// Checks for the existence of a template manifest file
+  ///
+  /// [template] The manifest of the stack template to check
+  ///
+  /// Returns: true if the template manifest file exists
+  static Future<bool> hasTemplateManifestFile(
+    StackTemplateManifest template,
+  ) async {
+    final installer = StackTemplateInstaller();
+    return installer.hasManifestFile(template.fullAssetPath);
+  }
+
+  /// Gets metadata from the template manifest file
+  ///
+  /// [template] The manifest of the stack template to retrieve
+  ///
+  /// Returns: The metadata of the template manifest, or null if failed
+  static Future<Map<String, dynamic>?> getTemplateManifestMetadata(
+    StackTemplateManifest template,
+  ) async {
+    final installer = StackTemplateInstaller();
+    return installer.getManifestMetadata(template.fullAssetPath);
+  }
+
+  // Old method name for backward compatibility
+  @Deprecated('Use hasTemplateManifestFile instead')
+  static Future<bool> hasManifestFile(StackTemplateManifest template) async {
+    return hasTemplateManifestFile(template);
+  }
+
+  @Deprecated('Use getTemplateManifestMetadata instead')
+  static Future<Map<String, dynamic>?> getManifestMetadata(
+    StackTemplateManifest template,
+  ) async {
+    return getTemplateManifestMetadata(template);
+  }
+}

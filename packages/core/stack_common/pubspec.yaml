@@ -1,0 +1,20 @@
+name: core_stack_common
+description: Platform-independent core logic for App stacks.
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  core_foundation_common:
+    path: ../foundation_common
+  core_graph_common:
+    path: ../graph_common
+  meta: ^1.11.0
+  path: ^1.9.0
+  collection: ^1.18.0
+
+dev_dependencies:
+  test: ^1.25.2
+  lints: ^5.0.0

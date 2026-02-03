@@ -1,0 +1,37 @@
+name: features_settings
+resolution: workspace
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=3.38.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  path: ^1.8.3
+  path_provider: ^2.1.5
+  json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.4
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  shared_preferences: ^2.2.2
+  lucide_icons_flutter: ^3.0.5
+  core_foundation_flutter:
+    path: ../../core/foundation_flutter
+  core_app_config:
+    path: ../../core/app_config
+  presentation_components:
+    path: ../../presentation/components
+  core_themes:
+    path: ../../core/themes
+  app:
+    path: ../../app
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.14
+  freezed: ^2.5.7
+  json_serializable: ^6.8.0
+  very_good_analysis: ^9.0.0
+  riverpod_generator: ^2.6.2

@@ -1,0 +1,3073 @@
+# RinneGraph ライブラリ完全ガイド (LLM向け)
+
+## 概要
+
+RinneGraphは、SQLiteをバックエンドとするDart/Flutter用の組み込み型グラフデータベースライブラリです。Apache TinkerPopのGremlinに触発されたトラバーサルAPIを提供し、プロパティグラフモデルを使用してデータを管理します。
+
+### 基本情報
+- **パッケージ名**: rinne_graph
+- **言語**: Dart 3.7以上
+- **データベース**: SQLite (sqflite_common_ffi使用)
+- **データモデル**: プロパティグラフ（頂点とエッジ）
+- **API**: Gremlin風トラバーサルAPI
+- **用途**: Arizalグラフデータベースオーガナイザーアプリ向け
+
+## アーキテクチャ
+
+### 主要コンポーネント
+
+1. **データベース層**
+   - `Database`: データベース操作の抽象インターフェース
+   - `SQLiteDatabase`: SQLiteを使用した具体的な実装
+   - `Transaction`: トランザクション処理
+
+2. **モデル層**
+   - `Element`: 頂点と辺の共通インターフェース
+   - `Vertex`: グラフの頂点
+   - `Edge`: グラフの辺（有向）
+
+3. **グラフ操作層**
+   - `Graph`: グラフデータベース全体の操作
+   - `GraphStatistics`: グラフの統計情報
+
+4. **トラバーサル層**
+   - `TraversalSource`: トラバーサルの開始点
+   - `Traversal`: トラバーサルステップのチェーン
+   - `SqlTraversal`: SQLベースのトラバーサル実装
+
+### データベーススキーマ
+
+```sql
+-- 頂点テーブル
+CREATE TABLE vertices (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 頂点ラベルテーブル
+CREATE TABLE vertex_labels (
+  vertex_id INTEGER,
+  label TEXT NOT NULL,
+  PRIMARY KEY (vertex_id, label),
+  FOREIGN KEY (vertex_id) REFERENCES vertices(id) ON DELETE CASCADE
+);
+
+-- 頂点プロパティテーブル
+CREATE TABLE vertex_properties (
+  vertex_id INTEGER,
+  key TEXT NOT NULL,
+  value NONE,
+  type INTEGER NOT NULL,
+  PRIMARY KEY (vertex_id, key),
+  FOREIGN KEY (vertex_id) REFERENCES vertices(id) ON DELETE CASCADE
+);
+
+-- エッジテーブル
+CREATE TABLE edges (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  from_vertex_id INTEGER NOT NULL,
+  to_vertex_id INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (from_vertex_id) REFERENCES vertices(id) ON DELETE CASCADE,
+  FOREIGN KEY (to_vertex_id) REFERENCES vertices(id) ON DELETE CASCADE
+);
+
+-- エッジラベルテーブル
+CREATE TABLE edge_labels (
+  edge_id INTEGER,
+  label TEXT NOT NULL,
+  PRIMARY KEY (edge_id, label),
+  FOREIGN KEY (edge_id) REFERENCES edges(id) ON DELETE CASCADE
+);
+
+-- エッジプロパティテーブル
+CREATE TABLE edge_properties (
+  edge_id INTEGER,
+  key TEXT NOT NULL,
+  value NONE,
+  type INTEGER NOT NULL,
+  PRIMARY KEY (edge_id, key),
+  FOREIGN KEY (edge_id) REFERENCES edges(id) ON DELETE CASCADE
+);
+```
+
+**内部実装の詳細**:
+- プロパティテーブルの`value`カラムには、文字列値の場合は自動的に`str:`プレフィックスが追加される。データ取得時はカットされる。これはSQLiteで文字列型を保証するための処置。こうしないと、SQLiteに保存するテキストが他の型に変換可能な表現の場合に変換されてしまう。
+- リスト型プロパティは`dart:convert`の`jsonEncode`を使用してJSON文字列として保存され、`jsonDecode`で復元される。
+
+**プロパティ型ID**:
+- 0: null
+- 1: boolean
+- 2: integer
+- 3: float
+- 4: string
+- 5: datetime
+- 6: blob
+- 7: list
+
+## データモデル
+
+### Element（要素）
+
+頂点と辺の共通インターフェース：
+
+```dart
+abstract class Element {
+  int? get id;                              // 要素ID
+  Set<String> get labels;                   // ラベルセット
+  Map<String, dynamic> get properties;     // プロパティマップ
+  DateTime? get createdAt;                  // 作成日時
+  DateTime? get updatedAt;                  // 更新日時
+
+  bool hasAnyLabel(List<String> labels);
+  bool hasProperty(String key);
+  Object? getProperty(String key);
+  void setProperty(String key, Object? value);
+  void removeProperty(String key);
+}
+```
+
+### Vertex（頂点）
+
+```dart
+abstract class Vertex implements Element {
+  factory Vertex({
+    int? id,
+    Set<String>? labels,
+    Map<String, dynamic>? properties,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
+
+  factory Vertex.fromMap(Map<String, dynamic> map);
+  factory Vertex.fromJson(Map<String, dynamic> json);
+
+  Map<String, dynamic> toJson();
+  Vertex copyWith({...});
+}
+```
+
+### Edge（エッジ）
+
+```dart
+abstract class Edge implements Element {
+  factory Edge({
+    required int fromVertexId,
+    required int toVertexId,
+    int? id,
+    Set<String>? labels,
+    Map<String, dynamic>? properties,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
+
+  int get fromVertexId;                     // 出発頂点ID
+  int get toVertexId;                       // 到着頂点ID
+
+  bool isOutgoingFrom(int vertexId);        // 指定頂点からの出力エッジか
+  bool isIncomingTo(int vertexId);          // 指定頂点への入力エッジか
+  bool isConnectedTo(int vertexId);         // 指定頂点に接続しているか
+}
+```
+
+### プロパティ値の型
+
+サポートされるプロパティ値の型：
+- `bool`: 真偽値
+- `int`: 整数
+- `double`: 浮動小数点数
+- `String`: 文字列
+- `DateTime`: 日時
+- `List<dynamic>`: リスト（配列）- 任意の型の要素を含むことができる
+- `NullValue`: 明示的なnull値（プロパティの存在を示すnull）
+
+#### リスト型プロパティ
+
+リスト型プロパティは以下の特徴を持ちます：
+
+- **型**: `List<dynamic>`として扱われ、任意の型の要素を含むことができる
+- **保存形式**: JSONエンコードされた文字列としてSQLiteに保存される
+- **例**: `['tag1', 'tag2', 'tag3']`, `[1, 2, 3]`, `[true, false]`, `['text', 42, true]`
+
+```dart
+// リスト型プロパティの設定例
+vertex.setProperty('tags', ['developer', 'engineer', 'tech']);
+vertex.setProperty('scores', [85, 92, 78]);
+vertex.setProperty('flags', [true, false, true]);
+vertex.setProperty('mixed', ['text', 42, true]);
+
+// リスト型プロパティの取得
+final tags = vertex.getProperty('tags') as List<dynamic>;
+```
+
+注意：プロパティアクセスの結果が`null`の場合、そのプロパティは存在しません。空のプロパティ値を示すには`NullValue`クラスを使用します。
+
+## 基本的な使用方法
+
+### データベースの作成と接続
+
+```dart
+import 'package:rinne_graph/rinne_graph.dart';
+
+// インメモリデータベースを作成
+final graph = await Graph.openInMemory();
+
+// ファイルベースのデータベースを作成
+final graph = await Graph.open('my_graph.db');
+
+try {
+  // グラフ操作
+} finally {
+  await graph.close();
+}
+```
+
+### 頂点とエッジの作成
+
+```dart
+await graph.transaction((txn) async {
+  // 頂点を作成
+  final alice = await txn.createVertex(Vertex(
+    labels: {'person'},
+    properties: {'name': 'Alice', 'age': 30}
+  ));
+
+  final bob = await txn.createVertex(Vertex(
+    labels: {'person'},
+    properties: {'name': 'Bob', 'age': 25}
+  ));
+
+  // エッジを作成
+  final edge = await txn.createEdge(Edge(
+    fromVertexId: alice.id!,
+    toVertexId: bob.id!,
+    labels: {'knows'},
+    properties: {'since': 2020}
+  ));
+});
+```
+
+## トラバーサルAPI
+
+### 基本概念
+
+トラバーサルは以下の特徴を持ちます：
+1. **ステップの連鎖**: 複数のステップをチェーンして連結
+2. **遅延評価**: 実際にデータが必要になるまでクエリは実行されない
+3. **型変換**: 各ステップはデータ型を変換する可能性がある
+4. **SQL変換**: ステップはCTEベースのSQLクエリに変換される
+
+### トラバーサルの開始
+
+```dart
+final g = graph.traversal();
+
+// 全ての頂点を取得
+final vertices = g.V();
+
+// 特定IDの頂点を取得
+final vertex = g.V([1, 2, 3]);
+
+// 全てのエッジを取得
+final edges = g.E();
+
+// 特定IDのエッジを取得
+final edge = g.E([1, 2, 3]);
+```
+
+### 実装済みトラバーサルステップ
+
+#### 1. 開始ステップ（SQL変換）
+
+**V([List<int>? ids])**
+- 頂点を選択
+- パラメータ: 頂点IDのリスト（省略時は全頂点）
+- 出力: 頂点
+
+```dart
+final allVertices = await g.V().toList();
+final specificVertices = await g.V([1, 2, 3]).toList();
+```
+
+**E([List<int>? ids])**
+- エッジを選択
+- パラメータ: エッジIDのリスト（省略時は全エッジ）
+- 出力: エッジ
+
+```dart
+final allEdges = await g.E().toList();
+final specificEdges = await g.E([1, 2, 3]).toList();
+```
+
+#### 2. フィルタリングステップ（SQL変換）
+
+**hasId([List<int>? ids])**
+- IDでフィルタリング
+- パラメータ: IDのリスト
+- 出力: 入力と同じ型
+
+```dart
+final vertices = await g.V().hasId([1, 2, 3]).toList();
+```
+
+**hasLabel(List<String> labels)**
+- ラベルでフィルタリング
+- パラメータ: ラベルのリスト
+- 出力: 入力と同じ型
+
+```dart
+final persons = await g.V().hasLabel(['person']).toList();
+final knowsEdges = await g.E().hasLabel(['knows']).toList();
+```
+
+**hasKey(String key, dynamic value)**
+- プロパティでフィルタリング
+- パラメータ: プロパティキーと値
+- 出力: 入力と同じ型
+
+```dart
+final alice = await g.V().hasKey('name', 'Alice').toList();
+final adults = await g.V().hasKey('age', 30).toList();
+```
+
+**hasNot(String key)**
+- プロパティが存在しないことでフィルタリング
+- パラメータ: プロパティキー
+- 出力: 入力と同じ型
+
+```dart
+final noAge = await g.V().hasNot('age').toList();
+```
+
+**hasKeyContains(String key, String value)**
+- プロパティ値が指定文字列を含むことでフィルタリング
+- パラメータ: プロパティキーと検索文字列
+- 出力: 入力と同じ型
+
+```dart
+final gmailUsers = await g.V().hasKeyContains('email', 'gmail').toList();
+final engineers = await g.V().hasKeyContains('title', 'Engineer').toList();
+```
+
+**hasKeyStartsWith(String key, String value)**
+- プロパティ値が指定文字列で始まることでフィルタリング
+- パラメータ: プロパティキーと検索文字列
+- 出力: 入力と同じ型
+
+```dart
+final aNames = await g.V().hasKeyStartsWith('name', 'A').toList();
+final httpUrls = await g.V().hasKeyStartsWith('url', 'http://').toList();
+```
+
+**hasKeyEndsWith(String key, String value)**
+- プロパティ値が指定文字列で終わることでフィルタリング
+- パラメータ: プロパティキーと検索文字列
+- 出力: 入力と同じ型
+
+```dart
+final comDomains = await g.V().hasKeyEndsWith('email', '.com').toList();
+final pdfFiles = await g.V().hasKeyEndsWith('filename', '.pdf').toList();
+```
+
+#### リスト検索メソッド
+
+**listContains(String key, dynamic value)**
+- リスト型プロパティが指定値を含むことでフィルタリング（LIKE演算子使用）
+- パラメータ: プロパティキーと検索値
+- 出力: 入力と同じ型
+- 注意: 数値の部分一致が発生する可能性があります（例：6を検索すると-4716にもマッチ）
+
+```dart
+final dartDevelopers = await g.V().listContains('skills', 'dart').toList();
+final highScorers = await g.V().listContains('scores', 90).toList();
+```
+
+**listContainsExact(String key, dynamic value)**
+- リスト型プロパティが指定値を正確に含むことでフィルタリング（JSON1拡張使用）
+- パラメータ: プロパティキーと検索値
+- 出力: 入力と同じ型
+- 推奨: 正確な検索が必要な場合はこちらを使用
+
+```dart
+final dartDevelopers = await g.V().listContainsExact('skills', 'dart').toList();
+final exactScorers = await g.V().listContainsExact('scores', 90).toList();
+```
+
+**listLength(String key, int length)**
+- リスト型プロパティの長さでフィルタリング（JSON1拡張使用）
+- パラメータ: プロパティキーと期待する長さ
+- 出力: 入力と同じ型
+
+```dart
+final threeSkills = await g.V().listLength('skills', 3).toList();
+final emptyLists = await g.V().listLength('items', 0).toList();
+```
+
+**hasKeyMatches(String key, String pattern)**
+- プロパティ値が正規表現パターンにマッチすることでフィルタリング
+- パラメータ: プロパティキーと正規表現パターン
+- 出力: 入力と同じ型
+
+```dart
+final phoneNumbers = await g.V().hasKeyMatches('phone', r'^\d{3}-\d{3}-\d{4}$').toList();
+final emails = await g.V().hasKeyMatches('email', r'^[\w._%+-]+@[\w.-]+\.[A-Z|a-z]{2,}$').toList();
+```
+
+**hasKeyGreaterThan(String key, dynamic value)**
+- プロパティ値が指定値より大きいことでフィルタリング
+- パラメータ: プロパティキーと比較値
+- 出力: 入力と同じ型
+
+```dart
+final adults = await g.V().hasKeyGreaterThan('age', 18).toList();
+final highScorers = await g.V().hasKeyGreaterThan('score', 90).toList();
+```
+
+**hasKeyLessThan(String key, dynamic value)**
+- プロパティ値が指定値より小さいことでフィルタリング
+- パラメータ: プロパティキーと比較値
+- 出力: 入力と同じ型
+
+```dart
+final youngUsers = await g.V().hasKeyLessThan('age', 30).toList();
+final lowPrices = await g.V().hasKeyLessThan('price', 100).toList();
+```
+
+**hasKeyBetween(String key, dynamic min, dynamic max)**
+- プロパティ値が指定範囲内にあることでフィルタリング
+- パラメータ: プロパティキー、最小値、最大値
+- 出力: 入力と同じ型
+
+```dart
+final middleAged = await g.V().hasKeyBetween('age', 30, 50).toList();
+final mediumPrices = await g.V().hasKeyBetween('price', 50, 200).toList();
+```
+
+**hasKeyIn(String key, List<dynamic> values)**
+- プロパティ値が指定リストに含まれることでフィルタリング
+- パラメータ: プロパティキーと値のリスト
+- 出力: 入力と同じ型
+
+```dart
+final primaryColors = await g.V().hasKeyIn('color', ['red', 'blue', 'yellow']).toList();
+final activeStatus = await g.V().hasKeyIn('status', ['active', 'pending']).toList();
+```
+
+**hasKeyNotIn(String key, List<dynamic> values)**
+- プロパティ値が指定リストに含まれないことでフィルタリング
+- パラメータ: プロパティキーと値のリスト
+- 出力: 入力と同じ型
+
+```dart
+final nonArchived = await g.V().hasKeyNotIn('status', ['archived', 'deleted']).toList();
+final otherColors = await g.V().hasKeyNotIn('color', ['red', 'blue']).toList();
+```
+
+**hasNotLabel(List<String> labels)**
+- 指定ラベルを持たないことでフィルタリング
+- パラメータ: ラベルのリスト
+- 出力: 入力と同じ型
+
+```dart
+final nonPersons = await g.V().hasNotLabel(['person']).toList();
+final otherEdges = await g.E().hasNotLabel(['knows', 'likes']).toList();
+```
+
+#### 3. 移動ステップ（SQL変換）
+
+**out([List<String>? labels])**
+- 出力エッジを通って隣接頂点に移動
+- パラメータ: エッジラベルのリスト（省略時は全ラベル）
+- 入力: 頂点
+- 出力: 頂点
+
+```dart
+final friends = await g.V().hasLabel(['person']).out(['knows']).toList();
+final allConnected = await g.V().out().toList();
+```
+
+**in_([List<String>? labels])**
+- 入力エッジを通って隣接頂点に移動
+- パラメータ: エッジラベルのリスト（省略時は全ラベル）
+- 入力: 頂点
+- 出力: 頂点
+
+```dart
+final knownBy = await g.V().hasLabel(['person']).in_(['knows']).toList();
+```
+
+**both([List<String>? labels])**
+- 両方向のエッジを通って隣接頂点に移動
+- パラメータ: エッジラベルのリスト（省略時は全ラベル）
+- 入力: 頂点
+- 出力: 頂点
+
+```dart
+final connected = await g.V().hasLabel(['person']).both(['knows']).toList();
+```
+
+#### 4. エッジ移動ステップ（SQL変換）
+
+**outE([List<String>? labels])**
+- 出力エッジに移動
+- パラメータ: エッジラベルのリスト（省略時は全ラベル）
+- 入力: 頂点
+- 出力: エッジ
+
+```dart
+final outgoingEdges = await g.V().hasLabel(['person']).outE(['knows']).toList();
+```
+
+**inE([List<String>? labels])**
+- 入力エッジに移動
+- パラメータ: エッジラベルのリスト（省略時は全ラベル）
+- 入力: 頂点
+- 出力: エッジ
+
+```dart
+final incomingEdges = await g.V().hasLabel(['person']).inE(['knows']).toList();
+```
+
+**bothE([List<String>? labels])**
+- 両方向のエッジに移動
+- パラメータ: エッジラベルのリスト（省略時は全ラベル）
+- 入力: 頂点
+- 出力: エッジ
+
+```dart
+final allEdges = await g.V().hasLabel(['person']).bothE().toList();
+```
+
+**outV()**
+- エッジの出力頂点（from頂点）に移動
+- 入力: エッジ
+- 出力: 頂点
+
+```dart
+final sourceVertices = await g.E().hasLabel(['knows']).outV().toList();
+```
+
+**inV()**
+- エッジの入力頂点（to頂点）に移動
+- 入力: エッジ
+- 出力: 頂点
+
+```dart
+final targetVertices = await g.E().hasLabel(['knows']).inV().toList();
+```
+
+**bothV()**
+- エッジの両端の頂点に移動
+- 入力: エッジ
+- 出力: 頂点
+
+```dart
+final endpointVertices = await g.E().hasLabel(['knows']).bothV().toList();
+```
+
+#### 5. プロパティ操作ステップ（SQL変換）
+
+**id()**
+- 要素のIDを取得
+- 出力: ID値
+
+```dart
+final ids = await g.V().hasLabel(['person']).id().toList();
+```
+
+**values([List<String>? keys])**
+- プロパティ値を取得
+- パラメータ: プロパティキーのリスト（省略時は全プロパティ）
+- 出力: プロパティ値
+
+```dart
+final names = await g.V().hasLabel(['person']).values(['name']).toList();
+final allValues = await g.V().values().toList();
+```
+
+**valueMap([List<String>? keys])**
+- プロパティのマップを取得
+- パラメータ: プロパティキーのリスト（省略時は全プロパティ）
+- 出力: プロパティマップ
+
+```dart
+final personMaps = await g.V().hasLabel(['person']).valueMap(['name', 'age']).toList();
+final allMaps = await g.V().valueMap().toList();
+```
+
+#### 6. 集約ステップ（SQL変換）
+
+**count()**
+- 要素の数をカウント
+- 出力: カウント値
+
+```dart
+final vertexCount = await g.V().count().toList();
+final personCount = await g.V().hasLabel(['person']).count().toList();
+```
+
+**dedup()**
+- 重複を除去
+- 出力: 入力と同じ型
+
+```dart
+final uniqueVertices = await g.V().both(['knows']).dedup().toList();
+```
+
+#### 7. パス操作ステップ（基本実装）
+
+**as(String label)**
+- ステップにラベルを付与
+- パラメータ: ラベル名
+- 出力: 入力と同じ型
+
+```dart
+final result = await g.V().hasLabel(['person']).as('people').toList();
+```
+
+**select(List<String> labels)**
+- 特定のラベルを選択
+- パラメータ: ラベル名のリスト
+- 出力: 選択された値
+
+```dart
+final result = await g.V().as('people').select(['people']).toList();
+```
+
+**path()**
+- パス情報を取得（基本実装）
+- 出力: パス情報
+
+```dart
+final paths = await g.V().out(['knows']).path().toPathList();
+```
+
+#### 8. カスタム処理ステップ（後処理）
+
+**filter(bool Function(dynamic) filterFunction)**
+- カスタム条件でフィルタリング
+- パラメータ: フィルター関数
+- 出力: 入力と同じ型
+- 実装: 後処理フィルター
+
+```dart
+final filtered = await g.V().filter((row) => row != null).toList();
+final conditional = await g.V().filter((row) {
+  // 複雑な条件ロジック
+  return someCondition(row);
+}).toList();
+```
+
+**map(dynamic Function(dynamic) transformer)**
+- カスタム変換処理
+- パラメータ: 変換関数
+- 出力: 変換された値
+- 実装: 後処理変換器
+
+```dart
+final transformed = await g.V().map((row) => 'Vertex: $row').toList();
+final processed = await g.V().map((row) => processData(row)).toList();
+```
+
+#### 9. ソートと制限（SQL変換）
+
+**limit(int limit)**
+- 結果数を制限
+- パラメータ: 制限数
+- 出力: 入力と同じ型
+
+```dart
+final first10 = await g.V().limit(10).toList();
+```
+
+**skip(int offset)**
+- 指定数の結果をスキップ（ページネーション用）
+- パラメータ: スキップ数
+- 出力: 入力と同じ型
+
+```dart
+// ページネーションの例
+final pageSize = 20;
+final page = 3;
+final results = await g.V()
+    .hasLabel(['person'])
+    .skip((page - 1) * pageSize)
+    .limit(pageSize)
+    .toList();
+```
+
+**order()**
+- 結果をソート（基本実装）
+- 出力: 入力と同じ型
+
+```dart
+final ordered = await g.V().order().toList();
+```
+
+**byId([SortOrder? order])**
+- IDでソート
+- パラメータ: ソート順序（asc, desc, shuffle）
+- 出力: 入力と同じ型
+
+```dart
+final sortedById = await g.V().byId(SortOrder.asc).toList();
+```
+
+**byKey(String key, [SortOrder? order])**
+- プロパティキーでソート
+- パラメータ: プロパティキー、ソート順序
+- 出力: 入力と同じ型
+
+```dart
+final sortedByName = await g.V().byKey('name', SortOrder.asc).toList();
+```
+
+#### 10. グループ化ステップ（基本実装）
+
+**group()**
+- グループ化（基本実装）
+- 出力: グループ化された結果
+
+```dart
+final grouped = await g.V().group().toList();
+```
+
+### 未実装ステップ
+
+以下のステップは現在未実装です：
+
+- **repeat(Traversal traversal)**: 繰り返し処理
+- **until(bool Function(dynamic) predicate)**: 終了条件
+- **times(int times)**: 繰り返し回数
+
+## 実行とクエリ
+
+### 結果の取得
+
+```dart
+// リストとして取得
+final results = await traversal.toList();
+
+// セットとして取得
+final uniqueResults = await traversal.toSet();
+
+// パスリストとして取得
+final paths = await traversal.toPathList();
+
+// ストリームとして取得（未実装）
+// final stream = traversal.stream;
+```
+
+### SQLクエリの確認
+
+```dart
+final traversal = g.V().hasLabel(['person']).out(['knows']);
+final query = traversal.buildQuery();
+print('SQL: ${query.query}');
+print('Parameters: ${query.parameters}');
+```
+
+## 複合クエリの例
+
+### 基本的なトラバーサル
+
+```dart
+// 人物の友人を取得
+final friends = await g.V()
+    .hasLabel(['person'])
+    .hasKey('name', 'Alice')
+    .out(['knows'])
+    .toList();
+
+// 友人の友人を取得
+final friendsOfFriends = await g.V()
+    .hasLabel(['person'])
+    .hasKey('name', 'Alice')
+    .out(['knows'])
+    .out(['knows'])
+    .dedup()
+    .toList();
+
+// 相互に知り合いの関係
+final mutualFriends = await g.V()
+    .hasLabel(['person'])
+    .hasKey('name', 'Alice')
+    .both(['knows'])
+    .toList();
+```
+
+### プロパティ操作
+
+```dart
+// 名前のリストを取得
+final names = await g.V()
+    .hasLabel(['person'])
+    .values(['name'])
+    .toList();
+
+// 人物の詳細情報を取得
+final personDetails = await g.V()
+    .hasLabel(['person'])
+    .valueMap(['name', 'age'])
+    .toList();
+
+// 年齢でフィルタリング
+final adults = await g.V()
+    .hasLabel(['person'])
+    .hasKey('age', 18)  // 正確な値でのマッチング
+    .toList();
+```
+
+### エッジトラバーサル
+
+```dart
+// 人物から出ていくエッジを取得
+final outgoingRelations = await g.V()
+    .hasLabel(['person'])
+    .hasKey('name', 'Alice')
+    .outE()
+    .toList();
+
+// エッジから相手の頂点を取得
+final relatedPeople = await g.V()
+    .hasLabel(['person'])
+    .hasKey('name', 'Alice')
+    .outE(['knows'])
+    .inV()
+    .toList();
+
+// 複雑なエッジトラバーサル
+final connections = await g.V()
+    .hasLabel(['person'])
+    .outE(['knows'])
+    .inV()
+    .outE(['works_with'])
+    .inV()
+    .toList();
+```
+
+### カスタム処理
+
+```dart
+// フィルター関数を使用
+final filtered = await g.V()
+    .hasLabel(['person'])
+    .filter((row) {
+      // 複雑な条件ロジック
+      return row != null;
+    })
+    .toList();
+
+// 変換関数を使用
+final transformed = await g.V()
+    .hasLabel(['person'])
+    .map((row) => 'Person: ${row.toString()}')
+    .toList();
+
+// フィルターと変換の組み合わせ
+final processed = await g.V()
+    .hasLabel(['person'])
+    .filter((row) => row != null)
+    .map((row) => processPersonData(row))
+    .toList();
+```
+
+### 集約とカウント
+
+```dart
+// 頂点数をカウント
+final totalVertices = await g.V().count().toList();
+
+// 特定ラベルの頂点数をカウント
+final personCount = await g.V().hasLabel(['person']).count().toList();
+
+// エッジ数をカウント
+final edgeCount = await g.E().count().toList();
+
+// 重複除去後のカウント
+final uniqueConnections = await g.V()
+    .both(['knows'])
+    .dedup()
+    .count()
+    .toList();
+```
+
+## エラーハンドリング
+
+### 一般的なエラー
+
+1. **型の不一致**: ステップの入力型と出力型が合わない
+2. **存在しないプロパティ**: 存在しないプロパティキーを指定
+3. **無効なID**: 存在しない頂点やエッジのIDを指定
+4. **データベース接続エラー**: データベースファイルの問題
+
+### エラー対策
+
+```dart
+try {
+  final results = await g.V().hasLabel(['person']).toList();
+} catch (e) {
+  print('トラバーサルエラー: $e');
+}
+
+// トランザクション内でのエラーハンドリング
+await graph.transaction((txn) async {
+  try {
+    final vertex = await txn.createVertex(Vertex(
+      labels: {'person'},
+      properties: {'name': 'Alice'}
+    ));
+    return vertex;
+  } catch (e) {
+    print('頂点作成エラー: $e');
+    rethrow;
+  }
+});
+```
+
+## パフォーマンス考慮事項
+
+### SQL変換ステップ vs 後処理ステップ
+
+**SQL変換ステップ（高パフォーマンス）**:
+- `V()`, `E()`, `hasLabel()`, `hasKey()`, `out()`, `in_()`, `both()`
+- `outE()`, `inE()`, `bothE()`, `outV()`, `inV()`, `bothV()`
+- `values()`, `valueMap()`, `count()`, `dedup()`
+
+**後処理ステップ（低パフォーマンス）**:
+- `filter()`, `map()`
+
+### 最適化のヒント
+
+1. **フィルタリングを早期に実行**: `hasLabel()`や`hasKey()`を先に実行
+2. **limit()を使用**: 大量のデータを扱う場合は結果数を制限
+3. **適切なインデックス**: データベーススキーマには適切なインデックスが設定済み
+4. **トランザクションの使用**: 複数の操作をトランザクション内で実行
+
+```dart
+// 良い例：早期フィルタリング
+final optimized = await g.V()
+    .hasLabel(['person'])      // 早期フィルタリング
+    .hasKey('age', 30)         // さらにフィルタリング
+    .out(['knows'])
+    .limit(100)                // 結果数制限
+    .toList();
+
+// 避けるべき例：後処理フィルターの多用
+final inefficient = await g.V()
+    .filter((row) => complexCondition1(row))
+    .filter((row) => complexCondition2(row))
+    .map((row) => expensiveTransform(row))
+    .toList();
+```
+
+## 制限事項
+
+### 現在の制限
+
+1. **ストリーム処理**: `stream`プロパティは未実装
+2. **複雑なパス操作**: `as()`/`select()`は基本実装のみ
+3. **ループ処理**: `repeat()`/`until()`/`times()`は未実装
+4. **高度な集約**: `group()`は基本実装のみ
+5. **トランザクション分離**: 読み取り専用トランザクションは未サポート
+
+### 回避策
+
+```dart
+// ストリーム処理の代替
+final results = await g.V().toList();
+for (final result in results) {
+  // 処理
+}
+
+// 複雑なフィルタリングの代替
+final candidates = await g.V().hasLabel(['person']).toList();
+final filtered = candidates.where((vertex) => complexCondition(vertex));
+
+// ループ処理の代替
+var current = await g.V().hasKey('name', 'Alice').toList();
+for (int i = 0; i < 3; i++) {
+  final ids = current.map((v) => v['id'] as int).toList();
+  current = await g.V(ids).out(['knows']).toList();
+}
+```
+
+## 開発とテスト
+
+### テストの実行
+
+```bash
+# 全テストを実行
+dart test
+
+# 特定のテストファイルを実行
+dart test test/traversal/count_step_test.dart
+
+# トラバーサル関連のテストを実行
+dart test test/traversal/
+```
+
+### デバッグ
+
+```dart
+// クエリの確認
+final traversal = g.V().hasLabel(['person']).out(['knows']);
+final query = traversal.buildQuery();
+print('Generated SQL: ${query.query}');
+print('Parameters: ${query.parameters}');
+
+// 結果の確認
+final results = await graph.database.rawQuery(query.query, query.parameters);
+print('Raw results: $results');
+```
+
+## まとめ
+
+RinneGraphは、SQLiteベースの軽量なグラフデータベースライブラリとして、Gremlin風のトラバーサルAPIを提供します。主要な機能は実装済みで、基本的なグラフ操作から複雑なトラバーサルまで対応可能です。
+
+**主な特徴**:
+- プロパティグラフモデル
+- SQL変換による高パフォーマンス
+- 後処理による柔軟なカスタム処理
+- トランザクション対応
+- 型安全なAPI
+
+**適用場面**:
+- パーソナルデータ管理
+- 関係性の可視化
+- グラフベースの検索
+- ナレッジグラフの構築
+
+## 実装の詳細
+
+### SQL変換アーキテクチャ
+
+RinneGraphのトラバーサルAPIは、各ステップをCTE（Common Table Expression）ベースのSQLクエリに変換します。
+
+#### CTE変換の仕組み
+
+```sql
+-- 例：g.V().hasLabel(['person']).out(['knows']).count()
+WITH
+  cte_0 AS (
+    SELECT vertices.id, 1 as type, vertices.id as value
+    FROM vertices
+  ),
+  cte_1 AS (
+    SELECT cte_0.id, cte_0.type, cte_0.value
+    FROM cte_0
+    JOIN vertex_labels ON cte_0.id = vertex_labels.vertex_id
+    WHERE vertex_labels.label IN (?)
+  ),
+  cte_2 AS (
+    SELECT edges.to_vertex_id as id, 1 as type, edges.to_vertex_id as value
+    FROM cte_1
+    JOIN edges ON cte_1.id = edges.from_vertex_id
+    JOIN edge_labels ON edges.id = edge_labels.edge_id
+    WHERE edge_labels.label IN (?)
+  ),
+  cte_3 AS (
+    SELECT COUNT(*) as id, 2 as type, COUNT(*) as value, COUNT(*) AS count_value
+    FROM cte_2
+  )
+SELECT * FROM cte_3;
+```
+
+#### 型システム
+
+```dart
+enum ElementType {
+  vertex,    // 頂点
+  edge,      // エッジ
+  property,  // プロパティ値
+  value,     // 任意の値
+  both,      // 頂点またはエッジ
+  any,       // 任意の型
+}
+```
+
+各ステップは入力型と出力型を定義し、型の互換性がチェックされます。
+
+### 後処理システム
+
+SQL変換が困難な処理は後処理で実行されます：
+
+```dart
+// 後処理フィルターの例
+final filtered = await g.V()
+    .hasLabel(['person'])  // SQL変換
+    .filter((row) {        // 後処理
+      return complexLogic(row);
+    })
+    .toList();
+
+// 後処理変換器の例
+final transformed = await g.V()
+    .hasLabel(['person'])  // SQL変換
+    .map((row) {           // 後処理
+      return transformData(row);
+    })
+    .toList();
+```
+
+後処理は以下の順序で実行されます：
+1. SQLクエリの実行
+2. 後処理フィルターの順次適用
+3. 後処理変換器の順次適用
+
+## トランザクション対応トラバーサルAPI
+
+### 概要
+
+トランザクション内でトラバーサルAPIを使用することで、データの一貫性を保ちながら複雑なグラフ操作を実行できます。
+
+### 基本的な使用方法
+
+```dart
+await graph.transaction((txn) async {
+  // トランザクション内でトラバーサルソースを取得
+  final g = txn.traversal();
+
+  // 通常のトラバーサルAPIと同じように使用
+  final vertices = await g.V().hasLabel(['person']).toList();
+  final edges = await g.E().hasLabel(['knows']).toList();
+
+  // CRUD操作と組み合わせ
+  final newVertex = await txn.createVertex(vertex);
+  final neighbors = await g.V([newVertex.id!]).out().toList();
+
+  return neighbors;
+});
+```
+
+### ロールバック機能
+
+トランザクション内で例外が発生した場合、すべての変更が自動的にロールバックされます：
+
+```dart
+try {
+  await graph.transaction((txn) async {
+    final g = txn.traversal();
+
+    // データを作成
+    final vertex = await txn.createVertex(newVertex);
+
+    // 条件チェック
+    final count = await g.V().hasLabel(['person']).count().toList();
+    if (count.first['count_value'] > 100) {
+      throw Exception('Too many persons'); // 自動ロールバック
+    }
+
+    // 追加操作
+    await txn.createEdge(newEdge);
+  });
+} catch (e) {
+  print('Transaction rolled back: $e');
+}
+```
+
+### 複雑な業務ロジックの実装
+
+```dart
+await graph.transaction((txn) async {
+  final g = txn.traversal();
+
+  // 既存データの検証
+  final existingConnections = await g.V([userId])
+      .out(['follows'])
+      .count()
+      .toList();
+
+  final currentCount = existingConnections.first['count_value'] as int;
+  if (currentCount >= maxConnections) {
+    throw Exception('Connection limit exceeded');
+  }
+
+  // 新しい接続を作成
+  await txn.createEdge(Edge(
+    fromVertexId: userId,
+    toVertexId: targetUserId,
+    labels: {'follows'},
+  ));
+
+  // 作成後の検証
+  final updatedConnections = await g.V([userId])
+      .out(['follows'])
+      .toList();
+
+  return updatedConnections;
+});
+```
+
+### 利点
+
+1. **データ整合性**: トラバーサルクエリとCRUD操作が同一トランザクション内で実行
+2. **自動ロールバック**: 例外発生時にすべての変更が自動的に取り消される
+3. **一貫したビュー**: トランザクション内では一貫したデータビューを提供
+4. **既存APIとの互換性**: 通常のトラバーサルAPIと同じインターフェース
+
+## 高度な使用例
+
+### リスト型プロパティの活用
+
+```dart
+// 開発者のスキルセットを管理
+final alice = await graph.transaction((txn) async {
+  return await txn.createVertex(Vertex(
+    labels: {'Developer'},
+    properties: {
+      'name': 'Alice',
+      'skills': ['dart', 'flutter', 'python', 'sql'],
+      'experience_years': [3, 2, 5, 4],
+      'certifications': ['AWS', 'Google Cloud'],
+      'active_projects': ['mobile_app', 'web_dashboard'],
+    },
+  ));
+});
+
+// スキル検索
+final dartDevelopers = await graph.traversal()
+    .V()
+    .hasLabel(['Developer'])
+    .listContainsExact('skills', 'dart')
+    .toList();
+
+// 複数スキルを持つ開発者
+final fullStackDevs = await graph.traversal()
+    .V()
+    .hasLabel(['Developer'])
+    .listContainsExact('skills', 'dart')
+    .listContainsExact('skills', 'python')
+    .toList();
+
+// 特定数のスキルを持つ開発者
+final experiencedDevs = await graph.traversal()
+    .V()
+    .hasLabel(['Developer'])
+    .listLength('skills', 4)  // 4つのスキルを持つ
+    .toList();
+
+// プロジェクトチーム分析
+final projectMembers = await graph.traversal()
+    .V()
+    .hasLabel(['Developer'])
+    .listContainsExact('active_projects', 'mobile_app')
+    .toList();
+```
+
+### 複雑なグラフ分析
+
+```dart
+// ソーシャルネットワーク分析
+Future<Map<String, dynamic>> analyzeSocialNetwork(Graph graph) async {
+  final g = graph.traversal();
+
+  // 全人物数
+  final totalPeople = await g.V().hasLabel(['person']).count().toList();
+
+  // 関係数
+  final totalRelations = await g.E().hasLabel(['knows']).count().toList();
+
+  // 最も多くの友人を持つ人（後処理で実装）
+  final peopleWithFriends = await g.V()
+      .hasLabel(['person'])
+      .map((person) async {
+        final friendCount = await g.V([person['id']])
+            .out(['knows'])
+            .count()
+            .toList();
+        return {
+          'person': person,
+          'friendCount': friendCount.first,
+        };
+      })
+      .toList();
+
+  return {
+    'totalPeople': totalPeople.first,
+    'totalRelations': totalRelations.first,
+    'analysis': peopleWithFriends,
+  };
+}
+```
+
+### パスの追跡
+
+```dart
+// 関係のパスを追跡
+Future<List<List<dynamic>>> findConnectionPaths(
+  Graph graph,
+  String fromName,
+  String toName
+) async {
+  final g = graph.traversal();
+
+  // 直接の関係
+  final directConnection = await g.V()
+      .hasLabel(['person'])
+      .hasKey('name', fromName)
+      .out(['knows'])
+      .hasKey('name', toName)
+      .toList();
+
+  if (directConnection.isNotEmpty) {
+    return [['direct', fromName, toName]];
+  }
+
+  // 2段階の関係
+  final twoStepConnections = await g.V()
+      .hasLabel(['person'])
+      .hasKey('name', fromName)
+      .out(['knows'])
+      .filter((intermediate) => intermediate['name'] != toName)
+      .out(['knows'])
+      .hasKey('name', toName)
+      .toList();
+
+  // パスの構築は後処理で実装
+  return twoStepConnections.map((connection) =>
+      ['two-step', fromName, 'intermediate', toName]
+  ).toList();
+}
+```
+
+### データの一括処理
+
+```dart
+// 大量データの効率的な処理
+Future<void> processBulkData(Graph graph) async {
+  await graph.transaction((txn) async {
+    // バッチでの頂点作成
+    final vertices = <Vertex>[];
+    for (int i = 0; i < 1000; i++) {
+      vertices.add(Vertex(
+        labels: {'item'},
+        properties: {'index': i, 'category': 'batch_${i % 10}'}
+      ));
+    }
+
+    // 一括作成
+    final createdVertices = <Vertex>[];
+    for (final vertex in vertices) {
+      createdVertices.add(await txn.createVertex(vertex));
+    }
+
+    // 関係の一括作成
+    for (int i = 0; i < createdVertices.length - 1; i++) {
+      await txn.createEdge(Edge(
+        fromVertexId: createdVertices[i].id!,
+        toVertexId: createdVertices[i + 1].id!,
+        labels: {'next'},
+      ));
+    }
+  });
+}
+```
+
+### カスタムフィルターとトランスフォーマー
+
+```dart
+// 複雑なフィルタリング条件
+bool isActiveUser(dynamic userData) {
+  if (userData is! Map<String, dynamic>) return false;
+
+  final lastLogin = userData['lastLogin'] as DateTime?;
+  final postCount = userData['postCount'] as int? ?? 0;
+
+  if (lastLogin == null) return false;
+
+  final daysSinceLogin = DateTime.now().difference(lastLogin).inDays;
+  return daysSinceLogin <= 30 && postCount >= 5;
+}
+
+// カスタム変換処理
+Map<String, dynamic> enrichUserData(dynamic userData) {
+  if (userData is! Map<String, dynamic>) return {};
+
+  final user = Map<String, dynamic>.from(userData);
+
+  // 年齢グループの計算
+  final age = user['age'] as int? ?? 0;
+  user['ageGroup'] = age < 18 ? 'minor' :
+                     age < 65 ? 'adult' : 'senior';
+
+  // アクティビティスコアの計算
+  final postCount = user['postCount'] as int? ?? 0;
+  final friendCount = user['friendCount'] as int? ?? 0;
+  user['activityScore'] = (postCount * 2 + friendCount).toDouble();
+
+  return user;
+}
+
+// 使用例
+Future<List<Map<String, dynamic>>> getActiveUsers(Graph graph) async {
+  return await graph.traversal()
+      .V()
+      .hasLabel(['user'])
+      .filter(isActiveUser)
+      .map(enrichUserData)
+      .toList()
+      .then((results) => results.cast<Map<String, dynamic>>());
+}
+```
+
+## トラブルシューティング
+
+### よくある問題と解決策
+
+#### 1. 型エラー
+
+```dart
+// 問題：型の不一致
+// final result = await g.E().out(['knows']).toList(); // エラー
+
+// 解決：適切な型変換
+final result = await g.E().inV().out(['knows']).toList(); // OK
+```
+
+#### 2. 空の結果
+
+```dart
+// 問題：期待した結果が得られない
+final result = await g.V().hasLabel(['person']).hasKey('age', '30').toList();
+
+// 解決：データ型の確認
+final result = await g.V().hasLabel(['person']).hasKey('age', 30).toList(); // 文字列ではなく数値
+```
+
+#### 3. パフォーマンス問題
+
+```dart
+// 問題：遅いクエリ
+final result = await g.V()
+    .filter((v) => expensiveOperation(v))
+    .hasLabel(['person'])
+    .toList();
+
+// 解決：フィルタリングの順序を最適化
+final result = await g.V()
+    .hasLabel(['person'])  // 先にSQL変換でフィルタリング
+    .filter((v) => expensiveOperation(v))
+    .toList();
+```
+
+#### 4. メモリ使用量
+
+```dart
+// 問題：大量のデータでメモリ不足
+final allData = await g.V().toList();
+
+// 解決：ページネーションの実装
+Future<List<dynamic>> getPaginatedData(Graph graph, int page, int size) async {
+  final offset = page * size;
+  return await graph.traversal()
+      .V()
+      .limit(size)
+      // オフセットは手動で実装する必要がある
+      .toList();
+}
+```
+
+### デバッグテクニック
+
+```dart
+// 1. SQLクエリの確認
+void debugQuery(Traversal traversal) {
+  final query = traversal.buildQuery();
+  print('SQL: ${query.query}');
+  print('Parameters: ${query.parameters}');
+}
+
+// 2. 中間結果の確認
+Future<void> debugTraversal(Graph graph) async {
+  final g = graph.traversal();
+
+  // ステップごとの結果を確認
+  final step1 = await g.V().toList();
+  print('Step 1 (V): ${step1.length} results');
+
+  final step2 = await g.V().hasLabel(['person']).toList();
+  print('Step 2 (hasLabel): ${step2.length} results');
+
+  final step3 = await g.V().hasLabel(['person']).out(['knows']).toList();
+  print('Step 3 (out): ${step3.length} results');
+}
+
+// 3. データベースの直接確認
+Future<void> inspectDatabase(Graph graph) async {
+  // 頂点数の確認
+  final vertexCount = await graph.database.rawQuery(
+    'SELECT COUNT(*) as count FROM vertices'
+  );
+  print('Total vertices: ${vertexCount.first['count']}');
+
+  // ラベルの確認
+  final labels = await graph.database.rawQuery(
+    'SELECT DISTINCT label FROM vertex_labels'
+  );
+  print('Vertex labels: ${labels.map((r) => r['label']).toList()}');
+
+  // プロパティの確認
+  final properties = await graph.database.rawQuery(
+    'SELECT DISTINCT key FROM vertex_properties LIMIT 10'
+  );
+  print('Property keys: ${properties.map((r) => r['key']).toList()}');
+}
+```
+
+## ベストプラクティス
+
+### 1. 効率的なクエリの作成
+
+```dart
+// Good: 早期フィルタリング
+final efficient = await g.V()
+    .hasLabel(['person'])      // 最初にラベルでフィルタリング
+    .hasKey('active', true)    // 次にプロパティでフィルタリング
+    .out(['knows'])
+    .hasLabel(['person'])      // 結果もフィルタリング
+    .limit(100)                // 結果数を制限
+    .toList();
+
+// Bad: 後処理フィルターの多用
+final inefficient = await g.V()
+    .filter((v) => v['labels'].contains('person'))
+    .filter((v) => v['active'] == true)
+    .out(['knows'])
+    .filter((v) => v['labels'].contains('person'))
+    .toList();
+```
+
+### 2. トランザクションの適切な使用
+
+```dart
+// Good: 関連する操作をまとめる
+await graph.transaction((txn) async {
+  final user = await txn.createVertex(Vertex(
+    labels: {'user'},
+    properties: {'name': 'Alice'}
+  ));
+
+  final profile = await txn.createVertex(Vertex(
+    labels: {'profile'},
+    properties: {'bio': 'Software Developer'}
+  ));
+
+  await txn.createEdge(Edge(
+    fromVertexId: user.id!,
+    toVertexId: profile.id!,
+    labels: {'has_profile'}
+  ));
+
+  return user;
+});
+
+// Bad: 個別のトランザクション
+final user = await graph.transaction((txn) => txn.createVertex(...));
+final profile = await graph.transaction((txn) => txn.createVertex(...));
+await graph.transaction((txn) => txn.createEdge(...));
+```
+
+### 3. エラーハンドリング
+
+```dart
+// Good: 適切なエラーハンドリング
+Future<List<dynamic>> safeQuery(Graph graph) async {
+  try {
+    return await graph.traversal()
+        .V()
+        .hasLabel(['person'])
+        .toList();
+  } on DatabaseException catch (e) {
+    print('Database error: $e');
+    return [];
+  } on ArgumentError catch (e) {
+    print('Invalid argument: $e');
+    return [];
+  } catch (e) {
+    print('Unexpected error: $e');
+    rethrow;
+  }
+}
+```
+
+### 4. リソース管理
+
+```dart
+// Good: 適切なリソース管理
+Future<void> processGraph() async {
+  final graph = await Graph.open('data.db');
+  try {
+    // グラフ操作
+    await performOperations(graph);
+  } finally {
+    await graph.close();
+  }
+}
+
+// Better: try-with-resourcesパターン
+Future<T> withGraph<T>(
+  String path,
+  Future<T> Function(Graph) operation
+) async {
+  final graph = await Graph.open(path);
+  try {
+    return await operation(graph);
+  } finally {
+    await graph.close();
+  }
+}
+```
+
+## データベース初期化チェック機能
+
+### 概要
+
+RinneGraphライブラリでは、SQLiteファイルが本ライブラリ用に適切に初期化されているかをチェックする専用APIを提供しています。この機能により、データベースファイルを開く前に安全に検証できます。
+
+### 主要API
+
+#### DatabaseManager.validateDatabaseFile()
+
+```dart
+Future<DatabaseValidationResult> validateDatabaseFile(
+  String path, {
+  DatabaseValidationOptions options = DatabaseValidationOptions.defaultOptions,
+})
+```
+
+- **目的**: SQLiteファイルがRinneGraph用に初期化されているかをチェック
+- **パラメータ**:
+  - `path`: チェックするデータベースファイルのパス
+  - `options`: 検証オプション（省略時はデフォルト）
+- **戻り値**: `DatabaseValidationResult` 検証結果
+- **例外**: `DatabaseValidationException` ファイルアクセスエラーなど
+- **特徴**: 読み取り専用モードで安全に検証
+
+### 検証結果クラス
+
+#### DatabaseValidationResult
+
+```dart
+class DatabaseValidationResult {
+  final bool isValid;                    // データベースが有効かどうか
+  final bool isInitialized;              // 本ライブラリ用に初期化されているか
+  final List<String> missingTables;      // 不足しているテーブル
+  final List<String> missingIndexes;     // 不足しているインデックス
+  final List<String> missingTriggers;    // 不足しているトリガー
+  final int? schemaVersion;              // スキーマバージョン
+  final String? errorMessage;            // エラーメッセージ
+
+  bool get isFullyInitialized;           // 完全に初期化されているか
+  String get description;                // 詳細な説明
+}
+```
+
+#### DatabaseValidationOptions
+
+```dart
+class DatabaseValidationOptions {
+  final bool checkTables;                // テーブルの存在チェック
+  final bool checkIndexes;               // インデックスの存在チェック
+  final bool checkTriggers;              // トリガーの存在チェック
+  final bool checkSchemaVersion;         // スキーマバージョンチェック
+  final bool strictMode;                 // 厳密モード
+
+  // 定義済みオプション
+  static const defaultOptions;           // デフォルト検証
+  static const basic;                    // 基本検証（テーブルのみ）
+  static const strict;                   // 厳密検証
+}
+```
+
+### 検証対象要素
+
+#### 必須テーブル
+- `vertices` - 頂点テーブル
+- `edges` - エッジテーブル
+- `vertex_labels` - 頂点ラベルテーブル
+- `edge_labels` - エッジラベルテーブル
+- `vertex_properties` - 頂点プロパティテーブル
+- `edge_properties` - エッジプロパティテーブル
+
+#### 必須インデックス
+- `idx_vertex_labels` - 頂点ラベルインデックス
+- `idx_edge_labels` - エッジラベルインデックス
+- `idx_edges_from_to` - エッジ接続インデックス
+- `idx_vertex_properties_key_type_value` - 頂点プロパティインデックス
+- `idx_edge_properties_key_type_value` - エッジプロパティインデックス
+
+#### 必須トリガー
+- `update_vertex_timestamp` - 頂点更新時刻トリガー
+- `update_edge_timestamp` - エッジ更新時刻トリガー
+
+### 使用例
+
+#### 基本的な検証
+
+```dart
+final manager = DatabaseManager();
+final result = await manager.validateDatabaseFile('my_graph.db');
+
+if (result.isFullyInitialized) {
+  // 安全にデータベースを開ける
+  final graph = await Graph.open('my_graph.db');
+} else {
+  // 問題がある場合の処理
+  print('データベースに問題があります: ${result.description}');
+}
+```
+
+#### 検証オプションの使用
+
+```dart
+// 基本検証のみ
+final basicResult = await manager.validateDatabaseFile(
+  'my_graph.db',
+  options: DatabaseValidationOptions.basic,
+);
+
+// カスタム検証
+final customResult = await manager.validateDatabaseFile(
+  'my_graph.db',
+  options: DatabaseValidationOptions(
+    checkTables: true,
+    checkIndexes: true,
+    checkTriggers: false,
+    checkSchemaVersion: true,
+  ),
+);
+```
+
+#### エラーハンドリング
+
+```dart
+try {
+  final result = await manager.validateDatabaseFile('my_graph.db');
+
+  if (!result.isValid) {
+    // ファイルが無効
+    handleInvalidFile(result.errorMessage);
+  } else if (!result.isInitialized) {
+    // 初期化されていない
+    handleUninitializedFile();
+  } else if (!result.isFullyInitialized) {
+    // 部分的に初期化済み
+    handlePartiallyInitialized(result);
+  }
+
+} on DatabaseValidationException catch (e) {
+  // 検証エラー
+  handleValidationError(e.message);
+}
+```
+
+### 実装上の注意点
+
+#### LLM向け開発ガイドライン
+
+1. **安全性の確保**
+   - 検証は読み取り専用モードで実行
+   - 既存データに影響を与えない
+   - ファイルロックの考慮
+
+2. **適切なエラーハンドリング**
+   - `DatabaseValidationException`の適切なキャッチ
+   - 詳細なエラーメッセージの提供
+   - ユーザーフレンドリーなメッセージ
+
+3. **パフォーマンス考慮**
+   - 大きなファイルでの検証時間
+   - 必要最小限の検証オプション使用
+   - キャッシュ機能の活用（将来実装）
+
+4. **使用パターン**
+   - アプリケーション起動時の検証
+   - ファイル選択時の事前チェック
+   - データベース移行時の検証
+
+### テスト戦略
+
+#### プロパティベーステスト対応
+- 存在しないファイルの検証
+- 正常に初期化されたデータベースの検証
+- 空のデータベースファイルの検証
+- 各種検証オプションの動作確認
+- エラーケースの検証
+
+#### テストファイル
+- `test/database_validation_test.dart` - 包括的なテストケース
+- kiri_checkを使用したプロパティベーステスト
+- 各種検証シナリオの網羅
+
+## インデックス管理API
+
+RinneGraphライブラリでは、ユーザーが自身のデータベースのパフォーマンスを最適化するためのインデックス管理APIを提供しています。これにより、頻繁にアクセスされるプロパティに対してSQLレベルでインデックスを作成・管理できます。
+
+### 基本概念
+
+- **ユーザー責任**: インデックスの作成・削除・管理はユーザーの責任で行います
+- **パフォーマンス最適化**: 頻繁にアクセスされるプロパティにインデックスを作成することで、クエリ性能を向上させます
+- **柔軟性**: アプリケーション固有のデータアクセスパターンに応じて最適化できます
+
+### IndexEntityType enum
+
+インデックスを作成する対象を指定します：
+
+```dart
+enum IndexEntityType {
+  vertices,  // 頂点プロパティのみ
+  edges,     // エッジプロパティのみ
+  both,      // 両方（将来実装）
+}
+```
+
+### PropertyIndexInfo クラス
+
+作成されたインデックスの情報を表します：
+
+```dart
+class PropertyIndexInfo {
+  final String name;                    // インデックス名
+  final String propertyKey;             // プロパティキー
+  final IndexEntityType entityType;     // 対象エンティティタイプ
+}
+```
+
+### インデックス管理メソッド
+
+#### createPropertyIndex()
+
+プロパティインデックスを作成します：
+
+```dart
+Future<void> createPropertyIndex(
+  String propertyKey, {
+  IndexEntityType entityType = IndexEntityType.vertices,
+  String? indexName,
+});
+```
+
+**パラメータ:**
+- `propertyKey`: インデックスを作成するプロパティキー
+- `entityType`: インデックスを作成するエンティティタイプ（デフォルト: vertices）
+- `indexName`: インデックス名（省略時は自動生成）
+
+**使用例:**
+```dart
+final graph = await Graph.open('my_graph.db');
+
+// 頂点の'name'プロパティにインデックス作成
+await graph.createPropertyIndex('name');
+
+// エッジの'weight'プロパティにインデックス作成
+await graph.createPropertyIndex(
+  'weight',
+  entityType: IndexEntityType.edges,
+);
+
+// カスタム名でインデックス作成
+await graph.createPropertyIndex(
+  'title',
+  indexName: 'idx_custom_title',
+);
+```
+
+#### dropPropertyIndex()
+
+プロパティインデックスを削除します：
+
+```dart
+Future<void> dropPropertyIndex(String indexName);
+```
+
+**使用例:**
+```dart
+// インデックスを削除
+await graph.dropPropertyIndex('idx_custom_title');
+```
+
+#### listPropertyIndexes()
+
+作成済みプロパティインデックスの一覧を取得します：
+
+```dart
+Future<List<PropertyIndexInfo>> listPropertyIndexes();
+```
+
+**使用例:**
+```dart
+final indexes = await graph.listPropertyIndexes();
+for (final index in indexes) {
+  print('${index.name}: ${index.propertyKey} (${index.entityType})');
+}
+```
+
+#### hasPropertyIndex()
+
+指定されたプロパティにインデックスが存在するかチェックします：
+
+```dart
+Future<bool> hasPropertyIndex(
+  String propertyKey, {
+  IndexEntityType entityType = IndexEntityType.vertices,
+});
+```
+
+**使用例:**
+```dart
+final hasIndex = await graph.hasPropertyIndex('name');
+if (hasIndex) {
+  print('nameプロパティにはインデックスが存在します');
+}
+```
+
+### 実用的な使用例
+
+#### Arizalアプリケーションでの使用例
+
+```dart
+class AppIndexManager {
+  static Future<void> ensureIndexes(Graph graph) async {
+    // システムプロパティのインデックス
+    await graph.createPropertyIndex('_s_entity_id', indexName: 'idx_entity_id');
+    await graph.createPropertyIndex('_s_entity_kind', indexName: 'idx_entity_kind');
+    await graph.createPropertyIndex('_s_description_ref', indexName: 'idx_description_ref');
+    await graph.createPropertyIndex('_s_has_type', indexName: 'idx_has_type');
+
+    // ユーザーデータの頻繁にアクセスされるプロパティ
+    await graph.createPropertyIndex('name', indexName: 'idx_name');
+    await graph.createPropertyIndex('title', indexName: 'idx_title');
+    await graph.createPropertyIndex('id', indexName: 'idx_user_id');
+    await graph.createPropertyIndex('type', indexName: 'idx_user_type');
+  }
+
+  static Future<void> optimizeForSearch(Graph graph) async {
+    // 検索用インデックス
+    await graph.createPropertyIndex('description');
+    await graph.createPropertyIndex('tags');
+    await graph.createPropertyIndex('category');
+  }
+}
+
+// アプリケーション起動時
+final graph = await Graph.open('rinne_graph_desktop.db');
+await AppIndexManager.ensureIndexes(graph);
+```
+
+#### インデックス管理の例
+
+```dart
+Future<void> manageIndexes(Graph graph) async {
+  // 現在のインデックス一覧を確認
+  final currentIndexes = await graph.listPropertyIndexes();
+  print('現在のインデックス数: ${currentIndexes.length}');
+
+  // 特定のプロパティにインデックスが存在するかチェック
+  if (!await graph.hasPropertyIndex('name')) {
+    // 存在しない場合は作成
+    await graph.createPropertyIndex('name');
+    print('nameプロパティにインデックスを作成しました');
+  }
+
+  // 不要なインデックスを削除
+  for (final index in currentIndexes) {
+    if (index.propertyKey.startsWith('temp_')) {
+      await graph.dropPropertyIndex(index.name);
+      print('一時インデックス ${index.name} を削除しました');
+    }
+  }
+}
+```
+
+### パフォーマンス考慮事項
+
+#### インデックス作成のメリット
+- **クエリ性能向上**: 頻繁にアクセスされるプロパティの検索が高速化
+- **トラバーサル最適化**: `hasKey()`ステップなどのフィルタリングが効率化
+
+#### インデックス作成のコスト
+- **ストレージ使用量**: インデックスによるディスク使用量の増加
+- **更新性能**: データ更新時のインデックス維持コスト
+- **作成時間**: 大量データでのインデックス作成時間
+
+#### 推奨事項
+1. **頻繁にアクセスされるプロパティ**: `name`, `id`, `type`などの基本プロパティ
+2. **システムプロパティ**: `_s_`で始まるシステム内部プロパティ
+3. **検索対象プロパティ**: ユーザーが検索で使用するプロパティ
+4. **フィルタリング対象**: `hasKey()`ステップで頻繁に使用されるプロパティ
+
+### 注意事項
+
+1. **インデックス管理はユーザー責任**: ライブラリは機能のみ提供し、最適化戦略はユーザーが決定
+2. **適切な命名**: インデックス名の重複を避け、分かりやすい名前を使用
+3. **定期的な見直し**: アプリケーションの成長に応じてインデックス戦略を見直し
+4. **テスト環境での検証**: 本番環境での適用前にテスト環境でパフォーマンスを検証
+
+## ラベルイベントとコールバック機能
+
+### 概要
+
+RinneGraphライブラリでは、グラフデータの変更（特にラベルの追加・削除）を監視するためのイベントシステムを提供しています。この機能により、アプリケーション層でラベルメタデータの管理やリアルタイムな統計更新などを実装できます。
+
+### イベント型
+
+#### LabelEventType（ラベルイベントの種類）
+
+```dart
+enum LabelEventType {
+  added,    // ラベルが新しく追加された
+  removed,  // ラベルが削除された
+  updated,  // ラベルを持つエンティティが更新された
+}
+```
+
+#### VertexLabelEvent（頂点ラベルイベント）
+
+```dart
+class VertexLabelEvent {
+  final int vertexId;           // 頂点ID
+  final String label;           // 変更されたラベル
+  final Set<String> allLabels;  // 現在の全ラベル
+  final LabelEventType eventType; // イベントの種類
+  final String transactionId;  // トランザクションID
+  final DateTime timestamp;    // イベント発生時刻
+}
+```
+
+#### EdgeLabelEvent（エッジラベルイベント）
+
+```dart
+class EdgeLabelEvent {
+  final int edgeId;             // エッジID
+  final String label;           // 変更されたラベル
+  final Set<String> allLabels;  // 現在の全ラベル
+  final LabelEventType eventType; // イベントの種類
+  final String transactionId;  // トランザクションID
+  final DateTime timestamp;    // イベント発生時刻
+}
+```
+
+### イベントリスナーの登録
+
+#### 基本的な使用方法
+
+```dart
+final graph = await Graph.open('my_graph.db');
+
+// 頂点ラベルイベントを監視
+graph.onVertexLabelEvent((event) {
+  print('頂点 ${event.vertexId} のラベル "${event.label}" が ${event.eventType}');
+  print('現在のラベル: ${event.allLabels}');
+});
+
+// エッジラベルイベントを監視
+graph.onEdgeLabelEvent((event) {
+  print('エッジ ${event.edgeId} のラベル "${event.label}" が ${event.eventType}');
+});
+```
+
+#### イベントマネージャーを直接使用
+
+```dart
+// より詳細な制御が必要な場合
+graph.eventManager.addEventListener<VertexLabelEvent>((event) {
+  // 頂点ラベルイベントの処理
+});
+
+// リスナーの削除
+void myCallback(VertexLabelEvent event) {
+  // 処理
+}
+
+graph.eventManager.addEventListener<VertexLabelEvent>(myCallback);
+// 後で削除
+graph.eventManager.removeEventListener<VertexLabelEvent>(myCallback);
+```
+
+### 使用例
+
+#### 基本的なイベント監視
+
+```dart
+final graph = await Graph.open('my_graph.db');
+
+// 頂点ラベルイベントを監視
+graph.onVertexLabelEvent((event) {
+  print('頂点 ${event.vertexId} のラベル "${event.label}" が ${event.eventType}');
+});
+
+// エッジラベルイベントを監視
+graph.onEdgeLabelEvent((event) {
+  print('エッジ ${event.edgeId} のラベル "${event.label}" が ${event.eventType}');
+});
+
+// 頂点を作成（イベントが発火される）
+await graph.transaction((txn) async {
+  await txn.createVertex(Vertex(
+    labels: {'person', 'user'},
+    properties: {'name': 'Alice'},
+  ));
+});
+```
+
+#### アプリケーションでの活用例
+
+```dart
+class LabelMetadataManager {
+  final Graph _graph;
+
+  LabelMetadataManager(this._graph) {
+    // ラベルイベントを監視してメタデータを管理
+    _graph.onVertexLabelEvent((event) {
+      if (event.eventType == LabelEventType.added) {
+        _ensureLabelMetadataExists(event.label);
+      }
+    });
+  }
+
+  void _ensureLabelMetadataExists(String label) {
+    // ラベルメタデータが存在しない場合は作成
+    // アプリケーション側のデータベースに保存
+  }
+}
+```
+
+### 注意事項
+
+- コールバック内でエラーが発生してもトランザクションには影響しません
+- 重い処理は非同期で実行することを推奨します
+- リスナーが不要になったら適切に削除してください
+
+## ラベル統計情報の拡張
+
+### 概要
+
+RinneGraphライブラリでは、基本的なラベル統計情報（ラベル別使用数）に加えて、より詳細なラベル分析機能を提供しています。
+
+### 基本的な統計情報の取得
+
+```dart
+final graph = await Graph.open('my_graph.db');
+final stats = await graph.getStatistics();
+
+// ラベル別使用数の確認
+print('頂点ラベル統計:');
+stats.vertexLabelCounts.forEach((label, count) {
+  print('  $label: $count個');
+});
+
+print('エッジラベル統計:');
+stats.edgeLabelCounts.forEach((label, count) {
+  print('  $label: $count個');
+});
+```
+
+### 詳細なラベル分析
+
+#### LabelAnalyzer の使用
+
+```dart
+final analyzer = graph.labelAnalyzer;
+
+// ラベル組み合わせ分析
+final combinations = await analyzer.analyzeLabelCombinations();
+print('ラベル組み合わせ: $combinations');
+
+// ラベル関連性分析
+final relationships = await analyzer.analyzeLabelRelationships();
+print('ラベル関連性: $relationships');
+
+// 人気ラベルの検出
+final popularLabels = await analyzer.findPopularLabels();
+print('人気ラベル: $popularLabels');
+
+// 使用頻度の低いラベルの検出
+final underutilizedLabels = await analyzer.findUnderutilizedLabels();
+print('使用頻度の低いラベル: $underutilizedLabels');
+
+// 包括的なレポート生成
+final report = await analyzer.generateReport();
+print('分析レポート: ${report.getSummary()}');
+```
+
+### 利用可能な分析機能
+
+- **ラベル組み合わせ分析**: 複数ラベルを持つエンティティの組み合わせパターンを分析
+- **ラベル関連性分析**: エッジを通じて接続されているラベル間の関係を分析
+- **ラベル分布分析**: ラベルの使用頻度と分布を分析
+- **ラベルネットワーク構築**: ラベル間の関連性ネットワークを構築
+
+### 注意事項
+
+- 詳細分析は大量データに対してはパフォーマンスに影響する可能性があります
+- 必要に応じて結果をキャッシュすることを推奨します
+- 基本統計情報は `graph.getStatistics()` で効率的に取得できます
+
+## コマンドラインツール
+
+RinneGraphライブラリには、グラフデータベースの作成、データのインポート/エクスポート、統計情報の表示、クエリ実行などを行う包括的なコマンドラインツール `rinne` が付属しています。
+
+### インストールと基本使用方法
+
+```bash
+# ツールの実行
+rinne <command> [options]
+
+# ヘルプの表示
+rinne --help
+
+# バージョン情報の表示
+rinne --version
+
+# 特定コマンドのヘルプ
+rinne <command> --help
+```
+
+### ファイルパス処理
+
+コマンドラインツールは相対パスと絶対パスの両方をサポートしています：
+
+- **相対パス**: 現在のワーキングディレクトリを基準として解決
+- **絶対パス**: 指定されたパスをそのまま使用
+- **隠しディレクトリ**: `.dart_tool/sqflite_common_ffi/databases/` などの隠しディレクトリは使用せず、指定されたパスに直接ファイルを作成
+
+```bash
+# 相対パス（推奨）
+rinne create --output my_graph.db
+rinne info --database ./data/graph.db
+
+# 絶対パス
+rinne create --output /path/to/my_graph.db
+rinne info --database /absolute/path/to/graph.db
+```
+
+### 利用可能なコマンド
+
+#### 1. create - データベース作成
+
+新しいRinneGraphデータベースを作成します。作成されたデータベースは空の状態で、必要なテーブル構造が初期化されます。
+
+```bash
+# 基本的な作成
+rinne create --output graph.db
+
+# 説明付きで作成
+rinne create --output graph.db --description "プロジェクト用グラフDB"
+
+# 既存ファイルを上書き
+rinne create --output graph.db --overwrite
+
+# 詳細ログ付きで作成
+rinne create --output graph.db --description "新プロジェクト" --verbose
+
+# 相対パスでの作成
+rinne create --output ./data/my_graph.db --description "データディレクトリ内"
+
+# 絶対パスでの作成
+rinne create --output /home/user/projects/graph.db --description "絶対パス指定"
+```
+
+**オプション**:
+- `--output, -o <file>`: 出力ファイルパス（必須）
+- `--description, -d <text>`: データベースの説明
+- `--overwrite`: 既存ファイルを上書き
+- `--verbose, -v`: 詳細ログを出力
+- `--help, -h`: ヘルプを表示
+
+**動作詳細**:
+- 指定されたパスに新しいSQLiteデータベースファイルを作成
+- RinneGraph用のテーブル構造を自動的に初期化
+- 相対パスは現在のワーキングディレクトリを基準として解決
+- 既存ファイルがある場合は `--overwrite` オプションが必要
+- 作成後は頂点数・エッジ数ともに0の空のデータベース
+
+#### 2. import - データインポート
+
+外部ファイルからデータをインポートします。JSONとCSV形式をサポートしています。
+
+##### JSONインポート
+
+標準的なJSONファイルをサポートします。
+
+```bash
+# 基本的なJSONインポート
+rinne import json --input data/graph.json --database graph.db
+
+# 既存データベースに追加
+rinne import json --input data/graph.json --database graph.db --append
+
+# バリデーション無効化
+rinne import json --input data/graph.json --database graph.db --no-validation
+
+# ドライラン（検証のみ）
+rinne import json --input data/graph.json --database graph.db --dry-run
+
+# エラー時の動作指定
+rinne import json \
+  --input data/graph.json \
+  --database graph.db \
+  --on-error skip \
+  --verbose
+
+# 詳細ログ付きインポート
+rinne import json \
+  --input data/large_graph.json \
+  --database graph.db \
+  --verbose \
+  --on-error warn
+```
+
+**JSONインポート固有オプション**:
+- `--input, -i <file>`: 入力JSONファイル（必須）
+
+**サポートするJSON形式**:
+
+```json
+{
+  "nodes": [
+    {
+      "id": "node1",
+      "labels": ["Person"],
+      "properties": {"name": "太郎", "age": 30}
+    }
+  ],
+  "links": [
+    {
+      "id": "link1",
+      "source_id": "node1",
+      "target_id": "node2",
+      "type": "KNOWS",
+      "properties": {"since": 2020}
+    }
+  ]
+}
+```
+
+**JSON形式の詳細**:
+- `nodes`: ノード（頂点）の配列
+  - `id`: ノードの一意識別子（必須）
+  - `labels`: ラベルの配列（必須）
+  - `properties`: プロパティのオブジェクト（オプション）
+- `links`: エッジの配列
+  - `id`: エッジの一意識別子（必須）
+  - `source_id`: 出発ノードID（必須）
+  - `target_id`: 到着ノードID（必須）
+  - `type`: エッジタイプ（必須）
+  - `properties`: プロパティのオブジェクト（オプション）
+
+##### CSVインポート
+
+CSVファイルからのインポートでは、ノードとエッジを別々のファイルで指定します。
+
+```bash
+# 基本的なCSVインポート
+rinne import csv \
+  --nodes data/nodes.csv \
+  --edges data/edges.csv \
+  --database graph.db
+
+# 設定ファイル付きインポート
+rinne import csv \
+  --nodes data/nodes.csv \
+  --edges data/edges.csv \
+  --config data/import.csv \
+  --database graph.db
+
+# エラー時の動作指定
+rinne import csv \
+  --nodes data/nodes.csv \
+  --edges data/edges.csv \
+  --database graph.db \
+  --on-error skip \
+  --verbose
+
+# エンコーディング指定
+rinne import csv \
+  --nodes data/nodes_sjis.csv \
+  --edges data/edges_sjis.csv \
+  --database graph.db \
+  --encoding shift_jis
+
+# 詳細ログ付きインポート
+rinne import csv \
+  --nodes data/nodes.csv \
+  --edges data/edges.csv \
+  --database graph.db \
+  --verbose \
+  --append
+```
+
+**CSVインポート固有オプション**:
+- `--nodes, -n <file>`: ノードCSVファイル（必須）
+- `--edges, -e <file>`: エッジCSVファイル（必須）
+- `--config, -c <file>`: 設定CSVファイル（オプション）
+
+**共通オプション**:
+- `--database <file>`: 対象データベースファイル（必須）
+- `--append`: 既存データに追加（デフォルトは置換）
+- `--no-validation`: バリデーションをスキップ
+- `--on-error <action>`: エラー時の動作（skip/warn/error）
+- `--encoding <enc>`: ファイルエンコーディング（デフォルト: utf-8）
+- `--verbose, -v`: 詳細ログ出力
+- `--dry-run`: 実際のインポートを行わず検証のみ
+- `--help, -h`: ヘルプを表示
+
+**CSVファイル形式**:
+
+1. **ノードCSV** (`nodes.csv`):
+```csv
+NODE_ID,LABELS,name,age,email
+node1,"Person;Employee",山田太郎,30,yamada@example.com
+node2,"Person",佐藤花子,28,sato@example.com
+node3,"Company",株式会社サンプル,,info@sample.co.jp
+```
+
+- `NODE_ID`: ノードの一意識別子（必須）
+- `LABELS`: セミコロン区切りのラベルリスト（必須）
+- その他のカラム: プロパティとして扱われる
+
+2. **エッジCSV** (`edges.csv`):
+```csv
+LINK_ID,SOURCE_ID,TARGET_ID,TYPE,LABELS,since,strength
+link1,node1,node2,KNOWS,"Friend;Colleague",2020,strong
+link2,node1,node3,WORKS_FOR,"Employment",2018,
+link3,node2,node3,WORKS_FOR,"Employment",2019,medium
+```
+
+- `LINK_ID`: エッジの一意識別子（必須）
+- `SOURCE_ID`: 出発ノードID（必須）
+- `TARGET_ID`: 到着ノードID（必須）
+- `TYPE`: エッジタイプ（必須）
+- `LABELS`: セミコロン区切りのラベルリスト（オプション）
+- その他のカラム: プロパティとして扱われる
+
+3. **設定CSV** (`import.csv`):
+```csv
+SETTING,VALUE
+validation.required,name;age
+validation.unique,email
+validation.rules.age,>=0
+import.strict,true
+import.error.action,skip
+cycle_check,warn
+```
+
+**動作詳細**:
+- `--append` が指定されていない場合、既存データは削除される
+- バリデーションエラーは `--on-error` の設定に従って処理される
+- 空のプロパティ値は `NullValue` として扱われる
+- インポート進行状況は `--verbose` で詳細表示される
+
+#### 3. export - データエクスポート
+
+データベースからデータをエクスポートします。
+
+##### JSONエクスポート
+
+```bash
+# 全データをJSONでエクスポート
+rinne export json --database graph.db --output data/export.json
+
+# メタデータ付きエクスポート
+rinne export json \
+  --database graph.db \
+  --output data/export.json \
+  --include-metadata
+
+# 特定ラベルのみエクスポート
+rinne export json \
+  --database graph.db \
+  --output data/export.json \
+  --filter-labels "Person,Company"
+
+# 整形された出力
+rinne export json \
+  --database graph.db \
+  --output data/export.json \
+  --pretty
+```
+
+##### CSVエクスポート
+
+```bash
+# CSVファイルにエクスポート
+rinne export csv \
+  --database graph.db \
+  --nodes-output data/nodes.csv \
+  --edges-output data/edges.csv
+
+# ヘッダー無しでエクスポート
+rinne export csv \
+  --database graph.db \
+  --nodes-output data/nodes.csv \
+  --edges-output data/edges.csv \
+  --no-header
+```
+
+**共通オプション**:
+- `--database <file>`: 対象データベースファイル（必須）
+- `--filter-labels <labels>`: エクスポート対象ラベル（カンマ区切り）
+- `--limit <num>`: エクスポート件数制限
+- `--encoding <enc>`: 出力エンコーディング
+- `--verbose, -v`: 詳細ログ出力
+
+**JSONエクスポート固有オプション**:
+- `--output, -o <file>`: 出力JSONファイル（必須）
+- `--include-metadata`: メタデータを含める
+- `--pretty`: 整形された出力
+
+**CSVエクスポート固有オプション**:
+- `--nodes-output <file>`: ノードCSV出力ファイル（必須）
+- `--edges-output <file>`: エッジCSV出力ファイル（必須）
+- `--no-header`: ヘッダー行を出力しない
+
+#### 4. info - データベース情報表示
+
+データベースの基本情報と統計を表示します。
+
+```bash
+# 基本情報表示
+rinne info --database graph.db
+
+# 詳細統計表示
+rinne info --database graph.db --detailed
+
+# ラベル別統計表示
+rinne info --database graph.db --labels
+
+# JSON形式で出力
+rinne info --database graph.db --format json
+```
+
+**オプション**:
+- `--database <file>`: 対象データベースファイル（必須）
+- `--detailed`: 詳細統計を表示
+- `--labels`: ラベル別統計を表示
+- `--format <fmt>`: 出力形式（text/json）
+
+#### 5. validate - データベース検証
+
+データベースの整合性を検証します。
+
+```bash
+# 基本検証
+rinne validate --database graph.db
+
+# 詳細検証
+rinne validate --database graph.db --detailed
+
+# 修復可能な問題を自動修復
+rinne validate --database graph.db --repair
+
+# 検証結果をファイルに出力
+rinne validate --database graph.db --report validation_report.md
+```
+
+**オプション**:
+- `--database <file>`: 対象データベースファイル（必須）
+- `--detailed`: 詳細な検証を実行
+- `--repair`: 修復可能な問題を自動修復
+- `--report <file>`: 検証結果をファイルに出力
+
+#### 6. query - クエリ実行
+
+Gremlin風のトラバーサルクエリを実行します。RinneGraphのトラバーサルAPIを使用してグラフデータを検索・分析できます。
+
+```bash
+# 基本クエリ実行
+rinne query --database graph.db --traversal "g.V().hasLabel('Person')"
+
+# 全ての頂点を取得
+rinne query --database graph.db --traversal "g.V()"
+
+# 全てのエッジを取得
+rinne query --database graph.db --traversal "g.E()"
+
+# 特定ラベルの頂点を取得
+rinne query --database graph.db --traversal "g.V().hasLabel('Person')"
+
+# プロパティ値を取得
+rinne query --database graph.db --traversal "g.V().values('name')"
+
+# プロパティマップを取得
+rinne query --database graph.db --traversal "g.V().valueMap()"
+
+# 結果をファイルに出力
+rinne query \
+  --database graph.db \
+  --traversal "g.V().hasLabel('Person').values('name')" \
+  --output results.json
+
+# 結果件数制限
+rinne query \
+  --database graph.db \
+  --traversal "g.V()" \
+  --limit 100
+
+# CSV形式で出力
+rinne query \
+  --database graph.db \
+  --traversal "g.V().valueMap()" \
+  --format csv \
+  --output results.csv
+
+# テキスト形式で出力
+rinne query \
+  --database graph.db \
+  --traversal "g.V().hasLabel('Person')" \
+  --format text
+
+# 詳細ログ付きクエリ実行
+rinne query \
+  --database graph.db \
+  --traversal "g.V().hasLabel('Person').out('KNOWS')" \
+  --verbose
+```
+
+**オプション**:
+- `--database <file>`: 対象データベースファイル（必須）
+- `--traversal, -t <query>`: トラバーサルクエリ（必須）
+- `--output, -o <file>`: 結果出力ファイル
+- `--format <fmt>`: 出力形式（json/csv/text、デフォルト: json）
+- `--limit <num>`: 結果件数制限
+- `--verbose, -v`: 詳細ログを出力
+- `--help, -h`: ヘルプを表示
+
+**サポートするクエリ形式**:
+
+1. **頂点クエリ**:
+   - `g.V()` - 全ての頂点
+   - `g.V().hasLabel('Person')` - 特定ラベルの頂点
+   - `g.V().values('name')` - 特定プロパティの値
+   - `g.V().valueMap()` - プロパティマップ
+
+2. **エッジクエリ**:
+   - `g.E()` - 全てのエッジ
+   - `g.E().hasLabel('KNOWS')` - 特定ラベルのエッジ
+
+3. **複合クエリ**:
+   - `g.V().hasLabel('Person').out('KNOWS')` - 関連する頂点
+   - `g.V().hasLabel('Person').outE('KNOWS')` - 関連するエッジ
+
+**出力形式**:
+
+1. **JSON形式** (デフォルト):
+```json
+[
+  {
+    "id": 1000001,
+    "type": 10000,
+    "value": 1000001,
+    "label": "Person"
+  },
+  {
+    "id": 1000002,
+    "type": 10000,
+    "value": 1000002,
+    "label": "Person"
+  }
+]
+```
+
+2. **CSV形式**:
+```csv
+id,type,value,label
+1000001,10000,1000001,Person
+1000002,10000,1000002,Person
+```
+
+3. **テキスト形式**:
+```
+[0] {id: 1000001, type: 10000, value: 1000001, label: Person}
+[1] {id: 1000002, type: 10000, value: 1000002, label: Person}
+```
+
+**動作詳細**:
+- クエリはSQLに変換されて実行される
+- 結果は指定された形式で出力される
+- `--verbose` でクエリ実行の詳細が表示される
+- エラーが発生した場合は詳細なエラーメッセージが表示される
+- 大量の結果に対しては `--limit` で件数制限を推奨
+
+#### 7. sample - サンプルデータ生成
+
+テスト用のサンプルデータを生成します。
+
+```bash
+# 基本サンプル生成
+rinne sample --database graph.db --type simple
+
+# 大規模サンプル生成
+rinne sample \
+  --database graph.db \
+  --type large \
+  --nodes 10000 \
+  --edges 50000
+
+# 映画データサンプル生成
+rinne sample --database graph.db --type movies
+
+# 乱数シード指定
+rinne sample \
+  --database graph.db \
+  --type large \
+  --nodes 1000 \
+  --edges 5000 \
+  --seed 12345
+```
+
+**オプション**:
+- `--database <file>`: 対象データベースファイル（必須）
+- `--type <type>`: サンプルタイプ（simple/movies/large）
+- `--nodes <num>`: ノード数（largeタイプ用）
+- `--edges <num>`: エッジ数（largeタイプ用）
+- `--seed <num>`: 乱数シード
+
+### グローバルオプション
+
+すべてのサブコマンドで使用可能なオプション：
+
+- `--help, -h`: ヘルプ表示
+- `--version`: バージョン情報表示
+- `--verbose, -v`: 詳細ログ出力
+- `--quiet, -q`: エラー以外の出力を抑制
+- `--config <file>`: 設定ファイル指定
+
+**ログレベル**:
+- **通常**: 基本的な実行結果のみ表示
+- **詳細** (`--verbose`): 実行過程の詳細情報を表示
+- **静寂** (`--quiet`): エラーメッセージのみ表示
+
+**ヘルプシステム**:
+```bash
+# 全体のヘルプ
+rinne --help
+
+# 特定コマンドのヘルプ
+rinne create --help
+rinne import --help
+rinne import json --help  # サブコマンドのヘルプ
+rinne import csv --help   # サブコマンドのヘルプ
+rinne query --help
+```
+
+### 設定ファイル
+
+デフォルト設定を `~/.rinne/config.yaml` に保存できます。
+
+```yaml
+# デフォルト設定
+default:
+  encoding: utf-8
+  on_error: warn
+  verbose: false
+  quiet: false
+
+# インポート設定
+import:
+  validation: true
+  append: false
+  batch_size: 1000
+  encoding: utf-8
+  on_error: warn
+
+# エクスポート設定
+export:
+  include_metadata: true
+  pretty_json: true
+  encoding: utf-8
+
+# クエリ設定
+query:
+  default_limit: 1000
+  timeout: 30
+  format: json
+
+# データベース設定
+database:
+  auto_backup: false
+  backup_interval: 3600
+```
+
+**設定ファイルの優先順位**:
+1. コマンドライン引数（最優先）
+2. 指定された設定ファイル (`--config`)
+3. デフォルト設定ファイル (`~/.rinne/config.yaml`)
+4. 内蔵デフォルト値
+
+### 実用的な使用例
+
+#### シナリオ1: 新しいプロジェクトの開始
+
+```bash
+# 1. 新しいデータベースを作成
+rinne create --output project_graph.db --description "新プロジェクト用グラフDB"
+
+# 2. 初期データをJSONからインポート
+rinne import json --input initial_data.json --database project_graph.db --verbose
+
+# 3. データベースの状況を確認
+rinne info --database project_graph.db --labels
+
+# 4. 基本的なクエリでデータを確認
+rinne query --database project_graph.db --traversal "g.V().count()"
+```
+
+#### シナリオ2: CSVデータの一括インポート
+
+```bash
+# 1. 空のデータベースを作成
+rinne create --output csv_import.db --description "CSV一括インポート用"
+
+# 2. CSVファイルからデータをインポート
+rinne import csv \
+  --nodes employees.csv \
+  --edges relationships.csv \
+  --database csv_import.db \
+  --verbose \
+  --on-error warn
+
+# 3. インポート結果を確認
+rinne info --database csv_import.db --properties
+
+# 4. 特定のデータを検索
+rinne query \
+  --database csv_import.db \
+  --traversal "g.V().hasLabel('Employee').values('name')" \
+  --format csv \
+  --output employee_names.csv
+```
+
+#### シナリオ3: データ分析とレポート生成
+
+```bash
+# 1. 全ての人物ノードを取得
+rinne query \
+  --database analysis.db \
+  --traversal "g.V().hasLabel('Person')" \
+  --format json \
+  --output persons.json
+
+# 2. 関係性の分析
+rinne query \
+  --database analysis.db \
+  --traversal "g.E().hasLabel('KNOWS').count()" \
+  --format text
+
+# 3. 詳細なプロパティ分析
+rinne query \
+  --database analysis.db \
+  --traversal "g.V().hasLabel('Person').valueMap()" \
+  --format csv \
+  --output person_properties.csv \
+  --limit 1000
+
+# 4. データベース統計の取得
+rinne info --database analysis.db --labels --properties --verbose
+```
+
+#### シナリオ4: 大量データの処理
+
+```bash
+# 1. 大量データ用のデータベース作成
+rinne create --output large_data.db --description "大量データ処理用"
+
+# 2. バッチでのインポート（エラー処理付き）
+rinne import json \
+  --input large_dataset.json \
+  --database large_data.db \
+  --on-error skip \
+  --verbose
+
+# 3. 件数制限付きでのクエリ実行
+rinne query \
+  --database large_data.db \
+  --traversal "g.V()" \
+  --limit 100 \
+  --format csv \
+  --output sample_data.csv
+
+# 4. 統計情報の確認
+rinne info --database large_data.db --verbose
+```
+
+### トラブルシューティング
+
+#### よくある問題と解決方法
+
+1. **ファイルが見つからない**:
+```bash
+# 相対パスの確認
+ls -la *.db
+# 絶対パスでの指定
+rinne info --database /full/path/to/database.db
+```
+
+2. **インポートエラー**:
+```bash
+# ドライランで事前確認
+rinne import json --input data.json --database test.db --dry-run
+# エラー詳細の確認
+rinne import json --input data.json --database test.db --verbose --on-error warn
+```
+
+3. **クエリエラー**:
+```bash
+# 基本的なクエリから開始
+rinne query --database test.db --traversal "g.V().count()" --verbose
+# データベース構造の確認
+rinne info --database test.db --labels --properties
+```
+
+4. **パフォーマンス問題**:
+```bash
+# 件数制限の使用
+rinne query --database large.db --traversal "g.V()" --limit 100
+# 詳細ログでボトルネック確認
+rinne query --database large.db --traversal "g.V().hasLabel('Person')" --verbose
+```
+
+### データ形式
+
+#### JSON形式
+
+```json
+{
+  "metadata": {
+    "version": "1.0",
+    "created_at": "2025-03-15T10:30:00Z",
+    "description": "サンプルグラフデータ"
+  },
+  "nodes": [
+    {
+      "id": "node1",
+      "labels": ["Person"],
+      "properties": {
+        "name": "山田太郎",
+        "age": 30,
+        "email": "yamada@example.com"
+      }
+    }
+  ],
+  "links": [
+    {
+      "id": "link1",
+      "source_id": "node1",
+      "target_id": "node2",
+      "type": "KNOWS",
+      "labels": ["Friend"],
+      "properties": {
+        "since": 2020,
+        "strength": "strong"
+      }
+    }
+  ]
+}
+```
+
+#### CSV形式
+
+**ノードCSV (`nodes.csv`)**:
+```csv
+NODE_ID,LABELS,name,age,email
+node1,"Person;Employee",山田太郎,30,yamada@example.com
+node2,"Person",佐藤花子,28,sato@example.com
+```
+
+**エッジCSV (`edges.csv`)**:
+```csv
+EDGE_ID,SOURCE_ID,TARGET_ID,TYPE,LABELS,since,strength
+edge1,node1,node2,KNOWS,"Friend;Colleague",2020,strong
+```
+
+**設定CSV (`import.csv`)**:
+```csv
+SETTING,VALUE
+validation.required,name;age
+validation.unique,email
+validation.rules.age,>=0
+import.strict,true
+import.error.action,skip
+cycle_check,warn
+```
+
+### 使用例
+
+#### 新しいプロジェクトの開始
+
+```bash
+# 1. データベース作成
+rinne create --output project.db --description "新プロジェクト"
+
+# 2. サンプルデータ生成
+rinne sample --database project.db --type simple
+
+# 3. データベース情報確認
+rinne info --database project.db
+```
+
+#### 既存データのインポート
+
+```bash
+# 1. CSVデータのインポート
+rinne import csv \
+  --nodes data/nodes.csv \
+  --edges data/edges.csv \
+  --database project.db \
+  --verbose
+
+# 2. インポート結果の確認
+rinne info --database project.db --detailed
+```
+
+#### データ分析
+
+```bash
+# 1. 特定ラベルのノード検索
+rinne query \
+  --database project.db \
+  --traversal "g.V().hasLabel('Person').values('name')" \
+  --output person_names.json
+
+# 2. 統計情報の取得
+rinne info --database project.db --labels --format json > stats.json
+```
+
+#### データのバックアップと復元
+
+```bash
+# バックアップ（エクスポート）
+rinne export json \
+  --database production.db \
+  --output backup_$(date +%Y%m%d).json \
+  --include-metadata
+
+# 復元（インポート）
+rinne create --output restored.db
+rinne import json \
+  --input backup_20250315.json \
+  --database restored.db
+```
+
+### エラーハンドリング
+
+#### 終了コード
+
+- `0`: 正常終了
+- `1`: 一般的なエラー
+- `2`: コマンドライン引数エラー
+- `3`: ファイルアクセスエラー
+- `4`: データベースエラー
+- `5`: バリデーションエラー
+
+#### ログレベル
+
+- `ERROR`: エラーメッセージ
+- `WARN`: 警告メッセージ
+- `INFO`: 情報メッセージ（--verbose時）
+- `DEBUG`: デバッグメッセージ（開発時）
+
+このドキュメントの情報を基に、RinneGraphライブラリを効果的に活用してください。

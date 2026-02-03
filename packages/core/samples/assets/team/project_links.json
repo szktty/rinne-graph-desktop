@@ -1,0 +1,54 @@
+{
+  "links": [
+    {
+      "source": "person_001",
+      "target": "project_001",
+      "type": "$MANAGES",
+      "properties": {
+        "responsibility": "Technical Leadership",
+        "allocation": 0.8,
+        "$start_date": "2024-01-01"
+      }
+    },
+    {
+      "source": "person_002",
+      "target": "project_001",
+      "type": "$WORKS_ON",
+      "properties": {
+        "responsibility": "Frontend Development",
+        "allocation": 0.9,
+        "$start_date": "2024-01-15"
+      }
+    },
+    {
+      "source": "person_005",
+      "target": "project_001",
+      "type": "$MANAGES",
+      "properties": {
+        "responsibility": "Project Coordination",
+        "allocation": 0.6,
+        "$start_date": "2024-01-01"
+      }
+    },
+    {
+      "source": "team_001",
+      "target": "project_001",
+      "type": "$WORKS_ON",
+      "properties": {
+        "team_allocation": 0.7,
+        "$start_date": "2024-01-01",
+        "methodology": "Agile"
+      }
+    },
+    {
+      "source": "project_001",
+      "target": "technology_001",
+      "type": "$USES",
+      "properties": {
+        "usage_type": "Primary Framework",
+        "integration_level": "Core",
+        "since": "2024-01-01"
+      }
+    }
+  ]
+}

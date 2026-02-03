@@ -1,0 +1,33 @@
+name: core_themes
+resolution: workspace
+description: Theme customization system for App app
+version: 0.1.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=3.38.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  core_foundation_flutter:
+    path: ../../core/foundation_flutter
+  core_settings:
+    path: ../../core/settings
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.14
+  freezed: ^2.5.7
+  json_serializable: ^6.8.0
+  riverpod_generator: ^2.6.2
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

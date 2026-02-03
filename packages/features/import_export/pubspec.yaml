@@ -1,0 +1,49 @@
+name: features_import_export
+resolution: workspace
+description: Import and export features for App
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  
+  # File picker
+  file_picker: ^10.1.0
+  
+  # CSV processing
+  csv: ^6.0.0
+  
+  # Code generation
+  freezed_annotation: ^2.4.4
+  
+  # Internal packages
+  presentation_components:
+    path: ../../presentation/components
+  core_stack_flutter:
+    path: ../../core/stack_flutter
+  core_themes:
+    path: ../../core/themes
+  core_graph_flutter:
+    path: ../../core/graph
+  core_workflow:
+    path: ../../core/workflow
+  presentation_workflow:
+    path: ../../presentation/workflow
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.14
+  riverpod_generator: ^2.6.2
+
+flutter:
+  uses-material-design: true

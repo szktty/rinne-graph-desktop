@@ -1,0 +1,22 @@
+{
+  "labels": {
+    "Person": { "display_name": "Person" },
+    "Company": { "display_name": "Company" },
+    "Project": { "display_name": "Project" }
+  },
+  "properties": {
+    "name": { "display_name": "Name" },
+    "description": { "display_name": "Description" },
+    "role": { "display_name": "Role" },
+    "status": { "display_name": "Status" },
+    "budget": { "display_name": "Budget" },
+    "location": { "display_name": "Location" }
+  },
+  "link_types": {
+    "WORKS_FOR": { "display_name": "Works For" },
+    "MANAGES": { "display_name": "Manages" },
+    "ASSIGNED_TO": { "display_name": "Assigned To" },
+    "COLLABORATES_WITH": { "display_name": "Collaborates With" },
+    "OWNS": { "display_name": "Owns" }
+  }
+}

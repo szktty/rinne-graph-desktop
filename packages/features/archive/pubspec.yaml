@@ -1,0 +1,33 @@
+name: features_archive
+description: Archive functionality for App entities
+version: 1.0.0
+resolution: workspace
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=3.38.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  
+  # Core packages
+  core_graph_flutter:
+    path: ../../core/graph
+  core_themes:
+    path: ../../core/themes
+  
+  # Presentation packages
+  presentation_components:
+    path: ../../presentation/components
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  riverpod_generator: ^2.6.2
+  build_runner: ^2.4.14
+
+flutter:

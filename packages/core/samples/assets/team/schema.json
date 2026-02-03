@@ -1,0 +1,113 @@
+{
+  "labels": {
+    "Person": {
+      "display_name": "Person"
+    },
+    "Developer": {
+      "display_name": "Developer"
+    },
+    "Designer": {
+      "display_name": "Designer"
+    },
+    "Manager": {
+      "display_name": "Manager"
+    },
+    "Project": {
+      "display_name": "Project"
+    },
+    "Team": {
+      "display_name": "Team"
+    },
+    "Technology": {
+      "display_name": "Technology"
+    }
+  },
+  "link_types": {
+    "WORKS_ON": {
+      "display_name": "Works On"
+    },
+    "BELONGS_TO": {
+      "display_name": "Belongs To"
+    },
+    "MANAGES": {
+      "display_name": "Manages"
+    },
+    "USES": {
+      "display_name": "Uses"
+    },
+    "COLLABORATES_WITH": {
+      "display_name": "Collaborates With"
+    },
+    "REPORTS_TO": {
+      "display_name": "Reports To"
+    }
+  },
+  "properties": {
+    "name": {
+      "display_name": "Name",
+      "type": "string",
+      "required": true
+    },
+    "role": {
+      "display_name": "Role",
+      "type": "string"
+    },
+    "experience": {
+      "display_name": "Experience",
+      "type": "string"
+    },
+    "skills": {
+      "display_name": "Skills",
+      "type": "list"
+    },
+    "email": {
+      "display_name": "Email",
+      "type": "email"
+    },
+    "status": {
+      "display_name": "Status",
+      "type": "string",
+      "default": "active"
+    },
+    "priority": {
+      "display_name": "Priority",
+      "type": "string"
+    },
+    "start_date": {
+      "display_name": "Start Date",
+      "type": "date"
+    },
+    "deadline": {
+      "display_name": "Deadline",
+      "type": "date"
+    },
+    "budget": {
+      "display_name": "Budget",
+      "type": "integer"
+    },
+    "department": {
+      "display_name": "Department",
+      "type": "string"
+    },
+    "size": {
+      "display_name": "Size",
+      "type": "integer"
+    },
+    "location": {
+      "display_name": "Location",
+      "type": "string"
+    },
+    "category": {
+      "display_name": "Category",
+      "type": "string"
+    },
+    "version": {
+      "display_name": "Version",
+      "type": "string"
+    },
+    "license": {
+      "display_name": "License",
+      "type": "string"
+    }
+  }
+}

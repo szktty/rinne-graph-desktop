@@ -1,0 +1,115 @@
+# .github/workflows/release.yml
+
+name: Build, Notarize and Release macOS App
+
+on:
+  push:
+    tags:
+      - 'v*' # Run when a tag like v1.0.0, v2.3.4 is pushed
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  build-and-release:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write # Required for creating releases
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Install FVM
+        run: dart pub global activate fvm
+
+      - name: Install and configure Flutter SDK with FVM
+        run: |
+          fvm install
+          fvm use
+      
+      - name: Add FVM Flutter to PATH
+        run: echo "$(pwd)/.fvm/flutter_sdk/bin" >> $GITHUB_PATH
+
+      - name: Install Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap project
+        run: melos bootstrap
+
+      - name: Generate version.json
+        run: ./scripts/generate_version.sh
+
+
+      - name: Create environment file for notarization
+        env:
+          AC_API_KEY_ID: ${{ secrets.AC_API_KEY_ID }}
+          AC_API_KEY_ISSUER_ID: ${{ secrets.AC_API_KEY_ISSUER_ID }}
+          AC_API_KEY_BASE64: ${{ secrets.AC_API_KEY_BASE64 }}
+          CERTIFICATE_P12_BASE64: ${{ secrets.CERTIFICATE_P12_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+        run: |
+          # --- Setup Temporary Paths ---
+          KEY_PATH="$RUNNER_TEMP/AuthKey.p8"
+          CERT_PATH="$RUNNER_TEMP/cert.p12"
+
+          # --- Decode Secrets ---
+          echo "Decoding API Key and Certificate from secrets..."
+          echo "$AC_API_KEY_BASE64" | base64 --decode > "$KEY_PATH"
+          echo "$CERTIFICATE_P12_BASE64" | base64 --decode > "$CERT_PATH"
+          echo "✅ Secrets decoded successfully."
+
+          # --- Create env.sh for the script ---
+          echo "Creating env.sh file for notarization script..."
+          cat << EOF > scripts/notary/env.sh
+          export AC_API_KEY_ID="$AC_API_KEY_ID"
+          export AC_API_KEY_ISSUER_ID="$AC_API_KEY_ISSUER_ID"
+          export AC_API_KEY_PATH="$KEY_PATH"
+          export CERTIFICATE_P12_PATH="$CERT_PATH"
+          export CERTIFICATE_PASSWORD="$CERTIFICATE_PASSWORD"
+          export BUNDLE_ID="jp.szktty.RinneGraph"
+          EOF
+          echo "✅ env.sh created successfully."
+
+      - name: Run Build and Notarize script
+        run: ./scripts/notary/build_and_notarize.sh
+
+      - name: Get release artifact info
+        id: get_artifact_info
+        run: |
+          ARTIFACT_PATH=$(find build/dist/macos -name "*.dmg" -type f)
+          echo "ARTIFACT_PATH=${ARTIFACT_PATH}" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=$(basename "$ARTIFACT_PATH")" >> $GITHUB_ENV
+
+      - name: Upload notarized DMG as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RinneGraph-macOS-Installer
+          path: ${{ env.ARTIFACT_PATH }}
+          retention-days: 7
+
+      - name: Create Release Draft
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ARTIFACT_PATH }}
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## Release Notes for ${{ github.ref_name }}
+
+            This is an automated release. Please update the release notes.
+
+            ### Assets
+            - **${{ env.ARTIFACT_NAME }}**: macOS Installer (Notarized)
+          draft: true
+          
+      - name: Cleanup sensitive files
+        if: always()
+        run: |
+          echo "Cleaning up temporary secret files..."
+          rm -f "$RUNNER_TEMP/AuthKey.p8"
+          rm -f "$RUNNER_TEMP/cert.p12"
+          rm -f scripts/notary/env.sh
+          echo "✅ Cleanup complete."

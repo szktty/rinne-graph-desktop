@@ -1,0 +1,158 @@
+{
+  "nodes": [
+    {
+      "id": "person_001",
+      "labels": [
+        "$Person",
+        "$Developer"
+      ],
+      "properties": {
+        "$name": "Taro Tanaka",
+        "$role": "Tech Lead",
+        "$experience": "8 years",
+        "$skills": [
+          "Flutter",
+          "Dart",
+          "Architecture"
+        ],
+        "$email": "tanaka@example.com"
+      }
+    },
+    {
+      "id": "person_002",
+      "labels": [
+        "$Person",
+        "$Developer"
+      ],
+      "properties": {
+        "$name": "Hanako Sato",
+        "$role": "Senior Developer",
+        "$experience": "5 years",
+        "$skills": [
+          "Flutter",
+          "UI/UX",
+          "Testing"
+        ],
+        "$email": "sato@example.com"
+      }
+    },
+    {
+      "id": "person_003",
+      "labels": [
+        "$Person",
+        "$Developer"
+      ],
+      "properties": {
+        "$name": "Jiro Yamada",
+        "$role": "Backend Developer",
+        "$experience": "4 years",
+        "$skills": [
+          "Node.js",
+          "Database",
+          "API"
+        ],
+        "$email": "yamada@example.com"
+      }
+    },
+    {
+      "id": "person_004",
+      "labels": [
+        "$Person",
+        "$Designer"
+      ],
+      "properties": {
+        "$name": "Misaki Suzuki",
+        "$role": "UI/UX Designer",
+        "$experience": "3 years",
+        "$skills": [
+          "Figma",
+          "Design System",
+          "User Research"
+        ],
+        "$email": "suzuki@example.com"
+      }
+    },
+    {
+      "id": "person_005",
+      "labels": [
+        "$Person",
+        "$Manager"
+      ],
+      "properties": {
+        "$name": "Kenichi Takahashi",
+        "$role": "Project Manager",
+        "$experience": "6 years",
+        "$skills": [
+          "Project Management",
+          "Agile",
+          "Communication"
+        ],
+        "$email": "takahashi@example.com"
+      }
+    },
+    {
+      "id": "project_001",
+      "labels": [
+        "$Project"
+      ],
+      "properties": {
+        "$name": "App Desktop App",
+        "$status": "Active",
+        "$priority": "High",
+        "$start_date": "2024-01-01",
+        "$deadline": "2024-06-30",
+        "$budget": 1000000
+      }
+    },
+    {
+      "id": "project_002",
+      "labels": [
+        "$Project"
+      ],
+      "properties": {
+        "$name": "Mobile App Prototype",
+        "$status": "Planning",
+        "$priority": "Medium",
+        "$start_date": "2024-03-01",
+        "$deadline": "2024-09-30",
+        "$budget": 500000
+      }
+    },
+    {
+      "id": "team_001",
+      "labels": [
+        "$Team"
+      ],
+      "properties": {
+        "$name": "Core Development Team",
+        "$department": "Engineering",
+        "$size": 5,
+        "$location": "Tokyo"
+      }
+    },
+    {
+      "id": "technology_001",
+      "labels": [
+        "$Technology"
+      ],
+      "properties": {
+        "$name": "Flutter Framework",
+        "$category": "Frontend",
+        "$version": "3.29.0",
+        "$license": "BSD-3-Clause"
+      }
+    },
+    {
+      "id": "technology_002",
+      "labels": [
+        "$Technology"
+      ],
+      "properties": {
+        "$name": "RinneGraph",
+        "$category": "Database",
+        "$version": "1.0.0",
+        "$license": "MIT"
+      }
+    }
+  ]
+}

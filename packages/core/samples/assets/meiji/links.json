@@ -1,0 +1,1309 @@
+[
+  {
+    "source": "person-ryoma",
+    "target": "org-tosa",
+    "type": "$BELONGED_TO",
+    "properties": {
+      "$role": "郷士"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "org-kaientai",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-kaishu",
+    "type": "$MENTORED_BY"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-saigo",
+    "type": "$ALLIED_WITH"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-katsura",
+    "type": "$ALLIED_WITH"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-nakaoka",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-oryo",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "妻"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "event-satcho",
+    "type": "$MEDIATED"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "event-taisei",
+    "type": "$PROPOSED"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "event-omi",
+    "type": "$VICTIM_OF"
+  },
+  {
+    "source": "person-nakaoka",
+    "target": "org-tosa",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-nakaoka",
+    "target": "org-rikuguntai",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-saigo",
+    "target": "org-satsuma",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-okubo",
+    "target": "org-satsuma",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-katsura",
+    "target": "org-choshu",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-shinsaku",
+    "target": "org-choshu",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-kaishu",
+    "target": "org-bakufu",
+    "type": "$SERVED"
+  },
+  {
+    "source": "person-yoshinobu",
+    "target": "org-bakufu",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-kondo",
+    "target": "org-shinsengumi",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-hijikata",
+    "target": "org-shinsengumi",
+    "type": "$SERVED"
+  },
+  {
+    "source": "org-shinsengumi",
+    "target": "org-bakufu",
+    "type": "$AFFILIATED_WITH"
+  },
+  {
+    "source": "person-takechi",
+    "target": "org-kinnoto",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "org-kinnoto",
+    "type": "$FORMERLY_BELONGED_TO"
+  },
+  {
+    "source": "person-iwasaki",
+    "target": "org-kaientai",
+    "type": "$SUPPORTED",
+    "properties": {
+      "$role": "経理担当"
+    }
+  },
+  {
+    "source": "person-saigo",
+    "target": "event-satcho",
+    "type": "$PARTICIPATED_IN"
+  },
+  {
+    "source": "person-katsura",
+    "target": "event-satcho",
+    "type": "$PARTICIPATED_IN"
+  },
+  {
+    "source": "person-yoshinobu",
+    "target": "event-taisei",
+    "type": "$EXECUTED"
+  },
+  {
+    "source": "person-goto",
+    "target": "event-taisei",
+    "type": "$PROMOTED"
+  },
+  {
+    "source": "person-nakaoka",
+    "target": "event-omi",
+    "type": "$VICTIM_OF"
+  },
+  {
+    "source": "person-kaishu",
+    "target": "event-kobe",
+    "type": "$FOUNDED"
+  },
+  {
+    "source": "person-saigo",
+    "target": "person-okubo",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-katsura",
+    "target": "person-shinsaku",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-kondo",
+    "target": "person-hijikata",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-shinsaku",
+    "target": "person-yoshida",
+    "type": "$MENTORED_BY"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-kondo",
+    "type": "$OPPOSED_BY"
+  },
+  {
+    "source": "person-okita",
+    "target": "org-shinsengumi",
+    "type": "$SERVED",
+    "properties": {
+      "$role": "一番組組長"
+    }
+  },
+  {
+    "source": "person-saito",
+    "target": "org-shinsengumi",
+    "type": "$SERVED",
+    "properties": {
+      "$role": "三番組組長"
+    }
+  },
+  {
+    "source": "person-nagakura",
+    "target": "org-shinsengumi",
+    "type": "$SERVED",
+    "properties": {
+      "$role": "二番組組長"
+    }
+  },
+  {
+    "source": "person-harada",
+    "target": "org-shinsengumi",
+    "type": "$SERVED",
+    "properties": {
+      "$role": "十番組組長"
+    }
+  },
+  {
+    "source": "person-todo",
+    "target": "org-shinsengumi",
+    "type": "$SERVED",
+    "properties": {
+      "$role": "八番組組長"
+    }
+  },
+  {
+    "source": "person-inoue",
+    "target": "org-shinsengumi",
+    "type": "$SERVED",
+    "properties": {
+      "$role": "六番組組長"
+    }
+  },
+  {
+    "source": "person-serizawa",
+    "target": "org-shinsengumi",
+    "type": "$LEADS",
+    "properties": {
+      "$role": "初代局長"
+    }
+  },
+  {
+    "source": "person-ito",
+    "target": "org-shinsengumi",
+    "type": "$FORMERLY_SERVED",
+    "properties": {
+      "$role": "参謀"
+    }
+  },
+  {
+    "source": "person-okita",
+    "target": "person-kondo",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-saito",
+    "target": "person-kondo",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-nagakura",
+    "target": "person-kondo",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-harada",
+    "target": "person-kondo",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-todo",
+    "target": "person-kondo",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-inoue",
+    "target": "person-kondo",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-kondo",
+    "target": "person-serizawa",
+    "type": "$OPPOSED"
+  },
+  {
+    "source": "person-ito",
+    "target": "person-kondo",
+    "type": "$OPPOSED"
+  },
+  {
+    "source": "person-nariakira",
+    "target": "org-satsuma",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-komatsu",
+    "target": "org-satsuma",
+    "type": "$SERVED",
+    "properties": {
+      "$role": "家老"
+    }
+  },
+  {
+    "source": "person-atsuhime",
+    "target": "org-satsuma",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-omura",
+    "target": "org-choshu",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-inoue-kaoru",
+    "target": "org-choshu",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-kusaka",
+    "target": "org-choshu",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "org-shinsengumi",
+    "target": "event-ikedaya",
+    "type": "$ATTACKED"
+  },
+  {
+    "source": "org-choshu",
+    "target": "event-ikedaya",
+    "type": "$VICTIM_OF"
+  },
+  {
+    "source": "person-katsura",
+    "target": "event-ikedaya",
+    "type": "$SURVIVED"
+  },
+  {
+    "source": "org-choshu",
+    "target": "event-kinmon",
+    "type": "$INITIATED"
+  },
+  {
+    "source": "org-satsuma",
+    "target": "event-kinmon",
+    "type": "$DEFENDED_AGAINST"
+  },
+  {
+    "source": "org-bakufu",
+    "target": "event-kinmon",
+    "type": "$DEFENDED_AGAINST"
+  },
+  {
+    "source": "person-kusaka",
+    "target": "event-kinmon",
+    "type": "$DIED_IN"
+  },
+  {
+    "source": "person-saigo",
+    "target": "person-nariakira",
+    "type": "$MENTORED_BY"
+  },
+  {
+    "source": "person-atsuhime",
+    "target": "person-yoshinobu",
+    "type": "$RELATED_TO",
+    "properties": {
+      "$relation": "義母"
+    }
+  },
+  {
+    "source": "person-ito",
+    "target": "org-goryo-eji",
+    "type": "$FOUNDED"
+  },
+  {
+    "source": "person-todo",
+    "target": "org-goryo-eji",
+    "type": "$JOINED"
+  },
+  {
+    "source": "person-kido",
+    "target": "person-katsura",
+    "type": "$IS_SAME_AS"
+  },
+  {
+    "source": "person-ii",
+    "target": "org-bakufu",
+    "type": "$SERVED",
+    "properties": {
+      "$role": "大老"
+    }
+  },
+  {
+    "source": "person-abe",
+    "target": "org-bakufu",
+    "type": "$SERVED",
+    "properties": {
+      "$role": "老中首座"
+    }
+  },
+  {
+    "source": "person-oguri",
+    "target": "org-bakufu",
+    "type": "$SERVED",
+    "properties": {
+      "$role": "勘定奉行"
+    }
+  },
+  {
+    "source": "person-katamori",
+    "target": "org-aizu",
+    "type": "$LEADS"
+  },
+  {
+    "source": "org-aizu",
+    "target": "org-bakufu",
+    "type": "$ALLIED_WITH"
+  },
+  {
+    "source": "person-komei",
+    "target": "org-chotei",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-meiji",
+    "target": "org-chotei",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-iwakura",
+    "target": "org-chotei",
+    "type": "$SERVED"
+  },
+  {
+    "source": "person-sanjo",
+    "target": "org-chotei",
+    "type": "$SERVED"
+  },
+  {
+    "source": "person-ii",
+    "target": "event-ansei",
+    "type": "$EXECUTED"
+  },
+  {
+    "source": "person-yoshida",
+    "target": "event-ansei",
+    "type": "$VICTIM_OF"
+  },
+  {
+    "source": "person-ii",
+    "target": "event-sakuradamon",
+    "type": "$VICTIM_OF"
+  },
+  {
+    "source": "org-satsuma",
+    "target": "event-toba-fushimi",
+    "type": "$PARTICIPATED_IN",
+    "properties": {
+      "$side": "新政府軍"
+    }
+  },
+  {
+    "source": "org-choshu",
+    "target": "event-toba-fuhimi",
+    "type": "$PARTICIPATED_IN",
+    "properties": {
+      "$side": "新政府軍"
+    }
+  },
+  {
+    "source": "org-bakufu",
+    "target": "event-toba-fushimi",
+    "type": "$PARTICIPATED_IN",
+    "properties": {
+      "$side": "旧幕府軍"
+    }
+  },
+  {
+    "source": "org-shinsengumi",
+    "target": "event-toba-fushimi",
+    "type": "$PARTICIPATED_IN",
+    "properties": {
+      "$side": "旧幕府軍"
+    }
+  },
+  {
+    "source": "person-komei",
+    "target": "person-ii",
+    "type": "$OPPOSED"
+  },
+  {
+    "source": "person-iwakura",
+    "target": "person-saigo",
+    "type": "$ALLIED_WITH"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-matsudaira",
+    "type": "$INFLUENCED_BY"
+  },
+  {
+    "source": "person-katamori",
+    "target": "person-kondo",
+    "type": "$SUPERVISED"
+  },
+  {
+    "source": "person-kaishu",
+    "target": "event-edo-kaijo",
+    "type": "$NEGOTIATED"
+  },
+  {
+    "source": "person-saigo",
+    "target": "event-edo-kaijo",
+    "type": "$NEGOTIATED"
+  },
+  {
+    "source": "person-yamaoka",
+    "target": "event-edo-kaijo",
+    "type": "$SUPPORTED"
+  },
+  {
+    "source": "org-satsuma",
+    "target": "org-choshu",
+    "type": "$ALLIED_WITH",
+    "properties": {
+      "$through": "薩長同盟"
+    }
+  },
+  {
+    "source": "org-satsuma",
+    "target": "org-aizu",
+    "type": "$OPPOSED"
+  },
+  {
+    "source": "org-choshu",
+    "target": "org-aizu",
+    "type": "$OPPOSED"
+  },
+  {
+    "source": "person-kaishu",
+    "target": "person-saigo",
+    "type": "$NEGOTIATED_WITH"
+  },
+  {
+    "source": "person-kaishu",
+    "target": "person-enomoto",
+    "type": "$MENTORED"
+  },
+  {
+    "source": "person-kaishu",
+    "target": "person-john-manjiro",
+    "type": "$WORKED_WITH"
+  },
+  {
+    "source": "person-kaishu",
+    "target": "person-yamaoka",
+    "type": "$ALLIED_WITH"
+  },
+  {
+    "source": "person-enomoto",
+    "target": "org-bakufu",
+    "type": "$SERVED",
+    "properties": {
+      "$role": "海軍副総裁"
+    }
+  },
+  {
+    "source": "person-john-manjiro",
+    "target": "org-bakufu",
+    "type": "$SERVED",
+    "properties": {
+      "$role": "通訳"
+    }
+  },
+  {
+    "source": "person-takechi",
+    "target": "person-ryoma",
+    "type": "$OPPOSED"
+  },
+  {
+    "source": "person-matsudaira",
+    "target": "org-fukui",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-shinsaku",
+    "target": "org-kiheitai",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-iwasaki",
+    "target": "org-mitsubishi",
+    "type": "$FOUNDED"
+  },
+  {
+    "source": "org-choshu",
+    "target": "org-kiheitai",
+    "type": "$AFFILIATED_WITH"
+  },
+  {
+    "source": "org-satsuma",
+    "target": "org-shingun",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "org-choshu",
+    "target": "org-shingun",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "org-tosa",
+    "target": "org-shingun",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "org-bakufu",
+    "target": "org-kyubakufu",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "org-aizu",
+    "target": "org-kyubakufu",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "org-shinsengumi",
+    "target": "org-kyubakufu",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-saigo",
+    "target": "org-shingun",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-okubo",
+    "target": "org-shingun",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-katsura",
+    "target": "org-shingun",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-yoshinobu",
+    "target": "org-kyubakufu",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-kondo",
+    "target": "org-kyubakufu",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-hijikata",
+    "target": "org-kyubakufu",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "event-toba-fushimi",
+    "target": "org-shingun",
+    "type": "$VICTORY_FOR"
+  },
+  {
+    "source": "event-toba-fushimi",
+    "target": "org-kyubakufu",
+    "type": "$DEFEAT_FOR"
+  },
+  {
+    "source": "person-ogata",
+    "target": "org-tekijuku",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-fukuzawa",
+    "target": "org-tekijuku",
+    "type": "$STUDIED_AT"
+  },
+  {
+    "source": "person-sano",
+    "target": "org-tekijuku",
+    "type": "$STUDIED_AT"
+  },
+  {
+    "source": "person-omura",
+    "target": "org-tekijuku",
+    "type": "$STUDIED_AT"
+  },
+  {
+    "source": "person-otori",
+    "target": "org-tekijuku",
+    "type": "$STUDIED_AT"
+  },
+  {
+    "source": "person-tezuka",
+    "target": "org-tekijuku",
+    "type": "$STUDIED_AT"
+  },
+  {
+    "source": "org-tekijuku",
+    "target": "loc-osaka",
+    "type": "$LOCATED_IN"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "status-1",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-kaishu",
+    "target": "status-2",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-saigo",
+    "target": "status-3",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-katsura",
+    "target": "status-4",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-nakaoka",
+    "target": "status-5",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-goto",
+    "target": "status-6",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-iwasaki",
+    "target": "status-7",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-oryo",
+    "target": "status-8",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-takechi",
+    "target": "status-1",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-yoshida",
+    "target": "status-4",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-shinsaku",
+    "target": "status-4",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-okubo",
+    "target": "status-3",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-kondo",
+    "target": "status-9",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-hijikata",
+    "target": "status-10",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-yoshinobu",
+    "target": "status-11",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-okita",
+    "target": "status-12",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-saito",
+    "target": "status-13",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-nagakura",
+    "target": "status-14",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-harada",
+    "target": "status-15",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-todo",
+    "target": "status-16",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-inoue",
+    "target": "status-17",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-serizawa",
+    "target": "status-18",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-ito",
+    "target": "status-19",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-nariakira",
+    "target": "status-20",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-komatsu",
+    "target": "status-21",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-atsuhime",
+    "target": "status-22",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-omura",
+    "target": "status-4",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-inoue-kaoru",
+    "target": "status-4",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-kido",
+    "target": "status-23",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-kusaka",
+    "target": "status-4",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-ii",
+    "target": "status-24",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-abe",
+    "target": "status-25",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-oguri",
+    "target": "status-2",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-komei",
+    "target": "status-26",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-meiji",
+    "target": "status-27",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-iwakura",
+    "target": "status-28",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-sanjo",
+    "target": "status-28",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-matsudaira",
+    "target": "status-29",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-katamori",
+    "target": "status-30",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-enomoto",
+    "target": "status-2",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-john-manjiro",
+    "target": "status-31",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-yamaoka",
+    "target": "status-2",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-ogata",
+    "target": "status-32",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-ogata",
+    "target": "status-33",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-ogata",
+    "target": "status-34",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-fukuzawa",
+    "target": "status-32",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-fukuzawa",
+    "target": "status-34",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-sano",
+    "target": "status-32",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-sano",
+    "target": "status-35",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-otori",
+    "target": "status-32",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-otori",
+    "target": "status-2",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-tezuka",
+    "target": "status-36",
+    "type": "$HAS_STATUS"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-glover",
+    "type": "$SUPPORTED",
+    "properties": {
+      "$role": "武器商人"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-satow",
+    "type": "$WORKED_WITH",
+    "properties": {
+      "$role": "会談"
+    }
+  },
+  {
+    "source": "person-seishu",
+    "target": "person-kae",
+    "type": "$SPOUSE_OF"
+  },
+  {
+    "source": "person-seishu",
+    "target": "person-otsugi",
+    "type": "$RELATED_TO",
+    "properties": {
+      "$relation": "息子"
+    }
+  },
+  {
+    "source": "person-kae",
+    "target": "person-otsugi",
+    "type": "$RELATED_TO",
+    "properties": {
+      "$relation": "嫁"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-goto",
+    "type": "$COOPERATED_WITH",
+    "properties": {
+      "$through": "大政奉還"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-iwasaki",
+    "type": "$WORKED_WITH",
+    "properties": {
+      "$through": "海援隊"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-shinsaku",
+    "type": "$ALLIED_WITH"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-okubo",
+    "type": "$ALLIED_WITH"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-komatsu",
+    "type": "$NEGOTIATED_WITH",
+    "properties": {
+      "$through": "薩長同盟"
+    }
+  },
+  {
+    "source": "person-sasaki",
+    "target": "person-ryoma",
+    "type": "$SUSPECTED_OF_ASSASSINATION"
+  },
+  {
+    "source": "person-nobuo",
+    "target": "person-ryoma",
+    "type": "$SUSPECTED_OF_ASSASSINATION"
+  },
+  {
+    "source": "org-mimawarigumi",
+    "target": "event-omi",
+    "type": "$PARTICIPATED_IN"
+  },
+  {
+    "source": "person-sasaki",
+    "target": "org-mimawarigumi",
+    "type": "$LEADS"
+  },
+  {
+    "source": "person-nobuo",
+    "target": "org-mimawarigumi",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "org-mimawarigumi",
+    "target": "org-bakufu",
+    "type": "$AFFILIATED_WITH"
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-hachihei",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "父"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-sachi",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "母"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-iyo",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "継母"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-gonbei",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "兄"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-chizu",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "姉"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-ei",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "姉"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-otome",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "姉"
+    }
+  },
+  {
+    "source": "person-hachihei",
+    "target": "person-sachi",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "妻"
+    }
+  },
+  {
+    "source": "person-hachihei",
+    "target": "person-iyo",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "妻"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-shosaku",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "義父"
+    }
+  },
+  {
+    "source": "person-shosaku",
+    "target": "person-ryoma",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "義理の息子"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-sada",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "義母"
+    }
+  },
+  {
+    "source": "person-sada",
+    "target": "person-ryoma",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "義理の息子"
+    }
+  },
+  {
+    "source": "person-oryo",
+    "target": "person-shosaku",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "父"
+    }
+  },
+  {
+    "source": "person-shosaku",
+    "target": "person-oryo",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "娘"
+    }
+  },
+  {
+    "source": "person-oryo",
+    "target": "person-sada",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "母"
+    }
+  },
+  {
+    "source": "person-sada",
+    "target": "person-oryo",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "娘"
+    }
+  },
+  {
+    "source": "person-shosaku",
+    "target": "person-sada",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "妻"
+    }
+  },
+  {
+    "source": "person-sada",
+    "target": "person-shosaku",
+    "type": "$FAMILY",
+    "properties": {
+      "$relation": "夫"
+    }
+  },
+  {
+    "source": "person-ryoma",
+    "target": "person-saitani",
+    "type": "$IS_SAME_AS"
+  },
+  {
+    "source": "person-saitani",
+    "target": "person-ryoma",
+    "type": "$IS_SAME_AS"
+  },
+  {
+    "source": "person-oryo",
+    "target": "person-narasaki-ryo",
+    "type": "$IS_SAME_AS"
+  },
+  {
+    "source": "person-narasaki-ryo",
+    "target": "person-oryo",
+    "type": "$IS_SAME_AS"
+  },
+  {
+    "source": "person-fukuzawa",
+    "target": "org-keio",
+    "type": "$FOUNDED"
+  },
+  {
+    "source": "person-fukuzawa",
+    "target": "work-gakumon",
+    "type": "$AUTHOR_OF"
+  },
+  {
+    "source": "person-fukuzawa",
+    "target": "work-bunmeiron",
+    "type": "$AUTHOR_OF"
+  },
+  {
+    "source": "person-fukuzawa",
+    "target": "org-meirokusha",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-mori",
+    "target": "org-meirokusha",
+    "type": "$FOUNDED"
+  },
+  {
+    "source": "person-nishi",
+    "target": "org-meirokusha",
+    "type": "$BELONGED_TO"
+  },
+  {
+    "source": "person-fukuzawa",
+    "target": "person-mori",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-mori",
+    "target": "person-fukuzawa",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-fukuzawa",
+    "target": "person-nishi",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-nishi",
+    "target": "person-fukuzawa",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-fukuzawa",
+    "target": "person-shibusawa",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-shibusawa",
+    "target": "person-fukuzawa",
+    "type": "$COOPERATED_WITH"
+  },
+  {
+    "source": "person-fukuzawa",
+    "target": "person-okuma",
+    "type": "$OPPOSED"
+  },
+  {
+    "source": "person-okuma",
+    "target": "person-fukuzawa",
+    "type": "$OPPOSED"
+  }
+]

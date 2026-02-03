@@ -1,0 +1,45 @@
+import 'dart:io';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'platform_providers.g.dart';
+
+/// Provider that supplies platform information.
+@riverpod
+bool isMacOSPlatform(IsMacOSPlatformRef ref) => Platform.isMacOS;
+
+/// Class for managing platform information.
+@riverpod
+PlatformInfo platformInfo(PlatformInfoRef ref) {
+  return PlatformInfo();
+}
+
+/// Class representing platform information.
+class PlatformInfo {
+  /// Whether it is macOS.
+  bool get isMacOS => Platform.isMacOS;
+
+  /// Whether it is Windows.
+  bool get isWindows => Platform.isWindows;
+
+  /// Whether it is Linux.
+  bool get isLinux => Platform.isLinux;
+
+  /// Whether it is a desktop platform.
+  bool get isDesktop => isMacOS || isWindows || isLinux;
+
+  /// Whether it is a mobile platform.
+  bool get isMobile => Platform.isAndroid || Platform.isIOS;
+
+  /// Whether it is a web platform.
+  bool get isWeb => !isDesktop && !isMobile;
+
+  /// The name of the platform.
+  String get platformName {
+    if (isMacOS) return 'macOS';
+    if (isWindows) return 'Windows';
+    if (isLinux) return 'Linux';
+    if (Platform.isAndroid) return 'Android';
+    if (Platform.isIOS) return 'iOS';
+    return 'Unknown';
+  }
+}
