@@ -65,6 +65,13 @@ class VersionService {
       final json = jsonDecode(jsonString) as Map<String, dynamic>;
       return VersionInfo.fromJson(json);
     } catch (e) {
+      // In debug mode, this is a fatal error because it means the developer
+      // forgot to run `scripts/generate_version.sh`.
+      assert(
+        false,
+        'Failed to load version.json. '
+        'Please run `scripts/generate_version.sh` before running the app.',
+      );
       // If the file is not found, return default values.
       return VersionInfo(
         stage: 'Unknown',
