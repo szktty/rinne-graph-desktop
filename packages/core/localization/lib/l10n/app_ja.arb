@@ -39,27 +39,27 @@
   
   "app_concept_stack": "スタック",
   "@app_concept_stack": {
-    "description": "Arizal固有概念：データベースの単位"
+    "description": "RinneGraph固有概念：データベースの単位"
   },
   
   "app_concept_entity": "エンティティ",
   "@app_concept_entity": {
-    "description": "Arizal固有概念：グラフの要素"
+    "description": "RinneGraph固有概念：グラフの要素"
   },
   
   "app_concept_node": "ノード",
   "@app_concept_node": {
-    "description": "Arizal固有概念：グラフのノード"
+    "description": "RinneGraph固有概念：グラフのノード"
   },
   
   "app_concept_edge": "エッジ",
   "@app_concept_edge": {
-    "description": "Arizal固有概念：グラフのエッジ"
+    "description": "RinneGraph固有概念：グラフのエッジ"
   },
   
   "app_concept_graph": "グラフ",
   "@app_concept_graph": {
-    "description": "Arizal固有概念：グラフ構造"
+    "description": "RinneGraph固有概念：グラフ構造"
   },
   
   "database_term_query": "クエリ",
@@ -558,9 +558,9 @@
     "description": "削除メニュー項目"
   },
 
-  "menu_app_help": "Arizalヘルプ",
+  "menu_app_help": "RinneGraphヘルプ",
   "@menu_app_help": {
-    "description": "Arizalヘルプメニュー項目"
+    "description": "RinneGraphヘルプメニュー項目"
   },
 
   "menu_welcome": "ようこそ",
@@ -598,7 +598,7 @@
     "description": "デモ画面のタイトル"
   },
   
-  "demo_description": "このデモでは、Arizalアプリケーションのローカライズ機能を確認できます。",
+  "demo_description": "このデモでは、RinneGraphアプリケーションのローカライズ機能を確認できます。",
   "@demo_description": {
     "description": "デモ画面の説明文"
   },
@@ -613,9 +613,9 @@
     "description": "共通ボタンセクションのタイトル"
   },
   
-  "demo_app_concepts": "Arizal概念",
+  "demo_app_concepts": "RinneGraph概念",
   "@demo_app_concepts": {
-    "description": "Arizal概念セクションのタイトル"
+    "description": "RinneGraph概念セクションのタイトル"
   },
   
   "demo_database_terms": "データベース用語",
