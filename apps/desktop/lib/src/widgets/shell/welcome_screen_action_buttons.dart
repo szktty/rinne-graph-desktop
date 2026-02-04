@@ -10,8 +10,6 @@ import 'package:core_stack_common/src/service/stack_metadata_service.dart';
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
 import 'dart:io';
 
-
-
 /// Action buttons section for the welcome screen.
 class WelcomeScreenActionButtons extends ConsumerWidget {
   final VoidCallback? onCreateNewStack;

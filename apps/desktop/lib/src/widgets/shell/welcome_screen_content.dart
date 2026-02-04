@@ -43,7 +43,6 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
     final stacksAsync = ref.watch(core_stack.allStacksListProvider);
     final selectedStack = ref.watch(selectedWelcomeStackProvider);
 
-
     return Material(
       type: MaterialType.transparency,
       child: Padding(
@@ -127,7 +126,11 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
       switch (action) {
         case 'install':
           showInstallConfirmationDialogHelper(
-              context, ref, stackData.templateManifest, _installSampleStackTemplate);
+            context,
+            ref,
+            stackData.templateManifest,
+            _installSampleStackTemplate,
+          );
           break;
         default:
           debugPrint('Unknown template action: $action');
@@ -211,9 +214,7 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
   }
 
   /// Install sample stack template
-  Future<void> _installSampleStackTemplate(
-    dynamic manifest,
-  ) async {
+  Future<void> _installSampleStackTemplate(dynamic manifest) async {
     await installSampleStackTemplateHelper(context, ref, manifest);
 
     // Find the newly installed stack and activate it

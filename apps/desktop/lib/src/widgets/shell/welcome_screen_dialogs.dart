@@ -14,7 +14,6 @@ import 'package:features_welcome/src/providers/welcome_providers.dart';
 import 'package:core_foundation_flutter/core_foundation_flutter.dart'; // debugLog, AppSnackBar のために追加
 import 'package:features_welcome/src/services/debug_stack_operations.dart'; // DebugStackOperations のために追加
 
-
 import 'package:desktop/src/widgets/shell/welcome_screen_helpers.dart';
 
 /// Display stack info dialog
@@ -424,7 +423,10 @@ Widget buildWarningItemHelper(String text, AppColorScheme colorScheme) {
 
 // Debug helper functions moved from welcome_screen_grid_header.dart
 /// Debug: Confirmation dialog to archive all stacks
-void showDebugArchiveAllConfirmationHelper(BuildContext context, WidgetRef ref) {
+void showDebugArchiveAllConfirmationHelper(
+  BuildContext context,
+  WidgetRef ref,
+) {
   final colorScheme = ref.read(effectiveColorSchemeProvider);
 
   showDialog<bool>(

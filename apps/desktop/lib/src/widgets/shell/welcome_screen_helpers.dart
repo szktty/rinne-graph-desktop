@@ -96,12 +96,14 @@ Widget buildVersionInfoHelper(WidgetRef ref) {
   final displayVersionAsync = ref.watch(displayVersionStringProvider);
 
   return displayVersionAsync.when(
-        data: (version) => AppText(
+    data:
+        (version) => AppText(
           version,
           variant: AppTextVariant.bodyText,
           color: appColorScheme.base.foreground.withAlpha(179),
         ),
-        loading: () => AppText(
+    loading:
+        () => AppText(
           'Loading...',
           variant: AppTextVariant.bodyText,
           color: appColorScheme.base.foreground.withAlpha(179),
