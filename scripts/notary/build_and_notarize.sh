@@ -60,8 +60,17 @@ fi
 
 # --- App Information ---
 APP_NAME="RinneGraph"
-VERSION=$(grep '^version:' "$APP_DIR/pubspec.yaml" | awk '{print $2}')
-VERSION_STRING=$(echo "$VERSION" | cut -d+ -f1)
+
+# Use the release version from the environment if available (set by CI/CD).
+# Otherwise, fall back to the version from pubspec.yaml for local builds.
+if [ -n "$RELEASE_VERSION" ]; then
+    echo "✅ Using release version from environment: $RELEASE_VERSION"
+    VERSION_STRING="$RELEASE_VERSION"
+else
+    echo "ℹ️ No RELEASE_VERSION env var found. Using version from pubspec.yaml."
+    VERSION=$(grep '^version:' "$APP_DIR/pubspec.yaml" | awk '{print $2}')
+    VERSION_STRING=$(echo "$VERSION" | cut -d+ -f1)
+fi
 
 # --- Paths & Directories ---
 APP_BUNDLE_PATH="$APP_DIR/build/macos/Build/Products/Release/$APP_NAME.app"

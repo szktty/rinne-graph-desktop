@@ -74,6 +74,8 @@ jobs:
           echo "✅ env.sh created successfully."
 
       - name: Run Build and Notarize script
+        env:
+          RELEASE_VERSION: ${{ github.ref_name }}
         run: ./scripts/notary/build_and_notarize.sh
 
       - name: Get release artifact info
