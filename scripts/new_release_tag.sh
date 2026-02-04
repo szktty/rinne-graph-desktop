@@ -2,8 +2,21 @@
 
 # new_release_tag.sh
 # Script to generate a new Git tag for releases based on the latest release date and build number.
+# By default, it only prints the new tag name. Use the --create flag to create the Git tag.
 
 set -euo pipefail
+
+# --- Argument Parsing ---
+CREATE_TAG=false
+for arg in "$@"
+do
+    case $arg in
+        --create)
+        CREATE_TAG=true
+        shift # Remove --create from processing
+        ;;
+    esac
+done
 
 # Get today's date in YYMMDD format
 TODAY=$(date -u +"%y%m%d")
@@ -27,5 +40,11 @@ else
     NEW_TAG="v0.${TODAY}.${NEW_BUILD_NUMBER}"
 fi
 
-# Output the generated new tag name
-echo "$NEW_TAG"
+# If --create flag is passed, create the tag. Otherwise, just print the name.
+if [ "$CREATE_TAG" = true ]; then
+    git tag "$NEW_TAG"
+    echo "Successfully created tag: $NEW_TAG"
+else
+    # Output the generated new tag name
+    echo "$NEW_TAG"
+fi
