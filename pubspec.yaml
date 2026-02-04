@@ -23,7 +23,6 @@ workspace:
   - packages/core/undo
   - packages/core/workflow
   - packages/features/archive
-  - packages/features/charts
   - packages/features/record_editor
 
   - packages/features/import_export
@@ -50,7 +49,6 @@ dev_dependencies:
   core_graph_flutter: any
   core_stack_flutter: any
 melos:
-  sdkPath: .fvm/flutter_sdk
 
   ide:
     intellij:
@@ -114,7 +112,7 @@ melos:
       exec:
         orderDependents: true
         packageFilters:
-          scope: "core_app_config,core_events,core_exchange,core_foundation_common,core_foundation_flutter,core_graph_common,core_graph_flutter,core_localization,core_samples,core_settings,core_stack_common,core_stack_flutter,core_themes,core_undo,core_workflow,features_archive,features_charts,features_import_export,features_metadata_editor,features_pathfinder,features_record_editor,features_settings,features_stack_management,features_updates,features_welcome,presentation_components,presentation_workflow,app,desktop"
+          scope: "core_app_config,core_events,core_exchange,core_foundation_common,core_foundation_flutter,core_graph_common,core_graph_flutter,core_localization,core_samples,core_settings,core_stack_common,core_stack_flutter,core_themes,core_undo,core_workflow,features_archive,features_import_export,features_metadata_editor,features_pathfinder,features_record_editor,features_settings,features_stack_management,features_updates,features_welcome,presentation_components,presentation_workflow,app,desktop"
 
     test:
       description: Run tests in all packages.

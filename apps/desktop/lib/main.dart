@@ -15,10 +15,6 @@ import 'src/widgets/menu_builder.dart';
 import 'src/widgets/main_app_shell.dart';
 import 'src/providers/dialog_visibility_providers.dart';
 import 'src/providers/graph_providers.dart';
-import 'src/debug/screenshot_server.dart';
-
-// Global screenshot server instance
-ScreenshotServer? _screenshotServer;
 
 // Global reference to activity bar navigation function
 Function(int)? _globalActivityBarNavigator;
@@ -32,17 +28,6 @@ Future<void> main(List<String> args) async {
 
   // Initialize debug logger (disabled by default)
   debugLogger.initialize(enabled: false);
-
-  // Initialize settings system (temporarily initialize screenshot server with default settings)
-  // Actual settings will be loaded later in ProviderScope
-  if (args.contains('--enable-screenshot-server') ||
-      const String.fromEnvironment(
-            'ENABLE_SCREENSHOT_SERVER',
-            defaultValue: 'false',
-          ) ==
-          'true') {
-    _screenshotServer = ScreenshotServer();
-  }
 
   // Enabling development stacks is read from the configuration file, so
   // here we temporarily check command line arguments
@@ -67,9 +52,6 @@ Future<void> main(List<String> args) async {
           commandLineArgs: args,
         ),
   );
-
-  // Clean up screenshot server
-  await _screenshotServer?.stop();
 }
 
 // AppApp with ProviderScope for Riverpod
@@ -185,28 +167,13 @@ class _AppMaterialApp extends ConsumerWidget {
                                 ),
                               ),
                         ],
-                        child:
-                            _screenshotServer != null
-                                ? ScreenshotWrapper(
-                                  controller:
-                                      _screenshotServer!.screenshotController,
-                                  child: MainAppShell(
-                                    enableDevStacks: enableDevStacks,
-                                    commandLineArgs: commandLineArgs,
-                                    screenshotServer: _screenshotServer,
-                                    globalActivityBarNavigator:
-                                        _globalActivityBarNavigator,
-                                    navigatorKey: navigatorKey,
-                                  ),
-                                )
-                                : MainAppShell(
-                                  enableDevStacks: enableDevStacks,
-                                  commandLineArgs: commandLineArgs,
-                                  screenshotServer: _screenshotServer,
-                                  globalActivityBarNavigator:
-                                      _globalActivityBarNavigator,
-                                  navigatorKey: navigatorKey,
-                                ),
+                        child: MainAppShell(
+                          enableDevStacks: enableDevStacks,
+                          commandLineArgs: commandLineArgs,
+                          globalActivityBarNavigator:
+                              _globalActivityBarNavigator,
+                          navigatorKey: navigatorKey,
+                        ),
                       ),
                     ),
                   ),
@@ -249,25 +216,12 @@ class _AppMaterialApp extends ConsumerWidget {
               ),
             ),
           ],
-          child:
-              _screenshotServer != null
-                  ? ScreenshotWrapper(
-                    controller: _screenshotServer!.screenshotController,
-                    child: MainAppShell(
-                      enableDevStacks: enableDevStacks,
-                      commandLineArgs: commandLineArgs,
-                      screenshotServer: _screenshotServer,
-                      globalActivityBarNavigator: _globalActivityBarNavigator,
-                      navigatorKey: navigatorKey,
-                    ),
-                  )
-                  : MainAppShell(
-                    enableDevStacks: enableDevStacks,
-                    commandLineArgs: commandLineArgs,
-                    screenshotServer: _screenshotServer,
-                    globalActivityBarNavigator: _globalActivityBarNavigator,
-                    navigatorKey: navigatorKey,
-                  ),
+          child: MainAppShell(
+            enableDevStacks: enableDevStacks,
+            commandLineArgs: commandLineArgs,
+            globalActivityBarNavigator: _globalActivityBarNavigator,
+            navigatorKey: navigatorKey,
+          ),
         ),
       );
     }

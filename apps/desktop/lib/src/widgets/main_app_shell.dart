@@ -13,10 +13,8 @@ import 'package:core_app_config/core_app_config.dart';
 import '../providers/app_state_providers.dart';
 import '../providers/open_stacks_providers.dart';
 import '../providers/entity_selection_bridge_providers.dart';
-import '../debug/screenshot_server.dart';
 import '../providers/shell_state_manager.dart';
 import '../commands/register_core_commands.dart';
-import '../debug/command_server.dart';
 import 'shell/startup_handler.dart';
 import 'shell/sidebar_builder.dart';
 import 'shell/main_content_builder.dart';
@@ -29,14 +27,12 @@ class MainAppShell extends ConsumerWidget {
     super.key,
     this.enableDevStacks = false,
     this.commandLineArgs = const [],
-    this.screenshotServer,
     this.globalActivityBarNavigator,
     this.navigatorKey,
   });
 
   final bool enableDevStacks;
   final List<String> commandLineArgs;
-  final ScreenshotServer? screenshotServer;
   final Function(int)? globalActivityBarNavigator;
   final GlobalKey<NavigatorState>? navigatorKey;
 
@@ -68,32 +64,7 @@ class MainAppShell extends ConsumerWidget {
       }
     });
 
-    // Start screenshot server if not already started - also check the configuration file
-    final debugConfig = ref.watch(debugConfigProvider);
-    final shouldStartScreenshotServer =
-        (screenshotServer != null && debugConfig.enableScreenshotServer) ||
-        (screenshotServer != null);
-
     final shellState = ref.watch(shellStateManagerProvider);
-
-    if (shouldStartScreenshotServer && !shellState.screenshotServerStarted) {
-      Future(() {
-        ref
-            .read(shellStateManagerProvider.notifier)
-            .markScreenshotServerStarted();
-      });
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        try {
-          await screenshotServer!.start(
-            navigatorKey: navigatorKey!,
-            activityBarNavigator:
-                (index) => globalActivityBarNavigator?.call(index),
-          );
-        } catch (e) {
-          debugPrint('Failed to start screenshot server: $e');
-        }
-      });
-    }
 
     // Stack loading process at startup (delegated to StartupHandler)
     StartupHandler.schedule(
@@ -123,22 +94,6 @@ class MainAppShell extends ConsumerWidget {
         // Register in-app commands
         registerCoreCommands(ref);
         ref.read(shellStateManagerProvider.notifier).markCommandsRegistered();
-      });
-    }
-
-    // Start remote command server (minimal JSON-RPC implementation / localhost:18085)
-    // Can be enabled/disabled with dart-define (remoteCommandsEnabledProvider)
-    final enableRemoteCommands = ref.watch(remoteCommandsEnabledProvider);
-    if (enableRemoteCommands && !shellState.remoteCommandServerStarted) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        try {
-          ref
-              .read(shellStateManagerProvider.notifier)
-              .markRemoteCommandServerStarted();
-          await ref.read(commandServerProvider).start(ref);
-        } catch (e) {
-          debugPrint('Failed to start command server: $e');
-        }
       });
     }
 
