@@ -104,7 +104,7 @@ jobs:
       - name: Upload notarized DMG as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: RinneGraph-macOS-Installer
+          name: RinneGraph-${{ github.ref_name }}-macOS
           path: ${{ env.ARTIFACT_PATH }}
           retention-days: 7
 
