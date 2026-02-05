@@ -34,6 +34,8 @@ dependencies:
   desktop_drop: ^0.6.0
   cross_file: ^0.3.4+2
   url_launcher: ^6.3.2
+  core_samples:
+    path: ../../core/samples
 
 dev_dependencies:
   flutter_test:
