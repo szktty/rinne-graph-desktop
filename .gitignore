@@ -1,9 +1,17 @@
 # IDE
 .idea
-.vscode/
 *.swp
 *.swo
 *~
+
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
 
 # Flutter/Dart
 .dart_tool
@@ -55,7 +63,6 @@ apps/*/assets/version.json
 .gemini/
 .serena/
 augment/
-.vscode/launch.json
 *.iml
 **/.vitepress/cache
 node_modules

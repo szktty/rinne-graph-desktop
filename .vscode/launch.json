@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "desktop",
+            "cwd": "apps/desktop",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "desktop (profile mode)",
+            "cwd": "apps/desktop",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "desktop (release mode)",
+            "cwd": "apps/desktop",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
