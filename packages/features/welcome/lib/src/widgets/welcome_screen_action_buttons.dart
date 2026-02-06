@@ -48,16 +48,7 @@ class WelcomeScreenActionButtons extends ConsumerWidget {
             showImportDialog(context);
           },
         ),
-        const SizedBox(height: 32),
-        const AppDivider(),
-        const SizedBox(height: 32),
-        AppButton.normal(
-          label: 'Install Sample Stacks...',
-          onPressed: () {
-            ref.read(stackDisplayModeProvider.notifier).state =
-                StackDisplayModeType.sampleTemplate;
-          },
-        ),
+
       ],
     );
   }
