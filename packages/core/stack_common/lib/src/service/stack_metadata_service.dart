@@ -104,17 +104,87 @@ class StackMetadataService {
     return null;
   }
 
-  /// Gets the stack's thumbnail image file path
-  ///
-  /// [stackDir] The stack directory (`.stack`) from which to get the thumbnail image path.
-  /// [thumbnailFileName] The file name of the thumbnail image.
-  ///
-  /// Returns: The path of the thumbnail image file if it exists, otherwise null.
+  /// Saves the stack's thumbnail image file path
   Future<String?> getThumbnailFilePath(
     Directory stackDir,
     String? thumbnailFileName,
   ) async {
     final thumbnailFile = await findThumbnailFile(stackDir, thumbnailFileName);
     return thumbnailFile?.path;
+  }
+
+  /// Asynchronously saves metadata to the stack directory.
+  ///
+  /// [stackDir] The stack directory (`.stack`) where metadata will be saved.
+  /// [info] The StackInfo object to save to `info.json`.
+  /// [settings] The StackSettings object to save to `settings.json`.
+  Future<void> saveMetadata(
+    Directory stackDir,
+    StackInfo info,
+    StackSettings settings,
+  ) async {
+    await saveStackInfo(stackDir, info);
+    await saveStackSettings(stackDir, settings);
+  }
+
+  /// Asynchronously saves StackInfo to `info.json`.
+  ///
+  /// [stackDir] The stack directory (`.stack`).
+  /// [info] The StackInfo object to save.
+  Future<void> saveStackInfo(Directory stackDir, StackInfo info) async {
+    print(
+      '[StackMetadataService.saveStackInfo] Start saving info.json for ${stackDir.path}',
+    );
+    try {
+      final metaDir = Directory(p.join(stackDir.path, 'meta'));
+      if (!await metaDir.exists()) {
+        await metaDir.create(recursive: true);
+      }
+      final infoFile = File(p.join(metaDir.path, 'info.json'));
+      final json = info.toJson();
+      const encoder = JsonEncoder.withIndent('  ');
+      await infoFile.writeAsString(encoder.convert(json));
+      print(
+        '[StackMetadataService.saveStackInfo] Successfully saved info.json for ${stackDir.path}',
+      );
+    } catch (e, stackTrace) {
+      print(
+        '[StackMetadataService.saveStackInfo] Error saving info.json for ${stackDir.path}: $e',
+      );
+      print(stackTrace);
+      rethrow;
+    }
+  }
+
+  /// Asynchronously saves StackSettings to `settings.json`.
+  ///
+  /// [stackDir] The stack directory (`.stack`).
+  /// [settings] The StackSettings object to save.
+  Future<void> saveStackSettings(
+    Directory stackDir,
+    StackSettings settings,
+  ) async {
+    print(
+      '[StackMetadataService.saveStackSettings] Start saving settings.json for ${stackDir.path}',
+    );
+    try {
+      final metaDir = Directory(p.join(stackDir.path, 'meta'));
+      if (!await metaDir.exists()) {
+        await metaDir.create(recursive: true);
+      }
+      final settingsFile = File(p.join(metaDir.path, 'settings.json'));
+      final json = settings.toJson();
+      const encoder = JsonEncoder.withIndent('  ');
+      await settingsFile.writeAsString(encoder.convert(json));
+      print(
+        '[StackMetadataService.saveStackSettings] Successfully saved settings.json for ${stackDir.path}',
+      );
+    } catch (e, stackTrace) {
+      print(
+        '[StackMetadataService.saveStackSettings] Error saving settings.json for ${stackDir.path}: $e',
+      );
+      print(stackTrace);
+      rethrow;
+    }
   }
 }

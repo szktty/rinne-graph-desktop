@@ -9,7 +9,7 @@ The `docs/` directory contains official project documentation, serving as a cent
 ## Documentation Structure
 
 -   **`design/`**: Contains UI/UX specifications, design guidelines, and visual design principles.
--   **`stack/`**: Contains specifications related to the "Stack" data format and structure.
+-   **`stack/`**: Contains specifications related to the "Stack" data format and structure. Key architectural details regarding stack API implementation across different packages are detailed in `stack_api_architecture.md`.
 -   **`user-data-directory.md`**: Explains the structure and management of the user data directory.
 
 ## Writing Guidelines

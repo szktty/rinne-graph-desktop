@@ -44,3 +44,4 @@ When creating a new package, follow existing project conventions for consistent 
 *   Adhere to the package's defined scope and avoid scope creep.
 *   Ensure all new or modified packages include comprehensive tests.
 *   **Performance Considerations for UI**: When implementing UI, especially graph views where nodes are free-position widgets (e.g., in `plough`), be highly mindful of performance. Avoid excessive widget rebuilds, particularly as the number of nodes increases, to ensure a smooth user experience.
+*   **Stack API Architecture**: For comprehensive understanding of how stack-related packages (`core_stack_common`, `core_graph_common`, `core_stack_flutter`) are structured and how to use their APIs for creating, loading, and saving stacks, refer to `docs/stack/stack_api_architecture.md`. This document is essential for any work involving stack persistence or manipulation.

@@ -1,5 +1,6 @@
 // Re-export core_stack_common
-export 'package:core_stack_common/core_stack_common.dart';
+export 'package:core_stack_common/core_stack_common.dart'
+    hide StackService, StackSource, FileSystemStackSource;
 
 // 初期化
 export 'src/initialization/package_initialization.dart';

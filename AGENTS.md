@@ -51,3 +51,7 @@ flutter run
 *   **Convention Adherence**: Strictly follow existing project conventions (naming, formatting, architecture).
 *   **Verification**: Always run relevant tests, linters, and type checks after making changes.
 *   **Mandatory Build Check**: After any code modification, always perform a build check using `flutter build` to ensure no build errors. `flutter analyze` is for static analysis, not build validation. `flutter run` requires user interaction and is not suitable for automated build checks. If build errors occur, repeatedly attempt to fix them.
+
+## Key Architectural Documents
+
+*   **Stack API Architecture and Usage Guide**: Located at `docs/stack/stack_api_architecture.md`. This document is critical for understanding how the different packages (`core_stack_common`, `core_graph_common`, `core_stack_flutter`) collaborate to manage Stacks, including their metadata and graph database. AI agents should refer to this guide for comprehensive information on Stack-related operations, creation, and persistence.

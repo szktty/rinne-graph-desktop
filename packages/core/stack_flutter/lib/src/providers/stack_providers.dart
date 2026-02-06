@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:core_foundation_flutter/core_foundation_flutter.dart';
 import 'package:core_graph_common/core_graph_common.dart';
 import 'package:core_samples/core_samples.dart';
-import 'package:core_stack_common/core_stack_common.dart';
+import 'package:core_stack_common/core_stack_common.dart' hide StackService;
 import 'package:core_stack_flutter/src/service/stack_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;

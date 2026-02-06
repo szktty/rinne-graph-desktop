@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:core_graph_common/core_graph_common.dart';
+import 'package:path/path.dart' as p;
 import '../model.dart';
 import 'stack_locator_service.dart';
 import 'stack_metadata_service.dart';
@@ -9,8 +11,8 @@ class StackService {
   StackService({
     StackLocatorService? locator,
     StackMetadataService? metadataLoader,
-  }) : _locator = locator ?? StackLocatorService(),
-       _metadataLoader = metadataLoader ?? StackMetadataService();
+  })  : _locator = locator ?? StackLocatorService(),
+        _metadataLoader = metadataLoader ?? StackMetadataService();
   final StackLocatorService _locator;
   final StackMetadataService _metadataLoader;
 
@@ -61,6 +63,57 @@ class StackService {
     }
     print(
       '[StackService.listAvailableStacks] Finished for ${rootDirectory.path}',
+    );
+  }
+
+  /// Creates a new stack with the given name in the specified base directory.
+  ///
+  /// [baseDir] The directory where the new stack directory will be created.
+  /// [name] The name of the new stack. A `.stack` extension will be appended.
+  Future<Stack> createStack(Directory baseDir, String name) async {
+    final stackDir = Directory(p.join(baseDir.path, '$name.stack'));
+    if (await stackDir.exists()) {
+      throw FileSystemException('Stack directory already exists', stackDir.path);
+    }
+
+    // Create all required directories
+    final dataDir = Directory(p.join(stackDir.path, 'data'));
+    await Directory(p.join(stackDir.path, 'meta')).create(recursive: true);
+    await dataDir.create(recursive: true);
+    await Directory(p.join(stackDir.path, 'assets')).create(recursive: true);
+    await Directory(p.join(stackDir.path, 'datasets')).create(recursive: true);
+    await Directory(p.join(stackDir.path, 'filters')).create(recursive: true);
+
+    // Create the graph.db file
+    final dbPath = p.join(dataDir.path, 'graph.db');
+    await DatabaseCreator.createEmptyDatabase(dbPath);
+
+    final now = DateTime.now();
+    final info = StackInfo(
+      name: name,
+      createdAt: now,
+      lastModifiedAt: now,
+      version: '1.0',
+    );
+    const settings = StackSettings();
+
+    await _metadataLoader.saveMetadata(stackDir, info, settings);
+
+    return Stack(
+      directory: stackDir,
+      info: info,
+      settings: settings,
+    );
+  }
+
+  /// Updates the metadata of an existing stack.
+  ///
+  /// [stack] The stack object containing the updated information.
+  Future<void> updateStack(Stack stack) async {
+    await _metadataLoader.saveMetadata(
+      stack.directory,
+      stack.info,
+      stack.settings,
     );
   }
 }

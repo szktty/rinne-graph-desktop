@@ -11,5 +11,5 @@ export 'src/service/stack_metadata_service.dart';
 export 'src/service/stack_statistics_service.dart';
 
 // TODO: Fix complex service dependencies
-// export 'src/service/stack_service.dart';
-// export 'src/service/stack_source.dart';
+export 'src/service/stack_service.dart';
+export 'src/service/stack_source.dart';
