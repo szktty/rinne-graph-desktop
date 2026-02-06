@@ -31,12 +31,7 @@ class WelcomeScreenActionButtons extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppText(
-          'Get Started',
-          variant: AppTextVariant.textBody,
-          color: colorScheme.base.foreground,
-        ),
-        const SizedBox(height: 16),
+
         AppButton.primary(
           label: 'Create New Stack...',
           onPressed: () => _showNewStackCreationDialog(context, ref),
