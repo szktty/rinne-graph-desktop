@@ -8,12 +8,12 @@ import 'package:core_stack_flutter/core_stack.dart';
 import 'package:presentation_components/presentation_components.dart';
 import 'package:core_samples/core_samples.dart';
 
-import 'package:desktop/src/widgets/shell/welcome_screen_header.dart';
-import 'package:desktop/src/widgets/shell/welcome_screen_action_buttons.dart';
-import 'package:desktop/src/widgets/shell/welcome_screen_grid_header.dart';
-import 'package:desktop/src/widgets/shell/welcome_screen_stack_grid.dart';
-import 'package:desktop/src/widgets/shell/welcome_screen_dialogs.dart';
-import 'package:desktop/src/widgets/shell/welcome_screen_helpers.dart';
+import '../widgets/welcome_screen_header.dart';
+import '../widgets/welcome_screen_action_buttons.dart';
+import '../widgets/welcome_screen_grid_header.dart';
+import '../widgets/welcome_screen_stack_grid.dart';
+import '../widgets/welcome_screen_dialogs.dart';
+import '../widgets/welcome_screen_helpers.dart';
 
 /// Content for the welcome screen, displayed when no stack is active.
 class WelcomeScreenContent extends ConsumerStatefulWidget {

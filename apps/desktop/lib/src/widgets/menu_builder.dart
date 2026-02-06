@@ -7,6 +7,7 @@ import 'package:features_welcome/features_welcome.dart';
 import 'package:features_updates/updates.dart';
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
 import 'package:presentation_components/presentation_components.dart';
+import 'package:features_welcome/src/widgets/welcome_screen_dialogs.dart'; // For buildDialogFooterHelper
 
 import '../providers/app_state_providers.dart';
 import '../providers/open_stacks_providers.dart';
@@ -498,121 +499,37 @@ class MenuBuilder {
         ),
         PlatformMenuItem(
           label: 'Welcome',
-          onSelected: () {
-            // Check to prevent duplicate display
-            final isWelcomeDialogShowing = ref.read(
-              welcomeDialogShowingProvider,
-            );
-            if (isWelcomeDialogShowing) {
-              return; // Do nothing if already showing
-            }
+          onSelected: () async {
+            final navContext = navigatorKey.currentContext;
+            if (navContext == null) return;
 
-            // Set flag
-            ref.read(welcomeDialogShowingProvider.notifier).state = true;
+            final activeStack = ref.read(core_stack.activeStackProvider);
 
-            // Show welcome dialog
-            final navigatorContext = navigatorKey.currentContext;
-            if (navigatorContext != null) {
-              showWelcomeDialog(
-                navigatorContext,
-                onCreateNewStack: () {
-                  debugPrint('Create new stack from menu');
-                },
-                onOpenStack: () {
-                  debugPrint('Open existing stack from menu');
-                },
-                onImportStack: () {
-                  debugPrint('Import stack from menu');
-                },
-                onStackSelected: (selectedStack) async {
-                  debugPrint(
-                    'onStackSelected called from menu welcome: ${selectedStack.info.name}',
-                  );
-                  debugPrint(
-                    'Selected stack path: ${selectedStack.directory.path}',
-                  );
-
-                  final navContext = navigatorKey.currentContext;
-                  if (navContext == null) {
-                    debugPrint('Navigation context is null, aborting');
-                    return;
-                  }
-
-                  bool stackLoadedSuccessfully = false;
-                  try {
-                    // If same as current active stack, just close dialog
-                    final currentActiveStack = ref.read(
-                      core_stack.activeStackProvider,
-                    );
-                    debugPrint(
-                      'Current active stack: ${currentActiveStack?.directory.path ?? 'null'}',
-                    );
-
-                    if (currentActiveStack?.directory.path ==
-                        selectedStack.directory.path) {
-                      debugPrint(
-                        'Selected stack is already active, closing dialog',
-                      );
-                      stackLoadedSuccessfully = true;
-                    } else {
-                      // If different stack, perform switch
-                      debugPrint('Switching to different stack from menu');
-                      debugPrint('Setting active stack...');
-
-                      // Open stack
-                      ref
-                          .read(core_stack.activeStackProvider.notifier)
-                          .setStack(selectedStack);
-                      debugPrint('Active stack set successfully');
-
-                      ref
-                          .read(openStacksActionsProvider.notifier)
-                          .addStack(selectedStack);
-                      debugPrint('Stack added to open stacks');
-
-                      // Navigate to graph navigation screen
-                      ref
-                          .read(activityBarStateProvider.notifier)
-                          .setIndex(ActivityBarIndex.graphNavigation.value);
-                      debugPrint('Activity bar index set to graph navigation');
-
-                      stackLoadedSuccessfully = true;
-                      debugPrint(
-                        'Stack loaded successfully from menu: ${selectedStack.info.name}',
-                      );
-                    }
-                  } catch (e, stackTrace) {
-                    debugPrint('Error loading stack from menu: $e');
-                    debugPrint('Stack trace: $stackTrace');
-                    if (navContext.mounted) {
-                      await showAppErrorDialog(
-                        navContext,
-                        message:
-                            'Error opening stack "${selectedStack.info.name}".',
-                        details: '$e',
-                      );
-                    }
-                  }
-
-                  // Close welcome dialog only if stack loaded successfully
-                  if (stackLoadedSuccessfully && navContext.mounted) {
-                    debugPrint('Closing welcome dialog');
-                    Navigator.of(navContext).pop();
-                    // Reset flag when dialog is closed
-                    ref.read(welcomeDialogShowingProvider.notifier).state =
-                        false;
-                    debugPrint('Welcome dialog closed successfully');
-                  } else {
-                    debugPrint(
-                      'Stack loading failed or context not mounted, keeping dialog open',
-                    );
-                  }
-                },
-                onGoToMainScreen: () {
-                  // Reset flag when dialog is closed
-                  ref.read(welcomeDialogShowingProvider.notifier).state = false;
-                },
+            if (activeStack != null) {
+              // Show confirmation dialog before closing the active stack
+              final confirmed = await showAppDialog<bool>(
+                context: navContext,
+                title: '現在のスタックの変更を破棄しますか？',
+                child: const AppText(
+                  'ウェルカム画面に戻ると、現在開いているスタックは閉じられ、未保存の変更は失われます。',
+                  variant: AppTextVariant.bodyText,
+                ),
+                footer: buildDialogFooterHelper(
+                  colorScheme: ref.read(core_themes.effectiveColorSchemeProvider),
+                  cancelLabel: 'キャンセル',
+                  confirmLabel: '破棄して続行',
+                  isDestructive: true,
+                  onCancel: () => Navigator.of(navContext).pop(false),
+                  onConfirm: () => Navigator.of(navContext).pop(true),
+                ),
               );
+
+              if (confirmed == true) {
+                ref.read(core_stack.activeStackProvider.notifier).setStack(null);
+              }
+            } else {
+              // No active stack, just show the welcome screen
+              ref.read(core_stack.activeStackProvider.notifier).setStack(null);
             }
           },
         ),

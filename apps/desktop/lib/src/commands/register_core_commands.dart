@@ -3,7 +3,11 @@ import 'dart:io' as io;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:core_stack_flutter/core_stack.dart' as core_stack;
 import 'package:features_welcome/features_welcome.dart';
+import 'package:core_themes/core_themes.dart' as core_themes;
+import 'package:presentation_components/presentation_components.dart'; // For showAppDialog and AppText
+import 'package:features_welcome/src/widgets/welcome_screen_dialogs.dart'; // For buildDialogFooterHelper
 import '../providers/app_state_providers.dart';
 import '../providers/shell_state_manager.dart';
 import '../providers/ui_test_action_providers.dart';
@@ -472,21 +476,37 @@ void registerCoreCommands(WidgetRef ref) {
       title: 'Show Welcome Dialog',
       category: 'welcome',
       run: (ref, args) async {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          final ctx = navigatorKey.currentContext;
-          if (ctx != null) {
-            ref.read(welcomeDialogShowingProvider.notifier).state = true;
-            showWelcomeDialog(
-              ctx,
-              showCloseButton: true,
-              onGoToMainScreen: () {
-                ref.read(welcomeDialogShowingProvider.notifier).state = false;
+        final ctx = navigatorKey.currentContext;
+        if (ctx == null) return {'ok': false, 'message': 'context is null'};
 
-                Navigator.of(ctx).pop();
-              },
-            );
+        final activeStack = ref.read(core_stack.activeStackProvider);
+
+        if (activeStack != null) {
+          // Show confirmation dialog before closing the active stack
+          final confirmed = await showAppDialog<bool>(
+            context: ctx,
+            title: '現在のスタックの変更を破棄しますか？',
+            child: const AppText(
+              'ウェルカム画面に戻ると、現在開いているスタックは閉じられ、未保存の変更は失われます。',
+              variant: AppTextVariant.bodyText,
+            ),
+            footer: buildDialogFooterHelper(
+              colorScheme: ref.read(core_themes.effectiveColorSchemeProvider),
+              cancelLabel: 'キャンセル',
+              confirmLabel: '破棄して続行',
+              isDestructive: true,
+              onCancel: () => Navigator.of(ctx).pop(false),
+              onConfirm: () => Navigator.of(ctx).pop(true),
+            ),
+          );
+
+          if (confirmed == true) {
+            ref.read(core_stack.activeStackProvider.notifier).setStack(null);
           }
-        });
+        } else {
+          // No active stack, just show the welcome screen
+          ref.read(core_stack.activeStackProvider.notifier).setStack(null);
+        }
         return {'ok': true};
       },
     ),

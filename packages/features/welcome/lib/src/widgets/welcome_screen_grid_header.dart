@@ -5,8 +5,8 @@ import 'package:presentation_components/presentation_components.dart';
 import 'package:features_welcome/src/providers/welcome_providers.dart';
 import 'package:features_welcome/src/widgets/import_dialog.dart';
 
-import 'package:desktop/src/widgets/shell/welcome_screen_helpers.dart';
-import 'package:desktop/src/widgets/shell/welcome_screen_dialogs.dart';
+import '../widgets/welcome_screen_helpers.dart';
+import '../widgets/welcome_screen_dialogs.dart';
 
 /// Header section for the stack grid on the welcome screen.
 class WelcomeScreenGridHeader extends ConsumerWidget {

@@ -19,7 +19,7 @@ import 'shell/startup_handler.dart';
 import 'shell/sidebar_builder.dart';
 import 'shell/main_content_builder.dart';
 import 'shell/activity_bar_builder.dart';
-import 'shell/welcome_screen_content.dart';
+import 'package:features_welcome/src/widgets/welcome_screen_content.dart';
 
 /// Main shell of the application
 class MainAppShell extends ConsumerWidget {

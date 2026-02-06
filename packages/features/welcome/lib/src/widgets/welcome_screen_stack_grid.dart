@@ -6,7 +6,7 @@ import 'package:features_welcome/src/providers/welcome_providers.dart';
 import 'package:core_samples/core_samples.dart';
 import 'package:features_welcome/src/widgets/welcome_models.dart';
 
-import 'package:desktop/src/widgets/shell/welcome_screen_helpers.dart';
+import '../widgets/welcome_screen_helpers.dart';
 
 /// Callback for when a stack action is performed.
 typedef StackActionCallback = void Function(dynamic stackData, String action);

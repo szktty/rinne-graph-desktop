@@ -14,7 +14,7 @@ import 'package:features_welcome/src/providers/welcome_providers.dart';
 import 'package:core_foundation_flutter/core_foundation_flutter.dart'; // debugLog, AppSnackBar のために追加
 import 'package:features_welcome/src/services/debug_stack_operations.dart'; // DebugStackOperations のために追加
 
-import 'package:desktop/src/widgets/shell/welcome_screen_helpers.dart';
+import '../widgets/welcome_screen_helpers.dart';
 
 /// Display stack info dialog
 void showStackInfoDialogHelper(BuildContext context, core_stack.Stack stack) {
@@ -407,9 +407,9 @@ Widget buildDialogFooterHelper({
                 )
                 : AppButton.primary(label: confirmLabel, onPressed: onConfirm),
         ],
-      ),
-    ),
-  );
+      ), // Row を閉じる
+    ), // Padding を閉じる (ここが欠けていた)
+  ); // Container を閉じる
 }
 
 /// Build warning item

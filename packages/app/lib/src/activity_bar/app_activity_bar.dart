@@ -28,28 +28,10 @@ class AppActivityBar extends ConsumerWidget {
   /// Displays the welcome screen as a dialog (for stack switching)
   Future<void> _showWelcomeDialog(BuildContext context) async {
     try {
-      showWelcomeDialog(
-        context,
-        showCloseButton: true,
-        onCreateNewStack: () {
-          debugPrint('Create new stack from activity bar');
-        },
-        onOpenStack: () {
-          debugPrint('Open existing stack from activity bar');
-        },
-        onImportStack: () {
-          debugPrint('Import stack from activity bar');
-        },
-        onStackSelected: (selectedStack) {
-          debugPrint(
-            'Opening stack from activity bar: ${selectedStack.directory.path}',
-          );
-        },
-        onGoToMainScreen: () {
-          // Close the dialog
-          Navigator.of(context).pop();
-        },
-      );
+    // showWelcomeDialog(
+    //   context,
+    //   showCloseButton: true,
+    // );
       debugPrint('Welcome dialog displayed');
     } catch (e) {
       debugPrint('Failed to display welcome dialog: $e');

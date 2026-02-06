@@ -4,7 +4,7 @@ import 'package:presentation_components/presentation_components.dart';
 import 'package:features_welcome/src/providers/welcome_providers.dart';
 import 'package:core_themes/core_themes.dart' as core_themes;
 
-import 'package:desktop/src/widgets/shell/welcome_screen_helpers.dart';
+import '../widgets/welcome_screen_helpers.dart';
 
 /// Header section for the welcome screen.
 class WelcomeScreenHeader extends ConsumerWidget {
