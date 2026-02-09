@@ -10,6 +10,8 @@ import '../providers/selection_providers.dart';
 import '../providers/node_display_providers.dart';
 import '../providers/link_creation_providers.dart';
 import 'app_node_renderer.dart';
+import 'graph_dot_grid.dart';
+import 'graph_link_creation_overlay.dart';
 import 'node_display_settings_panel.dart';
 import '../events/selection_events.dart';
 
@@ -182,14 +184,14 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
               child: Stack(
                 children: [
                   // Dot grid background (not using IgnorePointer like experimental implementation)
-                  _DotGridBackground(
+                  DotGridBackground(
                     transformationController: _transformationController,
                   ),
                   // Graph view area - fill entire screen
                   Positioned.fill(child: cache.graphView!),
                   // Link creation arrow overlay
                   Positioned.fill(
-                    child: _LinkCreationArrowOverlay(
+                    child: LinkCreationArrowOverlay(
                       transformationController: _transformationController,
                     ),
                   ),
@@ -746,242 +748,3 @@ class _EnhancedInteractiveViewerState
   }
 }
 
-/// Widget to draw dot grid background
-class _DotGridBackground extends ConsumerStatefulWidget {
-  final TransformationController transformationController;
-
-  const _DotGridBackground({required this.transformationController});
-
-  @override
-  ConsumerState<_DotGridBackground> createState() => _DotGridBackgroundState();
-}
-
-class _DotGridBackgroundState extends ConsumerState<_DotGridBackground> {
-  late Matrix4 _transformationMatrix;
-
-  @override
-  void initState() {
-    super.initState();
-    _transformationMatrix = widget.transformationController.value;
-    widget.transformationController.addListener(_onTransformationChanged);
-  }
-
-  @override
-  void dispose() {
-    widget.transformationController.removeListener(_onTransformationChanged);
-    super.dispose();
-  }
-
-  void _onTransformationChanged() {
-    print('[DEBUG] Background: TransformationController changed');
-    print(
-      '[DEBUG] Background: New matrix: ${widget.transformationController.value}',
-    );
-    setState(() {
-      _transformationMatrix = widget.transformationController.value;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Get theme via @packages/core/themes/
-    final appColorScheme = ref.watch(effectiveColorSchemeProvider);
-
-    print('[DEBUG] Background: Building with matrix: $_transformationMatrix');
-
-    // Ensure background responds to hit test
-    return Container(
-      // Set graph view background color - set color to ensure hit test passes
-      color: appColorScheme.appSpecific.graph.background,
-      width: double.infinity,
-      height: double.infinity,
-      child: GestureDetector(
-        onTap: () {
-          print('[DEBUG] 🎨🎯 BACKGROUND TAPPED SUCCESSFULLY!');
-        },
-        onPanStart: (details) {
-          print('[DEBUG] 🎨🚀 BACKGROUND PAN START: ${details.localPosition}');
-        },
-        onPanUpdate: (details) {
-          print('[DEBUG] 🎨📍 BACKGROUND PAN UPDATE: ${details.localPosition}');
-        },
-        onPanEnd: (details) {
-          print('[DEBUG] 🎨🏁 BACKGROUND PAN END');
-        },
-        behavior:
-            HitTestBehavior
-                .opaque, // Important: pass hit test even for transparent areas
-        child: CustomPaint(
-          painter: _DotGridPainter(
-            transformation: _transformationMatrix,
-            appColorScheme: appColorScheme,
-          ),
-          size: Size.infinite,
-        ),
-      ),
-    );
-  }
-}
-
-/// CustomPainter to draw dot grid
-class _DotGridPainter extends CustomPainter {
-  final Matrix4 transformation;
-  final AppColorScheme appColorScheme;
-
-  const _DotGridPainter({
-    required this.transformation,
-    required this.appColorScheme,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    // Get zoom scale and offset from transformation matrix
-    final scale = transformation.getMaxScaleOnAxis();
-    final translation = transformation.getTranslation();
-    final offsetX = translation.x;
-    final offsetY = translation.y;
-
-    // Basic dot settings
-    const baseSpacing = 40.0; // Basic dot spacing
-    const baseDotSize = 1.5; // Basic dot size
-
-    // Adjust spacing and dot size based on zoom
-    final spacing = baseSpacing * scale;
-    final dotSize = (baseDotSize * scale).clamp(0.5, 4.0);
-
-    // Dot color (theme-aware)
-    // Use grid line color for better visibility
-    final dotColor = appColorScheme.appSpecific.graph.gridLine.withValues(
-      alpha: 0.3,
-    );
-
-    final paint =
-        Paint()
-          ..color = dotColor
-          ..style = PaintingStyle.fill;
-
-    // Calculate drawing range (for performance optimization)
-    final startX = (-offsetX / spacing).floor() * spacing;
-    final startY = (-offsetY / spacing).floor() * spacing;
-    final endX = startX + (size.width / scale + spacing * 2);
-    final endY = startY + (size.height / scale + spacing * 2);
-
-    // Draw dots
-    for (double x = startX; x <= endX; x += spacing) {
-      for (double y = startY; y <= endY; y += spacing) {
-        // Convert world coordinates to screen coordinates
-        final screenX = x * scale + offsetX;
-        final screenY = y * scale + offsetY;
-
-        // Draw only if within screen
-        if (screenX >= -dotSize &&
-            screenX <= size.width + dotSize &&
-            screenY >= -dotSize &&
-            screenY <= size.height + dotSize) {
-          canvas.drawCircle(Offset(screenX, screenY), dotSize, paint);
-        }
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _DotGridPainter oldDelegate) {
-    return transformation != oldDelegate.transformation ||
-        appColorScheme != oldDelegate.appColorScheme;
-  }
-}
-
-/// Widget to draw link creation arrow overlay
-class _LinkCreationArrowOverlay extends ConsumerWidget {
-  final TransformationController transformationController;
-
-  const _LinkCreationArrowOverlay({required this.transformationController});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final linkCreationState = ref.watch(linkCreationModeProvider);
-    final dragPosition = ref.watch(linkCreationDragPositionProvider);
-
-    // Only show overlay if in link creation mode and dragging
-    if (!linkCreationState.isActive ||
-        linkCreationState.sourceNodeId == null ||
-        dragPosition == null) {
-      return const SizedBox.expand();
-    }
-
-    return CustomPaint(
-      painter: _LinkCreationArrowPainter(
-        sourceNodeId: linkCreationState.sourceNodeId!,
-        dragPosition: dragPosition,
-        transformationMatrix: transformationController.value,
-      ),
-    );
-  }
-}
-
-/// Custom painter for link creation arrow
-class _LinkCreationArrowPainter extends CustomPainter {
-  final core_graph.EntityId sourceNodeId;
-  final Offset dragPosition;
-  final Matrix4 transformationMatrix;
-
-  _LinkCreationArrowPainter({
-    required this.sourceNodeId,
-    required this.dragPosition,
-    required this.transformationMatrix,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    // TODO: Get source node position from graph and draw arrow
-    // For now, just draw a simple line from center to drag position
-    final paint =
-        Paint()
-          ..color = Colors.blue.withValues(alpha: 0.7)
-          ..strokeWidth = 2.0
-          ..style = PaintingStyle.stroke;
-
-    // Draw line from center to drag position
-    canvas.drawLine(
-      Offset(size.width / 2, size.height / 2),
-      dragPosition,
-      paint,
-    );
-
-    // Draw arrowhead at drag position
-    _drawArrowhead(canvas, dragPosition, paint);
-  }
-
-  void _drawArrowhead(Canvas canvas, Offset position, Paint paint) {
-    const arrowSize = 10.0;
-    const arrowAngle = 0.5; // radians
-
-    final arrowPaint =
-        Paint()
-          ..color = Colors.blue.withValues(alpha: 0.7)
-          ..strokeWidth = 2.0
-          ..style = PaintingStyle.fill;
-
-    // Draw triangle arrowhead
-    final path = Path();
-    path.moveTo(position.dx, position.dy);
-    path.lineTo(
-      position.dx - arrowSize * (1 + arrowAngle),
-      position.dy - arrowSize,
-    );
-    path.lineTo(
-      position.dx - arrowSize * (1 - arrowAngle),
-      position.dy - arrowSize,
-    );
-    path.close();
-
-    canvas.drawPath(path, arrowPaint);
-  }
-
-  @override
-  bool shouldRepaint(_LinkCreationArrowPainter oldDelegate) {
-    return oldDelegate.sourceNodeId != sourceNodeId ||
-        oldDelegate.dragPosition != dragPosition ||
-        oldDelegate.transformationMatrix != transformationMatrix;
-  }
-}
