@@ -77,11 +77,20 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
                     ),
                     Expanded(
                       flex: 5,
-                      child: AppTabView(
-                        tabs: const [
-                          AppTab(id: 'my_stacks', label: 'My Stacks'),
-                          AppTab(id: 'samples', label: 'Samples'),
-                        ],
+                      child: () {
+                        final hasUserStacks = stacksAsync.maybeWhen(
+                          data: (stacks) => stacks.isNotEmpty,
+                          orElse: () => true,
+                        );
+                        final initialTabId =
+                            hasUserStacks ? 'my_stacks' : 'samples';
+                        return AppTabView(
+                          key: ValueKey('welcome_tab_$initialTabId'),
+                          initialSelectedTabId: initialTabId,
+                          tabs: const [
+                            AppTab(id: 'my_stacks', label: 'My Stacks'),
+                            AppTab(id: 'samples', label: 'Samples'),
+                          ],
                         contents: [
                           AppTabContent(
                             id: 'my_stacks',
@@ -161,7 +170,8 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
                             ),
                           ),
                         ],
-                      ),
+                        );
+                      }(),
                     ),
                   ],
                 ),
