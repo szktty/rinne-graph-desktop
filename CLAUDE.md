@@ -113,6 +113,48 @@ Graph views use free-position widgets (via `plough` package). Avoid excessive wi
 
 The `llms/` directory stores `llms-full.txt` context files for custom packages (`rinne_graph`, `kiri_check`, `plough`). These are gitignored — check if they exist before working on those packages.
 
+## Work Rules
+
+### Editing Discipline
+
+- **One file at a time**: Edit a single file, then run `flutter build macos` (from `apps/desktop/`) to verify. Do NOT batch-edit multiple files before building. This prevents cascading failures that are hard to trace back.
+- **Read the full file before editing**: Always use the Read tool to view the complete file before making changes. For files over 500 lines, read the entire file — do not rely on partial context or memory of the file's structure.
+- **When an Edit fails**: Do not retry with a guess. Re-read the file to get the current state, then construct the correct edit.
+
+### Error Handling
+
+- **Root cause first**: When a build error or runtime issue occurs, do NOT immediately patch the symptom. Instead:
+  1. Read the full error message and identify which file/line is the actual source.
+  2. Trace the data flow upstream to find the root cause (often in a different package).
+  3. Fix the root cause, then verify downstream effects.
+- **Stop after 2 failed attempts**: If the same error persists after two fix attempts, pause and explain the situation to the user rather than continuing to iterate. The fix approach is likely wrong.
+
+### Impact Analysis Before Changes
+
+- **Check dependents**: Before modifying any file in `packages/core/`, check what depends on the changed API by searching for imports and usages across the monorepo. A change in a core package can break multiple feature packages.
+- **Provider chain awareness**: When modifying a Riverpod provider, trace both directions — what it watches (upstream) and what watches it (downstream). Changes to a provider's return type or behavior ripple through all consumers.
+
+### Required Reading Before Tasks
+
+Read the relevant documentation BEFORE starting implementation:
+
+- **Cross-package data flows**: `docs/architecture/data_flows.md` (read first for any multi-package change)
+- **Known complexity hotspots**: `docs/architecture/data_flow_concerns.md`
+- **Stack operations** (create, load, save, delete): `docs/stack/stack_api_architecture.md`
+- **Import/export**: `docs/stack/stack_exchange_format_specification.md`
+- **UI component changes**: `docs/design/03-components.md` and `docs/design/04-implementation.md`
+- **Color/theme changes**: `docs/design/02-design-tokens.md` and `docs/design/09-color-design-guidelines.md`
+- **Dialog/panel layout**: `docs/design/13-panel-layout-guidelines.md` and `docs/design/15-warning-error-dialog-guidelines.md`
+- **Custom libraries** (rinne_graph, plough, kiri_check): Check `llms/` for context files first
+
+### Planning for Complex Changes
+
+For tasks that touch 3+ files or cross package boundaries, use plan mode:
+1. List all files that will be modified and why.
+2. Identify the data flow path (which providers/services are involved).
+3. Define the order of changes (start from the lowest-level package, work upward).
+4. Get user approval before starting implementation.
+
 ## Language
 
 All source code, comments, and documentation must be in English. Communicate with the user in their preferred language.
