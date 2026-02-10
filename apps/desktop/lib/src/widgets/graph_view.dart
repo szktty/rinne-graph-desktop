@@ -99,6 +99,8 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
     if (graphChanged || cache.ploughGraph == null) {
       debugPrint('[AppGraphView.build] Creating new PloughGraph');
       ploughGraph = _convertAppGraphToPlough(widget.appGraph);
+      // Request layout with animation so nodes animate from center
+      ploughGraph.markNeedsLayout(shouldAnimate: true);
       cache.ploughGraph = ploughGraph;
       cache.lastAppGraphHashCode = currentGraphHashCode;
     } else {
@@ -150,25 +152,35 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
       return const Center(child: Text("Graph is empty"));
     }
 
-    // Create new GraphView only if instance not yet created or
-    // graph has changed
-    if (cache.graphView == null || graphChanged) {
-      debugPrint('[AppGraphView.build] Creating new GraphView');
-      cache.graphView = plough.GraphView(
-        graph: ploughGraph,
-        layoutStrategy: layoutStrategy,
-        behavior: behavior,
-        allowSelection: true,
-        allowMultiSelection: false,
-        // Enable scrolling entire graph area by background drag
-        gestureMode: plough.GraphGestureMode.nodeEdgeOnly,
-        onBackgroundPanStart: _handleBackgroundPanStart,
-        onBackgroundPanUpdate: _handleBackgroundPanUpdate,
-        onBackgroundPanEnd: _handleBackgroundPanEnd,
-      );
-    } else {
-      debugPrint('[AppGraphView.build] Reusing cached GraphView');
-    }
+    // Use LayoutBuilder to get the available size for centering node animation
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final centerOffset = Offset(
+          constraints.maxWidth / 2,
+          constraints.maxHeight / 2,
+        );
+
+        // Create new GraphView only if instance not yet created or
+        // graph has changed
+        if (cache.graphView == null || graphChanged) {
+          debugPrint('[AppGraphView.build] Creating new GraphView');
+          cache.graphView = plough.GraphView(
+            graph: ploughGraph,
+            layoutStrategy: layoutStrategy,
+            behavior: behavior,
+            allowSelection: true,
+            allowMultiSelection: false,
+            // Start node animation from center of drawing area
+            nodeAnimationStartPosition: centerOffset,
+            // Enable scrolling entire graph area by background drag
+            gestureMode: plough.GraphGestureMode.nodeEdgeOnly,
+            onBackgroundPanStart: _handleBackgroundPanStart,
+            onBackgroundPanUpdate: _handleBackgroundPanUpdate,
+            onBackgroundPanEnd: _handleBackgroundPanEnd,
+          );
+        } else {
+          debugPrint('[AppGraphView.build] Reusing cached GraphView');
+        }
 
     // Wrap cached GraphView with InteractiveViewer and add dot grid background and zoom slider
     return GestureDetector(
@@ -201,6 +213,8 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
           ),
         ],
       ),
+    );
+      },
     );
   }
 
