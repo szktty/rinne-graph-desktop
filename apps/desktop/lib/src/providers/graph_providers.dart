@@ -38,20 +38,6 @@ core_graph.GraphStorage? activeStackGraphStorage(
 
   final storage = core_graph.RinneGraphStorage(graphDbPath);
 
-  // Start asynchronous initialization (do not wait for result)
-  storage
-      .initialize()
-      .then((_) {
-        debugPrint(
-          '[activeStackGraphStorage] RinneGraphStorage initialized successfully',
-        );
-      })
-      .catchError((error) {
-        debugPrint(
-          '[activeStackGraphStorage] Failed to initialize RinneGraphStorage: $error',
-        );
-      });
-
   ref.onDispose(() async {
     debugPrint('[activeStackGraphStorage] Disposing storage for: $graphDbPath');
     try {

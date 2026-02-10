@@ -31,9 +31,9 @@ abstract class PathProvider {
   ///
   /// Returns the App application's root directory for storing user-specific
   /// information, created within the user's home directory:
-  /// - macOS: ~/Documents/App
-  /// - Windows: %USERPROFILE%\Documents\App
-  /// - Linux: ~/Documents/App
+  /// - macOS: ~/Documents/RinneGraph
+  /// - Windows: %USERPROFILE%\Documents\RinneGraph
+  /// - Linux: ~/Documents/RinneGraph
   Future<Directory> getUserSpecificDirectory();
 
   /// Gets the directory for stacks
@@ -43,5 +43,14 @@ abstract class PathProvider {
   Future<Directory> getStacksDirectory() async {
     final userDir = await getUserSpecificDirectory();
     return Directory('${userDir.path}/Stacks');
+  }
+
+  /// Gets the directory for sample stacks
+  ///
+  /// Returns the directory for storing sample stack instances.
+  /// By default, returns getUserSpecificDirectory() + "/Samples".
+  Future<Directory> getSamplesDirectory() async {
+    final userDir = await getUserSpecificDirectory();
+    return Directory('${userDir.path}/Samples');
   }
 }

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
-import 'package:core_themes/core_themes.dart';
 import 'package:features_welcome/src/providers/welcome_providers.dart';
 import 'package:features_welcome/src/widgets/welcome_models.dart';
 import 'package:core_stack_flutter/core_stack.dart';
 import 'package:presentation_components/presentation_components.dart';
-import 'package:core_samples/core_samples.dart';
 
 import '../widgets/welcome_screen_header.dart';
 import '../widgets/welcome_screen_action_buttons.dart';
@@ -131,17 +129,16 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
                             id: 'samples',
                             content: Consumer(
                               builder: (context, ref, _) {
-                                final sampleStacksAsync =
-                                    ref.watch(assetStackTemplatesProvider);
+                                final sampleStacksAsync = ref.watch(
+                                  core_stack.sampleStacksListProvider,
+                                );
                                 return Column(
                                   children: [
-                                    const WelcomeScreenGridHeader(), // Can be adjusted if needed
+                                    const WelcomeScreenGridHeader(),
                                     Expanded(
                                       child: WelcomeScreenStackGrid(
-                                        stacksAsync:
-                                            sampleStacksAsync, // Pass sample stacks
-                                        selectedStack:
-                                            selectedStack, // Share selection state
+                                        stacksAsync: sampleStacksAsync,
+                                        selectedStack: selectedStack,
                                         onStackSelected: (stack) {
                                           if (selectedStack == stack) {
                                             ref
@@ -186,23 +183,6 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
   /// Handle stack actions
   void _handleStackAction(dynamic stackData, String action) {
     debugPrint('Stack action: $action for ${stackData.name}');
-
-    // For sample stack templates
-    if (stackData is StackTemplateWrapper) {
-      switch (action) {
-        case 'install':
-          showInstallConfirmationDialogHelper(
-            context,
-            ref,
-            stackData.templateManifest,
-            _installSampleStackTemplate,
-          );
-          break;
-        default:
-          debugPrint('Unknown template action: $action');
-      }
-      return;
-    }
 
     // Get original stack from CoreStackWrapper and check archive status
     if (stackData is CoreStackWrapper) {
@@ -251,18 +231,6 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
   }
 
   void _onStackDoubleClicked(dynamic stackData) {
-    // For sample stack templates, display installation confirmation dialog
-    if (stackData is StackTemplateWrapper) {
-      showInstallConfirmationDialogHelper(
-        context,
-        ref,
-        stackData.templateManifest,
-        _installSampleStackTemplate,
-      );
-      return;
-    }
-
-    // For normal stacks
     final coreStackWrapper = stackData as CoreStackWrapper;
     final stack = coreStackWrapper.originalStack;
 
@@ -279,20 +247,4 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
     }
   }
 
-  /// Install sample stack template
-  Future<void> _installSampleStackTemplate(dynamic manifest) async {
-    await installSampleStackTemplateHelper(context, ref, manifest);
-
-    // Find the newly installed stack and activate it
-    final allStacks = ref.read(core_stack.allStacksListProvider).value;
-    final newlyInstalledStack = allStacks?.firstWhere(
-      (s) =>
-          s.info.name == manifest.displayName, // Assuming unique display name
-      orElse: () => throw StateError('Newly installed stack not found'),
-    );
-
-    if (newlyInstalledStack != null) {
-      widget.onStackSelected?.call(newlyInstalledStack);
-    }
-  }
 }

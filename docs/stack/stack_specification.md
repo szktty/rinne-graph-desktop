@@ -8,6 +8,7 @@ A Stack is the fundamental unit for managing user data in RinneGraph, separated 
 
 -   **Normal Stack**: A persistent database created and managed by the user.
 -   **Scratch Stack**: A temporary working database.
+-   **Sample Stack**: An editable instance generated from a built-in template at app startup. Stored in the `Samples/` directory.
 -   **Asset-based Stack**: A sample database generated from read-only templates.
 
 ### 1.2 Technical Foundation
@@ -78,6 +79,8 @@ This is a JSON file containing basic information about the stack.
 - `author`: Author (string)
 - `thumbnail`: Thumbnail image filename (string)
 - `tags`: Array of tags (array of strings)
+- `isSample`: Whether this stack is a sample stack instance (boolean, default `false`)
+- `sampleTemplateId`: The template ID used to generate this sample stack (string, only present when `isSample` is `true`)
 
 ### 3.2 meta/settings.json
 
@@ -172,6 +175,7 @@ Datasets are a mechanism for logically dividing and managing large graphs.
 -   ✅ Basic dataset operations
 -   ✅ Riverpod provider integration
 -   ✅ Asset-based stacks (samples)
+-   ✅ Sample stacks (pre-instantiated from templates at startup)
 -   ✅ Scratch stacks (temporary work)
 -   ✅ Thumbnail image support
 

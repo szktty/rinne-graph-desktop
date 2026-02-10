@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:core_stack_flutter/core_stack.dart';
 import 'package:features_settings/features_settings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:core_foundation_flutter/core_foundation_flutter.dart';
 
 /// Manager for startup settings
 class StartupManager {
@@ -37,17 +36,7 @@ class StartupManager {
       );
     }
 
-    // 3. Check for automatic import of sample stack
-    final sampleStackPath = await _checkAndImportSampleStack();
-    if (sampleStackPath != null) {
-      debugPrint('Auto-imported sample stack: $sampleStackPath');
-      return StartupStackResult(
-        stackPath: sampleStackPath,
-        source: StartupStackSource.sampleImport,
-      );
-    }
-
-    // 4. Default (no stack)
+    // 3. Default (no stack)
     debugPrint('No startup stack specified');
     return const StartupStackResult(
       stackPath: null,
@@ -62,50 +51,6 @@ class StartupManager {
         return arguments[i + 1];
       }
     }
-    return null;
-  }
-
-  /// Checks for and imports sample stack if necessary
-  Future<String?> _checkAndImportSampleStack() async {
-    try {
-      // Get user's stack directory
-      final fileSystemService = ref.read(fileSystemServiceProvider);
-      final userStacksDir = await fileSystemService.getStacksDirectory();
-
-      // Check for existing stacks
-      if (await userStacksDir.exists()) {
-        final stackDirs =
-            await userStacksDir
-                .list()
-                .where(
-                  (entity) =>
-                      entity is Directory && entity.path.endsWith('.stack'),
-                )
-                .toList();
-
-        if (stackDirs.isNotEmpty) {
-          // Do not import if existing stacks are found
-          debugPrint('Existing stacks found, skipping sample stack import');
-          return null;
-        }
-      }
-
-      // Import sample stack
-      debugPrint('No existing stacks found, importing sample stack');
-      return await _importSampleStack();
-    } catch (e) {
-      debugPrint('Failed to check/import sample stack: $e');
-      return null;
-    }
-  }
-
-  /// Imports the sample stack
-  Future<String?> _importSampleStack() async {
-    // Automatic creation of sample stacks is disabled
-    // Users can install sample stacks from the welcome screen
-    debugPrint(
-      'Sample stack auto-creation is disabled. Users can install sample stacks from the welcome screen.',
-    );
     return null;
   }
 
@@ -160,9 +105,6 @@ enum StartupStackSource {
 
   /// Last opened stack (from settings)
   lastOpened,
-
-  /// Automatic import of sample stack
-  sampleImport,
 
   /// No stack
   none,

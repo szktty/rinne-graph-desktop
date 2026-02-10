@@ -72,6 +72,47 @@ final scratchesDirectoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ScratchesDirectoryRef = AutoDisposeFutureProviderRef<Directory>;
+String _$samplesDirectoryHash() => r'c2e9e84f51e5756919534d5d94c777df366faf5f';
+
+/// Provider to asynchronously get sample stacks directory
+///
+/// Copied from [samplesDirectory].
+@ProviderFor(samplesDirectory)
+final samplesDirectoryProvider = AutoDisposeFutureProvider<Directory>.internal(
+  samplesDirectory,
+  name: r'samplesDirectoryProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$samplesDirectoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SamplesDirectoryRef = AutoDisposeFutureProviderRef<Directory>;
+String _$sampleStacksListHash() => r'1cc32719c92ab74831ccd8ae4181c02fc8328e84';
+
+/// Provider to provide list of sample stacks as List<Stack>
+///
+/// Copied from [sampleStacksList].
+@ProviderFor(sampleStacksList)
+final sampleStacksListProvider =
+    AutoDisposeFutureProvider<List<Stack>>.internal(
+      sampleStacksList,
+      name: r'sampleStacksListProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$sampleStacksListHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SampleStacksListRef = AutoDisposeFutureProviderRef<List<Stack>>;
 String _$availableStacksStreamHash() =>
     r'1abd85812f6db34165faef1ea55a8d5b67933f46';
 
@@ -156,7 +197,7 @@ final refreshStacksTriggerProvider =
     );
 
 typedef _$RefreshStacksTrigger = AutoDisposeNotifier<int>;
-String _$stackActionsHash() => r'9381ea8bfc07487c1077c0cd9475339249ce01fa';
+String _$stackActionsHash() => r'304f55bbb6f80459308a1da74278ee7bd9dccf10';
 
 /// Provider to provide actions for stack creation, deletion, etc.
 ///

@@ -9,6 +9,8 @@ class StackInfo {
     this.author,
     this.thumbnail,
     this.tags = const [],
+    this.isSample = false,
+    this.sampleTemplateId,
   });
 
   factory StackInfo.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,8 @@ class StackInfo {
       lastModifiedAt: lastModifiedAt,
       version: json['version'] as String,
       tags: (json['tags'] as List<dynamic>?)?.cast<String>() ?? [],
+      isSample: json['isSample'] as bool? ?? false,
+      sampleTemplateId: json['sampleTemplateId'] as String?,
     );
   }
   final String name;
@@ -48,6 +52,8 @@ class StackInfo {
   final DateTime lastModifiedAt;
   final String version;
   final List<String> tags;
+  final bool isSample;
+  final String? sampleTemplateId;
 
   Map<String, dynamic> toJson() {
     return {
@@ -59,6 +65,8 @@ class StackInfo {
       'lastModifiedAt': lastModifiedAt.toIso8601String(),
       'version': version,
       'tags': tags,
+      if (isSample) 'isSample': isSample,
+      if (sampleTemplateId != null) 'sampleTemplateId': sampleTemplateId,
     };
   }
 
@@ -71,6 +79,8 @@ class StackInfo {
     DateTime? lastModifiedAt,
     String? version,
     List<String>? tags,
+    bool? isSample,
+    String? sampleTemplateId,
   }) {
     return StackInfo(
       name: name ?? this.name,
@@ -81,6 +91,8 @@ class StackInfo {
       lastModifiedAt: lastModifiedAt ?? this.lastModifiedAt,
       version: version ?? this.version,
       tags: tags ?? this.tags,
+      isSample: isSample ?? this.isSample,
+      sampleTemplateId: sampleTemplateId ?? this.sampleTemplateId,
     );
   }
 
@@ -96,6 +108,8 @@ class StackInfo {
           createdAt == other.createdAt &&
           lastModifiedAt == other.lastModifiedAt &&
           version == other.version &&
+          isSample == other.isSample &&
+          sampleTemplateId == other.sampleTemplateId &&
           // Using ListEquality is more robust, but here we compare simply
           _listEquals(tags, other.tags);
 
@@ -109,6 +123,8 @@ class StackInfo {
     createdAt,
     lastModifiedAt,
     version,
+    isSample,
+    sampleTemplateId,
     Object.hashAll(tags), // List hashCode
   );
 

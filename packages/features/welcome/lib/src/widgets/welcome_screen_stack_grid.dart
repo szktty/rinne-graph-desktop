@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:presentation_components/presentation_components.dart';
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
 import 'package:features_welcome/src/providers/welcome_providers.dart';
-import 'package:core_samples/core_samples.dart';
 import 'package:features_welcome/src/widgets/welcome_models.dart';
 
 import '../widgets/welcome_screen_helpers.dart';
@@ -74,11 +73,10 @@ class WelcomeScreenStackGrid extends ConsumerWidget {
                 .toList();
         break;
       case StackDisplayModeType.sampleTemplate:
-        // Display only sample stack templates
-        final sampleManifests = ref.watch(stackTemplateManifestsProvider);
+        // Display sample stacks (now real stacks, not templates)
         stackDataList =
-            sampleManifests
-                .map<StackData>((manifest) => StackTemplateWrapper(manifest))
+            realStacks
+                .map<StackData>((stack) => CoreStackWrapper(stack))
                 .toList();
         break;
       case StackDisplayModeType.active:
@@ -114,11 +112,6 @@ class WelcomeScreenStackGrid extends ConsumerWidget {
       selectedStack:
           selectedStack != null ? CoreStackWrapper(selectedStack) : null,
       onStackSelected: (dynamic stackData) {
-        // Skip selection state management for sample stack templates
-        if (stackData is StackTemplateWrapper) {
-          return;
-        }
-
         final coreStackWrapper = stackData as CoreStackWrapper;
         final stack = coreStackWrapper.originalStack;
 
@@ -136,20 +129,6 @@ class WelcomeScreenStackGrid extends ConsumerWidget {
         onStackAction(stackData, action);
       },
       customActionItems: (dynamic stackData) {
-        // For sample stack templates, return dedicated action menu
-        if (stackData is StackTemplateWrapper) {
-          return [
-            AppPopupMenuItemEntry<String>(
-              AppPopupMenuItem<String>(
-                value: 'install',
-                title: 'Install',
-                icon: Icons.download_outlined,
-                onSelected: () => onStackAction(stackData, 'install'),
-              ),
-            ),
-          ];
-        }
-
         // Get original stack from CoreStackWrapper and check archive status
         if (stackData is CoreStackWrapper) {
           final originalStack = stackData.originalStack;

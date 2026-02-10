@@ -75,12 +75,15 @@ class StackTemplateService {
     required StackTemplateManifest template,
     required Directory outputDirectory,
     String? stackName,
+    bool isSample = false,
   }) async {
     final installer = StackTemplateInstaller();
     return installer.generateStackFromTemplate(
       templateAssetPath: template.fullAssetPath,
       outputDirectory: outputDirectory,
       stackName: stackName ?? template.displayName,
+      isSample: isSample,
+      sampleTemplateId: isSample ? template.id : null,
     );
   }
 

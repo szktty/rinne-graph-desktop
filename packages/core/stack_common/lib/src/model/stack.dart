@@ -31,6 +31,9 @@ class Stack {
   /// Flag indicating if it's an asset-based stack
   final bool isAssetBased;
 
+  /// Whether it is a sample stack (derived from info metadata)
+  bool get isSample => info.isSample;
+
   /// Whether it is pinned
   bool get isPinned => settings.customFields['isPinned'] == true;
 
@@ -49,7 +52,7 @@ class Stack {
   /// Determines if a stack is a scratch stack
   /// Determined based on directory path
   static bool isPathScratchStack(String path) {
-    return path.contains('/App/Scratches/');
+    return path.contains('/RinneGraph/Scratches/');
   }
 
   /// Creates a copy of the stack and modifies specified fields

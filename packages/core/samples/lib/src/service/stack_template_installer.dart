@@ -22,6 +22,8 @@ class StackTemplateInstaller {
     required String templateAssetPath,
     required Directory outputDirectory,
     String? stackName,
+    bool isSample = false,
+    String? sampleTemplateId,
   }) async {
     try {
       debugPrint(
@@ -86,7 +88,12 @@ class StackTemplateInstaller {
 
       // 6. Generate info.json
       debugPrint('[ManifestStackInstaller] Generating info.json...');
-      await _createInfoJson(stackDir, manifest);
+      await _createInfoJson(
+        stackDir,
+        manifest,
+        isSample: isSample,
+        sampleTemplateId: sampleTemplateId,
+      );
 
       // 7. Generate settings.json
       debugPrint('[ManifestStackInstaller] Generating settings.json...');
@@ -160,8 +167,10 @@ class StackTemplateInstaller {
   /// Generate info.json file
   Future<void> _createInfoJson(
     Directory stackDir,
-    Map<String, dynamic> manifest,
-  ) async {
+    Map<String, dynamic> manifest, {
+    bool isSample = false,
+    String? sampleTemplateId,
+  }) async {
     final metadata = manifest['metadata'] as Map<String, dynamic>? ?? {};
 
     final info = {
@@ -172,6 +181,8 @@ class StackTemplateInstaller {
       'createdAt': metadata['created_at'] ?? DateTime.now().toIso8601String(),
       'lastModifiedAt': DateTime.now().toIso8601String(),
       'tags': metadata['tags'] ?? [],
+      if (isSample) 'isSample': true,
+      if (sampleTemplateId != null) 'sampleTemplateId': sampleTemplateId,
     };
 
     final infoFile = File(path.join(stackDir.path, 'meta', 'info.json'));

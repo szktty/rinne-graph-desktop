@@ -142,6 +142,125 @@ Future<Directory> scratchesDirectory(ScratchesDirectoryRef ref) async {
   return scratchesDir;
 }
 
+/// Provider to asynchronously get sample stacks directory
+@riverpod
+Future<Directory> samplesDirectory(SamplesDirectoryRef ref) async {
+  debugPrint('[stack_providers] samplesDirectory executing');
+  final fileSystemService = FileSystemService();
+  final samplesDir = await fileSystemService.getSamplesDirectory();
+
+  if (!await samplesDir.exists()) {
+    await samplesDir.create(recursive: true);
+    debugPrint(
+      '[stack_providers] Created Samples directory: ${samplesDir.path}',
+    );
+  }
+
+  debugPrint(
+    '[stack_providers] samplesDirectory got directory: ${samplesDir.path}',
+  );
+  return samplesDir;
+}
+
+/// Ensure all sample stacks from built-in templates are instantiated
+/// in the Samples directory. Idempotent: skips templates that already
+/// have a matching sample stack (by sampleTemplateId).
+Future<void> _ensureSampleStacksInstantiated(Directory samplesDir) async {
+  // Discover existing sample stacks
+  final stackService = StackService();
+  final existingStream = stackService.listAvailableStacks(
+    samplesDir,
+    maxDepth: 5,
+  );
+  final existingTemplateIds = <String>{};
+  await for (final stack in existingStream) {
+    final templateId = stack.info.sampleTemplateId;
+    if (templateId != null) {
+      existingTemplateIds.add(templateId);
+    }
+  }
+
+  // Get all available templates
+  final templates = StackTemplateService.getAvailableStackTemplates();
+  debugPrint(
+    '[stack_providers] _ensureSampleStacksInstantiated: '
+    '${existingTemplateIds.length} existing, ${templates.length} templates',
+  );
+
+  // Generate missing sample stacks
+  for (final template in templates) {
+    if (existingTemplateIds.contains(template.id)) {
+      continue;
+    }
+
+    debugPrint(
+      '[stack_providers] Generating sample stack: ${template.id} (${template.displayName})',
+    );
+    final result = await StackTemplateService.generateStackFromTemplate(
+      template: template,
+      outputDirectory: samplesDir,
+      isSample: true,
+    );
+    if (result != null) {
+      debugPrint(
+        '[stack_providers] Successfully generated sample stack: $result',
+      );
+    } else {
+      debugPrint(
+        '[stack_providers] Failed to generate sample stack: ${template.id}',
+      );
+    }
+  }
+}
+
+/// Provider to provide list of sample stacks as List<Stack>
+@riverpod
+Future<List<Stack>> sampleStacksList(SampleStacksListRef ref) async {
+  debugPrint('[stack_providers] sampleStacksList executing');
+
+  // Watch refreshStacksTrigger to create dependency
+  ref.watch(refreshStacksTriggerProvider);
+
+  try {
+    final samplesDir = await ref.watch(samplesDirectoryProvider.future);
+    debugPrint(
+      '[stack_providers] sampleStacksList got samplesDir: ${samplesDir.path}',
+    );
+
+    // Ensure all sample stacks are instantiated before listing
+    await _ensureSampleStacksInstantiated(samplesDir);
+
+    final stackService = StackService();
+    final stackStream = stackService.listAvailableStacks(
+      samplesDir,
+      maxDepth: 5,
+    );
+    final stacks = <Stack>[];
+
+    await for (final stack in stackStream) {
+      final isValid = await _validateStack(stack);
+      if (isValid) {
+        stacks.add(stack);
+        debugPrint(
+          '[stack_providers] sampleStacksList: collected ${stacks.length} sample stacks',
+        );
+      } else {
+        debugPrint(
+          '[stack_providers] sampleStacksList: skipping invalid sample stack: ${stack.info.name} @ ${stack.directory.path}',
+        );
+      }
+    }
+
+    debugPrint(
+      '[stack_providers] sampleStacksList: returning ${stacks.length} sample stacks',
+    );
+    return stacks;
+  } catch (e) {
+    debugPrint('[stack_providers] sampleStacksList error: $e');
+    return <Stack>[];
+  }
+}
+
 /// Provider to trigger stack list update
 @riverpod
 class RefreshStacksTrigger extends _$RefreshStacksTrigger {
@@ -321,7 +440,7 @@ class StackActions extends _$StackActions {
       '[stack_providers] Stack template generation started: ${manifest.id} (${manifest.displayName})',
     );
     try {
-      final searchDir = await ref.read(stackSearchDirectoryProvider.future);
+      final searchDir = await ref.read(samplesDirectoryProvider.future);
       debugPrint('[stack_providers] Output directory: ${searchDir.path}');
 
       final success = await createStackFromManifestBased(manifest, searchDir);

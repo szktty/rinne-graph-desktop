@@ -39,6 +39,12 @@ class FlutterPathProvider implements PathProvider {
   }
 
   @override
+  Future<Directory> getSamplesDirectory() async {
+    final userDir = await getUserSpecificDirectory();
+    return Directory('${userDir.path}/Samples');
+  }
+
+  @override
   Future<Directory> getUserSpecificDirectory() async {
     Directory baseDir;
 
@@ -93,11 +99,11 @@ class FlutterPathProvider implements PathProvider {
       baseDir = await path_provider.getApplicationDocumentsDirectory();
     }
 
-    // Create App-specific directory
-    final appDir = Directory('${baseDir.path}/App');
+    // Create RinneGraph-specific directory
+    final appDir = Directory('${baseDir.path}/RinneGraph');
     if (!await appDir.exists()) {
       await appDir.create(recursive: true);
-      debugPrint('📁 Created App directory: ${appDir.path}');
+      debugPrint('📁 Created RinneGraph directory: ${appDir.path}');
     }
 
     return appDir;

@@ -24,11 +24,11 @@ class FileSystemService {
   ///
   /// ユーザーのホームディレクトリ内に作成される、ユーザー固有の各種情報を保存する
   /// created within the user's home directory to store various user-specific information.
-  /// - macOS: ~/Documents/App
-  /// - Windows: %USERPROFILE%\Documents\App
-  /// - Linux: ~/Documents/App
-  /// - iOS: ~/Documents/App
-  /// - Android: /storage/emulated/0/Documents/App
+  /// - macOS: ~/Documents/RinneGraph
+  /// - Windows: %USERPROFILE%\Documents\RinneGraph
+  /// - Linux: ~/Documents/RinneGraph
+  /// - iOS: ~/Documents/RinneGraph
+  /// - Android: /storage/emulated/0/Documents/RinneGraph
   Future<Directory> getUserSpecificDirectory() async {
     return await _pathProvider.getUserSpecificDirectory();
   }
@@ -51,6 +51,11 @@ class FileSystemService {
   /// Retrieves the directory for stacks.
   Future<Directory> getStacksDirectory() async {
     return await _pathProvider.getStacksDirectory();
+  }
+
+  /// Retrieves the directory for sample stacks.
+  Future<Directory> getSamplesDirectory() async {
+    return await _pathProvider.getSamplesDirectory();
   }
 
   /// Reads a string from a file.

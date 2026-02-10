@@ -165,7 +165,7 @@ class StackCreationService {
   Future<Directory> _getUserStacksDirectory() async {
     // Get directory depending on the platform
     final appDocDir = await getApplicationDocumentsDirectory();
-    final stacksDir = Directory('${appDocDir.path}/App/Stacks');
+    final stacksDir = Directory('${appDocDir.path}/RinneGraph/Stacks');
 
     if (!await stacksDir.exists()) {
       await stacksDir.create(recursive: true);

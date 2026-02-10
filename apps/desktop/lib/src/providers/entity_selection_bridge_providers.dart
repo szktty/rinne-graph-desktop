@@ -127,15 +127,7 @@ class EntitySelectionBridge extends _$EntitySelectionBridge {
       // Create GraphContext
       final graphContext = core_graph.GraphContext(storage: storage);
 
-      // Wait for initialization
-      try {
-        await graphContext.initialize();
-      } catch (e) {
-        debugPrint(
-          '[EntitySelectionBridge] Failed to initialize GraphContext: $e',
-        );
-        return;
-      }
+      // Initialization is handled by _loadActualGraphData (with retry logic)
 
       core_graph.Graph? graph;
 
@@ -146,13 +138,6 @@ class EntitySelectionBridge extends _$EntitySelectionBridge {
         '[EntitySelectionBridge] Setting graph: ${graph.nodes.length} nodes, ${graph.links.length} links',
       );
       ref.read(core_graph.activeGraphProvider.notifier).setGraph(graph);
-
-      // End loading state
-      ref.read(graphLoadingStateProvider.notifier).state = false;
-      ref.read(delayedLoadingStateProvider.notifier).state = false;
-
-      // Cancel timer
-      delayedLoadingTimer.cancel();
     } on Exception catch (e) {
       debugPrint('[EntitySelectionBridge] Error loading graph: $e');
       ref.read(core_graph.activeGraphProvider.notifier).clearGraph();
@@ -163,13 +148,10 @@ class EntitySelectionBridge extends _$EntitySelectionBridge {
         e,
         context: 'Failed to load graph data.',
       );
-      'Failed to load graph data.';
-
-      // End loading state
+    } finally {
+      // Always end loading state and cancel timer
       ref.read(graphLoadingStateProvider.notifier).state = false;
       ref.read(delayedLoadingStateProvider.notifier).state = false;
-
-      // Cancel timer
       delayedLoadingTimer.cancel();
     }
   }
