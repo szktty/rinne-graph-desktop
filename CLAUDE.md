@@ -155,6 +155,19 @@ For tasks that touch 3+ files or cross package boundaries, use plan mode:
 3. Define the order of changes (start from the lowest-level package, work upward).
 4. Get user approval before starting implementation.
 
+### Progress Logging
+
+Before interrupting or ending work, always record the current state in a progress log file. This facilitates handoff between sessions. The log must include:
+
+1. **Current state**: What has been completed so far.
+2. **Remaining tasks**: What still needs to be done.
+3. **Failed approaches**: Approaches that were attempted but did not work, and why.
+
+Log file requirements:
+- Written in Markdown.
+- Saved under the `docs/progress/` directory.
+- File name must include the name of the task being worked on (e.g., `docs/progress/add-dark-mode.md`).
+
 ## Language
 
 All source code, comments, and documentation must be in English. Communicate with the user in their preferred language.
