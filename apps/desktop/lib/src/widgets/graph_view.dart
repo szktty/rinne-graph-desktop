@@ -182,38 +182,24 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
           debugPrint('[AppGraphView.build] Reusing cached GraphView');
         }
 
-    // Wrap cached GraphView with InteractiveViewer and add dot grid background and zoom slider
-    return GestureDetector(
-      onTap: () {
-        print('[DEBUG] 🏠 Main Stack tapped!');
-      },
-      child: Stack(
-        children: [
-          // Integrated approach based on experimental implementation
-          Positioned.fill(
-            child: _EnhancedInteractiveViewer(
-              transformationController: _transformationController,
-              child: Stack(
-                children: [
-                  // Dot grid background (not using IgnorePointer like experimental implementation)
-                  DotGridBackground(
-                    transformationController: _transformationController,
-                  ),
-                  // Graph view area - fill entire screen
-                  Positioned.fill(child: cache.graphView!),
-                  // Link creation arrow overlay
-                  Positioned.fill(
-                    child: LinkCreationArrowOverlay(
-                      transformationController: _transformationController,
-                    ),
-                  ),
-                ],
+        return _EnhancedInteractiveViewer(
+          transformationController: _transformationController,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: DotGridBackground(
+                  transformationController: _transformationController,
+                ),
               ),
-            ),
+              Positioned.fill(child: cache.graphView!),
+              Positioned.fill(
+                child: LinkCreationArrowOverlay(
+                  transformationController: _transformationController,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        );
       },
     );
   }
@@ -305,7 +291,9 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
     AppLayoutConfig config,
   ) {
     return switch (config) {
-      ForceDirectedLayoutConfig() => plough.GraphForceDirectedLayoutStrategy(),
+      ForceDirectedLayoutConfig() => _CenteredForceDirectedLayoutStrategy(
+        padding: const EdgeInsets.all(30),
+      ),
       TreeLayoutConfig(:final direction) => plough.GraphTreeLayoutStrategy(
         direction: direction,
       ),
@@ -684,6 +672,81 @@ class _NodeDisplaySettingsButtonState
         ),
       ],
     );
+  }
+}
+
+/// Force-directed layout that scales the result to fill the viewport.
+///
+/// After the standard force-directed simulation, this strategy scales and
+/// translates all node positions so that the bounding box fills the available
+/// viewport area (maintaining aspect ratio). This ensures nodes spread across
+/// the entire visible area regardless of cluster size.
+final class _CenteredForceDirectedLayoutStrategy
+    extends plough.GraphForceDirectedLayoutStrategy {
+  _CenteredForceDirectedLayoutStrategy({super.padding});
+
+  @override
+  void performLayout(plough.Graph graph, Size size) {
+    super.performLayout(graph, size);
+    _fitToViewport(graph, size);
+  }
+
+  void _fitToViewport(plough.Graph graph, Size size) {
+    if (graph.nodes.isEmpty) return;
+
+    // Calculate bounding box of all node positions
+    double minX = double.infinity;
+    double minY = double.infinity;
+    double maxX = double.negativeInfinity;
+    double maxY = double.negativeInfinity;
+
+    for (final node in graph.nodes) {
+      final pos = node.logicalPosition;
+      if (pos.dx < minX) minX = pos.dx;
+      if (pos.dy < minY) minY = pos.dy;
+      if (pos.dx > maxX) maxX = pos.dx;
+      if (pos.dy > maxY) maxY = pos.dy;
+    }
+
+    final bbWidth = maxX - minX;
+    final bbHeight = maxY - minY;
+    final bbCenter = Offset((minX + maxX) / 2, (minY + maxY) / 2);
+    final viewCenter = size.center(Offset.zero);
+
+    // Single node or zero-size bounding box: just center
+    if (bbWidth < 1 && bbHeight < 1) {
+      final offset = viewCenter - bbCenter;
+      for (final node in graph.nodes) {
+        positionNode(node, node.logicalPosition + offset);
+      }
+      return;
+    }
+
+    // Available area (viewport minus padding)
+    final availWidth = size.width - padding.left - padding.right;
+    final availHeight = size.height - padding.top - padding.bottom;
+
+    // Scale to fit, maintaining aspect ratio
+    double scale;
+    if (bbWidth < 1) {
+      scale = availHeight / bbHeight;
+    } else if (bbHeight < 1) {
+      scale = availWidth / bbWidth;
+    } else {
+      final scaleX = availWidth / bbWidth;
+      final scaleY = availHeight / bbHeight;
+      scale = scaleX < scaleY ? scaleX : scaleY;
+    }
+
+    // Scale from bounding box center, then translate to viewport center
+    for (final node in graph.nodes) {
+      final pos = node.logicalPosition;
+      final scaled = Offset(
+        (pos.dx - bbCenter.dx) * scale + viewCenter.dx,
+        (pos.dy - bbCenter.dy) * scale + viewCenter.dy,
+      );
+      positionNode(node, scaled);
+    }
   }
 }
 
