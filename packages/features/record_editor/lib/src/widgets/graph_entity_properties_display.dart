@@ -21,25 +21,77 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
     final editingProperties = ref.watch(editingEntityPropertiesProvider);
     final editingPropertyKeys = editingProperties.keys.toList();
 
-    return AppScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Labels section
-            _buildLabelsSection(labels: labels, colorScheme: appColorScheme),
-            const SizedBox(height: 24),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Header with Save/Cancel buttons
+        _buildHeader(appColorScheme),
+        // Scrollable content
+        Expanded(
+          child: AppScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Labels section
+                  _buildLabelsSection(
+                    labels: labels,
+                    colorScheme: appColorScheme,
+                  ),
+                  const SizedBox(height: 24),
 
-            // Properties section
-            _buildPropertiesSection(
-              properties: editingProperties,
-              propertyKeys: editingPropertyKeys,
-              colorScheme: appColorScheme,
+                  // Properties section
+                  _buildPropertiesSection(
+                    properties: editingProperties,
+                    propertyKeys: editingPropertyKeys,
+                    colorScheme: appColorScheme,
+                  ),
+                ],
+              ),
             ),
-          ],
+          ),
         ),
-      ),
+      ],
+    );
+  }
+
+  /// Builds the editor header with Save/Cancel icon buttons
+  Widget _buildHeader(AppColorScheme colorScheme) {
+    return Consumer(
+      builder: (context, ref, _) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: colorScheme.base.divider,
+                width: 1.0,
+              ),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: const Icon(AppIcons.save),
+                iconSize: 18.0,
+                tooltip: 'Save',
+                onPressed: () => _saveProperties(context, ref),
+                color: colorScheme.base.foreground,
+              ),
+              const SizedBox(width: 4.0),
+              IconButton(
+                icon: const Icon(AppIcons.rotateCcw),
+                iconSize: 18.0,
+                tooltip: 'Cancel',
+                onPressed: () => _cancelEditing(ref),
+                color: colorScheme.base.foreground,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -106,29 +158,9 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AppText(
-                  'Properties',
-                  variant: AppTextVariant.sectionTitlePrimary,
-                ),
-                Row(
-                  children: [
-                    AppButton(
-                      label: 'Save',
-                      onPressed: () => _saveProperties(context, ref),
-                      width: 80,
-                    ),
-                    const SizedBox(width: 8),
-                    AppButton(
-                      label: 'Cancel',
-                      onPressed: () => _cancelEditing(ref),
-                      width: 100,
-                    ),
-                  ],
-                ),
-              ],
+            AppText(
+              'Properties',
+              variant: AppTextVariant.sectionTitlePrimary,
             ),
             const SizedBox(height: 12),
             if (currentPropertyKeys.isEmpty)

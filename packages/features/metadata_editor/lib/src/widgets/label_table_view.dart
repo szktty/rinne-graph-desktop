@@ -40,7 +40,7 @@ class LabelTableView extends ConsumerWidget {
           // Tag column (name + color)
           AppTableColumn<_LabelTableRow>(
             id: 'tag',
-            title: '名前',
+            title: 'Name',
             width: 500, // より大きな幅を設定してエリア横幅いっぱいに
             cellBuilder:
                 (row, isSelected) => Align(
@@ -55,7 +55,7 @@ class LabelTableView extends ConsumerWidget {
           // Usage count column
           AppTableColumn<_LabelTableRow>(
             id: 'usageCount',
-            title: '使用回数',
+            title: 'Usage Count',
             width: 100,
             cellBuilder:
                 (row, isSelected) => Align(

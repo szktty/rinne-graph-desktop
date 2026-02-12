@@ -45,7 +45,8 @@ class AppIcons {
   static const IconData timeline = LucideIcons.clock200;
 
   // Actions
-  static const IconData save = LucideIcons.save200;
+  static const IconData save = LucideIcons.import200;
+  static const IconData rotateCcw = LucideIcons.rotateCcw200;
   static const IconData plus = LucideIcons.plus200;
   static const IconData x = LucideIcons.x200;
   static const IconData ellipsis = LucideIcons.ellipsis200;
