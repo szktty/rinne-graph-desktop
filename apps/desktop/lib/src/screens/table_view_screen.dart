@@ -77,10 +77,12 @@ class TableViewScreen extends ConsumerWidget {
 
     // Get node property keys and dynamically add columns
     if (nodes.isNotEmpty) {
-      // Collect property keys from all nodes
+      // Collect property keys from all nodes (excluding internal app_ properties)
       final propertyKeys = <String>{};
       for (final node in nodes) {
-        propertyKeys.addAll(node.properties.keys);
+        propertyKeys.addAll(
+          node.properties.keys.where((key) => !key.startsWith('app_')),
+        );
       }
 
       // Add columns for each property key
