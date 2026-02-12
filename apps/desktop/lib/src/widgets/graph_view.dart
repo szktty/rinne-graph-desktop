@@ -8,6 +8,7 @@ import '../models/layout_config.dart';
 import '../providers/graph_providers.dart';
 import '../providers/selection_providers.dart';
 import '../providers/node_display_providers.dart';
+import '../models/node_display_settings.dart';
 import '../providers/link_creation_providers.dart';
 import 'app_node_renderer.dart';
 import 'graph_dot_grid.dart';
@@ -39,6 +40,8 @@ class AppGraphView extends ConsumerStatefulWidget {
 class _AppGraphViewState extends ConsumerState<AppGraphView> {
   late TransformationController _transformationController;
   Offset? _lastPanPosition;
+  NodeDisplayContent? _lastDisplayContent;
+  int _graphViewKey = 0;
 
   @override
   void initState() {
@@ -89,6 +92,14 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
 
     // Get graph view cache
     final cache = ref.watch(graphViewCacheProvider);
+
+    // Watch display content — bump key to force GraphView rebuild when it changes
+    final displayContent = ref.watch(nodeDisplayContentProvider);
+    if (_lastDisplayContent != null && _lastDisplayContent != displayContent) {
+      cache.graphView = null;
+      _graphViewKey++;
+    }
+    _lastDisplayContent = displayContent;
 
     // Check if graph has changed
     final currentGraphHashCode = widget.appGraph.hashCode;
@@ -165,6 +176,7 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
         if (cache.graphView == null || graphChanged) {
           debugPrint('[AppGraphView.build] Creating new GraphView');
           cache.graphView = plough.GraphView(
+            key: ValueKey(_graphViewKey),
             graph: ploughGraph,
             layoutStrategy: layoutStrategy,
             behavior: behavior,
