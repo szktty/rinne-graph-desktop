@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plough/plough.dart' as plough;
 import 'package:core_themes/core_themes.dart';
-import 'package:presentation_components/presentation_components.dart';
 import '../models/node_display_settings.dart';
 import '../providers/node_display_providers.dart';
 
@@ -80,70 +79,90 @@ class AppNodeRenderer extends ConsumerWidget {
 
   /// Builds the node's content
   Widget _buildContent(NodeVisualData visualData) {
-    // Consider the border width on selection (2px) and offset downwards when not selected
-    const borderCompensation = 2.0;
-
     final content = switch (displayContent) {
       NodeDisplayContent.labelOnly => _buildLabelOnly(),
       NodeDisplayContent.labelWithIcon => _buildLabelWithIcon(visualData),
       NodeDisplayContent.iconOnly => _buildIconOnly(visualData),
     };
 
-    // Add top padding when not selected to compensate for the shift on selection
-    if (!node.isSelected) {
-      return Padding(
-        padding: const EdgeInsets.only(top: borderCompensation),
-        child: content,
-      );
-    }
+    return Center(child: content);
+  }
 
-    return content;
+  /// Returns a slightly darker color for the node border
+  Color _nodeBorderColor() {
+    final base = colorScheme.appSpecific.graph.nodeBase;
+    final hsl = HSLColor.fromColor(base);
+    return hsl.withLightness((hsl.lightness - 0.15).clamp(0.0, 1.0)).toColor();
+  }
+
+  /// Returns the node circle decoration with border
+  BoxDecoration _circleDecoration() {
+    return BoxDecoration(
+      shape: BoxShape.circle,
+      color: colorScheme.appSpecific.graph.nodeBase,
+      border: Border.all(
+        color: _nodeBorderColor(),
+        width: 4.0,
+      ),
+    );
+  }
+
+  /// Returns the shortened ID string "(xxxxxxxx)"
+  String _shortId() {
+    final id = node.id.value;
+    final short = id.replaceAll('-', '');
+    return '(${short.substring(0, 8.clamp(0, short.length))})';
   }
 
   /// Display label only
   Widget _buildLabelOnly() {
     final label = _getDisplayLabel();
-    const labelSpace = 8.0;
-    final labelHeight = _estimateLabelHeight();
-    final totalHeight = nodeSize.diameter + labelSpace + labelHeight;
 
-    return SizedBox(
+    return Container(
       width: nodeSize.diameter,
-      height: totalHeight,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Draw a circle
-          Container(
-            width: nodeSize.diameter,
-            height: nodeSize.diameter,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colorScheme.appSpecific.graph.nodeBase,
-            ),
-          ),
-          const SizedBox(height: labelSpace),
-          // Display label (fixed size)
-          SizedBox(
-            width: nodeSize.diameter,
-            height: labelHeight,
-            child: Center(
-              child: AppText(
+      height: nodeSize.diameter,
+      decoration: _circleDecoration(),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
                 label,
-                variant: _getTextVariant(),
-                color: colorScheme.appSpecific.graph.nodeText,
+                style: TextStyle(
+                  fontSize: _getLabelFontSize(),
+                  color: colorScheme.appSpecific.graph.nodeText,
+                  height: 1.2,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 1.0),
+              Text(
+                _shortId(),
+                style: TextStyle(
+                  fontSize: 9.0,
+                  color: colorScheme.appSpecific.graph.nodeText
+                      .withValues(alpha: 0.5),
+                  height: 1.0,
+                ),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   /// Display label + icon
+  ///
+  /// Uses Stack to keep label+ID visually centered in the circle,
+  /// with the icon positioned above the label.
   Widget _buildLabelWithIcon(NodeVisualData visualData) {
     final label = _getDisplayLabel();
     final icon = visualData.icon ?? Icons.circle;
@@ -153,46 +172,55 @@ class AppNodeRenderer extends ConsumerWidget {
       return _buildIconOnly(visualData);
     }
 
-    const labelSpace = 8.0;
-    final labelHeight = _estimateLabelHeight();
-    final totalHeight = nodeSize.diameter + labelSpace + labelHeight;
+    final iconSize = nodeSize.diameter * 0.25;
 
-    return SizedBox(
+    return Container(
       width: nodeSize.diameter,
-      height: totalHeight,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      height: nodeSize.diameter,
+      decoration: _circleDecoration(),
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          // Draw a circle (with icon)
-          Container(
-            width: nodeSize.diameter,
-            height: nodeSize.diameter,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colorScheme.appSpecific.graph.nodeBase,
-            ),
-            child: Center(
-              child: Icon(
-                icon,
-                size: nodeSize.diameter * 0.4,
-                color: colorScheme.appSpecific.graph.nodeIcon,
-              ),
+          // Label + ID centered in the circle
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: _getLabelFontSize(),
+                    color: colorScheme.appSpecific.graph.nodeText,
+                    height: 1.2,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 1.0),
+                Text(
+                  _shortId(),
+                  style: TextStyle(
+                    fontSize: 9.0,
+                    color: colorScheme.appSpecific.graph.nodeText
+                        .withValues(alpha: 0.5),
+                    height: 1.0,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: labelSpace),
-          // Display label (fixed size)
-          SizedBox(
-            width: nodeSize.diameter,
-            height: labelHeight,
-            child: Center(
-              child: AppText(
-                label,
-                variant: _getTextVariant(),
-                color: colorScheme.appSpecific.graph.nodeText,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+          // Icon positioned above the label area
+          Positioned(
+            top: nodeSize.diameter * 0.12,
+            child: Icon(
+              icon,
+              size: iconSize,
+              color: colorScheme.appSpecific.graph.nodeIcon,
             ),
           ),
         ],
@@ -208,10 +236,7 @@ class AppNodeRenderer extends ConsumerWidget {
     return Container(
       width: nodeSize.diameter,
       height: nodeSize.diameter,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: colorScheme.appSpecific.graph.nodeBase,
-      ),
+      decoration: _circleDecoration(),
       child: Center(
         child: Icon(
           icon,
@@ -250,48 +275,22 @@ class AppNodeRenderer extends ConsumerWidget {
     return id.length > 8 ? '${id.substring(0, 8)}...' : id;
   }
 
-  /// Gets the text variant corresponding to the node size
-  AppTextVariant _getTextVariant() {
+  /// Returns the label font size corresponding to the node size
+  double _getLabelFontSize() {
     switch (nodeSize) {
       case NodeSize.small:
-        return AppTextVariant.captionText;
+        return 10.0;
       case NodeSize.medium:
-        return AppTextVariant.smallText;
+        return 11.0;
       case NodeSize.large:
-        return AppTextVariant.bodyText;
+        return 13.0;
       case NodeSize.extraLarge:
-        return AppTextVariant.bodyText;
+        return 14.0;
     }
   }
 
-  /// Calculates the content height (circle + label + padding)
+  /// Calculates the content height (always just the circle diameter)
   double _calculateContentHeight() {
-    // Basically the size of the circle
-    double height = nodeSize.diameter;
-
-    // If the label is displayed, add the label height and space
-    if (displayContent == NodeDisplayContent.labelOnly ||
-        displayContent == NodeDisplayContent.labelWithIcon) {
-      // Space with label + label height (approximate)
-      const labelSpace = 8.0;
-      final labelHeight = _estimateLabelHeight();
-      height += labelSpace + labelHeight;
-    }
-
-    return height;
-  }
-
-  /// Estimates the label height
-  double _estimateLabelHeight() {
-    switch (nodeSize) {
-      case NodeSize.small:
-        return 20.0;
-      case NodeSize.medium:
-        return 24.0;
-      case NodeSize.large:
-        return 28.0;
-      case NodeSize.extraLarge:
-        return 32.0;
-    }
+    return nodeSize.diameter;
   }
 }
