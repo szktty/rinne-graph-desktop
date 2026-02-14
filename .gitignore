@@ -61,7 +61,6 @@ apps/*/assets/version.json
 .claude/
 .cursor/
 .gemini/
-.serena/
 augment/
 *.iml
 **/.vitepress/cache

@@ -1,0 +1,1 @@
+RinneGraph is a graph-based personal knowledge management application. It helps users manage and organize their personal knowledge using a property graph database approach, allowing for intuitive visualization and navigation of interconnected information. It is currently in an early Alpha stage.
