@@ -15,6 +15,7 @@ class StackTemplateService {
         description: 'Template data for a small software development team',
         tags: ['template', 'development', 'team', 'software'],
         category: 'business',
+        language: 'en',
       ),
       const StackTemplateManifest(
         id: 'meiji_sample',
@@ -24,6 +25,7 @@ class StackTemplateService {
             'Template data for Bakumatsu historical figures centered around Sakamoto Ryoma',
         tags: ['template', 'history', 'japan', 'meiji', 'ryoma'],
         category: 'history',
+        language: 'ja',
       ),
       const StackTemplateManifest(
         id: 'simple_graph_sample',
@@ -33,6 +35,7 @@ class StackTemplateService {
             'A sample stack with a simple graph structure. Shows basic node and link relationships without list-type properties.',
         tags: ['template', 'simple', 'basic', 'graph'],
         category: 'basic',
+        language: 'en',
       ),
     ];
   }

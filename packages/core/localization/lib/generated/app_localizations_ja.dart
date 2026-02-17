@@ -445,4 +445,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get command_welcome_wait_closed => 'ウェルカムが閉じられるまで待機';
+
+  @override
+  String get welcome_filter_language_all => 'すべての言語';
+
+  @override
+  String get welcome_filter_language_unspecified => '未指定';
+
+  @override
+  String get welcome_filter_language_label => '言語';
+
+  @override
+  String get language_name_en => '英語';
+
+  @override
+  String get language_name_ja => '日本語';
 }

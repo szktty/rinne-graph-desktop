@@ -261,7 +261,8 @@ If a manifest file exists, the `meta` directory is not required.
     "author": "Research Team",
     "version": "1.0.0",
     "tags": ["research", "university", "collaboration"],
-    "thumbnail": "thumbnail.png"
+    "thumbnail": "thumbnail.png",
+    "language": "en"
   },
   "files": [
     "researchers.csv",

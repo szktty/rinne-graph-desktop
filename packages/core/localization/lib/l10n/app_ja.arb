@@ -751,5 +751,30 @@
   "command_welcome_wait_closed": "ウェルカムが閉じられるまで待機",
   "@command_welcome_wait_closed": {
     "description": "コマンド：ウェルカムダイアログが閉じられるまで待機"
+  },
+
+  "welcome_filter_language_all": "すべての言語",
+  "@welcome_filter_language_all": {
+    "description": "ウェルカム画面：全言語フィルターオプション"
+  },
+
+  "welcome_filter_language_unspecified": "未指定",
+  "@welcome_filter_language_unspecified": {
+    "description": "ウェルカム画面：言語未指定フィルターオプション"
+  },
+
+  "welcome_filter_language_label": "言語",
+  "@welcome_filter_language_label": {
+    "description": "ウェルカム画面：言語フィルタードロップダウンのラベル"
+  },
+
+  "language_name_en": "英語",
+  "@language_name_en": {
+    "description": "言語名：英語"
+  },
+
+  "language_name_ja": "日本語",
+  "@language_name_ja": {
+    "description": "言語名：日本語"
   }
 }

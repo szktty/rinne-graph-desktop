@@ -81,6 +81,7 @@ This is a JSON file containing basic information about the stack.
 - `tags`: Array of tags (array of strings)
 - `isSample`: Whether this stack is a sample stack instance (boolean, default `false`)
 - `sampleTemplateId`: The template ID used to generate this sample stack (string, only present when `isSample` is `true`)
+- `language`: Language of the stack content (ISO 639-1 code, e.g. `"en"`, `"ja"`). Used for filtering stacks on the welcome screen.
 
 ### 3.2 meta/settings.json
 

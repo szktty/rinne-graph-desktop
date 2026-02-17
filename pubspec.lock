@@ -896,13 +896,11 @@ packages:
     source: hosted
     version: "3.1.6"
   plough:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      path: "."
-      ref: develop
-      resolved-ref: "23a5e8eef7711794c040b7790262cc5309dd5142"
-      url: "https://github.com/szktty/plough.git"
-    source: git
+      path: "../plough"
+      relative: true
+    source: path
     version: "0.7.0"
   plugin_platform_interface:
     dependency: transitive

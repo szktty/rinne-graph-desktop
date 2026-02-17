@@ -6,6 +6,7 @@ import 'package:features_welcome/src/providers/welcome_providers.dart';
 import 'package:features_welcome/src/widgets/welcome_models.dart';
 
 import '../widgets/welcome_screen_helpers.dart';
+import '../widgets/welcome_language_filter_dropdown.dart';
 
 /// Callback for when a stack action is performed.
 typedef StackActionCallback = void Function(dynamic stackData, String action);
@@ -59,46 +60,44 @@ class WelcomeScreenStackGrid extends ConsumerWidget {
     core_stack.Stack? selectedStack,
   ) {
     final displayMode = ref.watch(stackDisplayModeProvider);
+    final languageFilter = ref.watch(welcomeLanguageFilterProvider);
 
-    List<dynamic> stackDataList;
+    List<core_stack.Stack> filteredStacks;
 
     switch (displayMode) {
       case StackDisplayModeType.archived:
         // Display only archived stacks
-        final archivedStacks =
+        filteredStacks =
             realStacks.where((stack) => isStackArchivedHelper(stack)).toList();
-        stackDataList =
-            archivedStacks
-                .map<StackData>((stack) => CoreStackWrapper(stack))
-                .toList();
         break;
       case StackDisplayModeType.sampleTemplate:
         // Display sample stacks (now real stacks, not templates)
-        stackDataList =
-            realStacks
-                .map<StackData>((stack) => CoreStackWrapper(stack))
-                .toList();
+        filteredStacks = realStacks;
         break;
       case StackDisplayModeType.active:
         // Display only active stacks
-        final activeStacks =
+        filteredStacks =
             realStacks.where((stack) => !isStackArchivedHelper(stack)).toList();
         debugPrint(
-          '[WelcomeScreenContent] Active stacks display: showing ${activeStacks.length} out of ${realStacks.length} total',
+          '[WelcomeScreenContent] Active stacks display: showing ${filteredStacks.length} out of ${realStacks.length} total',
         );
         for (final stack in realStacks) {
           debugPrint(
             '[WelcomeScreenContent] Stack "${stack.info.name}": archived=${isStackArchivedHelper(stack)}',
           );
         }
-        stackDataList =
-            activeStacks
-                .map<StackData>((stack) => CoreStackWrapper(stack))
-                .toList();
         break;
       default: // Added default case for exhaustive switch
-        stackDataList = [];
+        filteredStacks = [];
     }
+
+    // Apply language filter
+    filteredStacks = filterStacksByLanguage(filteredStacks, languageFilter);
+
+    final List<dynamic> stackDataList =
+        filteredStacks
+            .map<StackData>((stack) => CoreStackWrapper(stack))
+            .toList();
 
     return AppStackGrid(
       stacks: stackDataList.map((e) => e as StackData).toList(),

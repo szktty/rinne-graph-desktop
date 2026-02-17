@@ -12,6 +12,7 @@ import '../widgets/welcome_screen_grid_header.dart';
 import '../widgets/welcome_screen_stack_grid.dart';
 import '../widgets/welcome_screen_dialogs.dart';
 import '../widgets/welcome_screen_helpers.dart';
+import '../widgets/welcome_language_filter_dropdown.dart';
 
 /// Content for the welcome screen, displayed when no stack is active.
 class WelcomeScreenContent extends ConsumerStatefulWidget {
@@ -94,7 +95,20 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
                             id: 'my_stacks',
                             content: Column(
                               children: [
-                                const WelcomeScreenGridHeader(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: WelcomeScreenGridHeader(),
+                                    ),
+                                    if (stacksAsync
+                                        case AsyncData(
+                                          :final value,
+                                        ))
+                                      WelcomeLanguageFilterDropdown(
+                                        stacks: value,
+                                      ),
+                                  ],
+                                ),
                                 Expanded(
                                   child: WelcomeScreenStackGrid(
                                     stacksAsync: stacksAsync,
@@ -134,7 +148,20 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
                                 );
                                 return Column(
                                   children: [
-                                    const WelcomeScreenGridHeader(),
+                                    Row(
+                                      children: [
+                                        const Expanded(
+                                          child: WelcomeScreenGridHeader(),
+                                        ),
+                                        if (sampleStacksAsync
+                                            case AsyncData(
+                                              :final value,
+                                            ))
+                                          WelcomeLanguageFilterDropdown(
+                                            stacks: value,
+                                          ),
+                                      ],
+                                    ),
                                     Expanded(
                                       child: WelcomeScreenStackGrid(
                                         stacksAsync: sampleStacksAsync,

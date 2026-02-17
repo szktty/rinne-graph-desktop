@@ -751,5 +751,30 @@
   "command_welcome_wait_closed": "Wait for welcome to close",
   "@command_welcome_wait_closed": {
     "description": "Command: Wait for welcome dialog to close"
+  },
+
+  "welcome_filter_language_all": "All Languages",
+  "@welcome_filter_language_all": {
+    "description": "Welcome screen: Language filter option for all languages"
+  },
+
+  "welcome_filter_language_unspecified": "Unspecified",
+  "@welcome_filter_language_unspecified": {
+    "description": "Welcome screen: Language filter option for unspecified language"
+  },
+
+  "welcome_filter_language_label": "Language",
+  "@welcome_filter_language_label": {
+    "description": "Welcome screen: Language filter dropdown label"
+  },
+
+  "language_name_en": "English",
+  "@language_name_en": {
+    "description": "Language name: English"
+  },
+
+  "language_name_ja": "Japanese",
+  "@language_name_ja": {
+    "description": "Language name: Japanese"
   }
 }

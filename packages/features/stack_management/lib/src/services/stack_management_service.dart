@@ -51,6 +51,7 @@ class StackManagementService {
   static Future<core_stack.Stack?> createNewStack(
     BuildContext context, {
     String? initialSavePath,
+    String? language,
   }) async {
     // Set default save path
     final defaultSavePath = initialSavePath ?? await getDefaultSavePath();
@@ -65,7 +66,10 @@ class StackManagementService {
     if (result != null) {
       try {
         // Implement actual stack creation process
-        final createdStack = await _createStackFromResult(result);
+        final createdStack = await _createStackFromResult(
+          result,
+          language: language,
+        );
 
         if (context.mounted) {
           // Display success message in dialog
@@ -113,8 +117,9 @@ class StackManagementService {
 
   /// Internal method to create a stack from stack creation results
   static Future<core_stack.Stack?> _createStackFromResult(
-    StackCreationResult result,
-  ) async {
+    StackCreationResult result, {
+    String? language,
+  }) async {
     // Convert relative path to absolute path
     final absoluteSavePath = _convertToAbsolutePath(result.savePath);
     final saveDir = Directory(absoluteSavePath);
@@ -133,7 +138,7 @@ class StackManagementService {
     await Directory(path.join(stackDirPath, 'assets')).create();
 
     // Create metadata files
-    await _createMetadataFiles(stackDir, result.name);
+    await _createMetadataFiles(stackDir, result.name, language: language);
 
     // Create empty graph database
     await _createEmptyGraphDatabase(stackDir);
@@ -144,6 +149,7 @@ class StackManagementService {
       createdAt: DateTime.now(),
       lastModifiedAt: DateTime.now(),
       version: '1.0',
+      language: language,
     );
 
     final stackSettings = core_stack.StackSettings();
@@ -168,8 +174,9 @@ class StackManagementService {
   /// Creates metadata files
   static Future<void> _createMetadataFiles(
     Directory stackDir,
-    String name,
-  ) async {
+    String name, {
+    String? language,
+  }) async {
     final infoFile = File(path.join(stackDir.path, 'meta', 'info.json'));
     final settingsFile = File(
       path.join(stackDir.path, 'meta', 'settings.json'),
@@ -180,6 +187,7 @@ class StackManagementService {
       'createdAt': DateTime.now().toIso8601String(),
       'lastModifiedAt': DateTime.now().toIso8601String(),
       'version': '1.0',
+      if (language != null) 'language': language,
     };
 
     final settingsData = <String, dynamic>{};

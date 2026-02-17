@@ -448,4 +448,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get command_welcome_wait_closed => 'Wait for welcome to close';
+
+  @override
+  String get welcome_filter_language_all => 'All Languages';
+
+  @override
+  String get welcome_filter_language_unspecified => 'Unspecified';
+
+  @override
+  String get welcome_filter_language_label => 'Language';
+
+  @override
+  String get language_name_en => 'English';
+
+  @override
+  String get language_name_ja => 'Japanese';
 }

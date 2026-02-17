@@ -2,6 +2,7 @@
   "metadata": {
     "name": "Simple Graph Sample",
     "description": "A sample stack with a simple graph structure. Demonstrates basic relationships between nodes and links without list-type properties.",
+    "language": "en",
     "author": "App Team",
     "version": "1.0.0",
     "tags": ["sample", "simple", "basic", "graph"],

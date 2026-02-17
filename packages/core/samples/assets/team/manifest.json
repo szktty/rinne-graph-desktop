@@ -2,6 +2,7 @@
   "metadata": {
     "name": "Software Development Team Sample",
     "description": "Sample data for a small software development team",
+    "language": "en",
     "author": "App Development Team",
     "version": "1.0.0",
     "tags": [
