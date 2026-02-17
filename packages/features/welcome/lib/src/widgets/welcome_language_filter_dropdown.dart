@@ -44,62 +44,43 @@ class WelcomeLanguageFilterDropdown extends ConsumerWidget {
 
     final sortedLanguages = languageCodes.toList()..sort();
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          _getFilterLabel(context),
-          style: TextStyle(
-            fontSize: 12,
-            color: colorScheme.base.foreground.withValues(alpha: 0.6),
-          ),
+    return DropdownButton<String>(
+      value: currentFilter ?? '',
+      underline: const SizedBox.shrink(),
+      isDense: true,
+      style: TextStyle(
+        fontSize: 12,
+        color: colorScheme.base.foreground,
+      ),
+      dropdownColor: colorScheme.base.background,
+      items: [
+        // "All Languages" option
+        DropdownMenuItem<String>(
+          value: '',
+          child: Text(_getAllLabel(context)),
         ),
-        const SizedBox(width: 4),
-        DropdownButton<String>(
-          value: currentFilter ?? '',
-          underline: const SizedBox.shrink(),
-          isDense: true,
-          style: TextStyle(
-            fontSize: 12,
-            color: colorScheme.base.foreground,
+        // "Unspecified" option
+        if (hasUnspecified)
+          DropdownMenuItem<String>(
+            value: welcomeLanguageFilterUnspecified,
+            child: Text(_getUnspecifiedLabel(context)),
           ),
-          dropdownColor: colorScheme.base.background,
-          items: [
-            // "All Languages" option
-            DropdownMenuItem<String>(
-              value: '',
-              child: Text(_getAllLabel(context)),
-            ),
-            // "Unspecified" option
-            if (hasUnspecified)
-              DropdownMenuItem<String>(
-                value: welcomeLanguageFilterUnspecified,
-                child: Text(_getUnspecifiedLabel(context)),
-              ),
-            // Language-specific options
-            ...sortedLanguages.map(
-              (code) => DropdownMenuItem<String>(
-                value: code,
-                child: Text(_getLanguageName(context, code)),
-              ),
-            ),
-          ],
-          onChanged: (value) {
-            if (value == null || value.isEmpty) {
-              ref.read(welcomeLanguageFilterProvider.notifier).setFilter(null);
-            } else {
-              ref.read(welcomeLanguageFilterProvider.notifier).setFilter(value);
-            }
-          },
+        // Language-specific options
+        ...sortedLanguages.map(
+          (code) => DropdownMenuItem<String>(
+            value: code,
+            child: Text(_getLanguageName(context, code)),
+          ),
         ),
       ],
+      onChanged: (value) {
+        if (value == null || value.isEmpty) {
+          ref.read(welcomeLanguageFilterProvider.notifier).setFilter(null);
+        } else {
+          ref.read(welcomeLanguageFilterProvider.notifier).setFilter(value);
+        }
+      },
     );
-  }
-
-  /// Get the filter label based on the app locale.
-  String _getFilterLabel(BuildContext context) {
-    final locale = Localizations.localeOf(context);
-    return locale.languageCode == 'ja' ? '言語' : 'Language';
   }
 
   /// Get the "All Languages" label.
