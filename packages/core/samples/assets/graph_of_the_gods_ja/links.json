@@ -1,0 +1,69 @@
+[
+  {
+    "source": "titan-saturn",
+    "target": "god-jupiter",
+    "type": "father"
+  },
+  {
+    "source": "human-alcmene",
+    "target": "demigod-hercules",
+    "type": "mother"
+  },
+  {
+    "source": "god-jupiter",
+    "target": "demigod-hercules",
+    "type": "father"
+  },
+  {
+    "source": "demigod-hercules",
+    "target": "monster-nemean",
+    "type": "battled"
+  },
+  {
+    "source": "demigod-hercules",
+    "target": "monster-hydra",
+    "type": "battled"
+  },
+  {
+    "source": "demigod-hercules",
+    "target": "monster-cerberus",
+    "type": "battled",
+    "properties": {
+      "$time": 1
+    }
+  },
+  {
+    "source": "god-pluto",
+    "target": "god-jupiter",
+    "type": "brother"
+  },
+  {
+    "source": "god-pluto",
+    "target": "god-neptune",
+    "type": "brother"
+  },
+  {
+    "source": "god-pluto",
+    "target": "location-tartarus",
+    "type": "lives",
+    "properties": {
+      "$reason": "死を恐れぬ"
+    }
+  },
+  {
+    "source": "god-jupiter",
+    "target": "location-sky",
+    "type": "lives",
+    "properties": {
+      "$reason": "新鮮な風を好む"
+    }
+  },
+  {
+    "source": "god-neptune",
+    "target": "location-sea",
+    "type": "lives",
+    "properties": {
+      "$reason": "波を好む"
+    }
+  }
+]

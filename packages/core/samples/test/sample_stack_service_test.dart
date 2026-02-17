@@ -6,7 +6,7 @@ void main() {
     test('getAvailableStackTemplates returns correct stack templates', () {
       final stackTemplates = StackTemplateService.getAvailableStackTemplates();
 
-      expect(stackTemplates.length, 4);
+      expect(stackTemplates.length, 5);
 
       // Team template
       final teamTemplate = stackTemplates.firstWhere(
@@ -36,17 +36,29 @@ void main() {
       expect(simpleGraphTemplate.category, 'basic');
       expect(simpleGraphTemplate.language, 'en');
 
-      // Graph of the Gods template
-      final graphOfTheGodsTemplate = stackTemplates.firstWhere(
+      // Graph of the Gods (English) template
+      final graphOfTheGodsEnTemplate = stackTemplates.firstWhere(
         (s) => s.id == 'graph_of_the_gods',
       );
-      expect(graphOfTheGodsTemplate.displayName, 'Graph of the Gods');
+      expect(graphOfTheGodsEnTemplate.displayName, 'Graph of the Gods');
       expect(
-        graphOfTheGodsTemplate.fullAssetPath,
+        graphOfTheGodsEnTemplate.fullAssetPath,
         'packages/core_samples/assets/graph_of_the_gods',
       );
-      expect(graphOfTheGodsTemplate.category, 'mythology');
-      expect(graphOfTheGodsTemplate.language, 'en');
+      expect(graphOfTheGodsEnTemplate.category, 'mythology');
+      expect(graphOfTheGodsEnTemplate.language, 'en');
+
+      // Graph of the Gods (Japanese) template
+      final graphOfTheGodsJaTemplate = stackTemplates.firstWhere(
+        (s) => s.id == 'graph_of_the_gods_ja',
+      );
+      expect(graphOfTheGodsJaTemplate.displayName, 'ギリシャ神のグラフ');
+      expect(
+        graphOfTheGodsJaTemplate.fullAssetPath,
+        'packages/core_samples/assets/graph_of_the_gods_ja',
+      );
+      expect(graphOfTheGodsJaTemplate.category, 'mythology');
+      expect(graphOfTheGodsJaTemplate.language, 'ja');
     });
 
     test(
@@ -55,7 +67,7 @@ void main() {
         final assetManifests =
             StackTemplateService.getAssetStackTemplateManifests();
 
-        expect(assetManifests.length, 4);
+        expect(assetManifests.length, 5);
 
         final teamManifest = assetManifests.firstWhere(
           (m) => m.fullAssetPath == 'packages/core_samples/assets/team',

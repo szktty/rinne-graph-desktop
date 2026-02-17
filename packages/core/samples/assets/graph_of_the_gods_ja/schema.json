@@ -1,0 +1,25 @@
+{
+  "labels": {
+    "titan": { "display_name": "巨神" },
+    "god": { "display_name": "神" },
+    "human": { "display_name": "人間" },
+    "demigod": { "display_name": "半神" },
+    "location": { "display_name": "場所" },
+    "monster": { "display_name": "怪物" }
+  },
+  "properties": {
+    "$name": { "display_name": "名前", "type": "string" },
+    "$age": { "display_name": "年齢", "type": "integer" },
+    "$type": { "display_name": "種別", "type": "string" },
+    "$reason": { "display_name": "理由", "type": "string" },
+    "$time": { "display_name": "時期", "type": "integer" }
+  },
+  "link_types": {
+    "father": { "display_name": "〜の父" },
+    "mother": { "display_name": "〜の母" },
+    "brother": { "display_name": "〜の兄弟" },
+    "battled": { "display_name": "〜と戦った" },
+    "lives": { "display_name": "〜に住む" },
+    "pet": { "display_name": "〜のペット" }
+  }
+}
