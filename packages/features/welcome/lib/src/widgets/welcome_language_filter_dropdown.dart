@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:core_themes/core_themes.dart';
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
+import 'package:presentation_components/presentation_components.dart';
 import 'package:features_welcome/src/providers/welcome_providers.dart';
+
+/// Sentinel value representing "All Languages" (no filter).
+const _allLanguagesValue = '';
 
 /// Language filter dropdown for the welcome screen stack grid.
 ///
@@ -20,7 +23,6 @@ class WelcomeLanguageFilterDropdown extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentFilter = ref.watch(welcomeLanguageFilterProvider);
-    final colorScheme = ref.watch(effectiveColorSchemeProvider);
 
     // Collect unique languages from stacks
     final languageCodes = <String>{};
@@ -44,36 +46,30 @@ class WelcomeLanguageFilterDropdown extends ConsumerWidget {
 
     final sortedLanguages = languageCodes.toList()..sort();
 
-    return DropdownButton<String>(
-      value: currentFilter ?? '',
-      underline: const SizedBox.shrink(),
-      isDense: true,
-      style: TextStyle(
-        fontSize: 12,
-        color: colorScheme.base.foreground,
+    // Build dropdown menu entries
+    final entries = <DropdownMenuEntry<String>>[
+      DropdownMenuEntry<String>(
+        value: _allLanguagesValue,
+        label: _getAllLabel(context),
       ),
-      dropdownColor: colorScheme.base.background,
-      items: [
-        // "All Languages" option
-        DropdownMenuItem<String>(
-          value: '',
-          child: Text(_getAllLabel(context)),
+      if (hasUnspecified)
+        DropdownMenuEntry<String>(
+          value: welcomeLanguageFilterUnspecified,
+          label: _getUnspecifiedLabel(context),
         ),
-        // "Unspecified" option
-        if (hasUnspecified)
-          DropdownMenuItem<String>(
-            value: welcomeLanguageFilterUnspecified,
-            child: Text(_getUnspecifiedLabel(context)),
-          ),
-        // Language-specific options
-        ...sortedLanguages.map(
-          (code) => DropdownMenuItem<String>(
-            value: code,
-            child: Text(_getLanguageName(context, code)),
-          ),
+      ...sortedLanguages.map(
+        (code) => DropdownMenuEntry<String>(
+          value: code,
+          label: _getLanguageName(context, code),
         ),
-      ],
-      onChanged: (value) {
+      ),
+    ];
+
+    return AppDropdownMenu<String>(
+      initialSelection: currentFilter ?? _allLanguagesValue,
+      dropdownMenuEntries: entries,
+      position: AppDropdownMenuPosition.below,
+      onSelected: (value) {
         if (value == null || value.isEmpty) {
           ref.read(welcomeLanguageFilterProvider.notifier).setFilter(null);
         } else {
