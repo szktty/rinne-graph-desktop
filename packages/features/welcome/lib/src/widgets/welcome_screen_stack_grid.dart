@@ -169,6 +169,15 @@ class WelcomeScreenStackGrid extends ConsumerWidget {
                 onSelected: () => onStackAction(stackData, 'archive'),
               ),
             ),
+            if (originalStack.info.sampleTemplateId != null)
+              AppPopupMenuItemEntry<String>(
+                AppPopupMenuItem<String>(
+                  value: 'reload',
+                  title: 'Reload',
+                  icon: Icons.refresh,
+                  onSelected: () => onStackAction(stackData, 'reload'),
+                ),
+              ),
           ];
         }
 

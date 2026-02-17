@@ -47,6 +47,16 @@ class StackTemplateService {
         category: 'mythology',
         language: 'en',
       ),
+      const StackTemplateManifest(
+        id: 'graph_of_the_gods_ja',
+        displayName: 'ギリシャ神のグラフ',
+        fullAssetPath: 'packages/core_samples/assets/graph_of_the_gods_ja',
+        description:
+            'JanusGraphのドキュメントで使用されている、グラフデータベースの主要機能を示すためのサンプルグラフ。',
+        tags: ['サンプル', 'janusgraph', '神話', 'グラフ', '日本語'],
+        category: 'mythology',
+        language: 'ja',
+      ),
     ];
   }
 

@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
+import 'package:core_samples/core_samples.dart';
+import 'package:core_themes/core_themes.dart';
 import 'package:features_welcome/src/providers/welcome_providers.dart';
 import 'package:features_welcome/src/widgets/welcome_models.dart';
 import 'package:core_stack_flutter/core_stack.dart';
@@ -251,8 +255,91 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
         case 'restore':
           restoreStackHelper(ref, stackData);
           break;
+        case 'reload':
+          _handleReloadSampleStack(originalStack);
+          break;
         default:
           debugPrint('Unknown stack action: $action');
+      }
+    }
+  }
+
+  /// Handle reloading a sample stack from its asset template
+  Future<void> _handleReloadSampleStack(core_stack.Stack stack) async {
+    final templateId = stack.info.sampleTemplateId;
+    if (templateId == null) return;
+
+    final template = StackTemplateService.getStackTemplateById(templateId);
+    if (template == null) {
+      debugPrint('Template not found for id: $templateId');
+      return;
+    }
+
+    final colorScheme = ref.read(effectiveColorSchemeProvider);
+
+    final confirmed = await showAppDialog<bool>(
+      context: context,
+      title: 'Reload Sample Stack',
+      width: 450,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppText(
+            'Are you sure you want to reload "${stack.info.name}"?',
+            variant: AppTextVariant.bodyText,
+            color: colorScheme.base.foreground,
+          ),
+          AppSpacing.sm(),
+          buildWarningItemHelper(
+            'The current stack data will be deleted and regenerated from the template.',
+            colorScheme,
+          ),
+          AppSpacing.sm(),
+          buildWarningItemHelper(
+            'Any changes you have made to this sample stack will be lost.',
+            colorScheme,
+          ),
+        ],
+      ),
+      footer: buildDialogFooterHelper(
+        colorScheme: colorScheme,
+        cancelLabel: 'Cancel',
+        confirmLabel: 'Reload',
+        isDestructive: true,
+        onCancel: () => Navigator.of(context).pop(false),
+        onConfirm: () => Navigator.of(context).pop(true),
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    try {
+      // Delete existing stack directory
+      final stackDir = stack.directory;
+      if (stackDir.existsSync()) {
+        stackDir.deleteSync(recursive: true);
+        debugPrint('Deleted stack directory: ${stackDir.path}');
+      }
+
+      // Regenerate from template
+      final parentDir = stackDir.parent;
+      await StackTemplateService.generateStackFromTemplate(
+        template: template,
+        outputDirectory: parentDir,
+        stackName: template.displayName,
+        isSample: true,
+      );
+      debugPrint('Regenerated sample stack from template: $templateId');
+
+      // Refresh sample stacks list
+      ref.invalidate(core_stack.sampleStacksListProvider);
+    } catch (e) {
+      debugPrint('Failed to reload sample stack: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to reload sample stack: $e')),
+        );
       }
     }
   }
