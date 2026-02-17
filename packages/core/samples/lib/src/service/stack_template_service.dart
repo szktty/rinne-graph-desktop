@@ -37,6 +37,16 @@ class StackTemplateService {
         category: 'basic',
         language: 'en',
       ),
+      const StackTemplateManifest(
+        id: 'graph_of_the_gods',
+        displayName: 'Graph of the Gods',
+        fullAssetPath: 'packages/core_samples/assets/graph_of_the_gods',
+        description:
+            'The example graph used in the JanusGraph documentation to illustrate the core features of a graph database.',
+        tags: ['sample', 'janusgraph', 'mythology', 'graph', 'english'],
+        category: 'mythology',
+        language: 'en',
+      ),
     ];
   }
 

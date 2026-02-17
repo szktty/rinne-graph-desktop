@@ -6,7 +6,7 @@ void main() {
     test('getAvailableStackTemplates returns correct stack templates', () {
       final stackTemplates = StackTemplateService.getAvailableStackTemplates();
 
-      expect(stackTemplates.length, 3);
+      expect(stackTemplates.length, 4);
 
       // Team template
       final teamTemplate = stackTemplates.firstWhere(
@@ -20,7 +20,7 @@ void main() {
       final meijiTemplate = stackTemplates.firstWhere(
         (s) => s.id == 'meiji_sample',
       );
-      expect(meijiTemplate.displayName, '幕末龍馬相関図');
+      expect(meijiTemplate.displayName, 'Bakumatsu Ryoma Relationship Chart');
       expect(meijiTemplate.fullAssetPath, 'packages/core_samples/assets/meiji');
       expect(meijiTemplate.category, 'history');
 
@@ -34,6 +34,19 @@ void main() {
         'packages/core_samples/assets/simple_graph',
       );
       expect(simpleGraphTemplate.category, 'basic');
+      expect(simpleGraphTemplate.language, 'en');
+
+      // Graph of the Gods template
+      final graphOfTheGodsTemplate = stackTemplates.firstWhere(
+        (s) => s.id == 'graph_of_the_gods',
+      );
+      expect(graphOfTheGodsTemplate.displayName, 'Graph of the Gods');
+      expect(
+        graphOfTheGodsTemplate.fullAssetPath,
+        'packages/core_samples/assets/graph_of_the_gods',
+      );
+      expect(graphOfTheGodsTemplate.category, 'mythology');
+      expect(graphOfTheGodsTemplate.language, 'en');
     });
 
     test(
@@ -42,7 +55,7 @@ void main() {
         final assetManifests =
             StackTemplateService.getAssetStackTemplateManifests();
 
-        expect(assetManifests.length, 3);
+        expect(assetManifests.length, 4);
 
         final teamManifest = assetManifests.firstWhere(
           (m) => m.fullAssetPath == 'packages/core_samples/assets/team',
