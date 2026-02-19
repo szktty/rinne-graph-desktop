@@ -24,6 +24,8 @@ dependencies:
     path: ../../presentation/components
   core_themes:
     path: ../../core/themes
+  core_settings:
+    path: ../../core/settings
   app:
     path: ../../app
 

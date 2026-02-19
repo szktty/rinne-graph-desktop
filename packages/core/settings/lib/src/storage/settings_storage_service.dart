@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:core_foundation_flutter/core_foundation_flutter.dart';
-import '../model/app_settings.dart';
 
 /// Settings file storage directory name
 const String _settingsDirName = 'settings';
@@ -183,42 +182,6 @@ class SettingsStorageService {
       return false;
     } catch (e) {
       debugPrint('SettingsStorageService.clear error: $e');
-      return false;
-    }
-  }
-
-  /// Load application settings
-  Future<AppSettings> loadSettings() async {
-    try {
-      final settingsMap = await getObject('app_settings');
-      if (settingsMap != null) {
-        return AppSettings.fromJson(settingsMap);
-      } else {
-        // Return default settings
-        return const AppSettings();
-      }
-    } catch (e) {
-      debugPrint('SettingsStorageService.loadSettings error: $e');
-      return const AppSettings();
-    }
-  }
-
-  /// Save application settings
-  Future<bool> saveSettings(AppSettings settings) async {
-    try {
-      return await setObject('app_settings', settings.toJson());
-    } catch (e) {
-      debugPrint('SettingsStorageService.saveSettings error: $e');
-      return false;
-    }
-  }
-
-  /// Reset application settings
-  Future<bool> resetSettings() async {
-    try {
-      return await remove('app_settings');
-    } catch (e) {
-      debugPrint('SettingsStorageService.resetSettings error: $e');
       return false;
     }
   }

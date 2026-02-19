@@ -1,135 +1,55 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:logger/logger.dart';
-import '../storage/settings_storage_service.dart';
-import '../model/app_settings.dart';
+import '../providers/settings_storage_provider.dart';
+import '../model/settings.dart';
 
 part 'settings_providers.g.dart';
 
-/// Provider for SettingsStorageService instance
+/// Provider that manages application settings.
 @riverpod
-SettingsStorageService settingsStorageService(SettingsStorageServiceRef ref) {
-  return SettingsStorageService();
-}
-
-/// Provider for managing application settings
-@riverpod
-class AppSettingsManager extends _$AppSettingsManager {
+class SettingsManager extends _$SettingsManager {
   @override
-  Future<AppSettings> build() async {
-    final storage = ref.watch(settingsStorageServiceProvider);
-    return await storage.loadSettings();
+  Settings build() {
+    // Set initial values and load settings asynchronously.
+    _loadSettings();
+    return Settings.defaults();
   }
 
-  /// Save settings
-  Future<void> saveSettings(AppSettings settings) async {
-    final storage = ref.read(settingsStorageServiceProvider);
-    await storage.saveSettings(settings);
-    // Update state
-    state = AsyncData(settings);
-  }
-
-  /// Reset settings
-  Future<void> resetSettings() async {
-    final storage = ref.read(settingsStorageServiceProvider);
-    await storage.resetSettings();
-    // Load default settings
-    final defaultSettings = await storage.loadSettings();
-    state = AsyncData(defaultSettings);
-  }
-
-  /// Update specific setting value
-  Future<void> updateSetting<T>(String key, T value) async {
-    final currentSettings = await future;
-    final updatedSettings = currentSettings.copyWith(
-      // TODO: Implement based on actual setting properties
-    );
-    await saveSettings(updatedSettings);
-  }
-}
-
-/// Provider for managing auto-save settings
-@riverpod
-class AutoSaveManager extends _$AutoSaveManager {
-  @override
-  bool build() {
-    // Enable auto-save by default
-    return true;
-  }
-
-  /// Toggle auto-save on/off
-  void setAutoSave(bool enabled) {
-    state = enabled;
-  }
-
-  /// Check if auto-save is enabled
-  bool get isEnabled => state;
-}
-
-/// Provider for monitoring settings changes and auto-saving
-@riverpod
-class SettingsWatcher extends _$SettingsWatcher {
-  @override
-  void build() {
-    // Monitor changes to AppSettingsManager
-    ref.listen(appSettingsManagerProvider, (previous, next) {
-      final autoSaveEnabled = ref.read(autoSaveManagerProvider);
-      if (autoSaveEnabled && next.hasValue) {
-        // If auto-save is enabled and settings changed, perform save
-        _performAutoSave(next.value!);
-      }
-    });
-  }
-
-  Future<void> _performAutoSave(AppSettings settings) async {
+  /// Loads settings asynchronously.
+  void _loadSettings() async {
     try {
-      final storage = ref.read(settingsStorageServiceProvider);
-      await storage.saveSettings(settings);
+      final storageService = ref.read(settingsStorageServiceProvider);
+      final json = await storageService.getString('settings') ?? '{}';
+      final settings = Settings.fromJson(jsonDecode(json));
+      state = settings;
+      debugPrint('Settings loaded: $settings');
     } catch (e) {
-      // Log error
-      Logger().e('Settings auto-save failed', error: e);
+      debugPrint('Failed to decode settings JSON: $e');
     }
   }
-}
 
-/// Helper provider for settings operations
-@riverpod
-SettingsOperations settingsOperations(SettingsOperationsRef ref) {
-  return SettingsOperations(ref);
-}
-
-/// Class for managing settings operations
-class SettingsOperations {
-  final SettingsOperationsRef _ref;
-
-  SettingsOperations(this._ref);
-
-  /// Get current settings
-  Future<AppSettings> getCurrentSettings() async {
-    return await _ref.read(appSettingsManagerProvider.future);
+  /// Updates and saves settings.
+  void updateSettings(Settings settings) {
+    state = settings;
+    _saveSettings(settings);
   }
 
-  /// Save settings
-  Future<void> saveSettings(AppSettings settings) async {
-    await _ref.read(appSettingsManagerProvider.notifier).saveSettings(settings);
+  /// Updates theme color type.
+  void updateThemeColorType(String themeColorType) {
+    final newSettings = state.copyWith(themeColorType: themeColorType);
+    updateSettings(newSettings);
   }
 
-  /// Reset settings
-  Future<void> resetSettings() async {
-    await _ref.read(appSettingsManagerProvider.notifier).resetSettings();
-  }
-
-  /// Toggle auto-save on/off
-  void setAutoSave(bool enabled) {
-    _ref.read(autoSaveManagerProvider.notifier).setAutoSave(enabled);
-  }
-
-  /// Check if auto-save is enabled
-  bool get isAutoSaveEnabled => _ref.read(autoSaveManagerProvider);
-
-  /// Update specific setting value
-  Future<void> updateSetting<T>(String key, T value) async {
-    await _ref
-        .read(appSettingsManagerProvider.notifier)
-        .updateSetting(key, value);
+  /// Saves settings.
+  void _saveSettings(Settings settings) async {
+    try {
+      final storageService = ref.read(settingsStorageServiceProvider);
+      final json = jsonEncode(settings.toJson());
+      await storageService.setString('settings', json);
+      debugPrint('Settings saved: $settings');
+    } catch (e) {
+      debugPrint('Error saving settings: $e');
+    }
   }
 }
