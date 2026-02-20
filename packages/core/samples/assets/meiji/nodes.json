@@ -1,1135 +1,4159 @@
 [
   {
     "id": "person-ryoma",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "坂本龍馬",
-      "$description": "海援隊隊長。",
       "$birth_date": "1836-01-03",
       "$death_date": "1867-12-10",
-      "$death_cause": "暗殺"
+      "$death_cause": "暗殺",
+      "$domain": "土佐藩",
+      "$description": "土佐藩郷士出身の志士。勝海舟に師事し、薩長同盟の斡旋・大政奉還の推進に尽力した。近江屋事件で暗殺された。「船中八策」を起草し、近代日本の国家構想を示した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/坂本龍馬",
+      "$roles": [
+        "郷士",
+        "海援隊隊長",
+        "維新の志士"
+      ]
     }
   },
   {
     "id": "person-kaishu",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "勝海舟",
-      "$description": "軍艦奉行。",
       "$birth_date": "1823-03-12",
-      "$death_date": "1899-01-19"
+      "$death_date": "1899-01-19",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "江戸幕府の旗本・政治家。軍艦奉行として海軍の近代化に努め、坂本龍馬の師となった。幕末期には西郷隆盛と交渉して江戸城無血開城を実現した。「幕末の三舟」の一人。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/勝海舟",
+      "$roles": [
+        "幕臣",
+        "軍艦奉行",
+        "海軍卿"
+      ]
     }
   },
   {
     "id": "person-saigo",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "西郷隆盛",
-      "$description": "明治維新の指導者。",
       "$birth_date": "1828-01-23",
-      "$death_date": "1877-09-24"
+      "$death_date": "1877-09-24",
+      "$death_cause": "自決",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の軍人・政治家。大久保利通・木戸孝允とともに「維新の三傑」と呼ばれる。倒幕・戊辰戦争を主導し、江戸城無血開城を成し遂げた。征韓論政変で下野後、西南戦争を起こし城山で自決した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/西郷隆盛",
+      "$roles": [
+        "薩摩藩士",
+        "参議",
+        "陸軍大将"
+      ]
     }
   },
   {
     "id": "person-katsura",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "桂小五郎",
-      "$description": "明治維新の指導者。",
       "$birth_date": "1833-08-11",
-      "$death_date": "1877-05-26"
-    }
-  },
-  {
-    "id": "person-nakaoka",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "中岡慎太郎",
-      "$description": "陸援隊隊長。",
-      "$death_cause": "暗殺"
-    }
-  },
-  {
-    "id": "person-goto",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "後藤象二郎",
-      "$description": "大政奉還を推進。"
-    }
-  },
-  {
-    "id": "person-iwasaki",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "岩崎弥太郎",
-      "$description": "三菱財閥創業者。"
-    }
-  },
-  {
-    "id": "person-oryo",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "お龍"
-    }
-  },
-  {
-    "id": "person-takechi",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "武市半平太",
-      "$description": "土佐勤王党の盟主。"
-    }
-  },
-  {
-    "id": "person-yoshida",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "吉田松陰",
-      "$description": "思想家、教育者。",
-      "$birth_date": "1830-09-20",
-      "$death_date": "1859-11-21",
-      "$death_cause": "処刑"
-    }
-  },
-  {
-    "id": "person-shinsaku",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "高杉晋作",
-      "$description": "奇兵隊を創設。",
-      "$birth_date": "1839-09-27",
-      "$death_date": "1867-05-17",
-      "$death_cause": "病死"
-    }
-  },
-  {
-    "id": "person-okubo",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "大久保利通",
-      "$description": "明治政府の中心人物。",
-      "$birth_date": "1830-09-26",
-      "$death_date": "1878-05-14"
-    }
-  },
-  {
-    "id": "person-kondo",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "近藤勇",
-      "$birth_date": "1834-11-05",
-      "$death_date": "1868-05-17",
-      "$death_cause": "処刑"
-    }
-  },
-  {
-    "id": "person-hijikata",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "土方歳三",
-      "$birth_date": "1835-05-31",
-      "$death_date": "1869-06-20",
-      "$death_cause": "戦死"
-    }
-  },
-  {
-    "id": "person-yoshinobu",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "徳川慶喜"
-    }
-  },
-  {
-    "id": "person-okita",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "沖田総司",
-      "$description": "天才剣士と称される。",
-      "$death_cause": "病死"
-    }
-  },
-  {
-    "id": "person-saito",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "斎藤一",
-      "$description": "左利きとの説がある。"
-    }
-  },
-  {
-    "id": "person-nagakura",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "永倉新八",
-      "$description": "新選組屈指の剣腕。"
-    }
-  },
-  {
-    "id": "person-harada",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "原田左之助",
-      "$description": "槍の名手。"
-    }
-  },
-  {
-    "id": "person-todo",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "藤堂平助",
-      "$description": "最年少幹部の一人。"
-    }
-  },
-  {
-    "id": "person-inoue",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "井上源三郎",
-      "$description": "近藤・土方と同郷。"
-    }
-  },
-  {
-    "id": "person-serizawa",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "芹沢鴨",
-      "$death_cause": "暗殺"
-    }
-  },
-  {
-    "id": "person-ito",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "伊東甲子太郎",
-      "$description": "後に御陵衛士を結成。"
-    }
-  },
-  {
-    "id": "person-nariakira",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "島津斉彬",
-      "$description": "富国強兵を推進。"
-    }
-  },
-  {
-    "id": "person-komatsu",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "小松帯刀",
-      "$description": "薩長同盟に尽力。"
-    }
-  },
-  {
-    "id": "person-atsuhime",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "篤姫 (天璋院)",
-      "$description": "第13代将軍徳川家定の正室。"
-    }
-  },
-  {
-    "id": "person-omura",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "大村益次郎",
-      "$description": "近代日本の軍制の創設者。",
-      "$death_cause": "暗殺"
-    }
-  },
-  {
-    "id": "person-inoue-kaoru",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "井上馨",
-      "$description": "長州ファイブの一人。"
+      "$death_date": "1877-05-26",
+      "$death_cause": "病死",
+      "$domain": "長州藩",
+      "$description": "長州藩出身の政治家。木戸孝允とも呼ばれる。西郷隆盛・大久保利通とともに「維新の三傑」の一人。薩長同盟の締結に尽力し、明治政府では太政大臣を務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/木戸孝允",
+      "$roles": [
+        "長州藩士",
+        "参議",
+        "太政大臣"
+      ]
     }
   },
   {
     "id": "person-kido",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "木戸孝允",
-      "$description": "維新の三傑の一人。"
+      "$birth_date": "1833-08-11",
+      "$death_date": "1877-05-26",
+      "$death_cause": "病死",
+      "$domain": "長州藩",
+      "$description": "長州藩出身の政治家。桂小五郎の名でも知られる。西郷隆盛・大久保利通とともに「維新の三傑」の一人。薩長同盟の締結に尽力し、明治政府では五箇条の御誓文起草に関わった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/木戸孝允",
+      "$roles": [
+        "長州藩士",
+        "参議",
+        "太政大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-nakaoka",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "中岡慎太郎",
+      "$birth_date": "1838-04-13",
+      "$death_date": "1867-12-12",
+      "$death_cause": "暗殺",
+      "$domain": "土佐藩",
+      "$description": "土佐藩出身の志士。薩長同盟の成立に坂本龍馬とともに尽力した。陸援隊を組織し、倒幕運動を推進した。近江屋事件で坂本龍馬とともに暗殺された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/中岡慎太郎",
+      "$roles": [
+        "土佐藩士",
+        "陸援隊隊長"
+      ]
+    }
+  },
+  {
+    "id": "person-goto",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "後藤象二郎",
+      "$birth_date": "1838-04-19",
+      "$death_date": "1897-08-04",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "土佐藩参政。坂本龍馬と協力して大政奉還を推進した。明治政府では逓信大臣・農商務大臣などを歴任した。自由民権運動にも関与した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/後藤象二郎",
+      "$roles": [
+        "土佐藩参政",
+        "政治家"
+      ]
+    }
+  },
+  {
+    "id": "person-iwasaki",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "岩崎弥太郎",
+      "$birth_date": "1835-01-09",
+      "$death_date": "1885-02-07",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "土佐藩出身の実業家。海援隊の経理を担当し、後に三菱商会（後の三菱財閥）を設立した。日本最初の財閥を築いた「三菱の創業者」として知られる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/岩崎弥太郎",
+      "$roles": [
+        "実業家",
+        "三菱財閥創業者"
+      ]
+    }
+  },
+  {
+    "id": "person-oryo",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "お龍（楢崎龍）",
+      "$birth_date": "1841-06-06",
+      "$death_date": "1906-01-15",
+      "$death_cause": "病死",
+      "$domain": "京都",
+      "$description": "坂本龍馬の妻。本名は楢崎龍。寺田屋事件では龍馬の危機を知らせるために裸で屋根を駆け上がったとされる逸話で知られる。龍馬の死後は各地を転々とした。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/楢崎龍",
+      "$roles": [
+        "坂本龍馬の妻"
+      ]
+    }
+  },
+  {
+    "id": "person-takechi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "武市半平太",
+      "$birth_date": "1829-09-27",
+      "$death_date": "1865-08-07",
+      "$death_cause": "切腹",
+      "$domain": "土佐藩",
+      "$description": "土佐藩士・剣術家。土佐勤王党を結成し尊王攘夷運動を主導した。吉田東洋暗殺などを指示したとされ、土佐藩に捕らえられ切腹を命じられた。坂本龍馬の遠縁にあたる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/武市瑞山",
+      "$roles": [
+        "土佐藩士",
+        "土佐勤王党盟主"
+      ]
+    }
+  },
+  {
+    "id": "person-yoshida",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "吉田松陰",
+      "$birth_date": "1830-09-20",
+      "$death_date": "1859-11-21",
+      "$death_cause": "処刑",
+      "$domain": "長州藩",
+      "$description": "長州藩士・思想家・教育者。松下村塾を主宰し、伊藤博文・山縣有朋・高杉晋作・木戸孝允ら多くの維新志士を育てた。安政の大獄で幕府に捕らえられ処刑された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/吉田松陰",
+      "$roles": [
+        "長州藩士",
+        "思想家",
+        "教育者",
+        "松下村塾主宰"
+      ]
+    }
+  },
+  {
+    "id": "person-shinsaku",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "高杉晋作",
+      "$birth_date": "1839-09-27",
+      "$death_date": "1867-05-17",
+      "$death_cause": "病死",
+      "$domain": "長州藩",
+      "$description": "長州藩士。吉田松陰の門下生。身分を問わない混成部隊「奇兵隊」を創設した。下関での攘夷運動、四境戦争（第二次長州征伐）での幕府軍撃退に尽力した。肺結核により27歳で病死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/高杉晋作",
+      "$roles": [
+        "長州藩士",
+        "奇兵隊創設者"
+      ]
+    }
+  },
+  {
+    "id": "person-okubo",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "大久保利通",
+      "$birth_date": "1830-09-26",
+      "$death_date": "1878-05-14",
+      "$death_cause": "暗殺",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の政治家。西郷隆盛・木戸孝允とともに「維新の三傑」の一人。岩倉使節団に参加し、廃藩置県・地租改正など明治政府の近代化政策を主導した。紀尾井坂の変で暗殺された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/大久保利通",
+      "$roles": [
+        "薩摩藩士",
+        "参議",
+        "内務卿"
+      ]
+    }
+  },
+  {
+    "id": "person-kondo",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "近藤勇",
+      "$birth_date": "1834-11-05",
+      "$death_date": "1868-05-17",
+      "$death_cause": "処刑",
+      "$domain": "幕臣",
+      "$description": "武蔵国出身の剣士・幕臣。新選組を組織して局長となり、京都の治安維持にあたった。池田屋事件など多くの事件を指揮した。戊辰戦争で流山にて新政府軍に捕らえられ、斬首された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/近藤勇",
+      "$roles": [
+        "新選組局長"
+      ]
+    }
+  },
+  {
+    "id": "person-hijikata",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "土方歳三",
+      "$birth_date": "1835-05-31",
+      "$death_date": "1869-06-20",
+      "$death_cause": "戦死",
+      "$domain": "幕臣",
+      "$description": "武蔵国出身の剣士・幕臣。新選組の副長として厳格な規律を維持した「鬼の副長」。戊辰戦争を最後まで戦い抜き、箱館の戦いで銃弾を受けて戦死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/土方歳三",
+      "$roles": [
+        "新選組副長"
+      ]
+    }
+  },
+  {
+    "id": "person-yoshinobu",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "徳川慶喜",
+      "$birth_date": "1837-10-28",
+      "$death_date": "1913-11-22",
+      "$death_cause": "病死",
+      "$domain": "江戸幕府",
+      "$description": "江戸幕府第15代・最後の将軍。水戸藩主徳川斉昭の七男。大政奉還を行い260年続いた江戸幕府に終止符を打った。鳥羽・伏見の戦いで敗れ恭順し、後に公爵に叙された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/徳川慶喜",
+      "$roles": [
+        "江戸幕府第15代将軍"
+      ]
+    }
+  },
+  {
+    "id": "person-okita",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "沖田総司",
+      "$birth_date": "1844-01-01",
+      "$death_date": "1868-07-19",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "陸奥国出身の剣士・新選組一番組組長。天然理心流の使い手として「天才剣士」と評された。池田屋事件にも参加したが、肺結核を患い療養中に病死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/沖田総司",
+      "$roles": [
+        "新選組一番組組長"
+      ]
+    }
+  },
+  {
+    "id": "person-saito",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "斎藤一",
+      "$birth_date": "1844-01-01",
+      "$death_date": "1915-09-28",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "新選組三番組組長。池田屋事件・戊辰戦争に参加した。維新後は警察官として西南戦争に従軍し、晩年は東京高等師範学校の舎監を務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/斎藤一",
+      "$roles": [
+        "新選組三番組組長"
+      ]
+    }
+  },
+  {
+    "id": "person-nagakura",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "永倉新八",
+      "$birth_date": "1839-04-09",
+      "$death_date": "1915-01-05",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "松前藩出身の剣士・新選組二番組組長。神道無念流の使い手として新選組屈指の剣腕を誇った。後に新選組の回想録「浪士文久報国記事」を記した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/永倉新八",
+      "$roles": [
+        "新選組二番組組長"
+      ]
+    }
+  },
+  {
+    "id": "person-harada",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "原田左之助",
+      "$birth_date": "1840-01-01",
+      "$death_date": "1868-07-06",
+      "$death_cause": "戦死",
+      "$domain": "伊予松山藩",
+      "$description": "伊予松山藩出身の槍術家・新選組十番組組長。槍の名手として知られた。上野戦争（彰義隊）で戦死したとされるが、生存説もある。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/原田左之助",
+      "$roles": [
+        "新選組十番組組長"
+      ]
+    }
+  },
+  {
+    "id": "person-todo",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "藤堂平助",
+      "$birth_date": "1844-01-01",
+      "$death_date": "1867-11-18",
+      "$death_cause": "戦死",
+      "$domain": "幕臣",
+      "$description": "新選組八番組組長・最年少幹部の一人。伊東甲子太郎とともに御陵衛士（高台寺党）を結成して新選組を離脱したが、油小路事件で新選組に討たれた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/藤堂平助",
+      "$roles": [
+        "新選組八番組組長"
+      ]
+    }
+  },
+  {
+    "id": "person-inoue",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "井上源三郎",
+      "$birth_date": "1829-01-01",
+      "$death_date": "1868-01-27",
+      "$death_cause": "戦死",
+      "$domain": "幕臣",
+      "$description": "武蔵国出身の剣士・新選組六番組組長。近藤勇・土方歳三と同郷（多摩地方）の同門。鳥羽・伏見の戦いで戦死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/井上源三郎",
+      "$roles": [
+        "新選組六番組組長"
+      ]
+    }
+  },
+  {
+    "id": "person-serizawa",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "芹沢鴨",
+      "$birth_date": "1826-01-01",
+      "$death_date": "1863-09-18",
+      "$death_cause": "暗殺",
+      "$domain": "水戸藩",
+      "$description": "水戸藩浪士・新選組初代局長（近藤勇と並ぶ）。神道無念流の使い手。粗暴な行動が多く、近藤勇・土方歳三らによって暗殺された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/芹沢鴨",
+      "$roles": [
+        "新選組初代局長"
+      ]
+    }
+  },
+  {
+    "id": "person-ito",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "伊東甲子太郎",
+      "$birth_date": "1835-12-07",
+      "$death_date": "1867-11-18",
+      "$death_cause": "暗殺",
+      "$domain": "幕臣",
+      "$description": "常陸国出身の剣士。新選組参謀として加入したが後に離脱して御陵衛士（高台寺党）を結成した。油小路事件で新選組に暗殺された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/伊東甲子太郎",
+      "$roles": [
+        "新選組参謀",
+        "御陵衛士組長"
+      ]
+    }
+  },
+  {
+    "id": "person-nariakira",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "島津斉彬",
+      "$birth_date": "1809-04-28",
+      "$death_date": "1858-08-24",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩の第11代藩主。「富国強兵」「殖産興業」を掲げて藩政改革を推進し、反射炉・紡績機・ガス灯など西洋技術の導入に積極的だった。西郷隆盛・大久保利通らを引き立てた。「幕末四賢侯」の一人。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/島津斉彬",
+      "$roles": [
+        "薩摩藩第11代藩主"
+      ]
+    }
+  },
+  {
+    "id": "person-komatsu",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "小松帯刀",
+      "$birth_date": "1835-11-26",
+      "$death_date": "1870-08-16",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩の家老。西郷隆盛・大久保利通とともに薩摩藩の倒幕を主導した。薩長同盟の締結において仲介役を果たした。明治新政府でも活動したが35歳の若さで病死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/小松帯刀",
+      "$roles": [
+        "薩摩藩家老"
+      ]
+    }
+  },
+  {
+    "id": "person-atsuhime",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "篤姫（天璋院）",
+      "$birth_date": "1836-12-19",
+      "$death_date": "1883-11-20",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身。島津斉彬の養女として第13代将軍徳川家定に嫁ぎ、天璋院と称した。家定没後も大奥の最高権力者として振る舞い、江戸城無血開城に際して勝海舟の交渉を後押しした。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/天璋院",
+      "$roles": [
+        "第13代将軍徳川家定の正室",
+        "天璋院"
+      ]
+    }
+  },
+  {
+    "id": "person-omura",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "大村益次郎",
+      "$birth_date": "1824-05-30",
+      "$death_date": "1869-11-05",
+      "$death_cause": "暗殺",
+      "$domain": "長州藩",
+      "$description": "長州藩出身の兵学者・軍人。緒方洪庵の適塾で蘭学を学んだ。戊辰戦争で新政府軍の軍事作戦を指揮し上野戦争を勝利に導いた。近代日本陸軍の基礎を築き「陸軍の父」と呼ばれる。攘夷派の刺客に暗殺された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/大村益次郎",
+      "$roles": [
+        "長州藩士",
+        "兵部大輔"
+      ]
+    }
+  },
+  {
+    "id": "person-inoue-kaoru",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "井上馨",
+      "$birth_date": "1836-01-16",
+      "$death_date": "1915-09-01",
+      "$death_cause": "病死",
+      "$domain": "長州藩",
+      "$description": "長州藩出身の政治家。「長州ファイブ」の一人としてイギリスに密航留学した。伊藤博文の盟友として明治政府の外交・財政を担当し、外務大臣として条約改正交渉に当たった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/井上馨",
+      "$roles": [
+        "長州藩士",
+        "外務大臣",
+        "内務大臣"
+      ]
     }
   },
   {
     "id": "person-kusaka",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "久坂玄瑞",
-      "$description": "松下村塾の秀才。",
-      "$death_cause": "戦死"
+      "$birth_date": "1840-08-11",
+      "$death_date": "1864-08-20",
+      "$death_cause": "自決",
+      "$domain": "長州藩",
+      "$description": "長州藩士。吉田松陰の門下生として松下村塾で学び、松陰の義弟となった。高杉晋作とともに長州藩の尊王攘夷運動を主導した。禁門の変で敗れ、自決した。「松下村塾の双璧」と呼ばれた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/久坂玄瑞",
+      "$roles": [
+        "長州藩士",
+        "松下村塾門下生"
+      ]
     }
   },
   {
     "id": "person-ii",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "井伊直弼",
-      "$description": "幕府の大老。安政の大獄を主導。",
       "$birth_date": "1815-11-29",
       "$death_date": "1860-03-24",
-      "$death_cause": "暗殺"
+      "$death_cause": "暗殺",
+      "$domain": "彦根藩",
+      "$description": "彦根藩主・江戸幕府大老。日米修好通商条約を勅許なしに調印した。安政の大獄で反対派を大量に弾圧した。水戸・薩摩浪士によって桜田門外で暗殺された（桜田門外の変）。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/井伊直弼",
+      "$roles": [
+        "彦根藩主",
+        "江戸幕府大老"
+      ]
     }
   },
   {
     "id": "person-abe",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "阿部正弘",
-      "$description": "ペリー来航時の老中首座。"
+      "$birth_date": "1819-12-03",
+      "$death_date": "1857-08-06",
+      "$death_cause": "病死",
+      "$domain": "備後福山藩",
+      "$description": "備後福山藩主・老中首座。ペリー来航時に老中首座として幕府の外交に対応した。開国を受け入れつつ、諸大名や朝廷の意見を聴取する柔軟な姿勢を示した「三家の御意見番」。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/阿部正弘",
+      "$roles": [
+        "備後福山藩主",
+        "老中首座"
+      ]
     }
   },
   {
     "id": "person-oguri",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "小栗忠順",
-      "$description": "勘定奉行。横須賀製鉄所を建設。"
+      "$birth_date": "1827-07-16",
+      "$death_date": "1868-05-03",
+      "$death_cause": "処刑",
+      "$domain": "幕臣",
+      "$description": "江戸幕府の旗本・勘定奉行。遣米使節団の一員として渡米した。横須賀製鉄所（造船所）の建設を推進し幕府の近代化を図った。「幕末の傑物」と評される。戊辰戦争で新政府軍に捕らえられ斬首された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/小栗忠順",
+      "$roles": [
+        "幕臣",
+        "勘定奉行",
+        "外国奉行"
+      ]
     }
   },
   {
     "id": "person-komei",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "孝明天皇",
-      "$description": "明治天皇の父。",
       "$birth_date": "1831-07-22",
-      "$death_date": "1867-01-30"
+      "$death_date": "1867-01-30",
+      "$death_cause": "病死",
+      "$domain": "皇室",
+      "$description": "第121代天皇。明治天皇の父。強硬な攘夷論者で、幕府への勅許なしの条約調印に激怒した。公武合体を支持しつつ攘夷を主張したが、36歳で崩御した（毒殺説もあるが不明）。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/孝明天皇",
+      "$roles": [
+        "第121代天皇"
+      ]
     }
   },
   {
     "id": "person-meiji",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "明治天皇",
       "$birth_date": "1852-11-03",
-      "$death_date": "1912-07-30"
+      "$death_date": "1912-07-30",
+      "$death_cause": "病死",
+      "$domain": "皇室",
+      "$description": "第122代天皇。孝明天皇の第二皇子。王政復古の大号令・五箇条の御誓文・大日本帝国憲法発布など明治維新の諸政策を推進した。在位中に日清・日露戦争を経験し、近代日本の発展を見届けた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/明治天皇",
+      "$roles": [
+        "第122代天皇"
+      ]
     }
   },
   {
     "id": "person-iwakura",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "岩倉具視",
-      "$description": "倒幕派の中心人物。",
       "$birth_date": "1825-10-26",
-      "$death_date": "1883-07-20"
+      "$death_date": "1883-07-20",
+      "$death_cause": "病死",
+      "$domain": "公家",
+      "$description": "幕末・明治期の公家・政治家。倒幕運動の推進者として王政復古の大号令を主導した。岩倉使節団の全権大使として欧米を視察し、明治政府の近代化政策に貢献した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/岩倉具視",
+      "$roles": [
+        "公家",
+        "右大臣"
+      ]
     }
   },
   {
     "id": "person-sanjo",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "三条実美",
-      "$description": "尊王攘夷派の急進派。",
       "$birth_date": "1837-03-13",
-      "$death_date": "1891-02-18"
+      "$death_date": "1891-02-18",
+      "$death_cause": "病死",
+      "$domain": "公家",
+      "$description": "幕末・明治期の公家・政治家。尊王攘夷派の急進派として活動し、七卿落ちの一人。明治政府では太政大臣として最高位に就き、廃藩置県・岩倉使節団派遣などを推進した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/三条実美",
+      "$roles": [
+        "公家",
+        "太政大臣"
+      ]
     }
   },
   {
     "id": "person-matsudaira",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "松平春嶽",
-      "$description": "四賢侯の一人。",
       "$birth_date": "1828-10-10",
-      "$death_date": "1890-06-02"
+      "$death_date": "1890-06-02",
+      "$death_cause": "病死",
+      "$domain": "福井藩",
+      "$description": "福井藩の第14代藩主。「四賢侯」の一人。橋本左内・横井小楠を登用して藩政改革を推進した。一橋派として徳川慶喜の将軍継嗣擁立に尽力した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/松平春嶽",
+      "$roles": [
+        "福井藩主",
+        "四賢侯の一人"
+      ]
     }
   },
   {
     "id": "person-katamori",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "松平容保",
-      "$description": "京都守護職。",
       "$birth_date": "1836-02-15",
-      "$death_date": "1893-12-05"
+      "$death_date": "1893-12-05",
+      "$death_cause": "病死",
+      "$domain": "会津藩",
+      "$description": "会津藩の第9代藩主。京都守護職として京都の治安維持を担当し、新選組を監督した。戊辰戦争では旧幕府側として戦ったが降伏した。後に日光東照宮の宮司を務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/松平容保",
+      "$roles": [
+        "会津藩主",
+        "京都守護職"
+      ]
     }
   },
   {
     "id": "person-enomoto",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "榎本武揚",
-      "$description": "オランダに留学し、開陽丸で帰国。",
       "$birth_date": "1836-10-05",
-      "$death_date": "1908-10-26"
+      "$death_date": "1908-10-26",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "幕臣・海軍副総裁。オランダに留学して帰国後、開陽丸で箱館に渡り蝦夷共和国を樹立した。降伏後は明治政府に登用され、逓信大臣・外務大臣・文部大臣などを歴任した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/榎本武揚",
+      "$roles": [
+        "幕臣",
+        "海軍副総裁",
+        "外務大臣"
+      ]
     }
   },
   {
     "id": "person-john-manjiro",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "ジョン万次郎",
-      "$description": "咸臨丸で渡米。",
       "$birth_date": "1827-01-27",
-      "$death_date": "1898-11-12"
+      "$death_date": "1898-11-12",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "土佐国出身。漁中に遭難しアメリカ船に救助されてアメリカで教育を受けた。帰国後は幕府の通訳として活躍し、日米和親条約交渉などに関わった。咸臨丸でのアメリカ渡航にも参加した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/ジョン万次郎",
+      "$roles": [
+        "漁師出身の通訳",
+        "幕府通詞"
+      ]
     }
   },
   {
     "id": "person-yamaoka",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "山岡鉄舟",
-      "$description": "幕末の三舟の一人。",
       "$birth_date": "1836-07-23",
-      "$death_date": "1888-07-19"
-    }
-  },
-  {
-    "id": "org-kaientai",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "海援隊",
-      "$description": "坂本龍馬が率いた浪士結社。貿易なども行う。"
-    }
-  },
-  {
-    "id": "org-rikuguntai",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "陸援隊",
-      "$description": "中岡慎太郎が率いた浪士結社。"
-    }
-  },
-  {
-    "id": "org-tosa",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "土佐藩",
-      "$description": "坂本龍馬、中岡慎太郎らの出身藩。"
-    }
-  },
-  {
-    "id": "org-satsuma",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "薩摩藩",
-      "$description": "西郷隆盛、大久保利通らの出身藩。"
-    }
-  },
-  {
-    "id": "org-choshu",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "長州藩",
-      "$description": "桂小五郎、高杉晋作らの出身藩。"
-    }
-  },
-  {
-    "id": "org-bakufu",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "江戸幕府",
-      "$description": "徳川将軍家を中心とした武家政権。"
-    }
-  },
-  {
-    "id": "org-shinsengumi",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "新選組",
-      "$description": "京都の治安維持を担当した幕府の警察組織。"
-    }
-  },
-  {
-    "id": "org-kinnoto",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "土佐勤王党",
-      "$description": "武市半平太が結成した尊王攘夷を掲げる組織。"
-    }
-  },
-  {
-    "id": "org-goryo-eji",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "御陵衛士",
-      "$description": "伊東甲子太郎が新選組を離脱して結成した組織。"
-    }
-  },
-  {
-    "id": "org-aizu",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "会津藩",
-      "$description": "松平容保が藩主。京都守護職を務める。"
-    }
-  },
-  {
-    "id": "org-chotei",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "朝廷",
-      "$description": "天皇を中心とする日本の伝統的な政権。"
-    }
-  },
-  {
-    "id": "event-satcho",
-    "labels": ["$Event"],
-    "properties": {
-      "$name": "薩長同盟",
-      "$year": 1866,
-      "$description": "薩摩藩と長州藩の軍事同盟。"
-    }
-  },
-  {
-    "id": "event-taisei",
-    "labels": ["$Event"],
-    "properties": {
-      "$name": "大政奉還",
-      "$year": 1867,
-      "$description": "徳川慶喜が政権を朝廷に返上した出来事。"
-    }
-  },
-  {
-    "id": "event-teradaya",
-    "labels": ["$Event"],
-    "properties": {
-      "$name": "寺田屋事件",
-      "$year": 1862,
-      "$description": "薩摩藩士による同士討ち事件。龍馬も標的となった。"
-    }
-  },
-  {
-    "id": "event-omi",
-    "labels": ["$Event"],
-    "properties": {
-      "$name": "近江屋事件",
-      "$year": 1867,
-      "$description": "坂本龍馬と中岡慎太郎が暗殺された事件。"
-    }
-  },
-  {
-    "id": "event-kobe",
-    "labels": ["$Event"],
-    "properties": {
-      "$name": "神戸海軍操練所",
-      "$year": 1863,
-      "$description": "勝海舟が設立した海軍士官養成機関。"
-    }
-  },
-  {
-    "id": "event-ikedaya",
-    "labels": ["$Event"],
-    "properties": {
-      "$name": "池田屋事件",
-      "$year": 1864,
-      "$description": "新選組が尊王攘夷派を襲撃した事件。"
-    }
-  },
-  {
-    "id": "event-kinmon",
-    "labels": ["$Event"],
-    "properties": {
-      "$name": "禁門の変",
-      "$year": 1864,
-      "$description": "池田屋事件をきっかけに長州藩が京都で起こした戦闘。"
-    }
-  },
-  {
-    "id": "event-sakuradamon",
-    "labels": ["$Event"],
-    "properties": {
-      "$name": "桜田門外の変",
-      "$year": 1860,
-      "$description": "井伊直弼が暗殺された事件。"
-    }
-  },
-  {
-    "id": "event-ansei",
-    "labels": ["$Event"],
-    "properties": {
-      "$name": "安政の大獄",
-      "$year": 1858,
-      "$description": "井伊直弼による反対派への弾圧。"
-    }
-  },
-  {
-    "id": "event-toba-fushimi",
-    "labels": ["$Event"],
-    "properties": {
-      "$name": "鳥羽・伏見の戦い",
-      "$year": 1868,
-      "$description": "戊辰戦争の初戦。新政府軍が旧幕府軍に勝利。"
-    }
-  },
-  {
-    "id": "event-edo-kaijo",
-    "labels": ["$Event"],
-    "properties": {
-      "$name": "江戸城無血開城",
-      "$year": 1868,
-      "$description": "勝海舟と西郷隆盛の交渉により、江戸城が戦火を交えずに明け渡された。"
-    }
-  },
-  {
-    "id": "org-fukui",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "福井藩",
-      "$description": "松平春嶽が藩主を務めた藩。"
-    }
-  },
-  {
-    "id": "org-kiheitai",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "奇兵隊",
-      "$description": "高杉晋作が創設した長州藩の軍事組織。"
-    }
-  },
-  {
-    "id": "org-mitsubishi",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "三菱",
-      "$description": "岩崎弥太郎が創設した会社。"
-    }
-  },
-  {
-    "id": "org-shingun",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "新政府軍",
-      "$description": "戊辰戦争における倒幕派の軍事勢力。薩摩藩、長州藩などが中心。"
-    }
-  },
-  {
-    "id": "org-kyubakufu",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "旧幕府軍",
-      "$description": "戊辰戦争における幕府側の軍事勢力。会津藩、新選組などが中心。"
+      "$death_date": "1888-07-19",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "幕臣・剣士。「幕末の三舟」（勝海舟・山岡鉄舟・高橋泥舟）の一人。江戸城無血開城に際し、勝海舟の使者として西郷隆盛と先行交渉した。剣・書・禅の達人として知られた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/山岡鉄舟",
+      "$roles": [
+        "幕臣",
+        "静岡藩権大参事"
+      ]
     }
   },
   {
     "id": "person-ogata",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "緒方洪庵",
       "$birth_date": "1810-08-13",
-      "$death_date": "1863-07-25"
+      "$death_date": "1863-07-25",
+      "$death_cause": "病死",
+      "$domain": "足守藩",
+      "$description": "備中足守藩出身の蘭学者・医師。大阪に適塾を開き、福沢諭吉・大村益次郎・橋本左内・佐野常民・大鳥圭介ら多くの人材を育てた。「蘭学中興の祖」と称される。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/緒方洪庵",
+      "$roles": [
+        "蘭学者",
+        "医師",
+        "教育者",
+        "適塾創設者"
+      ]
     }
   },
   {
     "id": "person-fukuzawa",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "福沢諭吉",
-      "$description": "慶應義塾の創立者。"
+      "$birth_date": "1835-01-10",
+      "$death_date": "1901-02-03",
+      "$death_cause": "病死",
+      "$domain": "中津藩",
+      "$description": "中津藩出身の啓蒙思想家・教育者。適塾で蘭学を学び、渡米・渡欧後に慶應義塾を創立した。「学問のすゝめ」「文明論之概略」などの著作で近代日本の思想形成に大きく貢献した。「独立自尊」を唱えた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/福沢諭吉",
+      "$roles": [
+        "思想家",
+        "教育者",
+        "ジャーナリスト",
+        "慶應義塾創立者"
+      ]
     }
   },
   {
     "id": "person-sano",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "佐野常民",
-      "$description": "日本赤十字社の創設者。"
+      "$birth_date": "1823-02-07",
+      "$death_date": "1902-12-07",
+      "$death_cause": "病死",
+      "$domain": "佐賀藩",
+      "$description": "佐賀藩出身の政治家。適塾で学んだ後、幕末に佐賀藩の殖産興業を担った。1877年の西南戦争中に博愛社を設立し、後に日本赤十字社に改組した。元老院議長・枢密顧問官なども務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/佐野常民",
+      "$roles": [
+        "佐賀藩士",
+        "政治家",
+        "日本赤十字社創立者"
+      ]
     }
   },
   {
     "id": "person-otori",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "大鳥圭介",
-      "$description": "徳川幕府の陸軍奉行。"
-    }
-  },
-  {
-    "id": "person-tezuka",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "手塚良仙",
-      "$description": "手塚治虫の曽祖父。"
-    }
-  },
-  {
-    "id": "org-tekijuku",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "適塾",
-      "$description": "緒方洪庵が開いた蘭学の私塾。"
-    }
-  },
-  {
-    "id": "loc-osaka",
-    "labels": ["$Location"],
-    "properties": {
-      "$name": "大阪",
-      "$description": "適塾の所在地。"
-    }
-  },
-  {
-    "id": "status-1",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "土佐藩郷士"
-    }
-  },
-  {
-    "id": "status-2",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "幕臣"
-    }
-  },
-  {
-    "id": "status-3",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "薩摩藩士"
-    }
-  },
-  {
-    "id": "status-4",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "長州藩士"
-    }
-  },
-  {
-    "id": "status-5",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "土佐藩士"
-    }
-  },
-  {
-    "id": "status-6",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "土佐藩参政"
-    }
-  },
-  {
-    "id": "status-7",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "土佐藩出身の実業家"
-    }
-  },
-  {
-    "id": "status-8",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "坂本龍馬の妻"
-    }
-  },
-  {
-    "id": "status-9",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "新選組局長"
-    }
-  },
-  {
-    "id": "status-10",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "新選組副長"
-    }
-  },
-  {
-    "id": "status-11",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "江戸幕府第15代将軍"
-    }
-  },
-  {
-    "id": "status-12",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "新選組一番組組長"
-    }
-  },
-  {
-    "id": "status-13",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "新選組三番組組長"
-    }
-  },
-  {
-    "id": "status-14",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "新選組二番組組長"
-    }
-  },
-  {
-    "id": "status-15",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "新選組十番組組長"
-    }
-  },
-  {
-    "id": "status-16",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "新選組八番組組長"
-    }
-  },
-  {
-    "id": "status-17",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "新選組六番組組長"
-    }
-  },
-  {
-    "id": "status-18",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "新選組初代局長の一人"
-    }
-  },
-  {
-    "id": "status-19",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "新選組参謀"
-    }
-  },
-  {
-    "id": "status-20",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "薩摩藩第11代藩主"
-    }
-  },
-  {
-    "id": "status-21",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "薩摩藩家老"
-    }
-  },
-  {
-    "id": "status-22",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "島津斉彬の養女"
-    }
-  },
-  {
-    "id": "status-23",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "桂小五郎としての活動が知られる"
-    }
-  },
-  {
-    "id": "status-24",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "彦根藩主"
-    }
-  },
-  {
-    "id": "status-25",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "備後福山藩主"
-    }
-  },
-  {
-    "id": "status-26",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "第121代天皇"
-    }
-  },
-  {
-    "id": "status-27",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "第122代天皇"
-    }
-  },
-  {
-    "id": "status-28",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "公家"
-    }
-  },
-  {
-    "id": "status-29",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "福井藩主"
-    }
-  },
-  {
-    "id": "status-30",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "会津藩主"
-    }
-  },
-  {
-    "id": "status-31",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "土佐出身の通訳"
-    }
-  },
-  {
-    "id": "status-32",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "蘭学者"
-    }
-  },
-  {
-    "id": "status-33",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "医師"
-    }
-  },
-  {
-    "id": "status-34",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "教育者"
-    }
-  },
-  {
-    "id": "status-35",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "政治家"
-    }
-  },
-  {
-    "id": "status-36",
-    "labels": ["$Status"],
-    "properties": {
-      "$name": "蘭方医"
+      "$birth_date": "1833-04-14",
+      "$death_date": "1911-06-15",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "幕臣・軍人。適塾で蘭学を学んだ。戊辰戦争では旧幕府軍を率いて最後まで抵抗し、箱館政権の陸軍頭取を務めた。降伏後は明治政府に仕え、初代駐朝公使となった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/大鳥圭介",
+      "$roles": [
+        "幕臣",
+        "陸軍奉行並",
+        "駐朝公使"
+      ]
     }
   },
   {
     "id": "person-glover",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "トーマス・ブレーク・グラバー",
-      "$description": "スコットランド出身の商人。長崎でグラバー商会を設立し、武器や弾薬を販売。薩長同盟を支援し、坂本龍馬とも交流があった。"
+      "$birth_date": "1838-06-06",
+      "$death_date": "1911-12-16",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "スコットランド出身の商人。長崎でグラバー商会を設立し、薩摩藩・長州藩への武器・船舶の販売を行った。薩摩藩士・長州藩士の密航留学を支援し、倒幕運動を陰で支えた。長崎グラバー邸が現存する。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/トーマス・グラバー",
+      "$roles": [
+        "スコットランド系商人",
+        "グラバー商会設立者"
+      ]
     }
   },
   {
     "id": "person-satow",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "アーネスト・サトウ",
-      "$description": "イギリスの外交官、通訳。駐日英国公使館の通訳官として、坂本龍馬と会談し、日本の政治情勢を分析した。"
-    }
-  },
-  {
-    "id": "person-seishu",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "華岡青洲",
-      "$description": "江戸時代の外科医。世界で初めて全身麻酔を用いた手術に成功した。",
-      "$birth_date": "1760-10-23",
-      "$death_date": "1835-11-21"
-    }
-  },
-  {
-    "id": "person-kae",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "加恵",
-      "$description": "華岡青洲の妻。麻酔薬「通仙散」の開発に協力した。"
-    }
-  },
-  {
-    "id": "person-otsugi",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "於継",
-      "$description": "華岡青洲の母。麻酔薬「通仙散」の開発に協力した。"
+      "$birth_date": "1843-06-30",
+      "$death_date": "1929-08-26",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "イギリスの外交官・日本研究者。駐日英国公使館の通訳官として幕末・明治期の日本に滞在し、日本語・日本文化を深く学んだ。薩摩藩・長州藩との交渉を担い、英国の対日政策に影響を与えた。回想録「一外交官の見た明治維新」を著した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/アーネスト・サトウ",
+      "$roles": [
+        "イギリス外交官",
+        "通訳官"
+      ]
     }
   },
   {
     "id": "person-sasaki",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "佐々木只三郎",
-      "$description": "京都見廻組与頭。坂本龍馬暗殺の実行犯の指揮者とされる。"
+      "$birth_date": "1833-01-01",
+      "$death_date": "1868-01-27",
+      "$death_cause": "戦死",
+      "$domain": "幕臣",
+      "$description": "幕臣・京都見廻組与頭。坂本龍馬暗殺の実行犯の指揮者とされる有力な説がある（確定ではない）。鳥羽・伏見の戦いで戦死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/佐々木只三郎",
+      "$roles": [
+        "京都見廻組与頭"
+      ]
     }
   },
   {
     "id": "person-nobuo",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "今井信郎",
-      "$description": "元京都見廻組隊士。龍馬暗殺の実行犯の一人とされ、後に自白した。"
-    }
-  },
-  {
-    "id": "org-mimawarigumi",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "京都見廻組",
-      "$description": "江戸幕府が設置した治安維持組織。主に御家人で構成された。"
-    }
-  },
-  {
-    "id": "person-hachihei",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "坂本八平",
-      "$description": "坂本龍馬の父。"
-    }
-  },
-  {
-    "id": "person-sachi",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "坂本幸",
-      "$description": "坂本龍馬の母。"
-    }
-  },
-  {
-    "id": "person-iyo",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "坂本伊與",
-      "$description": "坂本龍馬の継母。"
-    }
-  },
-  {
-    "id": "person-gonbei",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "坂本権平",
-      "$description": "坂本龍馬の兄。"
-    }
-  },
-  {
-    "id": "person-chizu",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "坂本千鶴",
-      "$description": "坂本龍馬の長姉。"
-    }
-  },
-  {
-    "id": "person-ei",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "坂本栄",
-      "$description": "坂本龍馬の次姉。"
-    }
-  },
-  {
-    "id": "person-otome",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "坂本乙女",
-      "$description": "坂本龍馬の三姉。龍馬に大きな影響を与えた。"
-    }
-  },
-  {
-    "id": "person-shosaku",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "楢崎将作",
-      "$description": "お龍の父。医師。"
-    }
-  },
-  {
-    "id": "person-sada",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "楢崎貞",
-      "$description": "お龍の母。"
-    }
-  },
-  {
-    "id": "person-saitani",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "才谷梅太郎",
-      "$description": "坂本龍馬が使用した偽名。"
-    }
-  },
-  {
-    "id": "person-narasaki-ryo",
-    "labels": ["$Person"],
-    "properties": {
-      "$name": "楢崎龍",
-      "$description": "お龍の本名。"
-    }
-  },
-  {
-    "id": "org-keio",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "慶應義塾",
-      "$description": "福沢諭吉が創設した私塾・大学。"
-    }
-  },
-  {
-    "id": "org-meirokusha",
-    "labels": ["$Organization"],
-    "properties": {
-      "$name": "明六社",
-      "$description": "森有礼、福沢諭吉らが結成した日本初の近代的な学術団体。"
+      "$birth_date": "1841-02-13",
+      "$death_date": "1918-05-23",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "幕臣・元京都見廻組隊士。明治時代に坂本龍馬暗殺への関与を自白したとされる人物の一人。後に静岡に移住し農業を営んだ。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/今井信郎",
+      "$roles": [
+        "京都見廻組隊士"
+      ]
     }
   },
   {
     "id": "person-mori",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "森有礼",
-      "$description": "薩摩藩士、外交官、政治家。明六社の設立者で初代文部大臣。"
+      "$birth_date": "1847-08-23",
+      "$death_date": "1889-02-12",
+      "$death_cause": "暗殺",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の外交官・政治家。イギリス・アメリカに留学し、明六社を設立した啓蒙思想家でもある。初代文部大臣として近代学校制度の整備に尽力した。大日本帝国憲法発布の日に暗殺された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/森有礼",
+      "$roles": [
+        "薩摩藩士",
+        "外交官",
+        "初代文部大臣"
+      ]
     }
   },
   {
     "id": "person-nishi",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "西周",
-      "$description": "思想家、啓蒙家、教育者。明六社の主要メンバー。"
+      "$birth_date": "1829-03-07",
+      "$death_date": "1897-01-31",
+      "$death_cause": "病死",
+      "$domain": "津和野藩",
+      "$description": "津和野藩出身の思想家・啓蒙家。オランダに留学して哲学・法学を学んだ。「哲学」「概念」など多くの学術用語を日本語に訳し、「哲学の祖」と呼ばれる。明六社の主要メンバー。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/西周_(啓蒙家)",
+      "$roles": [
+        "思想家",
+        "啓蒙家",
+        "教育者"
+      ]
     }
   },
   {
     "id": "person-shibusawa",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "渋沢栄一",
-      "$description": "実業家。「日本資本主義の父」と呼ばれる。"
+      "$birth_date": "1840-03-16",
+      "$death_date": "1931-11-11",
+      "$death_cause": "病死",
+      "$domain": "武蔵国",
+      "$description": "武蔵国出身の実業家・官僚。一橋慶喜の家臣として幕府に仕えた後、明治政府の大蔵省に出仕した。退官後は第一国立銀行をはじめ約500の企業・団体の設立・育成に関わった。「日本資本主義の父」と呼ばれる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/渋沢栄一",
+      "$roles": [
+        "実業家",
+        "官僚"
+      ]
     }
   },
   {
     "id": "person-okuma",
-    "labels": ["$Person"],
+    "labels": [
+      "$Person"
+    ],
     "properties": {
       "$name": "大隈重信",
-      "$description": "政治家。早稲田大学の創設者。"
+      "$birth_date": "1838-03-11",
+      "$death_date": "1922-01-10",
+      "$death_cause": "病死",
+      "$domain": "佐賀藩",
+      "$description": "佐賀藩出身の政治家。グイド・フルベッキに師事した。明治政府で財政・外交を担当したが、明治14年の政変で下野した。立憲改進党を結成し、早稲田大学（東京専門学校）を創立した。第8代・第17代内閣総理大臣。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/大隈重信",
+      "$roles": [
+        "政治家",
+        "第8代・第17代内閣総理大臣",
+        "早稲田大学創立者"
+      ]
     }
   },
   {
-    "id": "work-gakumon",
-    "labels": ["$Work"],
+    "id": "person-tezuka",
+    "labels": [
+      "$Person"
+    ],
     "properties": {
-      "$name": "学問のすゝめ",
-      "$description": "福沢諭吉の代表的な著作の一つ。"
+      "$name": "手塚良仙",
+      "$birth_date": "1809-01-01",
+      "$death_date": "1876-01-01",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "幕末・明治期の蘭方医。緒方洪庵の適塾で蘭学・医学を学んだ。手塚治虫の曽祖父として知られる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/手塚良仙",
+      "$roles": [
+        "蘭方医"
+      ]
     }
   },
   {
-    "id": "work-bunmeiron",
-    "labels": ["$Work"],
+    "id": "person-seishu",
+    "labels": [
+      "$Person"
+    ],
     "properties": {
-      "$name": "文明論之概略",
-      "$description": "福沢諭吉の代表的な著作の一つ。"
+      "$name": "華岡青洲",
+      "$birth_date": "1760-10-23",
+      "$death_date": "1835-11-21",
+      "$death_cause": "病死",
+      "$domain": "紀伊国",
+      "$description": "江戸時代後期の外科医。世界で初めて全身麻酔（麻沸散/通仙散）を用いた乳癌手術に成功した（1804年）。妻・加恵と母・於継が人体実験に協力したことで知られる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/華岡青洲",
+      "$roles": [
+        "外科医",
+        "蘭方医"
+      ]
+    }
+  },
+  {
+    "id": "person-kae",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "加恵",
+      "$birth_date": "1764-01-01",
+      "$death_date": "1827-01-01",
+      "$death_cause": "病死",
+      "$domain": "紀伊国",
+      "$description": "華岡青洲の妻。麻酔薬「通仙散」の開発のため、姑・於継とともに人体実験に自ら志願した。実験の結果、視力を失ったとされる。有吉佐和子の小説『華岡青洲の妻』のモデルとなったが、小説の内容は史実と異なる部分がある。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/加恵_(華岡青洲の妻)",
+      "$roles": [
+        "華岡青洲の妻"
+      ]
+    }
+  },
+  {
+    "id": "person-otsugi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "於継",
+      "$birth_date": "1741-01-01",
+      "$death_date": "1802-01-01",
+      "$death_cause": "病死",
+      "$domain": "紀伊国",
+      "$description": "華岡青洲の母。麻酔薬「通仙散」の開発のため、息子・青洲の人体実験に自ら志願した最初の被験者の一人。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/於継",
+      "$roles": [
+        "華岡青洲の母"
+      ]
+    }
+  },
+  {
+    "id": "person-hachihei",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "坂本八平",
+      "$birth_date": "1797-01-01",
+      "$death_date": "1853-01-01",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "土佐藩郷士。坂本家第8代当主。坂本龍馬の父。龍馬が脱藩する以前に病死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/坂本八平",
+      "$roles": [
+        "土佐藩郷士",
+        "坂本龍馬の父"
+      ]
+    }
+  },
+  {
+    "id": "person-sachi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "坂本幸",
+      "$birth_date": "1799-01-01",
+      "$death_date": "1848-01-01",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "坂本龍馬の生母。龍馬が幼少の頃に病死したため、継母・伊與に育てられた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/坂本龍馬",
+      "$roles": [
+        "坂本龍馬の母"
+      ]
+    }
+  },
+  {
+    "id": "person-iyo",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "坂本伊與",
+      "$birth_date": "1812-01-01",
+      "$death_date": "1887-01-01",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "坂本龍馬の継母。生母・幸の死後、八平の後妻となり、龍馬を養育した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/坂本龍馬",
+      "$roles": [
+        "坂本龍馬の継母"
+      ]
+    }
+  },
+  {
+    "id": "person-gonbei",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "坂本権平",
+      "$birth_date": "1823-01-01",
+      "$death_date": "1901-01-01",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "坂本龍馬の兄。坂本家第9代当主。龍馬が脱藩後も土佐藩に留まり、龍馬の後ろ盾となった。明治維新後も土佐で生涯を送った。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/坂本権平",
+      "$roles": [
+        "土佐藩郷士",
+        "坂本龍馬の兄"
+      ]
+    }
+  },
+  {
+    "id": "person-chizu",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "坂本千鶴",
+      "$birth_date": "1820-01-01",
+      "$death_date": "1904-01-01",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "坂本龍馬の長姉。峰吉（黒石屋）に嫁いだ。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/坂本龍馬",
+      "$roles": [
+        "坂本龍馬の長姉"
+      ]
+    }
+  },
+  {
+    "id": "person-ei",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "坂本栄",
+      "$birth_date": "1825-01-01",
+      "$death_date": "1886-01-01",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "坂本龍馬の次姉。高松太郎（順蔵）に嫁いだ。龍馬の脱藩後も連絡を取り合った。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/坂本龍馬",
+      "$roles": [
+        "坂本龍馬の次姉"
+      ]
+    }
+  },
+  {
+    "id": "person-otome",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "坂本乙女",
+      "$birth_date": "1832-08-04",
+      "$death_date": "1879-08-07",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "坂本龍馬の三姉。武芸・学問に優れ、龍馬の剣術の師でもあった。龍馬に大きな影響を与えた人物で、脱藩後も頻繁に手紙のやりとりをした。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/坂本乙女",
+      "$roles": [
+        "坂本龍馬の三姉"
+      ]
+    }
+  },
+  {
+    "id": "person-shosaku",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "楢崎将作",
+      "$birth_date": "1822-01-01",
+      "$death_date": "1871-01-01",
+      "$death_cause": "病死",
+      "$domain": "京都",
+      "$description": "お龍（楢崎龍）の父。京都で医師を営んでいたが、尊王攘夷運動に関わり、新選組に捕縛されて獄死したとされる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/楢崎龍",
+      "$roles": [
+        "医師",
+        "お龍の父"
+      ]
+    }
+  },
+  {
+    "id": "person-sada",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "楢崎貞",
+      "$birth_date": "1829-01-01",
+      "$death_date": "1889-01-01",
+      "$death_cause": "病死",
+      "$domain": "京都",
+      "$description": "お龍（楢崎龍）の母。夫・将作の死後、生活苦に陥り、お龍は島原の置屋に奉公したとされる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/楢崎龍",
+      "$roles": [
+        "お龍の母"
+      ]
+    }
+  },
+  {
+    "id": "person-saitani",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "才谷梅太郎",
+      "$birth_date": "1836-01-03",
+      "$death_date": "1867-12-10",
+      "$death_cause": "暗殺",
+      "$domain": "土佐藩",
+      "$description": "坂本龍馬が脱藩後に使用した変名（偽名）。「才谷屋」は坂本家の本家の屋号に由来する。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/坂本龍馬",
+      "$roles": [
+        "坂本龍馬の変名"
+      ]
+    }
+  },
+  {
+    "id": "person-narasaki-ryo",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "楢崎龍",
+      "$birth_date": "1841-01-01",
+      "$death_date": "1906-01-15",
+      "$death_cause": "病死",
+      "$domain": "京都",
+      "$description": "坂本龍馬の妻。通称「お龍」。寺田屋騒動（1866年）の際に龍馬に危機を知らせ、命を救った。龍馬暗殺後は各地を転々とし、晩年は貧困の中で亡くなった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/楢崎龍",
+      "$roles": [
+        "坂本龍馬の妻",
+        "お龍"
+      ]
+    }
+  },
+  {
+    "id": "person-ito-hirobumi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "伊藤博文",
+      "$birth_date": "1841-10-16",
+      "$death_date": "1909-10-26",
+      "$death_cause": "暗殺",
+      "$domain": "長州藩",
+      "$description": "長州藩出身の政治家。初代内閣総理大臣を務め、大日本帝国憲法の制定に尽力した。ハルビン駅で安重根に暗殺された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/伊藤博文",
+      "$roles": [
+        "政治家",
+        "初代・第5代・第7代・第10代内閣総理大臣",
+        "枢密院議長"
+      ]
+    }
+  },
+  {
+    "id": "person-yamagata",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "山縣有朋",
+      "$birth_date": "1838-06-14",
+      "$death_date": "1922-02-01",
+      "$death_cause": "病死",
+      "$domain": "長州藩",
+      "$description": "長州藩出身の軍人・政治家。高杉晋作とともに奇兵隊を組織し、明治軍制の基礎を築いた。第3代・第9代内閣総理大臣を務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/山縣有朋",
+      "$roles": [
+        "軍人",
+        "政治家",
+        "第3代・第9代内閣総理大臣",
+        "陸軍元帥"
+      ]
+    }
+  },
+  {
+    "id": "person-itagaki",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "板垣退助",
+      "$birth_date": "1837-05-21",
+      "$death_date": "1919-07-16",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "土佐藩出身の政治家。戊辰戦争で活躍後、征韓論争で下野し、自由民権運動を主導して自由党を結成した。「板垣死すとも自由は死せず」の言葉で知られる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/板垣退助",
+      "$roles": [
+        "政治家",
+        "自由民権運動の指導者",
+        "自由党総理"
+      ]
+    }
+  },
+  {
+    "id": "person-eto",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "江藤新平",
+      "$birth_date": "1834-03-18",
+      "$death_date": "1874-04-13",
+      "$death_cause": "処刑",
+      "$domain": "佐賀藩",
+      "$description": "佐賀藩出身の政治家。明治政府の司法卿として近代的な法制度の整備に尽力した。明治6年の政変で下野後、佐賀の乱を起こし敗れて梟首刑に処せられた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/江藤新平",
+      "$roles": [
+        "政治家",
+        "司法卿",
+        "佐賀の乱指導者"
+      ]
+    }
+  },
+  {
+    "id": "person-soejima",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "副島種臣",
+      "$birth_date": "1828-10-17",
+      "$death_date": "1905-01-31",
+      "$death_cause": "病死",
+      "$domain": "佐賀藩",
+      "$description": "佐賀藩出身の政治家・外交家。明治政府の外務卿として外交を担当した。中国との外交に辣腕を振るい、枢密顧問官なども務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/副島種臣",
+      "$roles": [
+        "政治家",
+        "外務卿",
+        "書家"
+      ]
+    }
+  },
+  {
+    "id": "person-nakae-chomin",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "中江兆民",
+      "$birth_date": "1847-12-08",
+      "$death_date": "1901-12-13",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "土佐藩出身の思想家・政治家。フランスに留学しルソーの「社会契約論」を翻訳するなど、自由民権思想の理論的支柱となった。「東洋のルソー」と呼ばれた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/中江兆民",
+      "$roles": [
+        "思想家",
+        "政治家",
+        "自由民権運動家"
+      ]
+    }
+  },
+  {
+    "id": "person-kato-hiroyuki",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "加藤弘之",
+      "$birth_date": "1836-07-05",
+      "$death_date": "1916-02-09",
+      "$death_cause": "病死",
+      "$domain": "出石藩",
+      "$description": "出石藩出身の思想家・政治家・教育者。当初は天賦人権論を唱えたが後に社会進化論・国権主義へと転向した。東京大学の初代総長を務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/加藤弘之",
+      "$roles": [
+        "思想家",
+        "政治家",
+        "教育者",
+        "東京大学初代総長"
+      ]
+    }
+  },
+  {
+    "id": "person-shimazu-hisamitsu",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "島津久光",
+      "$birth_date": "1817-12-02",
+      "$death_date": "1887-12-06",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩の島津斉彬の異父弟で、藩主島津忠義の父として藩の実権を握った。文久の改革を推進し、生麦事件の引き金となった。維新後も政府の要職を歴任した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/島津久光",
+      "$roles": [
+        "薩摩藩実権者",
+        "国父",
+        "太政大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-mori-takachika",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "毛利敬親",
+      "$birth_date": "1819-03-05",
+      "$death_date": "1871-12-05",
+      "$death_cause": "病死",
+      "$domain": "長州藩",
+      "$description": "長州藩の第13代藩主。尊王攘夷運動を支援し、高杉晋作や木戸孝允など多くの志士を庇護した。「そうせい候」と呼ばれた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/毛利敬親",
+      "$roles": [
+        "長州藩主"
+      ]
+    }
+  },
+  {
+    "id": "person-yamauchi-toyoshige",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "山内容堂",
+      "$birth_date": "1827-11-27",
+      "$death_date": "1872-07-26",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "土佐藩の第15代藩主。「四賢侯」の一人。大政奉還の建白書を朝廷に提出するよう徳川慶喜に働きかけた。「鯨海酔侯」と号した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/山内容堂",
+      "$roles": [
+        "土佐藩主",
+        "四賢侯の一人"
+      ]
+    }
+  },
+  {
+    "id": "person-hashimoto-sanai",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "橋本左内",
+      "$birth_date": "1834-03-11",
+      "$death_date": "1859-11-01",
+      "$death_cause": "処刑",
+      "$domain": "福井藩",
+      "$description": "福井藩士・思想家・医師。松平春嶽に仕え、一橋慶喜を将軍継嗣に擁立する運動に尽力した。安政の大獄で捕らえられ、26歳で刑死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/橋本左内",
+      "$roles": [
+        "藩士",
+        "思想家",
+        "医師"
+      ]
+    }
+  },
+  {
+    "id": "person-umeda-umpin",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "梅田雲浜",
+      "$birth_date": "1815-07-18",
+      "$death_date": "1859-09-01",
+      "$death_cause": "病死",
+      "$domain": "小浜藩",
+      "$description": "小浜藩出身の儒学者・尊王攘夷運動家。安政の大獄で最初に逮捕された人物の一人。獄中で病死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/梅田雲浜",
+      "$roles": [
+        "儒学者",
+        "尊王攘夷活動家"
+      ]
+    }
+  },
+  {
+    "id": "person-rai-mikisaburo",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "頼三樹三郎",
+      "$birth_date": "1825-10-11",
+      "$death_date": "1859-11-01",
+      "$death_cause": "処刑",
+      "$domain": "浪人",
+      "$description": "儒学者頼山陽の三男。詩人として知られ、尊王攘夷運動に関わったことで安政の大獄により捕らえられ、吉田松陰と同日に処刑された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/頼三樹三郎",
+      "$roles": [
+        "詩人",
+        "尊王攘夷活動家"
+      ]
+    }
+  },
+  {
+    "id": "person-harris",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "タウンゼント・ハリス",
+      "$birth_date": "1804-10-09",
+      "$death_date": "1878-02-25",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "アメリカの外交官。初代駐日総領事・初代駐日公使として下田に赴任し、日米修好通商条約の締結に尽力した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/タウンゼント・ハリス",
+      "$roles": [
+        "アメリカ外交官",
+        "初代駐日総領事",
+        "初代駐日公使"
+      ]
+    }
+  },
+  {
+    "id": "person-alcock",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "ラザフォード・オールコック",
+      "$birth_date": "1809-05-28",
+      "$death_date": "1897-11-02",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "イギリスの外交官。初代駐日公使として日本に赴任した。日本滞在の経験を著書「大君の都」にまとめた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/ラザフォード・オールコック",
+      "$roles": [
+        "イギリス外交官",
+        "初代駐日公使"
+      ]
+    }
+  },
+  {
+    "id": "person-parkes",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "ハリー・パークス",
+      "$birth_date": "1828-02-24",
+      "$death_date": "1885-03-22",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "イギリスの外交官。1865年から1883年まで長期にわたり駐日公使を務め、薩長両藩を支援して倒幕・維新に影響を与えた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/ハリー・パークス",
+      "$roles": [
+        "イギリス外交官",
+        "駐日公使"
+      ]
+    }
+  },
+  {
+    "id": "person-roches",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "レオン・ロッシュ",
+      "$birth_date": "1809-09-01",
+      "$death_date": "1900-09-06",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "フランスの外交官。1864年から1868年まで駐日公使を務め、江戸幕府を支援して軍事・産業の近代化を援助した。横須賀造船所の建設などに関与した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/レオン・ロッシュ",
+      "$roles": [
+        "フランス外交官",
+        "駐日公使"
+      ]
+    }
+  },
+  {
+    "id": "person-brunet",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "ジュール・ブリュネ",
+      "$birth_date": "1838-01-02",
+      "$death_date": "1911-08-21",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "フランスの陸軍士官。幕府の軍制改革を指導したフランス軍事顧問団の一員として来日した。箱館戦争では榎本武揚ら旧幕府勢力を支援した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/ジュール・ブリュネ",
+      "$roles": [
+        "フランス軍人",
+        "幕府軍事顧問"
+      ]
+    }
+  },
+  {
+    "id": "person-fukuchi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "福地源一郎",
+      "$birth_date": "1841-06-06",
+      "$death_date": "1906-01-04",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "幕末・明治期のジャーナリスト・劇作家・政治家。東京日日新聞（現・毎日新聞）の主筆として活躍し、「福地桜痴」の号で知られた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/福地源一郎",
+      "$roles": [
+        "ジャーナリスト",
+        "劇作家",
+        "政治家"
+      ]
+    }
+  },
+  {
+    "id": "person-kuroda",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "黒田清隆",
+      "$birth_date": "1840-11-09",
+      "$death_date": "1900-08-23",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の軍人・政治家。戊辰戦争で活躍し、北海道開拓使長官として北海道の開拓を推進した。第2代内閣総理大臣を務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/黒田清隆",
+      "$roles": [
+        "軍人",
+        "政治家",
+        "第2代内閣総理大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-togo",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "東郷平八郎",
+      "$birth_date": "1848-01-27",
+      "$death_date": "1934-05-30",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の海軍軍人。日露戦争の日本海海戦で連合艦隊を率いてロシアのバルチック艦隊を撃滅した。「東洋のネルソン」と称される。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/東郷平八郎",
+      "$roles": [
+        "海軍軍人",
+        "海軍元帥",
+        "連合艦隊司令長官"
+      ]
+    }
+  },
+  {
+    "id": "person-yamamoto-gonnohyoe",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "山本権兵衛",
+      "$birth_date": "1852-11-26",
+      "$death_date": "1933-12-08",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の海軍軍人・政治家。海軍大臣として海軍の近代化に尽力し、第16代・第22代内閣総理大臣を務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/山本権兵衛",
+      "$roles": [
+        "海軍軍人",
+        "政治家",
+        "第16代・第22代内閣総理大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-matsukata",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "松方正義",
+      "$birth_date": "1835-03-23",
+      "$death_date": "1924-07-02",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の政治家。大蔵大臣として財政改革（松方デフレ）を断行し、日本銀行を設立した。第4代・第6代内閣総理大臣を務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/松方正義",
+      "$roles": [
+        "政治家",
+        "第4代・第6代内閣総理大臣",
+        "大蔵大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-inoue-kowashi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "井上毅",
+      "$birth_date": "1844-02-06",
+      "$death_date": "1895-03-17",
+      "$death_cause": "病死",
+      "$domain": "熊本藩",
+      "$description": "熊本藩出身の法制官僚・政治家。大日本帝国憲法や教育勅語の起草に深く関わり、明治国家の法制度の基礎を築いた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/井上毅",
+      "$roles": [
+        "政治家",
+        "法制官僚",
+        "文部大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-niijima",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "新島襄",
+      "$birth_date": "1843-02-12",
+      "$death_date": "1890-01-23",
+      "$death_cause": "病死",
+      "$domain": "安中藩",
+      "$description": "安中藩出身のキリスト教伝道者・教育者。国禁を犯して渡米しアメリカで神学を学び帰国後、同志社英学校（現・同志社大学）を創立した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/新島襄",
+      "$roles": [
+        "教育者",
+        "キリスト教宣教師",
+        "同志社英学校創立者"
+      ]
+    }
+  },
+  {
+    "id": "person-uchimura",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "内村鑑三",
+      "$birth_date": "1861-03-26",
+      "$death_date": "1930-03-28",
+      "$death_cause": "病死",
+      "$domain": "高崎藩",
+      "$description": "高崎藩士の家に生まれたキリスト教思想家・文学者。「無教会主義」を提唱し、日露戦争に反対する非戦論を唱えた。著書「余はいかにしてキリスト信徒となりしか」で知られる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/内村鑑三",
+      "$roles": [
+        "キリスト教思想家",
+        "文学者",
+        "社会運動家"
+      ]
+    }
+  },
+  {
+    "id": "person-maehara",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "前原一誠",
+      "$birth_date": "1834-10-03",
+      "$death_date": "1876-12-03",
+      "$death_cause": "処刑",
+      "$domain": "長州藩",
+      "$description": "長州藩士。松下村塾で学び、倒幕運動や戊辰戦争で活躍した。明治維新後、萩の乱（1876年）を起こして敗れ斬首刑に処せられた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/前原一誠",
+      "$roles": [
+        "長州藩士",
+        "兵部大輔",
+        "萩の乱指導者"
+      ]
+    }
+  },
+  {
+    "id": "person-sagara-sozo",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "相楽総三",
+      "$birth_date": "1839-02-04",
+      "$death_date": "1868-03-26",
+      "$death_cause": "処刑",
+      "$domain": "武蔵国",
+      "$description": "武蔵国出身の討幕活動家。戊辰戦争開戦前後に赤報隊を組織して東征軍の先鋒を務めた。「年貢半減」を布告したが偽官軍とされ、下諏訪にて処刑（斬首）された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/相楽総三",
+      "$roles": [
+        "赤報隊隊長",
+        "討幕活動家"
+      ]
+    }
+  },
+  {
+    "id": "person-oyama-iwao",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "大山巌",
+      "$birth_date": "1842-11-12",
+      "$death_date": "1916-12-10",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の軍人。西郷隆盛の従弟。日清・日露戦争で活躍し、陸軍元帥に昇進した。「大山元帥」として知られる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/大山巌",
+      "$roles": [
+        "軍人",
+        "陸軍元帥",
+        "陸軍大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-kawamura-sumiyoshi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "川村純義",
+      "$birth_date": "1836-10-15",
+      "$death_date": "1904-08-11",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の海軍軍人。戊辰戦争に参加し、明治期には海軍の基礎を築いた。西南戦争では政府軍の海軍指揮を担当した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/川村純義",
+      "$roles": [
+        "海軍軍人",
+        "海軍卿",
+        "海軍大将"
+      ]
+    }
+  },
+  {
+    "id": "person-nozu",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "野津道貫",
+      "$birth_date": "1841-09-17",
+      "$death_date": "1908-10-18",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の陸軍軍人。戊辰戦争・西南戦争・日清戦争・日露戦争に参加し、陸軍元帥に昇進した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/野津道貫",
+      "$roles": [
+        "軍人",
+        "陸軍元帥"
+      ]
+    }
+  },
+  {
+    "id": "person-miyabe",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "宮部鼎蔵",
+      "$birth_date": "1820-02-13",
+      "$death_date": "1864-07-08",
+      "$death_cause": "自決",
+      "$domain": "熊本藩",
+      "$description": "熊本藩士・尊王攘夷活動家。吉田松陰の盟友で松下村塾にも関わった。池田屋事件で新選組に急襲された際に自刃した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/宮部鼎蔵",
+      "$roles": [
+        "熊本藩士",
+        "尊王攘夷活動家"
+      ]
+    }
+  },
+  {
+    "id": "person-irie",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "入江九一",
+      "$birth_date": "1837-03-26",
+      "$death_date": "1864-08-20",
+      "$death_cause": "戦死",
+      "$domain": "長州藩",
+      "$description": "長州藩士。吉田松陰の門下生として松下村塾で学んだ。禁門の変（蛤御門の変）で戦死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/入江九一",
+      "$roles": [
+        "長州藩士",
+        "松下村塾門下生"
+      ]
+    }
+  },
+  {
+    "id": "person-shinagawa",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "品川弥二郎",
+      "$birth_date": "1843-11-11",
+      "$death_date": "1900-02-26",
+      "$death_cause": "病死",
+      "$domain": "長州藩",
+      "$description": "長州藩士。松下村塾で吉田松陰に学んだ。維新後は政治家として活躍し、内務大臣などを歴任した。明治24年の選挙干渉で知られる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/品川弥二郎",
+      "$roles": [
+        "長州藩士",
+        "政治家",
+        "内務大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-kijima",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "来島又兵衛",
+      "$birth_date": "1817-01-01",
+      "$death_date": "1864-08-20",
+      "$death_cause": "戦死",
+      "$domain": "長州藩",
+      "$description": "長州藩士。禁門の変において長州軍の一隊を率いて京都に進攻した。戦闘中に銃弾を受けて戦死した（自決説もある）。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/来島又兵衛",
+      "$roles": [
+        "長州藩士",
+        "遊撃隊総督"
+      ]
+    }
+  },
+  {
+    "id": "person-maki-izumi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "真木和泉",
+      "$birth_date": "1813-06-16",
+      "$death_date": "1864-08-20",
+      "$death_cause": "自決",
+      "$domain": "久留米藩",
+      "$description": "久留米藩の神官・尊王攘夷活動家。禁門の変において長州藩とともに京都に進攻した。敗退後、天王山に追い詰められて自決した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/真木和泉",
+      "$roles": [
+        "久留米藩士",
+        "神官",
+        "尊王攘夷活動家"
+      ]
+    }
+  },
+  {
+    "id": "person-yamada-akiyoshi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "山田顕義",
+      "$birth_date": "1844-11-30",
+      "$death_date": "1892-11-11",
+      "$death_cause": "病死",
+      "$domain": "長州藩",
+      "$description": "長州藩出身の軍人・政治家。松下村塾で吉田松陰に学んだ。戊辰戦争・西南戦争で活躍し、後に司法大臣として法典整備に尽力した。日本大学の創立者でもある。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/山田顕義",
+      "$roles": [
+        "軍人",
+        "政治家",
+        "司法大臣",
+        "日本大学創立者"
+      ]
+    }
+  },
+  {
+    "id": "person-tanaka-mitsuaki",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "田中光顕",
+      "$birth_date": "1843-11-26",
+      "$death_date": "1939-03-28",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "土佐藩出身の政治家。陸援隊に参加し、維新後は宮内大臣などを歴任した。明治・大正・昭和を生き抜き、97歳で亡くなった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/田中光顕",
+      "$roles": [
+        "政治家",
+        "宮内大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-perry",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "マシュー・ペリー",
+      "$birth_date": "1794-04-10",
+      "$death_date": "1858-03-04",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "アメリカ海軍の提督。1853年（嘉永6年）に黒船4隻を率いて浦賀に来航し、日本に開国を要求した。翌年再来航して日米和親条約を締結させた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/マシュー・ペリー",
+      "$roles": [
+        "アメリカ海軍提督",
+        "東インド艦隊司令官"
+      ]
+    }
+  },
+  {
+    "id": "person-tokugawa-nariaki",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "徳川斉昭",
+      "$birth_date": "1800-04-04",
+      "$death_date": "1860-09-04",
+      "$death_cause": "病死",
+      "$domain": "水戸藩",
+      "$description": "水戸藩の第9代藩主。熱烈な尊王攘夷論者で「烈公」と呼ばれた。徳川慶喜の父。安政の大獄で隠居謹慎を命じられた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/徳川斉昭",
+      "$roles": [
+        "水戸藩主",
+        "尊王攘夷論者"
+      ]
+    }
+  },
+  {
+    "id": "person-date-munenari",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "伊達宗城",
+      "$birth_date": "1818-09-27",
+      "$death_date": "1892-12-20",
+      "$death_cause": "病死",
+      "$domain": "宇和島藩",
+      "$description": "宇和島藩の第8代藩主。「四賢侯」の一人。開明的な藩政改革を進め、洋式軍備の導入に積極的だった。明治維新後は外務卿などを務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/伊達宗城",
+      "$roles": [
+        "宇和島藩主",
+        "四賢侯の一人"
+      ]
+    }
+  },
+  {
+    "id": "person-anegakoji",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "姉小路公知",
+      "$birth_date": "1840-01-09",
+      "$death_date": "1863-08-16",
+      "$death_cause": "暗殺",
+      "$domain": "公家",
+      "$description": "幕末の尊王攘夷派公卿。三条実美らとともに急進的な攘夷運動を推進した。文久3年（1863年）に猿ヶ辻で暗殺された（猿ヶ辻の変）。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/姉小路公知",
+      "$roles": [
+        "公家",
+        "尊王攘夷派公卿"
+      ]
+    }
+  },
+  {
+    "id": "person-nakayama-tadayasu",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "中山忠能",
+      "$birth_date": "1809-12-08",
+      "$death_date": "1888-06-12",
+      "$death_cause": "病死",
+      "$domain": "公家",
+      "$description": "明治天皇の外祖父にあたる公家。幕末の朝廷政治において尊王攘夷派として活動し、王政復古の実現に貢献した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/中山忠能",
+      "$roles": [
+        "公家",
+        "明治天皇の外祖父"
+      ]
+    }
+  },
+  {
+    "id": "person-ohara-shigenori",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "大原重徳",
+      "$birth_date": "1801-02-11",
+      "$death_date": "1879-02-05",
+      "$death_cause": "病死",
+      "$domain": "公家",
+      "$description": "幕末の勤王公家。文久2年（1862年）に大原勅使として江戸に下り、幕府に攘夷の実行を要求した（文久の改革）。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/大原重徳",
+      "$roles": [
+        "公家",
+        "勤王家"
+      ]
+    }
+  },
+  {
+    "id": "person-hirosawa",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "広沢真臣",
+      "$birth_date": "1833-10-24",
+      "$death_date": "1871-02-07",
+      "$death_cause": "暗殺",
+      "$domain": "長州藩",
+      "$description": "長州藩出身の政治家。明治維新後は参議として政府の要職に就いた。明治4年（1871年）に自宅で暗殺されたが犯人は不明のまま（広沢参議暗殺事件）。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/広沢真臣",
+      "$roles": [
+        "長州藩士",
+        "参議"
+      ]
+    }
+  },
+  {
+    "id": "person-tokugawa-iesada",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "徳川家定",
+      "$birth_date": "1824-05-06",
+      "$death_date": "1858-08-14",
+      "$death_cause": "病死",
+      "$domain": "江戸幕府",
+      "$description": "江戸幕府第13代将軍。病弱で政務は老中に委ねられた。将軍継嗣問題では南紀派（井伊直弼支持）が勝利し徳川慶福（家茂）が後継となった。天璋院（篤姫）の夫。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/徳川家定",
+      "$roles": [
+        "江戸幕府第13代将軍"
+      ]
+    }
+  },
+  {
+    "id": "person-tokugawa-iemochi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "徳川家茂",
+      "$birth_date": "1846-07-17",
+      "$death_date": "1866-08-29",
+      "$death_cause": "病死",
+      "$domain": "江戸幕府",
+      "$description": "江戸幕府第14代将軍。和宮と結婚し公武合体を進めた。第1次・第2次長州征伐を命じたが、大坂城で病死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/徳川家茂",
+      "$roles": [
+        "江戸幕府第14代将軍"
+      ]
+    }
+  },
+  {
+    "id": "person-kazunomiya",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "和宮親子内親王",
+      "$birth_date": "1846-08-31",
+      "$death_date": "1877-09-02",
+      "$death_cause": "病死",
+      "$domain": "皇室",
+      "$description": "孝明天皇の妹。公武合体政策の一環として第14代将軍徳川家茂に降嫁した。家茂の死後は静寛院宮と称した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/和宮親子内親王",
+      "$roles": [
+        "内親王",
+        "徳川家茂の正室"
+      ]
+    }
+  },
+  {
+    "id": "person-nakamura-masanao",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "中村正直",
+      "$birth_date": "1832-06-24",
+      "$death_date": "1891-06-07",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "幕臣出身の啓蒙思想家・教育者。イギリスに留学し、スマイルズの「自助論」を「西国立志編」として翻訳し大ベストセラーとなった。同人社を設立した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/中村正直",
+      "$roles": [
+        "教育者",
+        "思想家",
+        "啓蒙家"
+      ]
+    }
+  },
+  {
+    "id": "person-tsuda-mamichi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "津田真道",
+      "$birth_date": "1829-08-05",
+      "$death_date": "1903-09-03",
+      "$death_cause": "病死",
+      "$domain": "津山藩",
+      "$description": "津山藩出身の啓蒙思想家・政治家。オランダに留学し、近代法学・政治学を学んで帰国後、明六社の設立に関わった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/津田真道",
+      "$roles": [
+        "思想家",
+        "啓蒙家",
+        "政治家"
+      ]
+    }
+  },
+  {
+    "id": "person-boissonade",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "ギュスターヴ・エミール・ボアソナード",
+      "$birth_date": "1825-06-20",
+      "$death_date": "1910-06-27",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "フランスの法学者。明治政府に招かれたお雇い外国人として来日し、刑法・民法草案の起草に関わり「日本近代法の父」と呼ばれる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/ギュスターヴ・エミール・ボアソナード",
+      "$roles": [
+        "フランス人法学者",
+        "お雇い外国人"
+      ]
+    }
+  },
+  {
+    "id": "person-verbeck",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "グイド・フルベッキ",
+      "$birth_date": "1830-01-23",
+      "$death_date": "1898-03-10",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "オランダ系アメリカ人宣教師・教育者。長崎で大隈重信や副島種臣らを教え、明治政府の顧問として活躍した。岩倉使節団の派遣計画にも関与したとされる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/グイド・フルベッキ",
+      "$roles": [
+        "アメリカ人宣教師",
+        "教育者",
+        "お雇い外国人"
+      ]
+    }
+  },
+  {
+    "id": "person-capron",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "ホーレス・ケプロン",
+      "$birth_date": "1804-11-23",
+      "$death_date": "1885-02-22",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "アメリカの農業専門家・軍人。明治政府に招かれ、北海道開拓使の最高顧問として北海道の開発計画を指導した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/ホーレス・ケプロン",
+      "$roles": [
+        "アメリカ人農業専門家",
+        "北海道開拓顧問"
+      ]
+    }
+  },
+  {
+    "id": "person-clark",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "ウィリアム・スミス・クラーク",
+      "$birth_date": "1826-07-31",
+      "$death_date": "1886-03-09",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "アメリカの農学者・教育者。明治政府の招聘で来日し、札幌農学校（現・北海道大学）の初代教頭を務めた。「Boys, be ambitious!」の言葉で知られる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/ウィリアム・スミス・クラーク",
+      "$roles": [
+        "アメリカ人教育者",
+        "農学者",
+        "お雇い外国人"
+      ]
+    }
+  },
+  {
+    "id": "person-brunton",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "リチャード・ヘンリー・ブラントン",
+      "$birth_date": "1841-09-26",
+      "$death_date": "1901-11-18",
+      "$death_cause": "病死",
+      "$domain": "外国人",
+      "$description": "イギリスの技術者。明治政府に招かれ、日本各地に灯台を建設した。「灯台の父」と呼ばれる。横浜の都市整備にも貢献した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/リチャード・ヘンリー・ブラントン",
+      "$roles": [
+        "イギリス人技術者",
+        "お雇い外国人"
+      ]
+    }
+  },
+  {
+    "id": "person-saigo-tsugumichi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "西郷従道",
+      "$birth_date": "1843-06-01",
+      "$death_date": "1902-07-18",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の軍人・政治家。西郷隆盛の弟。海軍大臣・内務大臣などを歴任した。兄の西南戦争参加後も政府に残り、帝国海軍の発展に貢献した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/西郷従道",
+      "$roles": [
+        "軍人",
+        "海軍大臣",
+        "内務大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-kirino",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "桐野利秋",
+      "$birth_date": "1838-06-09",
+      "$death_date": "1877-09-24",
+      "$death_cause": "戦死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩士・軍人。戊辰戦争で活躍後、陸軍少将となった。「人斬り半次郎」の異名を持つ。西南戦争では西郷隆盛の参謀として従軍し、城山の戦いで戦死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/桐野利秋",
+      "$roles": [
+        "薩摩藩士",
+        "陸軍少将"
+      ]
+    }
+  },
+  {
+    "id": "person-murata-shinpachi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "村田新八",
+      "$birth_date": "1836-11-01",
+      "$death_date": "1877-09-24",
+      "$death_cause": "戦死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩士。岩倉使節団に随行して欧米を視察した。西南戦争では西郷隆盛に従って参戦し、城山の戦いで戦死した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/村田新八",
+      "$roles": [
+        "薩摩藩士",
+        "軍人"
+      ]
+    }
+  },
+  {
+    "id": "person-kawaji",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "川路利良",
+      "$birth_date": "1834-07-21",
+      "$death_date": "1879-10-13",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の警察官僚。フランスで警察制度を学び、帰国後に警察制度を整備した。初代大警視として東京警視庁を創設した。「日本警察の父」と呼ばれる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/川路利良",
+      "$roles": [
+        "警察官僚",
+        "大警視（初代警視庁長官）"
+      ]
+    }
+  },
+  {
+    "id": "person-yokoi-shonan",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "横井小楠",
+      "$birth_date": "1809-09-22",
+      "$death_date": "1869-02-15",
+      "$death_cause": "暗殺",
+      "$domain": "熊本藩",
+      "$description": "熊本藩の儒学者・思想家。開明的な政治思想を持ち、松平春嶽の招きで福井藩政に関わった。坂本龍馬にも影響を与えた。明治2年に攘夷派に暗殺された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/横井小楠",
+      "$roles": [
+        "儒学者",
+        "思想家",
+        "藩政改革者"
+      ]
+    }
+  },
+  {
+    "id": "person-sakuma-shozan",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "佐久間象山",
+      "$birth_date": "1811-03-22",
+      "$death_date": "1864-08-12",
+      "$death_cause": "暗殺",
+      "$domain": "松代藩",
+      "$description": "松代藩出身の思想家・兵学者。「東洋道徳・西洋芸術（技術）」を唱えた。勝海舟・吉田松陰の師でもある。開国論者であったため、元治元年（1864年）に尊王攘夷派に暗殺された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/佐久間象山",
+      "$roles": [
+        "思想家",
+        "兵学者",
+        "教育者"
+      ]
+    }
+  },
+  {
+    "id": "person-ando-nobumasa",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "安藤信正",
+      "$birth_date": "1820-12-16",
+      "$death_date": "1871-07-16",
+      "$death_cause": "病死",
+      "$domain": "磐城平藩",
+      "$description": "磐城平藩主・幕府老中。桜田門外の変後、老中首座として公武合体を推進した。文久2年（1862年）の坂下門外の変で水戸浪士に襲撃され負傷した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/安藤信正",
+      "$roles": [
+        "老中",
+        "幕府政治家"
+      ]
+    }
+  },
+  {
+    "id": "person-okubo-ichio",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "大久保一翁",
+      "$birth_date": "1817-07-30",
+      "$death_date": "1888-08-01",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "幕臣・政治家。勝海舟とともに江戸城無血開城に尽力した。明治維新後も新政府に出仕した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/大久保一翁",
+      "$roles": [
+        "幕臣",
+        "政治家"
+      ]
+    }
+  },
+  {
+    "id": "person-kawai-tsuginosuke",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "河井継之助",
+      "$birth_date": "1827-02-07",
+      "$death_date": "1868-08-16",
+      "$death_cause": "病死",
+      "$domain": "長岡藩",
+      "$description": "長岡藩の家老・軍事指揮官。戊辰戦争において武装中立を目指したが失敗し、長岡藩を率いて新政府軍と戦った。ガトリング砲を活用した軍事戦略で知られる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/河井継之助",
+      "$roles": [
+        "長岡藩家老",
+        "軍事指揮官"
+      ]
+    }
+  },
+  {
+    "id": "person-yamakawa-hiroshi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "山川浩",
+      "$birth_date": "1845-03-21",
+      "$death_date": "1898-02-04",
+      "$death_cause": "病死",
+      "$domain": "会津藩",
+      "$description": "会津藩士。戊辰戦争で会津藩の軍事を指揮した。降伏後は新政府に仕え、陸軍少将に昇進した。妹の山川捨松はアメリカ留学後に大山巌と結婚した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/山川浩",
+      "$roles": [
+        "会津藩士",
+        "軍人",
+        "陸軍少将"
+      ]
+    }
+  },
+  {
+    "id": "person-higashikuze",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "東久世通禧",
+      "$birth_date": "1833-10-08",
+      "$death_date": "1912-01-02",
+      "$death_cause": "病死",
+      "$domain": "公家",
+      "$description": "幕末・明治期の公家・政治家。七卿落ちの一人。明治維新後は北海道開拓使の初代長官などを務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/東久世通禧",
+      "$roles": [
+        "公家",
+        "北海道開拓使初代長官"
+      ]
+    }
+  },
+  {
+    "id": "person-godai",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "五代友厚",
+      "$birth_date": "1836-02-12",
+      "$death_date": "1885-09-25",
+      "$death_cause": "病死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩出身の実業家・外交官。大阪の商工業発展に貢献し、大阪商工会議所の初代会頭を務めた。「大阪経済の父」と呼ばれる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/五代友厚",
+      "$roles": [
+        "実業家",
+        "外交官"
+      ]
+    }
+  },
+  {
+    "id": "person-yamamoto-kakuma",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "山本覚馬",
+      "$birth_date": "1828-04-29",
+      "$death_date": "1892-12-28",
+      "$death_cause": "病死",
+      "$domain": "会津藩",
+      "$description": "会津藩士・政治家。失明後も京都府顧問として京都の近代化に貢献した。新島襄が同志社英学校を創立する際に支援した。新島八重の兄。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/山本覚馬",
+      "$roles": [
+        "会津藩士",
+        "政治家",
+        "教育者"
+      ]
+    }
+  },
+  {
+    "id": "person-yamamoto-yae",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "新島八重",
+      "$birth_date": "1845-11-03",
+      "$death_date": "1932-06-14",
+      "$death_cause": "病死",
+      "$domain": "会津藩",
+      "$description": "会津藩士山本覚馬の妹。戊辰戦争（会津戦争）に銃を持って参加したことで知られる。後に新島襄と結婚し、同志社の発展を支えた。日本赤十字社の活動にも参加した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/新島八重",
+      "$roles": [
+        "社会活動家",
+        "新島襄の妻"
+      ]
+    }
+  },
+  {
+    "id": "person-ozaki-yukio",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "尾崎行雄",
+      "$birth_date": "1858-12-24",
+      "$death_date": "1954-10-06",
+      "$death_cause": "病死",
+      "$domain": "相模国",
+      "$description": "明治から昭和にかけて活躍した政治家。「憲政の神様」「議会政治の父」と呼ばれた。東京市長としてワシントンDCへ桜の木を寄贈したことでも知られる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/尾崎行雄",
+      "$roles": [
+        "政治家",
+        "憲政の神様"
+      ]
+    }
+  },
+  {
+    "id": "person-goto-shimpei",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "後藤新平",
+      "$birth_date": "1857-07-24",
+      "$death_date": "1929-04-13",
+      "$death_cause": "病死",
+      "$domain": "胆沢藩",
+      "$description": "胆沢藩出身の政治家・医師。台湾総督府民政長官として台湾の近代化を推進した。南満洲鉄道初代総裁、東京市長も務めた。「大風呂敷」の異名で知られた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/後藤新平",
+      "$roles": [
+        "政治家",
+        "医師",
+        "台湾総督府民政長官"
+      ]
+    }
+  },
+  {
+    "id": "person-mutsu",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "陸奥宗光",
+      "$birth_date": "1844-08-20",
+      "$death_date": "1897-08-24",
+      "$death_cause": "病死",
+      "$domain": "紀州藩",
+      "$description": "紀州藩出身の政治家・外交官。外務大臣として不平等条約の改正（領事裁判権の撤廃）と日清戦争の外交処理（下関条約）を行った「陸奥外交」で知られる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/陸奥宗光",
+      "$roles": [
+        "政治家",
+        "外務大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-yamada-houkoku",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "山田方谷",
+      "$birth_date": "1805-07-05",
+      "$death_date": "1877-06-26",
+      "$death_cause": "病死",
+      "$domain": "備中松山藩",
+      "$description": "備中松山藩の儒学者・藩政改革者。財政難に苦しむ備中松山藩を見事に再建した。「東洋一の財政家」とも称される。河井継之助の師でもある。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/山田方谷",
+      "$roles": [
+        "儒学者",
+        "藩政改革者"
+      ]
+    }
+  },
+  {
+    "id": "person-shima-yoshitake",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "島義勇",
+      "$birth_date": "1822-10-22",
+      "$death_date": "1874-04-13",
+      "$death_cause": "処刑",
+      "$domain": "佐賀藩",
+      "$description": "佐賀藩士。北海道の開拓に取り組み、札幌の都市計画を立案した「北海道開拓の父」。後に佐賀の乱に参加して江藤新平とともに処刑された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/島義勇",
+      "$roles": [
+        "佐賀藩士",
+        "北海道開拓者",
+        "佐賀の乱参加"
+      ]
+    }
+  },
+  {
+    "id": "person-kono-hironaka",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "河野広中",
+      "$birth_date": "1849-10-26",
+      "$death_date": "1923-11-27",
+      "$death_cause": "病死",
+      "$domain": "三春藩",
+      "$description": "三春藩出身の政治家・自由民権運動家。福島事件（1882年）で逮捕・投獄された。後に衆議院議長を務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/河野広中",
+      "$roles": [
+        "政治家",
+        "自由民権運動家"
+      ]
+    }
+  },
+  {
+    "id": "person-aoki-shuzo",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "青木周蔵",
+      "$birth_date": "1844-03-03",
+      "$death_date": "1914-02-16",
+      "$death_cause": "病死",
+      "$domain": "長州藩",
+      "$description": "長州藩出身の外交官・政治家。外務大臣として条約改正交渉に取り組んだが、大津事件（1891年）の責任をとって辞任した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/青木周蔵",
+      "$roles": [
+        "外交官",
+        "外務大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-sufu",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "周布政之助",
+      "$birth_date": "1823-11-26",
+      "$death_date": "1864-09-19",
+      "$death_cause": "自決",
+      "$domain": "長州藩",
+      "$description": "長州藩士・藩政家。長州藩の藩政改革を主導し、松下村塾の人材育成を支援した。禁門の変後の責任をとって自決した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/周布政之助",
+      "$roles": [
+        "長州藩士",
+        "藩政改革者"
+      ]
+    }
+  },
+  {
+    "id": "person-oi-kentaro",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "大井憲太郎",
+      "$birth_date": "1843-09-02",
+      "$death_date": "1922-10-15",
+      "$death_cause": "病死",
+      "$domain": "豊後国",
+      "$description": "豊後国出身の政治家・弁護士。自由民権運動の急進派として活動し、大阪事件（1885年）を主導して逮捕された。東洋自由党を結成した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/大井憲太郎",
+      "$roles": [
+        "政治家",
+        "弁護士",
+        "自由民権運動家"
+      ]
+    }
+  },
+  {
+    "id": "person-akamatsu-kotosaburo",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "赤松小三郎",
+      "$birth_date": "1831-09-13",
+      "$death_date": "1867-10-14",
+      "$death_cause": "暗殺",
+      "$domain": "上田藩",
+      "$description": "上田藩士・兵学者。洋式兵学を学び、幕末に議会制度の先駆けともいえる政治改革案の建白書を提出した。薩摩藩士に暗殺された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/赤松小三郎",
+      "$roles": [
+        "上田藩士",
+        "兵学者"
+      ]
+    }
+  },
+  {
+    "id": "person-nogi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "乃木希典",
+      "$birth_date": "1849-12-25",
+      "$death_date": "1912-09-13",
+      "$death_cause": "自決",
+      "$domain": "長州藩",
+      "$description": "長州藩出身の陸軍軍人。西南戦争・日清戦争・日露戦争（旅順攻囲戦）に参加した。明治天皇崩御に際し、妻とともに殉死（自決）した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/乃木希典",
+      "$roles": [
+        "軍人",
+        "陸軍大将",
+        "学習院長"
+      ]
+    }
+  },
+  {
+    "id": "person-taro-katsura",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "桂太郎",
+      "$birth_date": "1848-01-04",
+      "$death_date": "1913-10-10",
+      "$death_cause": "病死",
+      "$domain": "長州藩",
+      "$description": "長州藩出身の軍人・政治家。日露戦争中に内閣総理大臣を務め、ポーツマス条約を成立させた。通算在職日数が歴代最長の内閣総理大臣（第11・13・15代）。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/桂太郎",
+      "$roles": [
+        "軍人",
+        "第11代・第13代・第15代内閣総理大臣",
+        "陸軍大将"
+      ]
+    }
+  },
+  {
+    "id": "person-saionji",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "西園寺公望",
+      "$birth_date": "1849-12-07",
+      "$death_date": "1940-11-24",
+      "$death_cause": "病死",
+      "$domain": "公家",
+      "$description": "公家出身の政治家。フランスに留学し自由主義的思想を身につけた。第12代・第14代内閣総理大臣を務め、最後の元老として昭和初期の政治に影響を与えた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/西園寺公望",
+      "$roles": [
+        "政治家",
+        "第12代・第14代内閣総理大臣",
+        "元老"
+      ]
+    }
+  },
+  {
+    "id": "person-hayashi-tadasu",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "林董",
+      "$birth_date": "1850-05-19",
+      "$death_date": "1913-07-10",
+      "$death_cause": "病死",
+      "$domain": "佐倉藩",
+      "$description": "佐倉藩出身の外交官・政治家。駐英公使として日英同盟（1902年）の締結に尽力した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/林董",
+      "$roles": [
+        "外交官",
+        "外務大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-komura",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "小村寿太郎",
+      "$birth_date": "1855-10-26",
+      "$death_date": "1911-11-26",
+      "$death_cause": "病死",
+      "$domain": "飫肥藩",
+      "$description": "飫肥藩（日向国）出身の外交官・政治家。外務大臣としてポーツマス条約の締結に関わった。関税自主権の回復（1911年）も成し遂げた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/小村寿太郎",
+      "$roles": [
+        "外交官",
+        "外務大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-nishimura-shigeki",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "西村茂樹",
+      "$birth_date": "1828-09-24",
+      "$death_date": "1902-08-18",
+      "$death_cause": "病死",
+      "$domain": "佐倉藩",
+      "$description": "佐倉藩出身の啓蒙思想家・教育者。明六社の設立メンバー。後に国民道徳を重視する立場に転換し、日本弘道会を設立した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/西村茂樹",
+      "$roles": [
+        "啓蒙思想家",
+        "教育者",
+        "道徳教育家"
+      ]
+    }
+  },
+  {
+    "id": "person-tsuda-umeko",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "津田梅子",
+      "$birth_date": "1864-12-31",
+      "$death_date": "1929-08-16",
+      "$death_cause": "病死",
+      "$domain": "幕臣の娘",
+      "$description": "岩倉使節団に随行して渡米した官費女子留学生の一人（当時満6歳）。アメリカで教育を受け、帰国後に女子英学塾（現・津田塾大学）を創立した。日本の女性教育の先駆者。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/津田梅子",
+      "$roles": [
+        "教育者",
+        "津田塾大学創立者"
+      ]
+    }
+  },
+  {
+    "id": "person-yamakawa-sutematsu",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "山川捨松",
+      "$birth_date": "1860-02-24",
+      "$death_date": "1919-02-18",
+      "$death_cause": "病死",
+      "$domain": "会津藩",
+      "$description": "会津藩士の娘。岩倉使節団に随行して渡米した官費女子留学生の一人。帰国後、大山巌と結婚した。日本赤十字社の活動に参加し、看護師教育に貢献した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/山川捨松",
+      "$roles": [
+        "教育者",
+        "社会活動家"
+      ]
+    }
+  },
+  {
+    "id": "person-sawa-nobuyoshi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "沢宣嘉",
+      "$birth_date": "1836-12-19",
+      "$death_date": "1873-06-10",
+      "$death_cause": "病死",
+      "$domain": "公家",
+      "$description": "幕末・明治初期の公家・政治家。尊王攘夷派として活動し、文久3年（1863年）の七卿落ちの一人。明治維新後は外務卿を務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/沢宣嘉",
+      "$roles": [
+        "公家",
+        "外務卿"
+      ]
+    }
+  },
+  {
+    "id": "person-hoshi-toru",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "星亨",
+      "$birth_date": "1850-05-20",
+      "$death_date": "1901-06-21",
+      "$death_cause": "暗殺",
+      "$domain": "江戸",
+      "$description": "幕臣の子として江戸に生まれた政治家・弁護士。自由党の有力者として活躍した。1901年に伊庭想太郎に暗殺された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/星亨",
+      "$roles": [
+        "政治家",
+        "弁護士"
+      ]
+    }
+  },
+  {
+    "id": "person-yamaguchi-naoyoshi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "山口尚芳",
+      "$birth_date": "1839-10-07",
+      "$death_date": "1894-05-20",
+      "$death_cause": "病死",
+      "$domain": "佐賀藩",
+      "$description": "佐賀藩出身の外交官。岩倉使節団の副使（岩倉・大久保・木戸・伊藤とともに）の一人として欧米を視察した。帰国後は外交関係の整備に貢献した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/山口尚芳",
+      "$roles": [
+        "外交官",
+        "岩倉使節団副使"
+      ]
+    }
+  },
+  {
+    "id": "person-takenouchi",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "竹内保徳",
+      "$birth_date": "1806-01-17",
+      "$death_date": "1868-03-07",
+      "$death_cause": "病死",
+      "$domain": "幕臣",
+      "$description": "幕臣・外交官。文久2年（1862年）の遣欧使節団（竹内使節団）の正使として欧州諸国を訪問した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/竹内保徳",
+      "$roles": [
+        "幕臣",
+        "外国奉行",
+        "遣欧使節団正使"
+      ]
+    }
+  },
+  {
+    "id": "person-yamakawa-kenjiro",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "山川健次郎",
+      "$birth_date": "1854-09-16",
+      "$death_date": "1931-05-26",
+      "$death_cause": "病死",
+      "$domain": "会津藩",
+      "$description": "会津藩士の子。戊辰戦争後、アメリカに留学して物理学を修めた。東京帝国大学総長・九州帝国大学初代総長を務めた。山川浩の弟。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/山川健次郎",
+      "$roles": [
+        "物理学者",
+        "教育者",
+        "東京帝国大学総長"
+      ]
+    }
+  },
+  {
+    "id": "person-beppu",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "別府晋介",
+      "$birth_date": "1847-10-09",
+      "$death_date": "1877-09-24",
+      "$death_cause": "戦死",
+      "$domain": "薩摩藩",
+      "$description": "薩摩藩士。西南戦争で西郷隆盛の側近として参戦した。城山の戦いで敗勢を悟った西郷の介錯を務め、自らも銃弾を受けて戦死したとされる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/別府晋介",
+      "$roles": [
+        "薩摩藩士",
+        "軍人"
+      ]
+    }
+  },
+  {
+    "id": "person-miura-goro",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "三浦梧楼",
+      "$birth_date": "1847-01-01",
+      "$death_date": "1926-01-28",
+      "$death_cause": "病死",
+      "$domain": "長州藩",
+      "$description": "長州藩出身の軍人・外交官。陸軍中将を経て駐朝公使となり、明成皇后（閔妃）暗殺事件（乙未事変・1895年）を主謀した。日本に送還されたが不起訴となった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/三浦梧楼",
+      "$roles": [
+        "軍人",
+        "外交官",
+        "陸軍中将"
+      ]
+    }
+  },
+  {
+    "id": "person-tani-tateki",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "谷干城",
+      "$birth_date": "1837-12-28",
+      "$death_date": "1911-05-13",
+      "$death_cause": "病死",
+      "$domain": "土佐藩",
+      "$description": "土佐藩出身の軍人・政治家。西南戦争では熊本城を守備して西郷軍の攻撃を防いだことで名を馳せた。後に農商務大臣を務めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/谷干城",
+      "$roles": [
+        "軍人",
+        "陸軍中将",
+        "農商務大臣"
+      ]
+    }
+  },
+  {
+    "id": "person-itakura",
+    "labels": [
+      "$Person"
+    ],
+    "properties": {
+      "$name": "板倉勝静",
+      "$birth_date": "1823-10-12",
+      "$death_date": "1889-04-22",
+      "$death_cause": "病死",
+      "$domain": "備中松山藩",
+      "$description": "備中松山藩主・幕府老中。幕末の老中として大政奉還後も幕府を支えようとした。山田方谷を師と仰いだ。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/板倉勝静",
+      "$roles": [
+        "老中",
+        "幕府政治家"
+      ]
+    }
+  },
+  {
+    "id": "event-ansei",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "安政の大獄",
+      "$date": "1858-09-05",
+      "$date_end": "1859-11-01",
+      "$year": 1858,
+      "$category": "弾圧・政治",
+      "$location": "江戸・京都",
+      "$description": "江戸幕府の大老・井伊直弼が、日米修好通商条約の無勅許調印を批判した廷臣・大名・志士らを弾圧した事件。吉田松陰・橋本左内・頼三樹三郎らが処刑され、水戸藩主・徳川斉昭、越前藩主・松平春嶽らが隠居・謹慎処分を受けた。この弾圧に反発した水戸藩士らにより、翌年の桜田門外の変が引き起こされた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/安政の大獄"
+    }
+  },
+  {
+    "id": "event-sakuradamon",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "桜田門外の変",
+      "$date": "1860-03-24",
+      "$year": 1860,
+      "$category": "暗殺・事件",
+      "$location": "江戸・桜田門外（現・東京都千代田区）",
+      "$description": "水戸藩の脱藩浪士18名と薩摩藩士1名が、安政の大獄を断行した大老・井伊直弼を江戸城桜田門外で暗殺した事件。雪の降る中での奇襲で、江戸幕府の権威は大きく失墜した。幕末動乱の転換点となり、尊王攘夷運動が活発化するきっかけとなった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/桜田門外の変"
+    }
+  },
+  {
+    "id": "event-teradaya",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "寺田屋事件",
+      "$date": "1862-04-23",
+      "$year": 1862,
+      "$category": "事件・弾圧",
+      "$location": "伏見・寺田屋（現・京都府京都市伏見区）",
+      "$description": "薩摩藩が過激な尊王攘夷志士を粛清した同士討ち事件（第一次寺田屋事件、1862年）。島津久光の命により、有馬新七ら9名の薩摩藩急進派が寺田屋で殺傷された。また1866年には坂本龍馬が寺田屋に滞在中、幕府の伏見奉行所与力らに踏み込まれ、妻・お龍の機転により辛くも脱出した（第二次寺田屋事件）。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/寺田屋事件"
+    }
+  },
+  {
+    "id": "event-kobe",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "神戸海軍操練所",
+      "$date": "1863-07-01",
+      "$date_end": "1865-03-01",
+      "$year": 1863,
+      "$category": "教育・機関",
+      "$location": "兵庫（現・神戸市）",
+      "$description": "勝海舟が幕府の許可を得て設立した海軍士官の養成機関。坂本龍馬も塾頭格として参加した。薩摩・土佐・因州など諸藩の志士が藩を超えて集まり、海軍技術を学んだ。しかし池田屋事件後の長州征伐を機に勝海舟が免職となり、わずか約2年で廃止された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/神戸海軍操練所"
+    }
+  },
+  {
+    "id": "event-ikedaya",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "池田屋事件",
+      "$date": "1864-07-08",
+      "$year": 1864,
+      "$category": "事件・弾圧",
+      "$location": "京都・池田屋（現・京都府京都市中京区）",
+      "$description": "新選組が京都の旅籠・池田屋に集まっていた尊王攘夷派の志士を急襲した事件。近藤勇・土方歳三らが率いる新選組が、長州・土佐・肥後などの藩士20数名を殺傷・捕縛した。吉田稔麿・宮部鼎蔵らが死亡した。この事件が引き金となり、長州藩は翌月の禁門の変を起こした。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/池田屋事件"
+    }
+  },
+  {
+    "id": "event-kinmon",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "禁門の変",
+      "$date": "1864-08-20",
+      "$date_end": "1864-08-21",
+      "$year": 1864,
+      "$category": "軍事衝突",
+      "$location": "京都・蛤御門（現・京都府京都市上京区）",
+      "$description": "池田屋事件で多数の同志を失った長州藩が、京都での勢力回復を図り、兵を率いて上京した事件。蛤御門付近での戦闘で長州藩は薩摩・会津連合軍に敗北した。久坂玄瑞・来島又兵衛らが死亡した。この後、長州藩は朝敵とされ、第一次長州征伐が行われた。「元治の変」「蛤御門の変」とも呼ばれる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/禁門の変"
+    }
+  },
+  {
+    "id": "event-satcho",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "薩長同盟",
+      "$date": "1866-01-21",
+      "$year": 1866,
+      "$category": "外交・同盟",
+      "$location": "京都・小松帯刀邸",
+      "$description": "薩摩藩と長州藩が結んだ政治・軍事同盟。坂本龍馬と中岡慎太郎が仲介した。薩摩藩代表・西郷隆盛と長州藩代表・木戸孝允（桂小五郎）が署名した。これにより長年対立していた両藩が手を結び、倒幕への道が開かれた。6箇条の密約からなる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/薩長同盟"
+    }
+  },
+  {
+    "id": "event-taisei",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "大政奉還",
+      "$date": "1867-11-09",
+      "$year": 1867,
+      "$category": "政治・転換点",
+      "$location": "京都・二条城",
+      "$description": "第15代将軍・徳川慶喜が政権を朝廷に返上した出来事。土佐藩の後藤象二郎が山内容堂に進言し、坂本龍馬の「船中八策」を基に起草された「大政奉還建白書」が将軍に提出された。慶喜はこれを受け入れ、京都の二条城で諸侯に返上を宣言した。260年以上続いた江戸幕府の統治が名目上終わった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/大政奉還"
+    }
+  },
+  {
+    "id": "event-omi",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "近江屋事件",
+      "$date": "1867-12-10",
+      "$year": 1867,
+      "$category": "暗殺・事件",
+      "$location": "京都・近江屋（現・京都府京都市中京区）",
+      "$description": "坂本龍馬と中岡慎太郎が京都の醤油商・近江屋の離れで暗殺された事件。龍馬は即死、中岡は2日後に死亡した。犯人については京都見廻組説（佐々木只三郎が指揮）と新選組説があるが、現在は京都見廻組有力説が有力とされる。龍馬暗殺は大政奉還のわずか1か月後であった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/近江屋事件"
+    }
+  },
+  {
+    "id": "event-toba-fushimi",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "鳥羽・伏見の戦い",
+      "$date": "1868-01-27",
+      "$date_end": "1868-01-31",
+      "$year": 1868,
+      "$category": "軍事衝突・戊辰戦争",
+      "$location": "京都南郊・鳥羽・伏見（現・京都府京都市伏見区）",
+      "$description": "戊辰戦争の緒戦。王政復古の大号令後、京都周辺に展開した旧幕府軍と薩長を中心とする新政府軍が衝突した。兵力では旧幕府軍が上回ったが、薩摩・長州の近代的装備の前に旧幕府軍は敗北した。徳川慶喜は大坂城から江戸へ逃亡した。この戦いで旧幕府軍は朝敵とされ、戊辰戦争が本格化した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/鳥羽・伏見の戦い"
+    }
+  },
+  {
+    "id": "event-edo-kaijo",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "江戸城無血開城",
+      "$date": "1868-04-11",
+      "$year": 1868,
+      "$category": "軍事・政治",
+      "$location": "江戸城（現・東京都千代田区）",
+      "$description": "旧幕府側の勝海舟と新政府軍の西郷隆盛の交渉により、江戸城が戦火を交えることなく明け渡された出来事。薩長を中心とする新政府軍の東征軍が江戸に迫る中、山岡鉄舟が先行して西郷と交渉し、勝海舟と西郷の会談で最終決定した。江戸100万市民を戦禍から救い、明治維新を平和裏に達成した歴史的快挙として評価される。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/江戸城無血開城"
+    }
+  },
+  {
+    "id": "event-perry-arrival",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "ペリー来航（黒船来航）",
+      "$date": "1853-07-08",
+      "$year": 1853,
+      "$category": "外交",
+      "$location": "浦賀（相模国）",
+      "$description": "アメリカ海軍提督マシュー・ペリーが黒船4隻を率いて浦賀に来航し、日本に開国・通商を要求した。幕府は回答を翌年まで延期した。この事件は日本の鎖国政策に大きな衝撃を与えた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/黒船来航"
+    }
+  },
+  {
+    "id": "event-kanagawa-treaty",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "日米和親条約",
+      "$date": "1854-03-31",
+      "$year": 1854,
+      "$category": "条約",
+      "$location": "神奈川（横浜）",
+      "$description": "再来航したペリーと幕府の間で締結された条約。下田・箱館の2港を開港し、アメリカ船への薪水・食料の供給を認めた。日本の鎖国終焉の端緒となった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/日米和親条約"
+    }
+  },
+  {
+    "id": "event-harris-treaty",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "日米修好通商条約",
+      "$date": "1858-07-29",
+      "$year": 1858,
+      "$category": "条約",
+      "$location": "江戸",
+      "$description": "アメリカ公使タウンゼント・ハリスと江戸幕府の間で結ばれた通商条約。神奈川・長崎・新潟・兵庫の開港、江戸・大坂の開市、領事裁判権の設定など日本に不平等な内容が含まれた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/日米修好通商条約"
+    }
+  },
+  {
+    "id": "event-namamugi",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "生麦事件",
+      "$date": "1862-09-14",
+      "$year": 1862,
+      "$category": "事件",
+      "$location": "武蔵国生麦村（現・神奈川県横浜市）",
+      "$description": "島津久光の行列を横切ったイギリス人商人チャールズ・リチャードソンらを薩摩藩士が斬りつけ、リチャードソンが死亡した事件。後の薩英戦争の直接的原因となった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/生麦事件"
+    }
+  },
+  {
+    "id": "event-satsuma-british-war",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "薩英戦争",
+      "$date": "1863-08-15",
+      "$date_end": "1863-08-17",
+      "$year": 1863,
+      "$category": "戦闘",
+      "$location": "鹿児島湾",
+      "$description": "生麦事件への報復としてイギリス艦隊が鹿児島を砲撃した戦争。薩摩藩も激しく応戦した。互いに損害を受けた結果、薩摩藩はイギリスとの和解を選び、後に薩英関係は急接近した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/薩英戦争"
+    }
+  },
+  {
+    "id": "event-shimonoseki-war",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "下関戦争（馬関戦争）",
+      "$date": "1864-07-16",
+      "$date_end": "1864-09-05",
+      "$year": 1864,
+      "$category": "戦闘",
+      "$location": "下関（長州藩）",
+      "$description": "長州藩が下関海峡で外国船を砲撃したことへの報復として、英・仏・米・蘭の四国連合艦隊が下関を砲撃・占領した事件。長州藩は敗北し、攘夷の不可能を悟った。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/下関戦争"
+    }
+  },
+  {
+    "id": "event-choshu-expedition-1",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "第一次長州征伐",
+      "$date": "1864-08-20",
+      "$date_end": "1864-11-18",
+      "$year": 1864,
+      "$category": "戦闘",
+      "$location": "長州藩領",
+      "$description": "禁門の変での敗北後、幕府が諸藩に命じて行った長州藩の征討。長州藩は謝罪し恭順したため大規模な戦闘は発生しなかった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/第一次長州征伐"
+    }
+  },
+  {
+    "id": "event-choshu-expedition-2",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "第二次長州征伐（四境戦争）",
+      "$date": "1866-06-07",
+      "$date_end": "1866-09-02",
+      "$year": 1866,
+      "$category": "戦闘",
+      "$location": "長州藩領（四方国境）",
+      "$description": "幕府が再び長州藩を討伐しようとした戦争。薩長同盟を結んだ長州藩は奇兵隊など諸隊で反撃し、幕府軍を各地で撃退した。将軍家茂の死により戦闘は終了した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/第二次長州征伐"
+    }
+  },
+  {
+    "id": "event-boshin-war",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "戊辰戦争",
+      "$date": "1868-01-27",
+      "$date_end": "1869-06-27",
+      "$year": 1868,
+      "$category": "戦闘",
+      "$location": "日本各地",
+      "$description": "王政復古の大号令後に起きた明治新政府軍（薩長土肥連合）と旧幕府軍の間の内戦。鳥羽・伏見の戦いから始まり、上野戦争、会津戦争、箱館戦争へと続いた。新政府軍が勝利した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/戊辰戦争"
+    }
+  },
+  {
+    "id": "event-ueno-war",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "上野戦争",
+      "$date": "1868-07-04",
+      "$date_end": "1868-07-04",
+      "$year": 1868,
+      "$category": "戦闘",
+      "$location": "上野（江戸）",
+      "$description": "江戸城開城後も抵抗を続けた彰義隊と新政府軍の戦闘。わずか一日で彰義隊は壊滅した。大村益次郎が指揮を執った。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/上野戦争"
+    }
+  },
+  {
+    "id": "event-aizu-war",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "会津戦争",
+      "$date": "1868-08-21",
+      "$date_end": "1868-11-06",
+      "$year": 1868,
+      "$category": "戦闘",
+      "$location": "会津（陸奥国）",
+      "$description": "戊辰戦争における会津藩と新政府軍の戦闘。白虎隊の悲劇など多くの逸話が生まれた。会津藩主松平容保は降伏し、会津藩は斗南藩に移封された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/会津戦争"
+    }
+  },
+  {
+    "id": "event-hakodate-war",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "箱館戦争",
+      "$date": "1868-12-01",
+      "$date_end": "1869-06-27",
+      "$year": 1868,
+      "$category": "戦闘",
+      "$location": "北海道箱館（函館）",
+      "$description": "榎本武揚ら旧幕府勢力が蝦夷地に逃れて箱館政権（蝦夷共和国）を樹立し、新政府軍と戦った戊辰戦争最後の戦い。ブリュネらフランス人軍事顧問も参戦した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/箱館戦争"
+    }
+  },
+  {
+    "id": "event-osei-fukko",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "王政復古の大号令",
+      "$date": "1868-01-03",
+      "$year": 1868,
+      "$category": "政変",
+      "$location": "京都御所",
+      "$description": "明治天皇の名で発せられた、江戸幕府を廃止して天皇親政を宣言した命令。摂政・関白・幕府の廃止が宣言され、総裁・議定・参与の三職が設置された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/王政復古_(日本)"
+    }
+  },
+  {
+    "id": "event-gokajo-seimon",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "五箇条の御誓文",
+      "$date": "1868-04-06",
+      "$year": 1868,
+      "$category": "政策",
+      "$location": "京都",
+      "$description": "明治天皇が神々に誓う形式で発布した明治新政府の基本方針。木戸孝允らが起草し、広く会議を興して衆議に決すること、官武一途庶民に至るまで各その志を遂げさせることなどを約した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/五箇条の御誓文"
+    }
+  },
+  {
+    "id": "event-haihan-chiken",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "廃藩置県",
+      "$date": "1871-08-29",
+      "$year": 1871,
+      "$category": "政策",
+      "$location": "全国",
+      "$description": "明治政府が全国の藩を廃止して府・県に置き換えた政策。薩摩・長州・土佐の3藩の藩兵（御親兵）を中央に集結させてから実施され、中央集権体制が確立された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/廃藩置県"
+    }
+  },
+  {
+    "id": "event-iwakura-mission",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "岩倉使節団",
+      "$date": "1871-12-23",
+      "$date_end": "1873-09-13",
+      "$year": 1871,
+      "$category": "外交",
+      "$location": "欧米各国",
+      "$description": "岩倉具視を全権大使とし、木戸孝允・大久保利通・伊藤博文・山口尚芳らを副使とした欧米視察使節団。約2年間で欧米12か国を巡り、近代化のための情報を収集した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/岩倉使節団"
+    }
+  },
+  {
+    "id": "event-seikanron",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "征韓論政変（明治6年の政変）",
+      "$date": "1873-10-24",
+      "$year": 1873,
+      "$category": "政変",
+      "$location": "東京",
+      "$description": "西郷隆盛らの征韓論が大久保利通・木戸孝允ら岩倉使節団帰国組に否定され、西郷・板垣・後藤・副島・江藤ら征韓論派が下野した政変。この後、士族反乱や自由民権運動が起きた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/明治六年政変"
+    }
+  },
+  {
+    "id": "event-saga-rebellion",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "佐賀の乱",
+      "$date": "1874-02-16",
+      "$date_end": "1874-03-01",
+      "$year": 1874,
+      "$category": "戦闘",
+      "$location": "佐賀",
+      "$description": "征韓論争で下野した江藤新平・島義勇らが佐賀で起こした士族反乱。明治政府軍によって2週間で鎮圧され、江藤新平・島義勇は処刑された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/佐賀の乱"
+    }
+  },
+  {
+    "id": "event-hagi-rebellion",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "萩の乱",
+      "$date": "1876-10-28",
+      "$date_end": "1876-11-06",
+      "$year": 1876,
+      "$category": "戦闘",
+      "$location": "萩（長州）",
+      "$description": "前原一誠を指導者とする長州の不平士族が起こした反乱。廃刀令・秩禄処分への不満から蜂起したが、10日余りで鎮圧され、前原は処刑された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/萩の乱"
+    }
+  },
+  {
+    "id": "event-seinan-war",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "西南戦争",
+      "$date": "1877-01-29",
+      "$date_end": "1877-09-24",
+      "$year": 1877,
+      "$category": "戦闘",
+      "$location": "九州（熊本・宮崎・鹿児島）",
+      "$description": "西郷隆盛を盟主とした薩摩士族が起こした士族反乱。日本最後の内戦。熊本城攻防戦・田原坂の戦いなど激しい戦闘が行われたが、明治政府軍が勝利し、西郷は城山で自決した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/西南戦争"
+    }
+  },
+  {
+    "id": "event-jiyu-minken",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "自由民権運動",
+      "$date": "1874-01-17",
+      "$date_end": "1889-01-01",
+      "$year": 1874,
+      "$category": "政治運動",
+      "$location": "全国",
+      "$description": "板垣退助・中江兆民らが指導した国民の政治参加と議会開設を求める運動。1874年の民撰議院設立建白書提出に始まり、各地で演説会・結社が活発化した。明治14年の政変・自由党・立憲改進党結成などにつながった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/自由民権運動"
+    }
+  },
+  {
+    "id": "event-meiji-14-crisis",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "明治14年の政変",
+      "$date": "1881-10-12",
+      "$year": 1881,
+      "$category": "政変",
+      "$location": "東京",
+      "$description": "大隈重信がイギリス式の議院内閣制と早期国会開設を主張したため、伊藤博文・岩倉具視らによって政府から追放された政変。明治23年（1890年）の国会開設が約束された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/明治十四年の政変"
+    }
+  },
+  {
+    "id": "event-jiyuto-founded",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "自由党結成",
+      "$date": "1881-10-29",
+      "$year": 1881,
+      "$category": "政治運動",
+      "$location": "東京",
+      "$description": "板垣退助を総理として結成された日本初の本格的政党。フランス流の自由主義・急進的な民権思想を掲げた。大阪事件・福島事件などで弾圧を受け、1884年に解散した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/自由党_(日本_1881年)"
+    }
+  },
+  {
+    "id": "event-rikken-kaishinto",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "立憲改進党結成",
+      "$date": "1882-04-16",
+      "$year": 1882,
+      "$category": "政治運動",
+      "$location": "東京",
+      "$description": "大隈重信を党首として結成された政党。イギリス流の立憲君主制・漸進的な議会政治を主張した。自由党と並ぶ自由民権運動の主要政党となった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/立憲改進党"
+    }
+  },
+  {
+    "id": "event-meiji-constitution",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "大日本帝国憲法発布",
+      "$date": "1889-02-11",
+      "$year": 1889,
+      "$category": "政策",
+      "$location": "東京",
+      "$description": "明治天皇が伊藤博文内閣に対して欽定憲法として発布した憲法。天皇主権・議会制度・臣民の権利義務を定めた。ドイツ（プロイセン）憲法を範とし、伊藤博文・井上毅らが起草した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/大日本帝国憲法"
+    }
+  },
+  {
+    "id": "event-cabinet-system",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "内閣制度創設",
+      "$date": "1885-12-22",
+      "$year": 1885,
+      "$category": "政策",
+      "$location": "東京",
+      "$description": "太政官制を廃止して内閣制度が創設された。伊藤博文が初代内閣総理大臣に任命され、各大臣が置かれた。近代的な行政機構の基礎が確立した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/内閣制度"
+    }
+  },
+  {
+    "id": "event-kyoiku-chokugo",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "教育勅語発布",
+      "$date": "1890-10-30",
+      "$year": 1890,
+      "$category": "政策",
+      "$location": "東京",
+      "$description": "明治天皇の名で発布された教育に関する勅語。忠君愛国・儒教的道徳を基本とした国民教育の指針を示した。井上毅・元田永孚が起草に関わった。昭和22年（1947年）に国会で失効が確認された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/教育ニ関スル勅語"
+    }
+  },
+  {
+    "id": "event-first-diet",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "第1回帝国議会開設",
+      "$date": "1890-11-25",
+      "$year": 1890,
+      "$category": "政策",
+      "$location": "東京",
+      "$description": "大日本帝国憲法に基づき、貴族院・衆議院から成る帝国議会が開設された。第1回帝国議会では民党（自由民権系の政党）が過半数を占め、藩閥政府との対立が始まった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/帝国議会"
+    }
+  },
+  {
+    "id": "event-sino-japanese-war",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "日清戦争",
+      "$date": "1894-08-01",
+      "$date_end": "1895-04-17",
+      "$year": 1894,
+      "$category": "戦闘",
+      "$location": "朝鮮半島・満州・台湾",
+      "$description": "朝鮮の支配権をめぐって日本と清国が戦った戦争。日本軍が各地で勝利し、下関条約で台湾・澎湖諸島・遼東半島の割譲、賠償金の支払いを清国に認めさせた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/日清戦争"
+    }
+  },
+  {
+    "id": "event-shimonoseki-treaty",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "下関条約",
+      "$date": "1895-04-17",
+      "$year": 1895,
+      "$category": "条約",
+      "$location": "下関（山口県）",
+      "$description": "日清戦争の講和条約。清国の朝鮮独立の承認、遼東半島・台湾・澎湖諸島の割譲、賠償金2億両などが定められた。その後のロシア・フランス・ドイツによる三国干渉で遼東半島は清国に返還された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/下関条約"
+    }
+  },
+  {
+    "id": "event-treaty-revision",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "条約改正（領事裁判権撤廃）",
+      "$date": "1894-07-16",
+      "$year": 1894,
+      "$category": "外交",
+      "$location": "ロンドン",
+      "$description": "外務大臣陸奥宗光とイギリスとの間で日英通商航海条約が調印され、幕末以来の領事裁判権（治外法権）が撤廃された。1897年発効。他の欧米各国とも同様の条約が締結された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/日英通商航海条約"
+    }
+  },
+  {
+    "id": "event-haitourei",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "廃刀令",
+      "$date": "1876-03-28",
+      "$year": 1876,
+      "$category": "政策",
+      "$location": "全国",
+      "$description": "明治政府が発した、帯刀を禁止する太政官布告。軍人・警察官以外の者が公の場で刀を帯びることを禁じた。士族の特権喪失を象徴する政策で、萩の乱・西南戦争などの士族反乱の一因となった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/廃刀令"
+    }
+  },
+  {
+    "id": "event-chitsuroku-shobun",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "秩禄処分",
+      "$date": "1876-01-01",
+      "$date_end": "1876-12-31",
+      "$year": 1876,
+      "$category": "政策",
+      "$location": "全国",
+      "$description": "明治政府が士族・華族に支給していた家禄（秩禄）を廃止した政策。金禄公債証書を交付する形で実施された。士族階級の経済的基盤が失われ、各地で士族反乱の一因となった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/秩禄処分"
+    }
+  },
+  {
+    "id": "event-fukushima-incident",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "福島事件",
+      "$date": "1882-11-28",
+      "$year": 1882,
+      "$category": "事件",
+      "$location": "福島県",
+      "$description": "自由党員の農民が福島県令三島通庸の道路工事強制労働に反対して起こした事件。河野広中ら自由党幹部が逮捕され、自由民権運動への弾圧が強まった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/福島事件"
+    }
+  },
+  {
+    "id": "event-osaka-incident",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "大阪事件",
+      "$date": "1885-11-23",
+      "$year": 1885,
+      "$category": "事件",
+      "$location": "大阪",
+      "$description": "大井憲太郎らの自由党急進派が朝鮮に渡って政変を起こし、朝鮮の改革を実現しようとした計画が発覚した事件。大井ら140名以上が逮捕された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/大阪事件"
+    }
+  },
+  {
+    "id": "event-otsu-incident",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "大津事件",
+      "$date": "1891-05-11",
+      "$year": 1891,
+      "$category": "事件",
+      "$location": "大津（滋賀県）",
+      "$description": "来日中のロシア皇太子ニコライ（後のニコライ2世）が滋賀県大津で警備の巡査・津田三蔵に斬りつけられ負傷した事件。日露関係の悪化を恐れた政府の圧力に対し、大審院は法に基づき無期徒刑とした。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/大津事件"
+    }
+  },
+  {
+    "id": "event-russo-japanese-war",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "日露戦争",
+      "$date": "1904-02-08",
+      "$date_end": "1905-09-05",
+      "$year": 1904,
+      "$category": "戦闘",
+      "$location": "満州・朝鮮半島・日本海",
+      "$description": "朝鮮・満州の支配権をめぐって日本とロシアが戦った戦争。日本海海戦でのロシア・バルチック艦隊撃滅など日本が勝利し、ポーツマス条約で確立した地位を認められた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/日露戦争"
+    }
+  },
+  {
+    "id": "event-portsmouth-treaty",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "ポーツマス条約",
+      "$date": "1905-09-05",
+      "$year": 1905,
+      "$category": "条約",
+      "$location": "ポーツマス（アメリカ）",
+      "$description": "日露戦争の講和条約。アメリカのセオドア・ルーズベルト大統領の仲介で調印された。日本は南樺太・関東州租借権・南満洲鉄道などを獲得した。賠償金は得られなかった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/ポーツマス条約"
+    }
+  },
+  {
+    "id": "event-korea-annexation",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "韓国併合",
+      "$date": "1910-08-29",
+      "$year": 1910,
+      "$category": "外交",
+      "$location": "朝鮮（ソウル）",
+      "$description": "日本が大韓帝国を併合して朝鮮総督府を設置した出来事。日韓併合条約の調印により大韓帝国は消滅した。これ以後1945年まで朝鮮は日本の植民地となった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/韓国併合"
+    }
+  },
+  {
+    "id": "event-japan-bank-established",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "日本銀行設立",
+      "$date": "1882-10-10",
+      "$year": 1882,
+      "$category": "政策",
+      "$location": "東京",
+      "$description": "明治政府が設立した中央銀行。松方正義大蔵卿がベルギー国立銀行を範として設立した。紙幣の発行一元管理と金融制度の安定化を図り、日本の近代的金融制度の基礎となった。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/日本銀行"
+    }
+  },
+  {
+    "id": "event-meiji-education-reform",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "学制発布",
+      "$date": "1872-08-03",
+      "$year": 1872,
+      "$category": "政策",
+      "$location": "全国",
+      "$description": "明治政府が発した日本最初の近代的学校制度を定めた法令。「邑に不学の戸なく、家に不学の人なからしめん」を目標とし、全国に小学校の設置を定めた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/学制"
+    }
+  },
+  {
+    "id": "event-conscription-ordinance",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "徴兵令",
+      "$date": "1873-01-10",
+      "$year": 1873,
+      "$category": "政策",
+      "$location": "全国",
+      "$description": "明治政府が発した、満20歳に達した男子に兵役義務を課した法令。山縣有朋が推進した。士農工商を問わず国民皆兵の原則を定め、従来の武士による軍事制度を根本的に変革した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/徴兵令"
+    }
+  },
+  {
+    "id": "event-japan-uk-alliance",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "日英同盟",
+      "$date": "1902-01-30",
+      "$date_end": "1923-08-17",
+      "$year": 1902,
+      "$category": "外交",
+      "$location": "ロンドン",
+      "$description": "日本とイギリスの間で締結された軍事同盟。林董駐英公使とイギリス外相ランズダウン侯爵が調印した。日露戦争においてロシアの孤立化に貢献した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/日英同盟"
+    }
+  },
+  {
+    "id": "event-sangoku-kansho",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "三国干渉",
+      "$date": "1895-04-23",
+      "$date_end": "1895-05-10",
+      "$year": 1895,
+      "$category": "外交",
+      "$location": "東京",
+      "$description": "下関条約で遼東半島を獲得した日本に対し、ロシア・フランス・ドイツが遼東半島の清国への返還を勧告した出来事。日本は勧告に従い、遼東半島を返還した（3000万両の追加賠償金を得た）。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/三国干渉"
+    }
+  },
+  {
+    "id": "event-assassin-okubo",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "紀尾井坂の変（大久保利通暗殺）",
+      "$date": "1878-05-14",
+      "$year": 1878,
+      "$category": "暗殺",
+      "$location": "東京紀尾井坂",
+      "$description": "明治政府の実質的な最高指導者であった内務卿大久保利通が、島田一郎ら不平士族6名に暗殺された事件。西南戦争で西郷隆盛を討った大久保への復讐と政治批判が動機とされた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/紀尾井坂の変"
+    }
+  },
+  {
+    "id": "event-seven-kuge",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "七卿落ち",
+      "$date": "1863-08-18",
+      "$year": 1863,
+      "$category": "政変",
+      "$location": "京都",
+      "$description": "文久3年8月18日の政変の結果、三条実美・東久世通禧・沢宣嘉ら尊王攘夷派の公卿7名が京都を追放され、長州藩に落ち延びた出来事。七卿落ちとも呼ばれる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/七卿落ち"
+    }
+  },
+  {
+    "id": "event-sakashita-gate",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "坂下門外の変",
+      "$date": "1862-01-15",
+      "$year": 1862,
+      "$category": "暗殺",
+      "$location": "江戸城坂下門外",
+      "$description": "水戸浪士らが老中安藤信正を江戸城坂下門外で襲撃した事件。安藤は負傷したが一命を取り留めた。公武合体政策への反発が動機とされる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/坂下門外の変"
+    }
+  },
+  {
+    "id": "event-tenchugumi",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "天誅組の変",
+      "$date": "1863-08-17",
+      "$date_end": "1863-11-12",
+      "$year": 1863,
+      "$category": "事件",
+      "$location": "大和国（現・奈良県）",
+      "$description": "吉村寅太郎・中山忠光らが率いた尊王攘夷派が大和で挙兵した事件。幕府軍や諸藩に討伐されて壊滅した。同時期に生野の変なども起きた。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/天誅組の変"
+    }
+  },
+  {
+    "id": "event-meiji-restoration-declaration",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "明治改元・一世一元制の詔",
+      "$date": "1868-10-23",
+      "$year": 1868,
+      "$category": "政策",
+      "$location": "東京（東京奠都）",
+      "$description": "明治天皇の即位と「明治」への改元が行われ、一世一元制（天皇一代に元号を一つとする制度）が定められた。同年に江戸は東京と改称された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/明治"
+    }
+  },
+  {
+    "id": "event-hokkaido-colonization",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "北海道開拓使設置",
+      "$date": "1869-07-08",
+      "$date_end": "1882-02-08",
+      "$year": 1869,
+      "$category": "政策",
+      "$location": "北海道",
+      "$description": "明治政府が蝦夷地（北海道）の開拓と防衛のために設置した官庁。黒田清隆が長官を務め、ホーレス・ケプロンなどのお雇い外国人を招いて北海道の近代化を推進した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/開拓使"
+    }
+  },
+  {
+    "id": "event-daijokan-haishi",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "太政官制廃止・内閣制度創設",
+      "$date": "1885-12-22",
+      "$year": 1885,
+      "$category": "政策",
+      "$location": "東京",
+      "$description": "明治政府の最高機関であった太政官制が廃止され、近代的な内閣制度が導入された。初代内閣総理大臣に伊藤博文が任命された。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/太政官制"
+    }
+  },
+  {
+    "id": "event-minsen-giin",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "民撰議院設立建白書提出",
+      "$date": "1874-01-17",
+      "$year": 1874,
+      "$category": "政治運動",
+      "$location": "東京",
+      "$description": "板垣退助・後藤象二郎・副島種臣・江藤新平らが左院に提出した建白書。民選による議院の設立を要求した。日本における自由民権運動の出発点とされる。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/民撰議院設立建白書"
+    }
+  },
+  {
+    "id": "event-taiwan-expedition",
+    "labels": [
+      "$Event"
+    ],
+    "properties": {
+      "$name": "台湾出兵（台湾征討）",
+      "$date": "1874-05-06",
+      "$date_end": "1874-12-03",
+      "$year": 1874,
+      "$category": "戦闘",
+      "$location": "台湾",
+      "$description": "宮古島漂流民が台湾先住民に殺害されたことを口実に、西郷従道の指揮のもと日本軍が台湾に出兵した。清国との交渉の結果、清国は賠償金を支払い日本軍は撤退した。",
+      "$wikipedia_url": "https://ja.wikipedia.org/wiki/台湾出兵"
     }
   }
 ]

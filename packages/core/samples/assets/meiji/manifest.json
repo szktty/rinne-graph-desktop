@@ -1,11 +1,21 @@
 {
   "metadata": {
-    "name": "幕末龍馬相関図",
-    "description": "坂本龍馬を中心とした幕末の人物相関データ",
+    "name": "明治維新",
+    "description": "幕末から明治維新にかけての主要人物と出来事の相関データ）",
     "language": "ja",
     "author": "App Team",
-    "version": "1.1.0",
-    "tags": ["history", "japan", "meiji", "ryoma"]
+    "version": "2.0.0",
+    "tags": [
+      "history",
+      "japan",
+      "meiji",
+      "bakumatsu"
+    ],
+    "validation": {
+      "expected_node_count": 229,
+      "expected_link_count": 157,
+      "strict_mode": false
+    }
   },
   "schema": "schema.json",
   "files": [
