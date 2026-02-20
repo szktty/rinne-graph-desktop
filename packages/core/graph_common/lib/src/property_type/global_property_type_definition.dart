@@ -9,7 +9,7 @@ class GlobalPropertyTypeDefinition {
   /// Constructor.
   const GlobalPropertyTypeDefinition({
     required this.typeName,
-    this.displayName,
+    this.name,
     this.description,
     this.constraints = const {},
     this.uiHints = const {},
@@ -21,7 +21,7 @@ class GlobalPropertyTypeDefinition {
   final String typeName;
 
   /// Display name (e.g., 'Name', 'Age', 'Active').
-  final String? displayName;
+  final String? name;
 
   /// Description of the property.
   final String? description;
@@ -49,7 +49,7 @@ class GlobalPropertyTypeDefinition {
   Map<String, dynamic> toJson() {
     return {
       'type': typeName,
-      'display_name': displayName,
+      'name': name,
       'description': description,
       'constraints': constraints,
       'ui_hints': uiHints,
@@ -62,7 +62,7 @@ class GlobalPropertyTypeDefinition {
   factory GlobalPropertyTypeDefinition.fromJson(Map<String, dynamic> json) {
     return GlobalPropertyTypeDefinition(
       typeName: json['type'] as String,
-      displayName: json['display_name'] as String?,
+      name: json['name'] as String?,
       description: json['description'] as String?,
       constraints: Map<String, dynamic>.from(json['constraints'] as Map? ?? {}),
       uiHints: Map<String, dynamic>.from(json['ui_hints'] as Map? ?? {}),
@@ -204,7 +204,7 @@ class GlobalPropertyTypeDefinition {
   GlobalPropertyTypeDefinition copyWithUpdatedAt(DateTime updatedAt) {
     return GlobalPropertyTypeDefinition(
       typeName: typeName,
-      displayName: displayName,
+      name: name,
       description: description,
       constraints: constraints,
       uiHints: uiHints,
@@ -216,7 +216,7 @@ class GlobalPropertyTypeDefinition {
   /// Creates a copy with partial updates.
   GlobalPropertyTypeDefinition copyWith({
     String? typeName,
-    String? displayName,
+    String? name,
     String? description,
     Map<String, dynamic>? constraints,
     Map<String, dynamic>? uiHints,
@@ -225,7 +225,7 @@ class GlobalPropertyTypeDefinition {
   }) {
     return GlobalPropertyTypeDefinition(
       typeName: typeName ?? this.typeName,
-      displayName: displayName ?? this.displayName,
+      name: name ?? this.name,
       description: description ?? this.description,
       constraints: constraints ?? this.constraints,
       uiHints: uiHints ?? this.uiHints,
@@ -240,7 +240,7 @@ class GlobalPropertyTypeDefinition {
     if (other is! GlobalPropertyTypeDefinition) return false;
 
     return typeName == other.typeName &&
-        displayName == other.displayName &&
+        name == other.name &&
         description == other.description &&
         _mapEquals(constraints, other.constraints) &&
         _mapEquals(uiHints, other.uiHints) &&
@@ -252,7 +252,7 @@ class GlobalPropertyTypeDefinition {
   int get hashCode {
     return Object.hash(
       typeName,
-      displayName,
+      name,
       description,
       constraints,
       uiHints,
@@ -265,7 +265,7 @@ class GlobalPropertyTypeDefinition {
   String toString() {
     return 'GlobalPropertyTypeDefinition('
         'typeName: $typeName, '
-        'displayName: $displayName'
+        'name: $name'
         ')';
   }
 
@@ -278,3 +278,4 @@ class GlobalPropertyTypeDefinition {
     return true;
   }
 }
+

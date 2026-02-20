@@ -164,7 +164,7 @@ class _PropertyTypeManagementTabState
                   Expanded(
                     flex: 2,
                     child: AppText(
-                      propertyType.displayName ?? propertyType.typeName,
+                      propertyType.name ?? propertyType.typeName,
                       variant: AppTextVariant.bodyText,
                     ),
                   ),
