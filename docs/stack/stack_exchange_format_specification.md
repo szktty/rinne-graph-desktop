@@ -324,7 +324,7 @@ If a manifest file exists, the `meta` directory is not required.
 4.  **Schema Resolution:**
     - If a path is specified in the `schema` field of the manifest, that file is read as a schema.
     - If the `schema` field is not present, and `schema.json` exists in the same directory as the manifest file, it is automatically read.
-    - If a schema is loaded, mapping of identifiers starting with `$` (labels, link types, etc.) in the data to display names is performed.
+    - If a schema is loaded, mapping of identifiers starting with `$` (labels, link types, etc.) in the data to canonical names is performed.
 5.  If no manifest is found, files are processed individually.
 
 **User Tasks:**
@@ -343,7 +343,7 @@ If a manifest file exists, the `meta` directory is not required.
 
 ### Schema Definition File
 
-The schema definition file is an optional JSON file for mapping identifiers (usually English) used in data files to display names and data constraints displayed in the application. This separates the structural meaning of the data from human-readable displays and validation rules.
+The schema definition file is an optional JSON file for mapping identifiers (usually English) used in data files to canonical names (often localized) and data constraints displayed in the application. This separates the structural meaning of the data from human-readable names and validation rules.
 
 #### Purpose
 - **Ensure Data Quality**: Centrally manage validation rules such as type definitions, mandatory checks, and uniqueness constraints.
@@ -361,16 +361,15 @@ A schema file is a JSON object with three top-level keys: `labels`, `link_types`
 **Basic Structure:**
 ```json
 {
-  "labels": {
-    "identifier": { "display_name": "display name", ... },
+    "identifier": { "name": "display name", ... },
     ...
   },
   "link_types": {
-    "identifier": { "display_name": "display name", ... },
+    "identifier": { "name": "display name", ... },
     ...
   },
   "properties": {
-    "identifier": { "display_name": "display name", ... },
+    "identifier": { "name": "display name", ... },
     ...
   }
 }
@@ -380,16 +379,15 @@ A schema file is a JSON object with three top-level keys: `labels`, `link_types`
 ```json
 {
   "labels": {
-    "Person": {
-      "display_name": "Person"
-    },
-    "Organization": {
-      "display_name": "Organization"
+          "Person": {
+          "name": "Person"
+        },    "Organization": {
+      "name": "Organization"
     }
   },
   "link_types": {
     "BELONGED_TO": {
-      "display_name": "Belongs To",
+      "name": "Belongs To",
       // --- Future Extensions ---
       "allowed_connections": [
         { "from": "Person", "to": "Organization" }
@@ -398,18 +396,18 @@ A schema file is a JSON object with three top-level keys: `labels`, `link_types`
   },
   "properties": {
     "name": {
-      "display_name": "Name",
+      "name": "Name",
       "type": "string", // Future extension: Data type
       "required": true   // Future extension: Required property
     },
     "employee_id": {
-      "display_name": "Employee ID",
+      "name": "Employee ID",
       "type": "string",
       "unique": true,    // Future extension: Uniqueness constraint
       "pattern": "^EMP[0-9]{5}$" // Future extension: Regular expression pattern
     },
     "status": {
-      "display_name": "Status",
+      "name": "Status",
       "type": "string",
       "default": "active" // Future extension: Default value
     }
@@ -423,7 +421,7 @@ A schema file is a JSON object with three top-level keys: `labels`, `link_types`
 -   **Scope of `$` Prefix Application**:
     -   **JSON**: Applied to each element in the `labels` array, each key in the `properties` object, and the `type` key in the `links` object.
     -   **CSV**: Applied to data values in `labels` and `type` columns, and property key names in the header row.
--   **Scope of Initial Implementation**: In the current version, only the `display_name` key within each schema definition object is interpreted. Other keys (e.g., `type`, `required`) are reserved for future extensions and are ignored in the current version.
+-   **Scope of Initial Implementation**: In the current version, only the `name` key within each schema definition object is interpreted. Other keys (e.g., `type`, `required`) are reserved for future extensions and are ignored in the current version.
 -   **If Schema File Does Not Exist**: Identifiers with a `$` prefix will be treated as the string with `$` removed (e.g., `"$Person"` -> `"Person"`).
 
 ### Dataset Files
