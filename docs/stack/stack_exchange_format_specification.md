@@ -347,8 +347,8 @@ The schema definition file is an optional JSON file for mapping identifiers (usu
 
 #### Purpose
 - **Ensure Data Quality**: Centrally manage validation rules such as type definitions, mandatory checks, and uniqueness constraints.
-- **Readability and Maintainability**: Use consistent, programmatically manageable identifiers in data files, and manage display names and rules centrally in the schema file.
-- **Flexible Data Definition**: Users can freely design internal identifiers that do not necessarily match display names.
+- **Readability and Maintainability**: Use consistent, programmatically manageable identifiers in data files, and manage canonical names and rules centrally in the schema file.
+- **Flexible Data Definition**: Users can freely design internal identifiers that do not necessarily match their canonical names.
 
 #### File Name and Location
 - **Default file name**: `schema.json`
