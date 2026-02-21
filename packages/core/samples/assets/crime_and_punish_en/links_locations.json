@@ -1,0 +1,69 @@
+[
+  {
+    "source": "char-raskolnikov",
+    "target": "loc-raskolnikov-room",
+    "type": "resides_at"
+  },
+  {
+    "source": "char-alyona",
+    "target": "loc-alyona-apartment",
+    "type": "resides_at"
+  },
+  {
+    "source": "char-lizaveta",
+    "target": "loc-alyona-apartment",
+    "type": "resides_at"
+  },
+  {
+    "source": "char-marmeladov",
+    "target": "loc-marmeladov-home",
+    "type": "resides_at"
+  },
+  {
+    "source": "char-katerina",
+    "target": "loc-marmeladov-home",
+    "type": "resides_at"
+  },
+  {
+    "source": "char-sonya",
+    "target": "loc-marmeladov-home",
+    "type": "resides_at",
+    "properties": {
+      "note": "Family's former home. Moved out later."
+    }
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "loc-razumikhin-home",
+    "type": "resides_at"
+  },
+  {
+    "source": "char-sonya",
+    "target": "loc-sonya-room",
+    "type": "resides_at"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "loc-sonya-room",
+    "type": "resides_at",
+    "properties": {
+      "note": "Staying in the adjacent room."
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "loc-siberia",
+    "type": "resides_at",
+    "properties": {
+      "note": "Serving a sentence of hard labor in exile."
+    }
+  },
+  {
+    "source": "char-sonya",
+    "target": "loc-siberia",
+    "type": "resides_at",
+    "properties": {
+      "note": "Moved to a nearby town to be close to Raskolnikov."
+    }
+  }
+]

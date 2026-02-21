@@ -1,0 +1,227 @@
+[
+  {
+    "source": "scene-p6c1",
+    "target": "scene-p6c2",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p6c2",
+    "target": "scene-p6c3",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p6c3",
+    "target": "scene-p6c4",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p6c4",
+    "target": "scene-p6c5",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p6c5",
+    "target": "scene-p6c6",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p6c6",
+    "target": "scene-p6c7",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p6c7",
+    "target": "scene-p6c8",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p6c8",
+    "target": "scene-epilogue1",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-epilogue1",
+    "target": "scene-epilogue2",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p6c1",
+    "target": "scene-p6c2",
+    "type": "concurrent"
+  },
+  {
+    "source": "scene-p6c4",
+    "target": "scene-p6c5",
+    "type": "concurrent"
+  },
+  {
+    "source": "scene-p6c6",
+    "target": "scene-p6c7",
+    "type": "concurrent"
+  },
+  {
+    "source": "scene-p6c7",
+    "target": "scene-p6c8",
+    "type": "concurrent"
+  },
+  {
+    "source": "scene-p6c1",
+    "target": "loc-raskolnikov-room",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p6c2",
+    "target": "loc-raskolnikov-room",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p6c3",
+    "target": "loc-street",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p6c4",
+    "target": "loc-street",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p6c5",
+    "target": "loc-street",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p6c6",
+    "target": "loc-raskolnikov-room",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p6c7",
+    "target": "loc-haymarket",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p6c7",
+    "target": "loc-sonya-room",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-epilogue1",
+    "target": "loc-siberia",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-epilogue2",
+    "target": "loc-siberia",
+    "type": "located_at"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p6c1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p6c1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p6c2",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-porfiry",
+    "target": "scene-p6c2",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p6c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "scene-p6c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "scene-p6c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p6c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "scene-p6c5",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-p6c5",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p6c6",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-p6c6",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p6c6",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p6c7",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-p6c7",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p6c8",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-epilogue1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-epilogue1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-epilogue1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-epilogue1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-epilogue2",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-epilogue2",
+    "type": "appears_in"
+  }
+]

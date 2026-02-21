@@ -1,0 +1,76 @@
+[
+  {
+    "id": "scene-p4c1",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 4",
+      "chapter": "1",
+      "context": "After Svidrigailov's departure",
+      "day": 16,
+      "summary": "After Svidrigailov leaves Raskolnikov's room, Razumikhin returns. Raskolnikov relays Svidrigailov's offer to give Dunya an inheritance. Razumikhin is suspicious. Raskolnikov resolves to visit Sonya and heads out.",
+      "excerpt": "'Can this still be a continuation of my dream?' The thought crossed Raskolnikov's mind once more."
+    }
+  },
+  {
+    "id": "scene-p4c2",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 4",
+      "chapter": "2",
+      "context": "First visit to Sonya — the reading of Lazarus",
+      "day": 16,
+      "summary": "Raskolnikov visits Sonya's room for the first time. He takes in the poverty of her surroundings. Sonya is bewildered by his visit. Raskolnikov asks her to read aloud the passage on the raising of Lazarus from the Bible. Sonya reads it, and a particular feeling stirs between them. Raskolnikov puts a cryptic question to her.",
+      "excerpt": "It was already nearly eight o'clock. The two hurried to Bakaleyev's lodgings to arrive before Luzhin."
+    }
+  },
+  {
+    "id": "scene-p4c3",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 4",
+      "chapter": "3",
+      "context": "Confrontation with Luzhin — the engagement broken off",
+      "day": 17,
+      "time": "Morning",
+      "summary": "The confrontation between Dunya and her mother Pulkheria on one side, and Luzhin on the other. Raskolnikov is also present. Luzhin makes a false accusation that Sonya stole money, attempting to dominate Dunya. Lebezyatnikov testifies to Sonya's innocence and exposes Luzhin's scheme. Dunya breaks off the engagement.",
+      "excerpt": "Above all, the most remarkable thing was that to the very last moment he had not in the least foreseen such an outcome."
+    }
+  },
+  {
+    "id": "scene-p4c4",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 4",
+      "chapter": "4",
+      "context": "Second visit to Sonya — Svidrigailov eavesdrops",
+      "day": 17,
+      "summary": "After the break with Luzhin, Raskolnikov visits Sonya again. He is steeling himself toward confessing to her. It becomes clear that Svidrigailov lives in the room next to Sonya's — he had been eavesdropping on their conversation.",
+      "excerpt": "Raskolnikov went straight to the house on the canal where Sonya lived — an old three-story building painted green."
+    }
+  },
+  {
+    "id": "scene-p4c5",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 4",
+      "chapter": "5",
+      "context": "Return to Porfiry — psychological pressure",
+      "day": 18,
+      "time": "11 a.m.",
+      "summary": "Raskolnikov visits Porfiry again. Porfiry subjects him to a prolonged conversation designed to psychologically corner him and hints that he should turn himself in. The tense game of cat and mouse continues until a mysterious man suddenly bursts in crying that he is the murderer. Porfiry tells Raskolnikov he is giving him 'twenty-four hours.'",
+      "excerpt": "At exactly eleven the next morning, when Raskolnikov entered the preliminary investigation office and asked to be announced to Porfiry."
+    }
+  },
+  {
+    "id": "scene-p4c6",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 4",
+      "chapter": "6",
+      "context": "The mysterious man's apology — reunion with Svidrigailov",
+      "day": 18,
+      "summary": "On the way back from Porfiry's office, a mysterious tradesman appears and apologizes for calling him a murderer the other day. Afterward Raskolnikov runs into Svidrigailov by chance and the two sit facing each other in a tavern. Svidrigailov reveals that he overheard the conversation with Sonya, and hints at his feelings for Dunya and his murky past.",
+      "excerpt": "Whenever Raskolnikov later recalled this moment, it always came back to him in the following form."
+    }
+  }
+]

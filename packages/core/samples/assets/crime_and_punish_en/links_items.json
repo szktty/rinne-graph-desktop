@@ -1,0 +1,300 @@
+[
+  {
+    "source": "char-raskolnikov",
+    "target": "item-axe",
+    "type": "uses",
+    "properties": {
+      "note": "Used as the murder weapon."
+    }
+  },
+  {
+    "source": "item-axe",
+    "target": "scene-p1c7",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-silver-watch",
+    "type": "possesses",
+    "properties": {
+      "note": "A keepsake from his late father."
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-silver-watch",
+    "type": "transfers",
+    "properties": {
+      "counterpart": "Alyona",
+      "note": "Pawned."
+    }
+  },
+  {
+    "source": "char-alyona",
+    "target": "item-silver-watch",
+    "type": "possesses",
+    "properties": {
+      "note": "Received as a pawn."
+    }
+  },
+  {
+    "source": "item-silver-watch",
+    "target": "scene-p1c1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-ring",
+    "type": "transfers",
+    "properties": {
+      "counterpart": "Alyona",
+      "note": "Pawned."
+    }
+  },
+  {
+    "source": "char-alyona",
+    "target": "item-ring",
+    "type": "possesses",
+    "properties": {
+      "note": "Received as a pawn."
+    }
+  },
+  {
+    "source": "item-ring",
+    "target": "scene-p1c1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-purse",
+    "type": "possesses",
+    "properties": {
+      "note": "Stolen after the murder and hidden under a stone."
+    }
+  },
+  {
+    "source": "char-alyona",
+    "target": "item-purse",
+    "type": "possesses",
+    "properties": {
+      "note": "Original owner."
+    }
+  },
+  {
+    "source": "item-purse",
+    "target": "scene-p1c7",
+    "type": "appears_in"
+  },
+  {
+    "source": "item-purse",
+    "target": "scene-p2c1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "item-mothers-letter",
+    "type": "possesses",
+    "properties": {
+      "note": "The sender."
+    }
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "item-mothers-letter",
+    "type": "transfers",
+    "properties": {
+      "counterpart": "Raskolnikov",
+      "note": "Sends the letter."
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-mothers-letter",
+    "type": "possesses",
+    "properties": {
+      "note": "The recipient."
+    }
+  },
+  {
+    "source": "item-mothers-letter",
+    "target": "scene-p1c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-thesis",
+    "type": "possesses",
+    "properties": {
+      "note": "The author."
+    }
+  },
+  {
+    "source": "char-porfiry",
+    "target": "item-thesis",
+    "type": "possesses",
+    "properties": {
+      "note": "Consults it as material for the interrogation."
+    }
+  },
+  {
+    "source": "item-thesis",
+    "target": "scene-p3c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "item-thesis",
+    "target": "scene-p4c5",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-lizaveta",
+    "target": "item-bible",
+    "type": "transfers",
+    "properties": {
+      "counterpart": "Sonya",
+      "note": "Passed from Lizaveta to Sonya."
+    }
+  },
+  {
+    "source": "char-sonya",
+    "target": "item-bible",
+    "type": "possesses"
+  },
+  {
+    "source": "char-sonya",
+    "target": "item-bible",
+    "type": "uses",
+    "properties": {
+      "note": "At Raskolnikov's request, reads aloud the raising of Lazarus."
+    }
+  },
+  {
+    "source": "item-bible",
+    "target": "scene-p4c2",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-sonya",
+    "target": "item-cross",
+    "type": "possesses"
+  },
+  {
+    "source": "char-sonya",
+    "target": "item-cross",
+    "type": "transfers",
+    "properties": {
+      "counterpart": "Raskolnikov",
+      "note": "Given to him just before he turns himself in."
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-cross",
+    "type": "possesses",
+    "properties": {
+      "note": "Wears it when turning himself in."
+    }
+  },
+  {
+    "source": "item-cross",
+    "target": "scene-p6c7",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-marfa",
+    "target": "item-3000-rubles",
+    "type": "transfers",
+    "properties": {
+      "counterpart": "Dunya",
+      "note": "Bequeathed by will."
+    }
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "item-3000-rubles",
+    "type": "possesses",
+    "properties": {
+      "note": "Held as a pretext to contact Dunya."
+    }
+  },
+  {
+    "source": "char-dunya",
+    "target": "item-3000-rubles",
+    "type": "possesses",
+    "properties": {
+      "note": "The intended recipient of the inheritance."
+    }
+  },
+  {
+    "source": "item-3000-rubles",
+    "target": "scene-p3c6",
+    "type": "appears_in"
+  },
+  {
+    "source": "item-3000-rubles",
+    "target": "scene-p6c5",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-dunya",
+    "target": "item-pistol",
+    "type": "possesses"
+  },
+  {
+    "source": "char-dunya",
+    "target": "item-pistol",
+    "type": "uses",
+    "properties": {
+      "note": "Fires at Svidrigailov (the shot misses)."
+    }
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "item-pistol",
+    "type": "uses",
+    "properties": {
+      "note": "Uses it to take his own life."
+    }
+  },
+  {
+    "source": "item-pistol",
+    "target": "scene-p6c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "item-pistol",
+    "target": "scene-p6c5",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "item-35-rubles",
+    "type": "transfers",
+    "properties": {
+      "counterpart": "Raskolnikov",
+      "note": "Sent via Vakhrushev."
+    }
+  },
+  {
+    "source": "char-vakhrushina",
+    "target": "item-35-rubles",
+    "type": "transfers",
+    "properties": {
+      "counterpart": "Raskolnikov",
+      "note": "Acts as intermediary."
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-35-rubles",
+    "type": "possesses",
+    "properties": {
+      "note": "The recipient."
+    }
+  },
+  {
+    "source": "item-35-rubles",
+    "target": "scene-p2c3",
+    "type": "appears_in"
+  }
+]

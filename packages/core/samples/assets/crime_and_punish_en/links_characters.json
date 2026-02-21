@@ -1,0 +1,200 @@
+[
+  {
+    "source": "char-raskolnikov",
+    "target": "alias-raskolnikov-1",
+    "type": "alias"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "alias-raskolnikov-2",
+    "type": "alias"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "alias-raskolnikov-3",
+    "type": "alias"
+  },
+  {
+    "source": "char-sonya",
+    "target": "alias-sonya-1",
+    "type": "alias"
+  },
+  {
+    "source": "char-sonya",
+    "target": "alias-sonya-2",
+    "type": "alias"
+  },
+  {
+    "source": "char-porfiry",
+    "target": "alias-porfiry-1",
+    "type": "alias"
+  },
+  {
+    "source": "char-dunya",
+    "target": "alias-dunya-1",
+    "type": "alias"
+  },
+  {
+    "source": "char-dunya",
+    "target": "alias-dunya-2",
+    "type": "alias"
+  },
+  {
+    "source": "char-katerina",
+    "target": "alias-katerina-1",
+    "type": "alias"
+  },
+  {
+    "source": "char-lizaveta",
+    "target": "alias-lizaveta-1",
+    "type": "alias"
+  },
+  {
+    "source": "char-marmeladov",
+    "target": "alias-marmeladov-1",
+    "type": "alias"
+  },
+  {
+    "source": "char-alyona",
+    "target": "alias-alyona-1",
+    "type": "alias"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "alias-pulkheria-1",
+    "type": "alias"
+  },
+  {
+    "source": "char-luzhin",
+    "target": "alias-luzhin-1",
+    "type": "alias"
+  },
+  {
+    "source": "char-mikolka",
+    "target": "alias-mikolka-1",
+    "type": "alias"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-razumikhin",
+    "type": "friend"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-dunya",
+    "type": "family",
+    "properties": {
+      "relationship": "older brother"
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-pulkheria",
+    "type": "family",
+    "properties": {
+      "relationship": "son"
+    }
+  },
+  {
+    "source": "char-dunya",
+    "target": "char-pulkheria",
+    "type": "family",
+    "properties": {
+      "relationship": "daughter"
+    }
+  },
+  {
+    "source": "char-dunya",
+    "target": "char-luzhin",
+    "type": "acquaintance",
+    "properties": {
+      "relationship": "fiancé"
+    }
+  },
+  {
+    "source": "char-dunya",
+    "target": "char-svidrigailov",
+    "type": "acquaintance",
+    "properties": {
+      "relationship": "former employer"
+    }
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "char-marfa",
+    "type": "family",
+    "properties": {
+      "relationship": "husband"
+    }
+  },
+  {
+    "source": "char-marmeladov",
+    "target": "char-sonya",
+    "type": "family",
+    "properties": {
+      "relationship": "father"
+    }
+  },
+  {
+    "source": "char-marmeladov",
+    "target": "char-katerina",
+    "type": "family",
+    "properties": {
+      "relationship": "husband"
+    }
+  },
+  {
+    "source": "char-sonya",
+    "target": "char-katerina",
+    "type": "family",
+    "properties": {
+      "relationship": "stepchild"
+    }
+  },
+  {
+    "source": "char-alyona",
+    "target": "char-lizaveta",
+    "type": "family",
+    "properties": {
+      "relationship": "half-sister"
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-alyona",
+    "type": "antagonist"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-luzhin",
+    "type": "antagonist"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-porfiry",
+    "type": "antagonist"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-marmeladov",
+    "type": "acquaintance"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-sonya",
+    "type": "acquaintance"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-nastasya",
+    "type": "acquaintance"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "char-vakhrushina",
+    "type": "acquaintance",
+    "properties": {
+      "relationship": "old acquaintance"
+    }
+  }
+]

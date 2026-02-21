@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "name": "Crime and Punishment",
+    "description": "A knowledge graph of characters, scenes, and locations from Dostoevsky's novel 'Crime and Punishment'. Covers all six parts and the epilogue.",
+    "language": "en",
+    "author": "App Team",
+    "version": "1.0.0",
+    "tags": ["literature", "novel", "russian", "dostoevsky"],
+    "validation": {
+      "expected_node_count": 96,
+      "expected_link_count": 325,
+      "strict_mode": false
+    }
+  },
+  "schema": "schema.json",
+  "files": [
+    "nodes_characters.json",
+    "nodes_locations.json",
+    "nodes_scenes_part1.json",
+    "nodes_scenes_part2.json",
+    "nodes_scenes_part3.json",
+    "nodes_scenes_part4.json",
+    "nodes_scenes_part5.json",
+    "nodes_scenes_part6.json",
+    "links_characters.json",
+    "links_part1.json",
+    "links_part2.json",
+    "links_part3.json",
+    "links_part4.json",
+    "links_part5.json",
+    "links_part6.json",
+    "links_locations.json",
+    "nodes_items.json",
+    "links_items.json"
+  ]
+}

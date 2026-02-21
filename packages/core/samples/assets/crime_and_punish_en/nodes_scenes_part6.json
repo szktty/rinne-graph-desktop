@@ -1,0 +1,128 @@
+[
+  {
+    "id": "scene-p6c1",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 6",
+      "chapter": "1",
+      "context": "Listlessness after the confession — Porfiry's visit",
+      "day": 50,
+      "time": "Dawn",
+      "summary": "The morning after his confession to Sonya, Raskolnikov falls once again into a strange apathy and indifference. Razumikhin confesses his feelings for Dunya. Raskolnikov considers a final farewell to his mother and sister but cannot bring himself to act. Porfiry visits his lodgings and the two talk alone.",
+      "excerpt": "'None of that matters! None of it matters!'"
+    }
+  },
+  {
+    "id": "scene-p6c2",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 6",
+      "chapter": "2",
+      "context": "Porfiry's private visit — urging a confession",
+      "day": 50,
+      "time": "Evening",
+      "summary": "Porfiry visits Raskolnikov's lodgings alone and the two engage in a long dialogue. Porfiry says he has no proof but is convinced of his guilt, and urges him to turn himself in. Raskolnikov is shaken but does not admit anything. Porfiry closes in with a mixture of warmth and relentlessness, finally telling him that a confession will reduce his sentence before he leaves.",
+      "excerpt": "'You are a very intelligent man,' Porfiry began quietly, in a composed voice."
+    }
+  },
+  {
+    "id": "scene-p6c3",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 6",
+      "chapter": "3",
+      "context": "Conversation with Svidrigailov in a tavern",
+      "day": 50,
+      "time": "Morning",
+      "summary": "Raskolnikov wanders the streets aimlessly and runs into Svidrigailov again. The two talk at length in a tavern. Svidrigailov speaks of his obsession with Dunya and of his past misdeeds in something resembling a confession. Raskolnikov remains wary of Svidrigailov while unable to suppress his curiosity.",
+      "excerpt": "Raskolnikov made up his mind and called out to him. 'Hey!'"
+    }
+  },
+  {
+    "id": "scene-p6c4",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 6",
+      "chapter": "4",
+      "context": "Svidrigailov imprisons Dunya",
+      "day": 51,
+      "summary": "Svidrigailov lures Dunya and meets her alone. He declares his love for her and informs her that he knows Raskolnikov's secret — that he is a murderer. Dunya tries to flee but the door is locked. She pulls a pistol from her bag and fires at Svidrigailov, but misses. He gives up and releases her.",
+      "excerpt": "'I do not love you!' Dunya declared with finality."
+    }
+  },
+  {
+    "id": "scene-p6c5",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 6",
+      "chapter": "5",
+      "context": "Svidrigailov's last night and suicide",
+      "day": 51,
+      "time": "Night to dawn",
+      "summary": "After releasing Dunya, Svidrigailov passes one final night. In a dream he encounters the ghost of a young girl. He begins disposing of his affairs, arranging support for Katerina's children and for Sonya. At dawn he shoots himself on a bridge.",
+      "excerpt": "He picked up the pistol."
+    }
+  },
+  {
+    "id": "scene-p6c6",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 6",
+      "chapter": "6",
+      "context": "Farewell to mother and sister",
+      "day": 52,
+      "summary": "Raskolnikov visits his mother to say a final goodbye. His mother senses his anguish but asks no questions. Raskolnikov also bids farewell to his sister Dunya. Dunya understands that he has resolved to turn himself in and blesses her brother. Raskolnikov sets out for Sonya.",
+      "excerpt": "Walking toward his mother's home, Raskolnikov felt he had never loved her as deeply as he did at that moment."
+    }
+  },
+  {
+    "id": "scene-p6c7",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 6",
+      "chapter": "7",
+      "context": "Prostration at the Haymarket — toward surrender",
+      "day": 52,
+      "time": "Noon",
+      "summary": "Raskolnikov visits Sonya and tells her 'I am going now.' Sonya gives him a cross. He goes to the Haymarket, kneels down, and kisses the earth. The crowd laughs. He then heads to the police station but turns back once. Catching sight of Sonya, he steps forward again.",
+      "excerpt": "The Haymarket had always been a place that lingered in his memory."
+    }
+  },
+  {
+    "id": "scene-p6c8",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 6",
+      "chapter": "8",
+      "context": "Confession",
+      "day": 52,
+      "time": "Morning",
+      "summary": "Raskolnikov presents himself at the police station and confesses that he is the one who killed the old pawnbroker and Lizaveta. Lieutenant Ilya Petrovich receives him. The moment he speaks the words of his confession, it is shown that Sonya has been waiting outside the station.",
+      "excerpt": "'It was I who killed the old pawnbroker woman, Alyona Ivanovna, and her sister Lizaveta Ivanovna, with an axe.'"
+    }
+  },
+  {
+    "id": "scene-epilogue1",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Epilogue",
+      "chapter": "1",
+      "context": "A year and a half after the trial — serving time in Siberia",
+      "day": 600,
+      "summary": "Raskolnikov is serving a nine-year sentence in Siberia. The circumstances of his trial are recounted. His mother Pulkheria deteriorated mentally after his arrest and died. Dunya married Razumikhin. Raskolnikov, even while imprisoned, feels no remorse — he grieves only the failure of his theory.",
+      "excerpt": "Siberia. On the bank of a broad, desolate river stood a town, three hundred miles from the nearest city."
+    }
+  },
+  {
+    "id": "scene-epilogue2",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Epilogue",
+      "chapter": "2",
+      "context": "Renewal with Sonya",
+      "day": 600,
+      "summary": "Sonya has moved to a town near the prison and continues to visit Raskolnikov. Lying ill, Raskolnikov becomes aware of Sonya's love and finally feels his heart opening. The two embrace, and a true renewal begins. The door to a new life and a new reality swings open.",
+      "excerpt": "Why was she weeping? Why did she weep?… Why did she weep?…"
+    }
+  }
+]

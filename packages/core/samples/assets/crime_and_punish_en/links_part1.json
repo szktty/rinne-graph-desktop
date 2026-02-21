@@ -1,0 +1,292 @@
+[
+  {
+    "source": "scene-p1c1",
+    "target": "scene-p1c2",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p1c2",
+    "target": "scene-p1c3",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p1c3",
+    "target": "scene-p1c4",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p1c4",
+    "target": "scene-p1c5",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p1c5",
+    "target": "scene-p1c6",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p1c6",
+    "target": "scene-p1c7",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p1c1",
+    "target": "scene-p1c2",
+    "type": "concurrent"
+  },
+  {
+    "source": "scene-p1c3",
+    "target": "scene-p1c4",
+    "type": "concurrent"
+  },
+  {
+    "source": "scene-p1c4",
+    "target": "scene-p1c5",
+    "type": "concurrent"
+  },
+  {
+    "source": "scene-p1c5",
+    "target": "scene-p1c6",
+    "type": "concurrent"
+  },
+  {
+    "source": "scene-p1c6",
+    "target": "scene-p1c7",
+    "type": "concurrent"
+  },
+  {
+    "source": "scene-p1c1",
+    "target": "loc-raskolnikov-room",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p1c1",
+    "target": "loc-alyona-apartment",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p1c1",
+    "target": "loc-tavern",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p1c2",
+    "target": "loc-tavern",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p1c2",
+    "target": "loc-marmeladov-home",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p1c3",
+    "target": "loc-raskolnikov-room",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p1c4",
+    "target": "loc-street",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p1c5",
+    "target": "loc-street",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p1c5",
+    "target": "loc-razumikhin-home",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p1c5",
+    "target": "loc-haymarket",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p1c6",
+    "target": "loc-raskolnikov-room",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p1c6",
+    "target": "loc-alyona-apartment",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p1c7",
+    "target": "loc-alyona-apartment",
+    "type": "located_at"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-alyona",
+    "target": "scene-p1c1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c2",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-marmeladov",
+    "target": "scene-p1c2",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-katerina",
+    "target": "scene-p1c2",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-p1c2",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-nastasya",
+    "target": "scene-p1c2",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-nastasya",
+    "target": "scene-p1c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-p1c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p1c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "scene-p1c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-marfa",
+    "target": "scene-p1c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-luzhin",
+    "target": "scene-p1c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-vakhrushina",
+    "target": "scene-p1c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-luzhin",
+    "target": "scene-p1c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p1c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-p1c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-p1c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p1c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c5",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p1c5",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-lizaveta",
+    "target": "scene-p1c5",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-alyona",
+    "target": "scene-p1c5",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c6",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-nastasya",
+    "target": "scene-p1c6",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-lizaveta",
+    "target": "scene-p1c6",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-alyona",
+    "target": "scene-p1c6",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c7",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-alyona",
+    "target": "scene-p1c7",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-lizaveta",
+    "target": "scene-p1c7",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-koch",
+    "target": "scene-p1c7",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-mikolka",
+    "target": "scene-p1c7",
+    "type": "appears_in"
+  }
+]

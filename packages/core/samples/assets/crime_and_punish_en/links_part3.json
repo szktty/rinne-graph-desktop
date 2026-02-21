@@ -1,0 +1,167 @@
+[
+  {
+    "source": "scene-p3c1",
+    "target": "scene-p3c2",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p3c2",
+    "target": "scene-p3c3",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p3c3",
+    "target": "scene-p3c4",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p3c4",
+    "target": "scene-p3c5",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p3c5",
+    "target": "scene-p3c6",
+    "type": "next_scene"
+  },
+  {
+    "source": "scene-p3c3",
+    "target": "scene-p3c4",
+    "type": "concurrent"
+  },
+  {
+    "source": "scene-p3c5",
+    "target": "scene-p3c6",
+    "type": "concurrent"
+  },
+  {
+    "source": "scene-p3c1",
+    "target": "loc-raskolnikov-room",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p3c3",
+    "target": "loc-raskolnikov-room",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p3c4",
+    "target": "loc-street",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p3c5",
+    "target": "loc-raskolnikov-room",
+    "type": "located_at"
+  },
+  {
+    "source": "scene-p3c6",
+    "target": "loc-raskolnikov-room",
+    "type": "located_at"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p3c1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-p3c1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p3c1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p3c1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-zosimov",
+    "target": "scene-p3c1",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p3c2",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-p3c2",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p3c2",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p3c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-p3c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p3c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p3c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-zosimov",
+    "target": "scene-p3c3",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p3c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-porfiry",
+    "target": "scene-p3c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p3c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-mikolka",
+    "target": "scene-p3c4",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p3c5",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p3c6",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "scene-p3c6",
+    "type": "appears_in"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p3c6",
+    "type": "appears_in"
+  }
+]

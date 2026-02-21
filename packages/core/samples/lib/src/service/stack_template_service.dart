@@ -43,10 +43,20 @@ class StackTemplateService {
         displayName: '罪と罰',
         fullAssetPath: 'packages/core_samples/assets/crime_and_punish_ja',
         description:
-            'ドストエフスキーの小説『罪と罰』の登場人物・場面・場所の関係図。第一篇を収録。',
+            'ドストエフスキーの小説『罪と罰』の登場人物・場面・場所の関係図。全六篇＋エピローグを収録。',
         tags: ['サンプル', '文学', '小説', 'ロシア', 'ドストエフスキー', '日本語'],
         category: 'literature',
         language: 'ja',
+      ),
+      const StackTemplateManifest(
+        id: 'crime_and_punish_en',
+        displayName: 'Crime and Punishment',
+        fullAssetPath: 'packages/core_samples/assets/crime_and_punish_en',
+        description:
+            "A knowledge graph of characters, scenes, and locations from Dostoevsky's novel 'Crime and Punishment'. Covers all six parts and the epilogue.",
+        tags: ['sample', 'literature', 'novel', 'russian', 'dostoevsky', 'english'],
+        category: 'literature',
+        language: 'en',
       ),
     ];
   }
