@@ -1,0 +1,292 @@
+[
+  {
+    "source": "scene-p1c1",
+    "target": "scene-p1c2",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p1c2",
+    "target": "scene-p1c3",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p1c3",
+    "target": "scene-p1c4",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p1c4",
+    "target": "scene-p1c5",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p1c5",
+    "target": "scene-p1c6",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p1c6",
+    "target": "scene-p1c7",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p1c1",
+    "target": "scene-p1c2",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p1c3",
+    "target": "scene-p1c4",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p1c4",
+    "target": "scene-p1c5",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p1c5",
+    "target": "scene-p1c6",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p1c6",
+    "target": "scene-p1c7",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p1c1",
+    "target": "loc-raskolnikov-room",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p1c1",
+    "target": "loc-alyona-apartment",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p1c1",
+    "target": "loc-tavern",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p1c2",
+    "target": "loc-tavern",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p1c2",
+    "target": "loc-marmeladov-home",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p1c3",
+    "target": "loc-raskolnikov-room",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p1c4",
+    "target": "loc-street",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p1c5",
+    "target": "loc-street",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p1c5",
+    "target": "loc-razumikhin-home",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p1c5",
+    "target": "loc-haymarket",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p1c6",
+    "target": "loc-raskolnikov-room",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p1c6",
+    "target": "loc-alyona-apartment",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p1c7",
+    "target": "loc-alyona-apartment",
+    "type": "場所"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-alyona",
+    "target": "scene-p1c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-marmeladov",
+    "target": "scene-p1c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-katerina",
+    "target": "scene-p1c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-p1c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-nastasya",
+    "target": "scene-p1c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-nastasya",
+    "target": "scene-p1c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-p1c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p1c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "scene-p1c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-marfa",
+    "target": "scene-p1c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-luzhin",
+    "target": "scene-p1c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-vakhrushina",
+    "target": "scene-p1c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-luzhin",
+    "target": "scene-p1c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p1c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-p1c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-p1c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p1c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p1c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-lizaveta",
+    "target": "scene-p1c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-alyona",
+    "target": "scene-p1c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c6",
+    "type": "登場"
+  },
+  {
+    "source": "char-nastasya",
+    "target": "scene-p1c6",
+    "type": "登場"
+  },
+  {
+    "source": "char-lizaveta",
+    "target": "scene-p1c6",
+    "type": "登場"
+  },
+  {
+    "source": "char-alyona",
+    "target": "scene-p1c6",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p1c7",
+    "type": "登場"
+  },
+  {
+    "source": "char-alyona",
+    "target": "scene-p1c7",
+    "type": "登場"
+  },
+  {
+    "source": "char-lizaveta",
+    "target": "scene-p1c7",
+    "type": "登場"
+  },
+  {
+    "source": "char-koch",
+    "target": "scene-p1c7",
+    "type": "登場"
+  },
+  {
+    "source": "char-mikolka",
+    "target": "scene-p1c7",
+    "type": "登場"
+  }
+]

@@ -1,0 +1,300 @@
+[
+  {
+    "source": "char-raskolnikov",
+    "target": "item-axe",
+    "type": "使用",
+    "properties": {
+      "備考": "凶器として使用"
+    }
+  },
+  {
+    "source": "item-axe",
+    "target": "scene-p1c7",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-silver-watch",
+    "type": "所持",
+    "properties": {
+      "備考": "亡父の形見"
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-silver-watch",
+    "type": "授受",
+    "properties": {
+      "相手": "アリョーナ",
+      "備考": "質入れ"
+    }
+  },
+  {
+    "source": "char-alyona",
+    "target": "item-silver-watch",
+    "type": "所持",
+    "properties": {
+      "備考": "質受け品"
+    }
+  },
+  {
+    "source": "item-silver-watch",
+    "target": "scene-p1c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-ring",
+    "type": "授受",
+    "properties": {
+      "相手": "アリョーナ",
+      "備考": "質入れ"
+    }
+  },
+  {
+    "source": "char-alyona",
+    "target": "item-ring",
+    "type": "所持",
+    "properties": {
+      "備考": "質受け品"
+    }
+  },
+  {
+    "source": "item-ring",
+    "target": "scene-p1c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-purse",
+    "type": "所持",
+    "properties": {
+      "備考": "犯行後に奪い石の下に隠した"
+    }
+  },
+  {
+    "source": "char-alyona",
+    "target": "item-purse",
+    "type": "所持",
+    "properties": {
+      "備考": "元の所有者"
+    }
+  },
+  {
+    "source": "item-purse",
+    "target": "scene-p1c7",
+    "type": "登場"
+  },
+  {
+    "source": "item-purse",
+    "target": "scene-p2c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "item-mothers-letter",
+    "type": "所持",
+    "properties": {
+      "備考": "送り手"
+    }
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "item-mothers-letter",
+    "type": "授受",
+    "properties": {
+      "相手": "ラスコーリニコフ",
+      "備考": "手紙を送る"
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-mothers-letter",
+    "type": "所持",
+    "properties": {
+      "備考": "受取人"
+    }
+  },
+  {
+    "source": "item-mothers-letter",
+    "target": "scene-p1c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-thesis",
+    "type": "所持",
+    "properties": {
+      "備考": "著者"
+    }
+  },
+  {
+    "source": "char-porfiry",
+    "target": "item-thesis",
+    "type": "所持",
+    "properties": {
+      "備考": "取調べの材料として参照"
+    }
+  },
+  {
+    "source": "item-thesis",
+    "target": "scene-p3c4",
+    "type": "登場"
+  },
+  {
+    "source": "item-thesis",
+    "target": "scene-p4c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-lizaveta",
+    "target": "item-bible",
+    "type": "授受",
+    "properties": {
+      "相手": "ソーニャ",
+      "備考": "リザヴェータからソーニャへ譲渡"
+    }
+  },
+  {
+    "source": "char-sonya",
+    "target": "item-bible",
+    "type": "所持"
+  },
+  {
+    "source": "char-sonya",
+    "target": "item-bible",
+    "type": "使用",
+    "properties": {
+      "備考": "ラスコーリニコフの求めでラザロの復活を朗読"
+    }
+  },
+  {
+    "source": "item-bible",
+    "target": "scene-p4c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-sonya",
+    "target": "item-cross",
+    "type": "所持"
+  },
+  {
+    "source": "char-sonya",
+    "target": "item-cross",
+    "type": "授受",
+    "properties": {
+      "相手": "ラスコーリニコフ",
+      "備考": "自首直前に渡す"
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-cross",
+    "type": "所持",
+    "properties": {
+      "備考": "自首時に身につける"
+    }
+  },
+  {
+    "source": "item-cross",
+    "target": "scene-p6c7",
+    "type": "登場"
+  },
+  {
+    "source": "char-marfa",
+    "target": "item-3000-rubles",
+    "type": "授受",
+    "properties": {
+      "相手": "ドゥーニャ",
+      "備考": "遺言による遺贈"
+    }
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "item-3000-rubles",
+    "type": "所持",
+    "properties": {
+      "備考": "ドゥーニャへ渡す口実として保管"
+    }
+  },
+  {
+    "source": "char-dunya",
+    "target": "item-3000-rubles",
+    "type": "所持",
+    "properties": {
+      "備考": "遺産の受取人"
+    }
+  },
+  {
+    "source": "item-3000-rubles",
+    "target": "scene-p3c6",
+    "type": "登場"
+  },
+  {
+    "source": "item-3000-rubles",
+    "target": "scene-p6c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-dunya",
+    "target": "item-pistol",
+    "type": "所持"
+  },
+  {
+    "source": "char-dunya",
+    "target": "item-pistol",
+    "type": "使用",
+    "properties": {
+      "備考": "スヴィドリガイロフに向けて発砲（弾は外れる）"
+    }
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "item-pistol",
+    "type": "使用",
+    "properties": {
+      "備考": "自殺に使用"
+    }
+  },
+  {
+    "source": "item-pistol",
+    "target": "scene-p6c4",
+    "type": "登場"
+  },
+  {
+    "source": "item-pistol",
+    "target": "scene-p6c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "item-35-rubles",
+    "type": "授受",
+    "properties": {
+      "相手": "ラスコーリニコフ",
+      "備考": "ヴァフルーシンを介して送金"
+    }
+  },
+  {
+    "source": "char-vakhrushina",
+    "target": "item-35-rubles",
+    "type": "授受",
+    "properties": {
+      "相手": "ラスコーリニコフ",
+      "備考": "取次ぎ人"
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "item-35-rubles",
+    "type": "所持",
+    "properties": {
+      "備考": "受取人"
+    }
+  },
+  {
+    "source": "item-35-rubles",
+    "target": "scene-p2c3",
+    "type": "登場"
+  }
+]

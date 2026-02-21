@@ -1,0 +1,227 @@
+[
+  {
+    "source": "scene-p6c1",
+    "target": "scene-p6c2",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p6c2",
+    "target": "scene-p6c3",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p6c3",
+    "target": "scene-p6c4",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p6c4",
+    "target": "scene-p6c5",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p6c5",
+    "target": "scene-p6c6",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p6c6",
+    "target": "scene-p6c7",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p6c7",
+    "target": "scene-p6c8",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p6c8",
+    "target": "scene-epilogue1",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-epilogue1",
+    "target": "scene-epilogue2",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p6c1",
+    "target": "scene-p6c2",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p6c4",
+    "target": "scene-p6c5",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p6c6",
+    "target": "scene-p6c7",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p6c7",
+    "target": "scene-p6c8",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p6c1",
+    "target": "loc-raskolnikov-room",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p6c2",
+    "target": "loc-raskolnikov-room",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p6c3",
+    "target": "loc-street",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p6c4",
+    "target": "loc-street",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p6c5",
+    "target": "loc-street",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p6c6",
+    "target": "loc-raskolnikov-room",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p6c7",
+    "target": "loc-haymarket",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p6c7",
+    "target": "loc-sonya-room",
+    "type": "場所"
+  },
+  {
+    "source": "scene-epilogue1",
+    "target": "loc-siberia",
+    "type": "場所"
+  },
+  {
+    "source": "scene-epilogue2",
+    "target": "loc-siberia",
+    "type": "場所"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p6c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p6c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p6c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-porfiry",
+    "target": "scene-p6c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p6c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "scene-p6c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "scene-p6c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p6c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "scene-p6c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-p6c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p6c6",
+    "type": "登場"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-p6c6",
+    "type": "登場"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p6c6",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p6c7",
+    "type": "登場"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-p6c7",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p6c8",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-epilogue1",
+    "type": "登場"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-epilogue1",
+    "type": "登場"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-epilogue1",
+    "type": "登場"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-epilogue1",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-epilogue2",
+    "type": "登場"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-epilogue2",
+    "type": "登場"
+  }
+]
