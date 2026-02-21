@@ -9,15 +9,6 @@ class StackTemplateService {
   static List<StackTemplateManifest> getAvailableStackTemplates() {
     return [
       const StackTemplateManifest(
-        id: 'team_sample',
-        displayName: 'Software Development Team Sample',
-        fullAssetPath: 'packages/core_samples/assets/team',
-        description: 'Template data for a small software development team',
-        tags: ['template', 'development', 'team', 'software'],
-        category: 'business',
-        language: 'en',
-      ),
-      const StackTemplateManifest(
         id: 'meiji_sample',
         displayName: 'Bakumatsu Ryoma Relationship Chart',
         fullAssetPath: 'packages/core_samples/assets/meiji',
@@ -26,16 +17,6 @@ class StackTemplateService {
         tags: ['template', 'history', 'japan', 'meiji', 'ryoma'],
         category: 'history',
         language: 'ja',
-      ),
-      const StackTemplateManifest(
-        id: 'simple_graph_sample',
-        displayName: 'Simple Graph Sample',
-        fullAssetPath: 'packages/core_samples/assets/simple_graph',
-        description:
-            'A sample stack with a simple graph structure. Shows basic node and link relationships without list-type properties.',
-        tags: ['template', 'simple', 'basic', 'graph'],
-        category: 'basic',
-        language: 'en',
       ),
       const StackTemplateManifest(
         id: 'graph_of_the_gods',

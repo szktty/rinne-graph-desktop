@@ -30,9 +30,7 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/team/
     - assets/meiji/
-    - assets/simple_graph/
     - assets/graph_of_the_gods/
     - assets/graph_of_the_gods_ja/
     - assets/crime_and_punish_ja/

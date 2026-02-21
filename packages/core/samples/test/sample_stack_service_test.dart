@@ -6,15 +6,7 @@ void main() {
     test('getAvailableStackTemplates returns correct stack templates', () {
       final stackTemplates = StackTemplateService.getAvailableStackTemplates();
 
-      expect(stackTemplates.length, 5);
-
-      // Team template
-      final teamTemplate = stackTemplates.firstWhere(
-        (s) => s.id == 'team_sample',
-      );
-      expect(teamTemplate.displayName, 'Software Development Team Sample');
-      expect(teamTemplate.fullAssetPath, 'packages/core_samples/assets/team');
-      expect(teamTemplate.category, 'business');
+      expect(stackTemplates.length, 4);
 
       // Meiji template
       final meijiTemplate = stackTemplates.firstWhere(
@@ -23,18 +15,6 @@ void main() {
       expect(meijiTemplate.displayName, 'Bakumatsu Ryoma Relationship Chart');
       expect(meijiTemplate.fullAssetPath, 'packages/core_samples/assets/meiji');
       expect(meijiTemplate.category, 'history');
-
-      // Simple Graph template
-      final simpleGraphTemplate = stackTemplates.firstWhere(
-        (s) => s.id == 'simple_graph_sample',
-      );
-      expect(simpleGraphTemplate.displayName, 'Simple Graph Sample');
-      expect(
-        simpleGraphTemplate.fullAssetPath,
-        'packages/core_samples/assets/simple_graph',
-      );
-      expect(simpleGraphTemplate.category, 'basic');
-      expect(simpleGraphTemplate.language, 'en');
 
       // Graph of the Gods (English) template
       final graphOfTheGodsEnTemplate = stackTemplates.firstWhere(
@@ -67,22 +47,17 @@ void main() {
         final assetManifests =
             StackTemplateService.getAssetStackTemplateManifests();
 
-        expect(assetManifests.length, 5);
+        expect(assetManifests.length, 4);
 
-        final teamManifest = assetManifests.firstWhere(
-          (m) => m.fullAssetPath == 'packages/core_samples/assets/team',
+        final meijiManifest = assetManifests.firstWhere(
+          (m) => m.fullAssetPath == 'packages/core_samples/assets/meiji',
         );
-        expect(teamManifest.displayName, 'Software Development Team Sample');
-        expect(teamManifest.tags, contains('development'));
+        expect(meijiManifest.displayName, 'Bakumatsu Ryoma Relationship Chart');
+        expect(meijiManifest.tags, contains('history'));
       },
     );
 
     test('getStackTemplatesByCategory filters correctly', () {
-      final businessTemplates =
-          StackTemplateService.getStackTemplatesByCategory('business');
-      expect(businessTemplates.length, 1);
-      expect(businessTemplates.first.id, 'team_sample');
-
       final historyTemplates = StackTemplateService.getStackTemplatesByCategory(
         'history',
       );
@@ -95,11 +70,11 @@ void main() {
     });
 
     test('getStackTemplateById returns correct template', () {
-      final teamTemplate = StackTemplateService.getStackTemplateById(
-        'team_sample',
+      final meijiTemplate = StackTemplateService.getStackTemplateById(
+        'meiji_sample',
       );
-      expect(teamTemplate, isNotNull);
-      expect(teamTemplate!.displayName, 'Software Development Team Sample');
+      expect(meijiTemplate, isNotNull);
+      expect(meijiTemplate!.displayName, 'Bakumatsu Ryoma Relationship Chart');
 
       final nonExistentTemplate = StackTemplateService.getStackTemplateById(
         'nonexistent',
