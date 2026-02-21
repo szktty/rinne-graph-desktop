@@ -1,0 +1,167 @@
+[
+  {
+    "source": "scene-p3c1",
+    "target": "scene-p3c2",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p3c2",
+    "target": "scene-p3c3",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p3c3",
+    "target": "scene-p3c4",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p3c4",
+    "target": "scene-p3c5",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p3c5",
+    "target": "scene-p3c6",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p3c3",
+    "target": "scene-p3c4",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p3c5",
+    "target": "scene-p3c6",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p3c1",
+    "target": "loc-raskolnikov-room",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p3c3",
+    "target": "loc-raskolnikov-room",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p3c4",
+    "target": "loc-street",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p3c5",
+    "target": "loc-raskolnikov-room",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p3c6",
+    "target": "loc-raskolnikov-room",
+    "type": "場所"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p3c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-p3c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p3c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p3c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-zosimov",
+    "target": "scene-p3c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p3c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-p3c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p3c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p3c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "scene-p3c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-dunya",
+    "target": "scene-p3c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p3c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-zosimov",
+    "target": "scene-p3c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p3c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-porfiry",
+    "target": "scene-p3c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p3c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-mikolka",
+    "target": "scene-p3c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p3c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p3c6",
+    "type": "登場"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "scene-p3c6",
+    "type": "登場"
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "scene-p3c6",
+    "type": "登場"
+  }
+]

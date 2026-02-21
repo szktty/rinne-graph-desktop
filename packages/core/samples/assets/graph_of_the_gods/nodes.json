@@ -1,0 +1,92 @@
+[
+  {
+    "id": "titan-saturn",
+    "labels": ["titan"],
+    "properties": {
+      "$name": "saturn",
+      "$age": 10000
+    }
+  },
+  {
+    "id": "demigod-hercules",
+    "labels": ["demigod"],
+    "properties": {
+      "$name": "hercules",
+      "$age": 30
+    }
+  },
+  {
+    "id": "god-jupiter",
+    "labels": ["god"],
+    "properties": {
+      "$name": "jupiter",
+      "$age": 5000
+    }
+  },
+  {
+    "id": "human-alcmene",
+    "labels": ["human"],
+    "properties": {
+      "$name": "alcmene",
+      "$age": 45
+    }
+  },
+  {
+    "id": "monster-nemean",
+    "labels": ["monster"],
+    "properties": {
+      "$name": "nemean"
+    }
+  },
+  {
+    "id": "monster-hydra",
+    "labels": ["monster"],
+    "properties": {
+      "$name": "hydra"
+    }
+  },
+  {
+    "id": "monster-cerberus",
+    "labels": ["monster"],
+    "properties": {
+      "$name": "cerberus"
+    }
+  },
+  {
+    "id": "god-pluto",
+    "labels": ["god"],
+    "properties": {
+      "$name": "pluto",
+      "$age": 4000
+    }
+  },
+  {
+    "id": "god-neptune",
+    "labels": ["god"],
+    "properties": {
+      "$name": "neptune",
+      "$age": 4500
+    }
+  },
+  {
+    "id": "location-sky",
+    "labels": ["location"],
+    "properties": {
+      "$name": "sky"
+    }
+  },
+  {
+    "id": "location-sea",
+    "labels": ["location"],
+    "properties": {
+      "$name": "sea"
+    }
+  },
+  {
+    "id": "location-tartarus",
+    "labels": ["location"],
+    "properties": {
+      "$name": "tartarus"
+    }
+  }
+]

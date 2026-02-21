@@ -39,8 +39,8 @@ class SchemaDefinition {
     });
   }
 
-  /// Get display name for identifier (considering $ prefix)
-  String getDisplayName(String identifier, SchemaItemType type) {
+  /// Get name for identifier (considering $ prefix)
+  String getName(String identifier, SchemaItemType type) {
     // Remove $ prefix
     final cleanIdentifier =
         identifier.startsWith('\$') ? identifier.substring(1) : identifier;
@@ -59,7 +59,7 @@ class SchemaDefinition {
     }
 
     final definition = targetMap[cleanIdentifier];
-    return definition?.displayName ?? cleanIdentifier;
+    return definition?.name ?? cleanIdentifier;
   }
 
   /// Whether this is an empty schema definition
@@ -73,7 +73,7 @@ enum SchemaItemType { label, linkType, property }
 @immutable
 class SchemaItemDefinition {
   const SchemaItemDefinition({
-    this.displayName,
+    this.name,
     this.type,
     this.required,
     this.unique,
@@ -82,8 +82,8 @@ class SchemaItemDefinition {
     this.allowedConnections,
   });
 
-  /// Display name
-  final String? displayName;
+  /// The name of the schema item.
+  final String? name;
 
   /// Data type (for future extension)
   final String? type;
@@ -106,7 +106,7 @@ class SchemaItemDefinition {
   /// Create schema item definition from JSON
   factory SchemaItemDefinition.fromJson(Map<String, dynamic> json) {
     return SchemaItemDefinition(
-      displayName: json['display_name'] as String?,
+      name: json['name'] as String?,
       type: json['type'] as String?,
       required: json['required'] as bool?,
       unique: json['unique'] as bool?,

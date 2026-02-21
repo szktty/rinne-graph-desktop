@@ -1,0 +1,25 @@
+{
+  "labels": {
+    "titan": { "display_name": "Titan" },
+    "god": { "display_name": "God" },
+    "human": { "display_name": "Human" },
+    "demigod": { "display_name": "Demigod" },
+    "location": { "display_name": "Location" },
+    "monster": { "display_name": "Monster" }
+  },
+  "properties": {
+    "name": { "display_name": "Name", "type": "string" },
+    "age": { "display_name": "Age", "type": "integer" },
+    "type": { "display_name": "Type", "type": "string" },
+    "reason": { "display_name": "Reason", "type": "string" },
+    "time": { "display_name": "Time", "type": "integer" }
+  },
+  "link_types": {
+    "father": { "display_name": "Father Of" },
+    "mother": { "display_name": "Mother Of" },
+    "brother": { "display_name": "Brother Of" },
+    "battled": { "display_name": "Battled" },
+    "lives": { "display_name": "Lives In" },
+    "pet": { "display_name": "Pet Of" }
+  }
+}

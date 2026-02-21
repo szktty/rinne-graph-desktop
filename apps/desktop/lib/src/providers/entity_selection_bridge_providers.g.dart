@@ -32,7 +32,7 @@ final initializeEntitySelectionBridgeProvider =
 // ignore: unused_element
 typedef InitializeEntitySelectionBridgeRef = AutoDisposeProviderRef<void>;
 String _$entitySelectionBridgeHash() =>
-    r'4b1b0e8b8db436f0a83f7b1f3587b2dd4f7407bf';
+    r'e51f34dcc993db3ea485427da6e3afa391cebd2e';
 
 /// Provider that links entity selection state with the editor
 ///

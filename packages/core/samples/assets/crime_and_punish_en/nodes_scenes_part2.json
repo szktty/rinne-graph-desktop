@@ -1,0 +1,90 @@
+[
+  {
+    "id": "scene-p2c1",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 2",
+      "chapter": "1",
+      "context": "The night of the murder and the following day",
+      "day": 7,
+      "time": "Daytime",
+      "summary": "Raskolnikov returns to his room after the murders and falls into a stupor. He attempts to hide the blood-stained objects but his mind is severely impaired. A summons from the police station arrives; convinced he is about to be arrested, he presents himself — only to find the matter concerns unpaid rent. Relieved, he overhears talk of Alyona's murder in the station and faints. Back at his lodgings, he conceals the stolen items in a crack in the wall.",
+      "excerpt": "He lay there for a long time. Occasionally he seemed to wake and noticed that the dead of night had already come."
+    }
+  },
+  {
+    "id": "scene-p2c2",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 2",
+      "chapter": "2",
+      "context": "Falling ill — bedridden",
+      "day": 7,
+      "summary": "The day after hiding the evidence, Raskolnikov collapses with a mysterious fever. Razumikhin brings the doctor Zosimov to tend to him. In a semi-delirious state, Raskolnikov is desperate to hand the stolen purse and goods over to someone. He drifts between unconsciousness and half-wakefulness while Razumikhin nurses him devotedly.",
+      "excerpt": "'But what if they've already searched the place? What if they were there when I came home?'"
+    }
+  },
+  {
+    "id": "scene-p2c3",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 2",
+      "chapter": "3",
+      "context": "Regaining consciousness — Zamyotov's visit",
+      "day": 11,
+      "time": "Morning",
+      "summary": "Raskolnikov begins to recover consciousness in his sickbed. Razumikhin, Zosimov, and Nastasya are at his side. He is disturbed to learn that the police clerk Zamyotov paid a visit. He hears that a money order for thirty-five roubles has arrived from his mother. Razumikhin continues his devoted nursing and buys Raskolnikov new clothes.",
+      "excerpt": "Yet he had not been wholly unconscious throughout his illness. It was a feverish state shot through with delirium and half-awareness."
+    }
+  },
+  {
+    "id": "scene-p2c4",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 2",
+      "chapter": "4",
+      "context": "A dangerous conversation about the investigation",
+      "day": 11,
+      "summary": "Razumikhin, Zosimov, and Zamyotov gather and discuss the state of the investigation into the old woman's murder. The house painter Mikolka has come up as a suspect. Raskolnikov joins the conversation and makes provocative remarks that hint he might be the real killer. Zosimov grows concerned about Raskolnikov's mental state.",
+      "excerpt": "Zosimov was a tall, heavyset man with a clean-shaven but somewhat puffy, pallid face that had an unhealthy look."
+    }
+  },
+  {
+    "id": "scene-p2c5",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 2",
+      "chapter": "5",
+      "context": "Luzhin's first visit — driven away",
+      "day": 13,
+      "time": "Morning",
+      "summary": "Luzhin, Dunya's fiancé, pays his first call on Raskolnikov. He attempts to assert his superiority, but Raskolnikov rejects him with vehement hostility and sends him away. Luzhin retreats, biding his time. Razumikhin shares Raskolnikov's antipathy toward him. Raskolnikov gets up, dresses, and prepares to go out.",
+      "excerpt": "He was a man no longer young, prim and insufferably self-satisfied, with a wary and peevish expression."
+    }
+  },
+  {
+    "id": "scene-p2c6",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 2",
+      "chapter": "6",
+      "context": "Going out — conversation with Zamyotov — Marmeladov's fatal accident",
+      "day": 13,
+      "summary": "As Raskolnikov begins to recover, he ventures out. At the Crystal Palace tavern he runs into Zamyotov and makes remarks that virtually amount to a confession. He visits Alyona's apartment and bizarrely knocks on the wall. On his way home he witnesses Marmeladov struck down by a carriage, helps him, and is present at his death. He meets Sonya for the first time and gives her his remaining money. Returning home, he finds his mother and sister waiting.",
+      "excerpt": "But no sooner had she gone than he rose, latched the door, and began to unwrap the bundle of clothes that Razumikhin had brought and re-wrapped."
+    }
+  },
+  {
+    "id": "scene-p2c7",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 2",
+      "chapter": "7",
+      "context": "Reunion with his mother and sister",
+      "day": 13,
+      "time": "Night",
+      "summary": "His mother Pulkheria and sister Dunya arrive in St. Petersburg and are reunited with Raskolnikov. The scene is deeply emotional, yet Raskolnikov is strangely distant and incapable of normal interaction. Tension over the situation with Luzhin hangs in the air. Razumikhin offers to look after the two women. Raskolnikov accompanies his mother and sister to their lodgings.",
+      "excerpt": "In the middle of the street stood a luxurious private carriage drawn by a pair of dapple-gray thoroughbreds, with no passenger inside."
+    }
+  }
+]

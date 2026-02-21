@@ -9,14 +9,6 @@ class StackTemplateService {
   static List<StackTemplateManifest> getAvailableStackTemplates() {
     return [
       const StackTemplateManifest(
-        id: 'team_sample',
-        displayName: 'Software Development Team Sample',
-        fullAssetPath: 'packages/core_samples/assets/team',
-        description: 'Template data for a small software development team',
-        tags: ['template', 'development', 'team', 'software'],
-        category: 'business',
-      ),
-      const StackTemplateManifest(
         id: 'meiji_sample',
         displayName: 'Bakumatsu Ryoma Relationship Chart',
         fullAssetPath: 'packages/core_samples/assets/meiji',
@@ -24,15 +16,47 @@ class StackTemplateService {
             'Template data for Bakumatsu historical figures centered around Sakamoto Ryoma',
         tags: ['template', 'history', 'japan', 'meiji', 'ryoma'],
         category: 'history',
+        language: 'ja',
       ),
       const StackTemplateManifest(
-        id: 'simple_graph_sample',
-        displayName: 'Simple Graph Sample',
-        fullAssetPath: 'packages/core_samples/assets/simple_graph',
+        id: 'graph_of_the_gods',
+        displayName: 'Graph of the Gods',
+        fullAssetPath: 'packages/core_samples/assets/graph_of_the_gods',
         description:
-            'A sample stack with a simple graph structure. Shows basic node and link relationships without list-type properties.',
-        tags: ['template', 'simple', 'basic', 'graph'],
-        category: 'basic',
+            'The example graph used in the JanusGraph documentation to illustrate the core features of a graph database.',
+        tags: ['sample', 'janusgraph', 'mythology', 'graph', 'english'],
+        category: 'mythology',
+        language: 'en',
+      ),
+      const StackTemplateManifest(
+        id: 'graph_of_the_gods_ja',
+        displayName: 'ギリシャ神のグラフ',
+        fullAssetPath: 'packages/core_samples/assets/graph_of_the_gods_ja',
+        description:
+            'JanusGraphのドキュメントで使用されている、グラフデータベースの主要機能を示すためのサンプルグラフ。',
+        tags: ['サンプル', 'janusgraph', '神話', 'グラフ', '日本語'],
+        category: 'mythology',
+        language: 'ja',
+      ),
+      const StackTemplateManifest(
+        id: 'crime_and_punish_ja',
+        displayName: '罪と罰',
+        fullAssetPath: 'packages/core_samples/assets/crime_and_punish_ja',
+        description:
+            'ドストエフスキーの小説『罪と罰』の登場人物・場面・場所の関係図。全六篇＋エピローグを収録。',
+        tags: ['サンプル', '文学', '小説', 'ロシア', 'ドストエフスキー', '日本語'],
+        category: 'literature',
+        language: 'ja',
+      ),
+      const StackTemplateManifest(
+        id: 'crime_and_punish_en',
+        displayName: 'Crime and Punishment',
+        fullAssetPath: 'packages/core_samples/assets/crime_and_punish_en',
+        description:
+            "A knowledge graph of characters, scenes, and locations from Dostoevsky's novel 'Crime and Punishment'. Covers all six parts and the epilogue.",
+        tags: ['sample', 'literature', 'novel', 'russian', 'dostoevsky', 'english'],
+        category: 'literature',
+        language: 'en',
       ),
     ];
   }

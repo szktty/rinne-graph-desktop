@@ -1,0 +1,69 @@
+[
+  {
+    "source": "char-raskolnikov",
+    "target": "loc-raskolnikov-room",
+    "type": "居住"
+  },
+  {
+    "source": "char-alyona",
+    "target": "loc-alyona-apartment",
+    "type": "居住"
+  },
+  {
+    "source": "char-lizaveta",
+    "target": "loc-alyona-apartment",
+    "type": "居住"
+  },
+  {
+    "source": "char-marmeladov",
+    "target": "loc-marmeladov-home",
+    "type": "居住"
+  },
+  {
+    "source": "char-katerina",
+    "target": "loc-marmeladov-home",
+    "type": "居住"
+  },
+  {
+    "source": "char-sonya",
+    "target": "loc-marmeladov-home",
+    "type": "居住",
+    "properties": {
+      "備考": "家族の元の住まい。のちに転居"
+    }
+  },
+  {
+    "source": "char-razumikhin",
+    "target": "loc-razumikhin-home",
+    "type": "居住"
+  },
+  {
+    "source": "char-sonya",
+    "target": "loc-sonya-room",
+    "type": "居住"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "loc-sonya-room",
+    "type": "居住",
+    "properties": {
+      "備考": "隣室に滞在"
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "loc-siberia",
+    "type": "居住",
+    "properties": {
+      "備考": "流刑地として服役"
+    }
+  },
+  {
+    "source": "char-sonya",
+    "target": "loc-siberia",
+    "type": "居住",
+    "properties": {
+      "備考": "ラスコーリニコフに寄り添い近くの町へ移住"
+    }
+  }
+]

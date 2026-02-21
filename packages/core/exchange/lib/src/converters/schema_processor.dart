@@ -128,7 +128,7 @@ class SchemaProcessor {
 
     return headers.map((header) {
       if (header.startsWith('\$')) {
-        return schema.getDisplayName(header, SchemaItemType.property);
+        return schema.getName(header, SchemaItemType.property);
       }
       return header;
     }).toList();
@@ -145,7 +145,7 @@ class SchemaProcessor {
     }
 
     if (value.startsWith('\$')) {
-      return schema.getDisplayName(value, type);
+      return schema.getName(value, type);
     }
     return value;
   }
@@ -156,7 +156,7 @@ class SchemaProcessor {
 
     return labels.map((label) {
       if (label is String && label.startsWith('\$')) {
-        return schema.getDisplayName(label, SchemaItemType.label);
+        return schema.getName(label, SchemaItemType.label);
       }
       return label.toString();
     }).toList();
@@ -165,7 +165,7 @@ class SchemaProcessor {
   /// Processes link type
   static String _processLinkType(dynamic type, SchemaDefinition schema) {
     if (type is String && type.startsWith('\$')) {
-      return schema.getDisplayName(type, SchemaItemType.linkType);
+      return schema.getName(type, SchemaItemType.linkType);
     }
     return type.toString();
   }
@@ -182,7 +182,7 @@ class SchemaProcessor {
     properties.forEach((key, value) {
       final processedKey =
           key.startsWith('\$')
-              ? schema.getDisplayName(key, SchemaItemType.property)
+              ? schema.getName(key, SchemaItemType.property)
               : key;
       processedProperties[processedKey] = value;
     });

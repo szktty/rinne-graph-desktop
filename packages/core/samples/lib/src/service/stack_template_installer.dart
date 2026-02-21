@@ -173,6 +173,8 @@ class StackTemplateInstaller {
   }) async {
     final metadata = manifest['metadata'] as Map<String, dynamic>? ?? {};
 
+    final language = metadata['language'] as String?;
+
     final info = {
       'name': metadata['name'] ?? 'Unknown Stack',
       'description': metadata['description'] ?? '',
@@ -183,6 +185,7 @@ class StackTemplateInstaller {
       'tags': metadata['tags'] ?? [],
       if (isSample) 'isSample': true,
       if (sampleTemplateId != null) 'sampleTemplateId': sampleTemplateId,
+      if (language != null) 'language': language,
     };
 
     final infoFile = File(path.join(stackDir.path, 'meta', 'info.json'));

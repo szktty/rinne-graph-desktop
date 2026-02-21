@@ -58,7 +58,11 @@ class WelcomeScreenActionButtons extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) async {
-    final createdStack = await StackManagementService.createNewStack(context);
+    final language = Localizations.localeOf(context).languageCode;
+    final createdStack = await StackManagementService.createNewStack(
+      context,
+      language: language,
+    );
 
     if (createdStack != null && context.mounted) {
       // Open created stack and transition to graph navigation screen

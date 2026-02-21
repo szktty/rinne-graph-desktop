@@ -7,7 +7,7 @@ part of 'graph_providers.dart';
 // **************************************************************************
 
 String _$activeStackGraphStorageHash() =>
-    r'3d60868197057a35924b795980a0aae2b6e27731';
+    r'b9cbc7d38769d6dfdd29a7cde05a7cb60aa201ee';
 
 /// Provider for GraphStorage for the active stack
 ///

@@ -47,5 +47,29 @@ final selectedWelcomeStackProvider = AutoDisposeNotifierProvider<
 );
 
 typedef _$SelectedWelcomeStack = AutoDisposeNotifier<core_stack.Stack?>;
+String _$welcomeLanguageFilterHash() =>
+    r'dc37f350778dd18930072819710216cde29cc2f3';
+
+/// Provider that manages the language filter for the welcome screen.
+///
+/// - `null` = show all languages (no filter)
+/// - `'__unspecified__'` = show only stacks with no language set
+/// - any ISO 639-1 code (e.g. `'en'`, `'ja'`) = show only that language
+///
+/// Copied from [WelcomeLanguageFilter].
+@ProviderFor(WelcomeLanguageFilter)
+final welcomeLanguageFilterProvider =
+    AutoDisposeNotifierProvider<WelcomeLanguageFilter, String?>.internal(
+      WelcomeLanguageFilter.new,
+      name: r'welcomeLanguageFilterProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$welcomeLanguageFilterHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$WelcomeLanguageFilter = AutoDisposeNotifier<String?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -88,3 +88,50 @@ enum StackDisplayModeType {
 final assetStackArchiveStateProvider = StateProvider<Map<String, bool>>(
   (ref) => {},
 );
+
+/// Sentinel value for "unspecified language" filter option.
+const welcomeLanguageFilterUnspecified = '__unspecified__';
+
+/// Provider that manages the language filter for the welcome screen.
+///
+/// - `null` = show all languages (no filter)
+/// - `'__unspecified__'` = show only stacks with no language set
+/// - any ISO 639-1 code (e.g. `'en'`, `'ja'`) = show only that language
+@riverpod
+class WelcomeLanguageFilter extends _$WelcomeLanguageFilter {
+  @override
+  String? build() {
+    _loadSettings();
+    return null;
+  }
+
+  void _loadSettings() async {
+    try {
+      final storageService = ref.read(settingsStorageServiceProvider);
+      final value = await storageService.getString('welcomeLanguageFilter');
+      if (value != null) {
+        state = value;
+      }
+    } catch (e) {
+      debugPrint('Error loading language filter settings: $e');
+    }
+  }
+
+  void setFilter(String? value) {
+    state = value;
+    _saveSettings(value);
+  }
+
+  void _saveSettings(String? value) async {
+    try {
+      final storageService = ref.read(settingsStorageServiceProvider);
+      if (value == null) {
+        await storageService.remove('welcomeLanguageFilter');
+      } else {
+        await storageService.setString('welcomeLanguageFilter', value);
+      }
+    } catch (e) {
+      debugPrint('Error saving language filter settings: $e');
+    }
+  }
+}

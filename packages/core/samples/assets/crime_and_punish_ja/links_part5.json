@@ -1,0 +1,147 @@
+[
+  {
+    "source": "scene-p5c1",
+    "target": "scene-p5c2",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p5c2",
+    "target": "scene-p5c3",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p5c3",
+    "target": "scene-p5c4",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p5c4",
+    "target": "scene-p5c5",
+    "type": "次の場面"
+  },
+  {
+    "source": "scene-p5c2",
+    "target": "scene-p5c3",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p5c4",
+    "target": "scene-p5c5",
+    "type": "同時"
+  },
+  {
+    "source": "scene-p5c1",
+    "target": "loc-raskolnikov-room",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p5c2",
+    "target": "loc-marmeladov-home",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p5c3",
+    "target": "loc-marmeladov-home",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p5c4",
+    "target": "loc-sonya-room",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p5c5",
+    "target": "loc-street",
+    "type": "場所"
+  },
+  {
+    "source": "scene-p5c5",
+    "target": "loc-sonya-room",
+    "type": "場所"
+  },
+  {
+    "source": "char-luzhin",
+    "target": "scene-p5c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-lebezyatnikov",
+    "target": "scene-p5c1",
+    "type": "登場"
+  },
+  {
+    "source": "char-katerina",
+    "target": "scene-p5c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-p5c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p5c2",
+    "type": "登場"
+  },
+  {
+    "source": "char-luzhin",
+    "target": "scene-p5c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-p5c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p5c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-katerina",
+    "target": "scene-p5c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-lebezyatnikov",
+    "target": "scene-p5c3",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p5c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-p5c4",
+    "type": "登場"
+  },
+  {
+    "source": "char-katerina",
+    "target": "scene-p5c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-sonya",
+    "target": "scene-p5c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "scene-p5c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "scene-p5c5",
+    "type": "登場"
+  },
+  {
+    "source": "char-lebezyatnikov",
+    "target": "scene-p5c5",
+    "type": "登場"
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "titan-saturn",
+    "labels": ["titan"],
+    "properties": {
+      "$name": "サトゥルヌス",
+      "$age": 10000
+    }
+  },
+  {
+    "id": "demigod-hercules",
+    "labels": ["demigod"],
+    "properties": {
+      "$name": "ヘラクレス",
+      "$age": 30
+    }
+  },
+  {
+    "id": "god-jupiter",
+    "labels": ["god"],
+    "properties": {
+      "$name": "ユピテル",
+      "$age": 5000
+    }
+  },
+  {
+    "id": "human-alcmene",
+    "labels": ["human"],
+    "properties": {
+      "$name": "アルクメネ",
+      "$age": 45
+    }
+  },
+  {
+    "id": "monster-nemean",
+    "labels": ["monster"],
+    "properties": {
+      "$name": "ネメアの獅子"
+    }
+  },
+  {
+    "id": "monster-hydra",
+    "labels": ["monster"],
+    "properties": {
+      "$name": "ヒュドラ"
+    }
+  },
+  {
+    "id": "monster-cerberus",
+    "labels": ["monster"],
+    "properties": {
+      "$name": "ケルベロス"
+    }
+  },
+  {
+    "id": "god-pluto",
+    "labels": ["god"],
+    "properties": {
+      "$name": "プルート",
+      "$age": 4000
+    }
+  },
+  {
+    "id": "god-neptune",
+    "labels": ["god"],
+    "properties": {
+      "$name": "ネプトゥーヌス",
+      "$age": 4500
+    }
+  },
+  {
+    "id": "location-sky",
+    "labels": ["location"],
+    "properties": {
+      "$name": "空"
+    }
+  },
+  {
+    "id": "location-sea",
+    "labels": ["location"],
+    "properties": {
+      "$name": "海"
+    }
+  },
+  {
+    "id": "location-tartarus",
+    "labels": ["location"],
+    "properties": {
+      "$name": "タルタロス"
+    }
+  }
+]

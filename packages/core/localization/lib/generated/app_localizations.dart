@@ -949,6 +949,36 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'ウェルカムが閉じられるまで待機'**
   String get command_welcome_wait_closed;
+
+  /// ウェルカム画面：全言語フィルターオプション
+  ///
+  /// In ja, this message translates to:
+  /// **'すべての言語'**
+  String get welcome_filter_language_all;
+
+  /// ウェルカム画面：言語未指定フィルターオプション
+  ///
+  /// In ja, this message translates to:
+  /// **'未指定'**
+  String get welcome_filter_language_unspecified;
+
+  /// ウェルカム画面：言語フィルタードロップダウンのラベル
+  ///
+  /// In ja, this message translates to:
+  /// **'言語'**
+  String get welcome_filter_language_label;
+
+  /// 言語名：英語
+  ///
+  /// In ja, this message translates to:
+  /// **'英語'**
+  String get language_name_en;
+
+  /// 言語名：日本語
+  ///
+  /// In ja, this message translates to:
+  /// **'日本語'**
+  String get language_name_ja;
 }
 
 class _AppLocalizationsDelegate

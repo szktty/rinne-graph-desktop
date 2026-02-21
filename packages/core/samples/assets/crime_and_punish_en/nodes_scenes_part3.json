@@ -1,0 +1,77 @@
+[
+  {
+    "id": "scene-p3c1",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 3",
+      "chapter": "1",
+      "context": "Confrontation with his mother and sister — the Luzhin problem",
+      "day": 14,
+      "time": "Evening",
+      "summary": "His mother and sister come to visit. Raskolnikov insists that his mother break off all ties with Luzhin, and the emotional clash continues. Razumikhin steps in to mediate, while Dunya takes a cautious position regarding the engagement. Zosimov is also present and observes Raskolnikov's mental state. Pulkheria is bewildered by her son's transformation.",
+      "excerpt": "Raskolnikov raised himself and sat up on the sofa."
+    }
+  },
+  {
+    "id": "scene-p3c2",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 3",
+      "chapter": "2",
+      "context": "Razumikhin visits the mother and daughter",
+      "day": 14,
+      "time": "Morning",
+      "summary": "Razumikhin visits the women at their lodgings and takes them under his care. He begins to develop romantic feelings for Dunya. A letter arrives from Luzhin proposing a meeting the following day. Raskolnikov prepares to present himself to Porfiry.",
+      "excerpt": "Full of earnest solicitude, Razumikhin woke just past seven the next morning."
+    }
+  },
+  {
+    "id": "scene-p3c3",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 3",
+      "chapter": "3",
+      "context": "Mother and sister visit the lodgings — departure for Porfiry",
+      "day": 14,
+      "summary": "Raskolnikov's mother and sister visit him at his lodgings. Zosimov is also present. That day, Raskolnikov is due to visit the examining magistrate Porfiry, with Razumikhin accompanying him. Raskolnikov remains somehow aloof even toward his mother and sister.",
+      "excerpt": "'He's well, he's well!' Zosimov called out cheerfully to greet the two women as they entered."
+    }
+  },
+  {
+    "id": "scene-p3c4",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 3",
+      "chapter": "4",
+      "context": "First confrontation with Porfiry",
+      "day": 14,
+      "time": "Afternoon",
+      "summary": "Raskolnikov is questioned in Porfiry's office. Porfiry brings up an old article Raskolnikov wrote 'On Crime' and questions him about his theory of the 'extraordinary man.' Raskolnikov elaborates his doctrine while visibly unsettled. Porfiry appears outwardly friendly but eyes him with suspicion. The interrogation is suddenly interrupted when Mikolka bursts in confessing to the murder.",
+      "excerpt": "The door opened quietly, and a girl entered, glancing timidly around the room."
+    }
+  },
+  {
+    "id": "scene-p3c5",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 3",
+      "chapter": "5",
+      "context": "A stranger's accusation — nightmare — Svidrigailov appears",
+      "day": 14,
+      "summary": "On his way back from Porfiry's office, a mysterious stranger calls out to Raskolnikov with the word 'murderer.' Deeply shaken, he returns home and has a nightmare — Alyona rises from the dead and laughs at him. When he wakes, Svidrigailov is standing in his room.",
+      "excerpt": "But the man had already stepped inside. He entered with an expression of straining to suppress a grin."
+    }
+  },
+  {
+    "id": "scene-p3c6",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 3",
+      "chapter": "6",
+      "context": "Conversation with Svidrigailov",
+      "day": 15,
+      "summary": "Svidrigailov visits Raskolnikov's room. He announces that Marfa is dead and the obstacle to pursuing Dunya is gone, then asks Raskolnikov to arrange a meeting with her. Raskolnikov refuses, but Svidrigailov insists he wishes to give Dunya an inheritance of three thousand roubles. Raskolnikov cannot fathom Svidrigailov's true intentions.",
+      "excerpt": "'I don't believe it — I can't believe it!' Razumikhin exclaimed, straining desperately to refute Raskolnikov's reasoning."
+    }
+  }
+]

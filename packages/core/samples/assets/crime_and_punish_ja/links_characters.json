@@ -1,0 +1,200 @@
+[
+  {
+    "source": "char-raskolnikov",
+    "target": "alias-raskolnikov-1",
+    "type": "別名"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "alias-raskolnikov-2",
+    "type": "別名"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "alias-raskolnikov-3",
+    "type": "別名"
+  },
+  {
+    "source": "char-sonya",
+    "target": "alias-sonya-1",
+    "type": "別名"
+  },
+  {
+    "source": "char-sonya",
+    "target": "alias-sonya-2",
+    "type": "別名"
+  },
+  {
+    "source": "char-porfiry",
+    "target": "alias-porfiry-1",
+    "type": "別名"
+  },
+  {
+    "source": "char-dunya",
+    "target": "alias-dunya-1",
+    "type": "別名"
+  },
+  {
+    "source": "char-dunya",
+    "target": "alias-dunya-2",
+    "type": "別名"
+  },
+  {
+    "source": "char-katerina",
+    "target": "alias-katerina-1",
+    "type": "別名"
+  },
+  {
+    "source": "char-lizaveta",
+    "target": "alias-lizaveta-1",
+    "type": "別名"
+  },
+  {
+    "source": "char-marmeladov",
+    "target": "alias-marmeladov-1",
+    "type": "別名"
+  },
+  {
+    "source": "char-alyona",
+    "target": "alias-alyona-1",
+    "type": "別名"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "alias-pulkheria-1",
+    "type": "別名"
+  },
+  {
+    "source": "char-luzhin",
+    "target": "alias-luzhin-1",
+    "type": "別名"
+  },
+  {
+    "source": "char-mikolka",
+    "target": "alias-mikolka-1",
+    "type": "別名"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-razumikhin",
+    "type": "友人"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-dunya",
+    "type": "家族",
+    "properties": {
+      "続柄": "兄"
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-pulkheria",
+    "type": "家族",
+    "properties": {
+      "続柄": "息子"
+    }
+  },
+  {
+    "source": "char-dunya",
+    "target": "char-pulkheria",
+    "type": "家族",
+    "properties": {
+      "続柄": "娘"
+    }
+  },
+  {
+    "source": "char-dunya",
+    "target": "char-luzhin",
+    "type": "知人",
+    "properties": {
+      "続柄": "婚約者"
+    }
+  },
+  {
+    "source": "char-dunya",
+    "target": "char-svidrigailov",
+    "type": "知人",
+    "properties": {
+      "続柄": "元雇い主"
+    }
+  },
+  {
+    "source": "char-svidrigailov",
+    "target": "char-marfa",
+    "type": "家族",
+    "properties": {
+      "続柄": "夫"
+    }
+  },
+  {
+    "source": "char-marmeladov",
+    "target": "char-sonya",
+    "type": "家族",
+    "properties": {
+      "続柄": "父"
+    }
+  },
+  {
+    "source": "char-marmeladov",
+    "target": "char-katerina",
+    "type": "家族",
+    "properties": {
+      "続柄": "夫"
+    }
+  },
+  {
+    "source": "char-sonya",
+    "target": "char-katerina",
+    "type": "家族",
+    "properties": {
+      "続柄": "継子"
+    }
+  },
+  {
+    "source": "char-alyona",
+    "target": "char-lizaveta",
+    "type": "家族",
+    "properties": {
+      "続柄": "異母姉"
+    }
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-alyona",
+    "type": "対立"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-luzhin",
+    "type": "対立"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-porfiry",
+    "type": "対立"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-marmeladov",
+    "type": "知人"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-sonya",
+    "type": "知人"
+  },
+  {
+    "source": "char-raskolnikov",
+    "target": "char-nastasya",
+    "type": "知人"
+  },
+  {
+    "source": "char-pulkheria",
+    "target": "char-vakhrushina",
+    "type": "知人",
+    "properties": {
+      "続柄": "旧知"
+    }
+  }
+]

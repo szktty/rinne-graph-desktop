@@ -230,7 +230,7 @@ class GlobalPropertyTypeManager {
     final defaultDefinitions = <String, GlobalPropertyTypeDefinition>{
       'name': GlobalPropertyTypeDefinition(
         typeName: 'text',
-        displayName: 'Name',
+        name: 'Name',
         description: 'Entity name',
 
         constraints: {'max_length': 100},
@@ -240,7 +240,7 @@ class GlobalPropertyTypeManager {
       ),
       'description': GlobalPropertyTypeDefinition(
         typeName: 'text',
-        displayName: 'Description',
+        name: 'Description',
         description: 'Entity description',
 
         constraints: {'max_length': 500},
@@ -254,7 +254,7 @@ class GlobalPropertyTypeManager {
       ),
       'created_at': GlobalPropertyTypeDefinition(
         typeName: 'date',
-        displayName: 'Created date',
+        name: 'Created date',
         description: 'Entity creation date',
 
         constraints: {},
@@ -264,7 +264,7 @@ class GlobalPropertyTypeManager {
       ),
       'is_active': GlobalPropertyTypeDefinition(
         typeName: 'boolean',
-        displayName: 'Active',
+        name: 'Active',
         description: 'Active status',
 
         constraints: {},

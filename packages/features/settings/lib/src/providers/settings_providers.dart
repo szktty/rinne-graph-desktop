@@ -1,76 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:core_settings/core_settings.dart';
 import 'package:core_themes/core_themes.dart' as core_themes;
-import '../models/settings.dart';
 
 part 'settings_providers.g.dart';
-
-/// Provider that manages application settings.
-@riverpod
-class SettingsManager extends _$SettingsManager {
-  @override
-  Settings build() {
-    // Set initial values and load settings asynchronously.
-    _loadSettings();
-    return Settings.defaults();
-  }
-
-  /// Loads settings asynchronously.
-  void _loadSettings() async {
-    try {
-      final storageService = ref.read(settingsStorageServiceProvider);
-      final json = await storageService.getString('settings') ?? '{}';
-      final settings = Settings.fromJson(jsonDecode(json));
-      state = settings;
-      debugPrint('Settings loaded: $settings');
-    } catch (e) {
-      debugPrint('Failed to decode settings JSON: $e');
-    }
-  }
-
-  /// Updates and saves settings.
-  void updateSettings(Settings settings) {
-    state = settings;
-    _saveSettings(settings);
-    _syncWithCoreThemes(settings);
-  }
-
-  /// Updates theme color type.
-  void updateThemeColorType(String themeColorType) {
-    final newSettings = state.copyWith(themeColorType: themeColorType);
-    updateSettings(newSettings);
-  }
-
-  /// Syncs with core_themes package.
-  void _syncWithCoreThemes(Settings settings) {
-    try {
-      // テーマカラータイプの同期
-      final themeColorType = core_themes.ThemeColorType.values.firstWhere(
-        (e) => e.name == settings.themeColorType,
-        orElse: () => core_themes.ThemeColorType.blue,
-      );
-      ref
-          .read(core_themes.themeColorTypeProvider.notifier)
-          .setThemeColor(themeColorType);
-    } catch (e) {
-      debugPrint('Failed to sync with core_themes: $e');
-    }
-  }
-
-  /// Saves settings.
-  void _saveSettings(Settings settings) async {
-    try {
-      final storageService = ref.read(settingsStorageServiceProvider);
-      final json = jsonEncode(settings.toJson());
-      await storageService.setString('settings', json);
-      debugPrint('Settings saved: $settings');
-    } catch (e) {
-      debugPrint('Error saving settings: $e');
-    }
-  }
-}
 
 /// Provider that manages the active theme.
 @riverpod
@@ -79,6 +12,7 @@ class ActiveTheme extends _$ActiveTheme {
   core_themes.AppThemeData build() {
     // Initialize theme based on settings.
     final settings = ref.watch(settingsManagerProvider);
+    _syncThemeColor(settings);
     return _getThemeFromSettings(settings);
   }
 
@@ -105,6 +39,21 @@ class ActiveTheme extends _$ActiveTheme {
   String _getEffectiveThemeName() {
     // TODO: Implement system theme detection logic.
     return 'system';
+  }
+
+  /// Syncs theme color type with core_themes.
+  void _syncThemeColor(Settings settings) {
+    try {
+      final themeColorType = core_themes.ThemeColorType.values.firstWhere(
+        (e) => e.name == settings.themeColorType,
+        orElse: () => core_themes.ThemeColorType.blue,
+      );
+      ref
+          .read(core_themes.themeColorTypeProvider.notifier)
+          .setThemeColor(themeColorType);
+    } catch (e) {
+      debugPrint('Failed to sync with core_themes: $e');
+    }
   }
 
   /// Sets the theme manually.

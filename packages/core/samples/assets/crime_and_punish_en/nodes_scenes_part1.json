@@ -1,0 +1,91 @@
+[
+  {
+    "id": "scene-p1c1",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 1",
+      "chapter": "1",
+      "context": "Eve of the plan — reconnaissance",
+      "day": 1,
+      "time": "Evening",
+      "summary": "On a sweltering midsummer evening, Raskolnikov slips out of his lodgings and scouts out the old moneylender Alyona's apartment. The narrative reveals the inner world of a young man driven to the edge by poverty and despair, and his obsessive fixation on 'a certain plan.'",
+      "excerpt": "He stepped out into the street, as though overcome by hesitation, and slowly turned toward the K— Bridge."
+    }
+  },
+  {
+    "id": "scene-p1c2",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 1",
+      "chapter": "2",
+      "context": "Meeting Marmeladov in the tavern",
+      "day": 1,
+      "summary": "On his way back from the reconnaissance, Raskolnikov meets a retired civil servant named Marmeladov in a tavern. Marmeladov tearfully recounts how his daughter Sonya came to become a prostitute. Raskolnikov escorts him home the following morning.",
+      "excerpt": "The tavern was small and squalid, filled with tradesmen, carters, and cab drivers."
+    }
+  },
+  {
+    "id": "scene-p1c3",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 1",
+      "chapter": "3",
+      "context": "Letter from his mother",
+      "day": 3,
+      "summary": "Back at his lodgings, Raskolnikov receives a long letter from his mother Pulkheria. She describes how his sister Dunya was falsely accused while in service at the Svidrigailov household, and reports her engagement to the lawyer Luzhin. Raskolnikov is seized with fierce anger over the engagement.",
+      "excerpt": "'Rodya, it has been a month and a half since I last wrote to you — how it has tortured me, you cannot imagine.'"
+    }
+  },
+  {
+    "id": "scene-p1c4",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 1",
+      "chapter": "4",
+      "context": "Anger at the letter — wandering the streets",
+      "day": 4,
+      "time": "Night",
+      "summary": "After reading the letter, Raskolnikov wanders the streets consumed by rage and anguish. He notices a drunken girl and considers helping her, then changes his mind and walks away. He thinks of asking Razumikhin for work but does nothing about it. Overhearing Lizaveta mention her plans to be out the following day, he resolves to carry out 'the plan.'",
+      "excerpt": "When he had finished the letter, he lay on his back on the sofa as though he had fainted, staring blankly at the ceiling for a long while."
+    }
+  },
+  {
+    "id": "scene-p1c5",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 1",
+      "chapter": "5",
+      "context": "A dream and wavering over the plan",
+      "day": 5,
+      "time": "Evening",
+      "summary": "Raskolnikov sets out toward Razumikhin's but turns back. Exhausted, he falls asleep in the grass on an island and dreams a harrowing childhood memory of a horse beaten to death. On waking he feels revulsion at the plan, but upon overhearing at the market that Lizaveta will be away the next day, he makes his final decision to act.",
+      "excerpt": "Late the following evening, when the first period had ended and the next had begun, Raskolnikov lay asleep in the grass on the island."
+    }
+  },
+  {
+    "id": "scene-p1c6",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 1",
+      "chapter": "6",
+      "context": "Preparations for the crime — departure",
+      "day": 6,
+      "time": "Evening (just past 7 p.m.)",
+      "summary": "The day of the murder. Raskolnikov obtains an axe and prepares to go to the old woman's apartment. He conceals his tools while Nastasya is away, then sets out on unsteady legs. Along the way he glances at a clock and confirms it is just past seven.",
+      "excerpt": "Glancing sideways into a small shop, he saw the wall clock there already showed past ten minutes after seven."
+    }
+  },
+  {
+    "id": "scene-p1c7",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 1",
+      "chapter": "7",
+      "context": "The murder",
+      "day": 6,
+      "time": "Night (around 7:30 p.m.)",
+      "summary": "Raskolnikov gains entry to Alyona's apartment and kills her with the axe. When Lizaveta unexpectedly returns, he kills her on impulse as well. With Koch and Mikolka appearing outside the door, he barely manages to escape and return to his lodgings.",
+      "excerpt": "He turned the axe around, gripped it by the blunt end, raised it above his head, and brought it down with full force upon the old woman's skull."
+    }
+  }
+]

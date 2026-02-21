@@ -11,6 +11,7 @@ class StackInfo {
     this.tags = const [],
     this.isSample = false,
     this.sampleTemplateId,
+    this.language,
   });
 
   factory StackInfo.fromJson(Map<String, dynamic> json) {
@@ -42,6 +43,7 @@ class StackInfo {
       tags: (json['tags'] as List<dynamic>?)?.cast<String>() ?? [],
       isSample: json['isSample'] as bool? ?? false,
       sampleTemplateId: json['sampleTemplateId'] as String?,
+      language: json['language'] as String?,
     );
   }
   final String name;
@@ -54,6 +56,7 @@ class StackInfo {
   final List<String> tags;
   final bool isSample;
   final String? sampleTemplateId;
+  final String? language;
 
   Map<String, dynamic> toJson() {
     return {
@@ -67,6 +70,7 @@ class StackInfo {
       'tags': tags,
       if (isSample) 'isSample': isSample,
       if (sampleTemplateId != null) 'sampleTemplateId': sampleTemplateId,
+      if (language != null) 'language': language,
     };
   }
 
@@ -81,6 +85,7 @@ class StackInfo {
     List<String>? tags,
     bool? isSample,
     String? sampleTemplateId,
+    String? language,
   }) {
     return StackInfo(
       name: name ?? this.name,
@@ -93,6 +98,7 @@ class StackInfo {
       tags: tags ?? this.tags,
       isSample: isSample ?? this.isSample,
       sampleTemplateId: sampleTemplateId ?? this.sampleTemplateId,
+      language: language ?? this.language,
     );
   }
 
@@ -110,6 +116,7 @@ class StackInfo {
           version == other.version &&
           isSample == other.isSample &&
           sampleTemplateId == other.sampleTemplateId &&
+          language == other.language &&
           // Using ListEquality is more robust, but here we compare simply
           _listEquals(tags, other.tags);
 
@@ -125,6 +132,7 @@ class StackInfo {
     version,
     isSample,
     sampleTemplateId,
+    language,
     Object.hashAll(tags), // List hashCode
   );
 

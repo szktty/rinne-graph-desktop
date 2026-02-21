@@ -1,0 +1,101 @@
+{
+  "labels": {
+    "Character": {
+      "name": "Character"
+    },
+    "Alias": {
+      "name": "Alias"
+    },
+    "Scene": {
+      "name": "Scene"
+    },
+    "Location": {
+      "name": "Location"
+    },
+    "Item": {
+      "name": "Item"
+    }
+  },
+  "properties": {
+    "name": {
+      "name": "name"
+    },
+    "description": {
+      "name": "description"
+    },
+    "role": {
+      "name": "role"
+    },
+    "part": {
+      "name": "part"
+    },
+    "chapter": {
+      "name": "chapter"
+    },
+    "context": {
+      "name": "context"
+    },
+    "day": {
+      "name": "day"
+    },
+    "time": {
+      "name": "time"
+    },
+    "summary": {
+      "name": "summary"
+    },
+    "excerpt": {
+      "name": "excerpt"
+    },
+    "relationship": {
+      "name": "relationship"
+    },
+    "note": {
+      "name": "note"
+    },
+    "counterpart": {
+      "name": "counterpart"
+    }
+  },
+  "link_types": {
+    "alias": {
+      "name": "alias"
+    },
+    "appears_in": {
+      "name": "appears_in"
+    },
+    "next_scene": {
+      "name": "next_scene"
+    },
+    "concurrent": {
+      "name": "concurrent"
+    },
+    "located_at": {
+      "name": "located_at"
+    },
+    "friend": {
+      "name": "friend"
+    },
+    "family": {
+      "name": "family"
+    },
+    "acquaintance": {
+      "name": "acquaintance"
+    },
+    "antagonist": {
+      "name": "antagonist"
+    },
+    "resides_at": {
+      "name": "resides_at"
+    },
+    "possesses": {
+      "name": "possesses"
+    },
+    "transfers": {
+      "name": "transfers"
+    },
+    "uses": {
+      "name": "uses"
+    }
+  }
+}

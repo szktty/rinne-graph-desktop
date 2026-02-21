@@ -9,6 +9,7 @@ class StackTemplateManifest {
     this.description,
     this.tags = const [],
     this.category = 'template',
+    this.language,
   });
 
   /// Unique identifier for the stack template
@@ -29,6 +30,9 @@ class StackTemplateManifest {
   /// Category
   final String category;
 
+  /// Language (ISO 639-1 code, e.g. 'en', 'ja')
+  final String? language;
+
   /// Converts to AssetStackTemplateManifest
   AssetStackTemplateManifest toAssetStackTemplateManifest() {
     return AssetStackTemplateManifest(
@@ -48,6 +52,7 @@ class StackTemplateManifest {
       description: json['description'] as String?,
       tags: (json['tags'] as List<dynamic>?)?.cast<String>() ?? [],
       category: json['category'] as String? ?? 'template',
+      language: json['language'] as String?,
     );
   }
 
@@ -60,6 +65,7 @@ class StackTemplateManifest {
       if (description != null) 'description': description,
       'tags': tags,
       'category': category,
+      if (language != null) 'language': language,
     };
   }
 }

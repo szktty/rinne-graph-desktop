@@ -21,8 +21,8 @@ void main() {
     });
 
     test('hasManifestFile should return true for existing manifest', () async {
-      // The team sample stack has a manifest file
-      final hasManifest = await installer.hasManifestFile('assets/team');
+      // The meiji sample stack has a manifest file
+      final hasManifest = await installer.hasManifestFile('assets/meiji');
       expect(hasManifest, isTrue);
     });
 
@@ -39,10 +39,10 @@ void main() {
     test(
       'getManifestMetadata should return metadata for existing manifest',
       () async {
-        final metadata = await installer.getManifestMetadata('assets/team');
+        final metadata = await installer.getManifestMetadata('assets/meiji');
 
         expect(metadata, isNotNull);
-        expect(metadata!['name'], equals('Software Development Team Sample'));
+        expect(metadata!['name'], equals('Bakumatsu Ryoma Relationship Chart'));
         expect(metadata['description'], isNotNull);
         expect(metadata['author'], isNotNull);
         expect(metadata['version'], isNotNull);
@@ -70,7 +70,7 @@ void main() {
       'generateStackFromTemplate should use StackTemplateInstaller',
       () async {
         final template = StackTemplateService.getStackTemplateById(
-          'team_sample',
+          'meiji_sample',
         );
         expect(template, isNotNull);
 
@@ -85,44 +85,46 @@ void main() {
           template,
         );
         expect(metadata, isNotNull);
-        expect(metadata!['name'], equals('Software Development Team Sample'));
+        expect(metadata!['name'], equals('Bakumatsu Ryoma Relationship Chart'));
       },
     );
 
     test('hasManifestFile should work with StackTemplateManifest', () async {
-      final teamTemplate = StackTemplateService.getStackTemplateById(
-        'team_sample',
-      );
       final meijiTemplate = StackTemplateService.getStackTemplateById(
         'meiji_sample',
       );
+      final graphOfTheGodsTemplate = StackTemplateService.getStackTemplateById(
+        'graph_of_the_gods',
+      );
 
-      expect(teamTemplate, isNotNull);
       expect(meijiTemplate, isNotNull);
+      expect(graphOfTheGodsTemplate, isNotNull);
 
-      final teamHasManifest =
-          await StackTemplateService.hasTemplateManifestFile(teamTemplate!);
       final meijiHasManifest =
           await StackTemplateService.hasTemplateManifestFile(meijiTemplate!);
+      final graphOfTheGodsHasManifest =
+          await StackTemplateService.hasTemplateManifestFile(
+            graphOfTheGodsTemplate!,
+          );
 
-      expect(teamHasManifest, isTrue);
       expect(meijiHasManifest, isTrue);
+      expect(graphOfTheGodsHasManifest, isTrue);
     });
 
     test(
       'getManifestMetadata should work with StackTemplateManifest',
       () async {
-        final teamTemplate = StackTemplateService.getStackTemplateById(
-          'team_sample',
+        final meijiTemplate = StackTemplateService.getStackTemplateById(
+          'meiji_sample',
         );
-        expect(teamTemplate, isNotNull);
+        expect(meijiTemplate, isNotNull);
 
         final metadata = await StackTemplateService.getTemplateManifestMetadata(
-          teamTemplate!,
+          meijiTemplate!,
         );
         expect(metadata, isNotNull);
-        expect(metadata!['name'], equals('Software Development Team Sample'));
-        expect(metadata['tags'], contains('development'));
+        expect(metadata!['name'], equals('Bakumatsu Ryoma Relationship Chart'));
+        expect(metadata['tags'], contains('history'));
       },
     );
   });

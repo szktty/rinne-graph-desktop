@@ -1,0 +1,65 @@
+[
+  {
+    "id": "scene-p5c1",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 5",
+      "chapter": "1",
+      "context": "Luzhin's plan for revenge",
+      "day": 49,
+      "time": "Morning",
+      "summary": "The morning after Luzhin was sent away by Dunya. Luzhin still harbors longing and anger toward Dunya and begins plotting revenge. Staying in the same lodging as Lebezyatnikov, Luzhin hears about Katerina's memorial dinner. He gives Sonya money, deliberately laying a trap for her.",
+      "excerpt": "The morning after his decisive interview with Pulkheria and Dunya, even the resolute Luzhin felt somewhat sobered."
+    }
+  },
+  {
+    "id": "scene-p5c2",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 5",
+      "chapter": "2",
+      "context": "Marmeladov's forty-ninth day memorial dinner",
+      "day": 49,
+      "summary": "The memorial dinner held forty-nine days after Marmeladov's death. Katerina goes into debt to host a lavish meal. The poor neighbors gather and a rowdy scene unfolds. Katerina puts on airs and quarrels one after another with the guests. The atmosphere descends into chaos.",
+      "excerpt": "How on earth did the idea of this absurd dinner come to lodge itself in Katerina's disordered mind?"
+    }
+  },
+  {
+    "id": "scene-p5c3",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 5",
+      "chapter": "3",
+      "context": "Luzhin's scheme — Lebezyatnikov's testimony",
+      "day": 49,
+      "summary": "Luzhin appears at the dinner and publicly accuses Sonya of theft. Sonya protests her innocence, but the mood of the room turns against her. Lebezyatnikov then testifies that he witnessed Luzhin himself slip the banknote into Sonya's pocket, and the scheme is utterly exposed.",
+      "excerpt": "'Pyotr Petrovich!' she cried. 'At least you — please take my side!'"
+    }
+  },
+  {
+    "id": "scene-p5c4",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 5",
+      "chapter": "4",
+      "context": "Confession to Sonya",
+      "day": 49,
+      "time": "Evening",
+      "summary": "After Luzhin's scheme is exposed, Raskolnikov goes to Sonya's room and at last confesses that he murdered the old pawnbroker and Lizaveta. Sonya is shattered but does not reject him, urging him to 'turn yourself in and accept your suffering.' The two are bound together deeply. Raskolnikov still hesitates to give himself up.",
+      "excerpt": "Despite all the terror and anguish he had carried within him, Raskolnikov had faced down Luzhin and served as a bold and sharp-tongued advocate for Sonya."
+    }
+  },
+  {
+    "id": "scene-p5c5",
+    "labels": ["Scene"],
+    "properties": {
+      "part": "Part 5",
+      "chapter": "5",
+      "context": "Katerina's breakdown and death",
+      "day": 49,
+      "time": "Night",
+      "summary": "Katerina finally breaks down completely and takes the children into the streets to beg. Raskolnikov witnesses this. Katerina collapses in the street coughing blood, is carried to Sonya's room, and dies. Svidrigailov appears and offers to pay for the children's upkeep. Sonya is grateful but cannot fathom his true motives.",
+      "excerpt": "Lebezyatnikov had a look of anxiety about him."
+    }
+  }
+]
