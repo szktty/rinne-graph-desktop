@@ -6,81 +6,231 @@ part of 'task_panel_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$activeTasksHash() => r'2b2587f3bff7f3e6c2396418c256eebfbc9d6b79';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Provider that manages the visibility state of the task panel
 
-/// Provider that manages the active task list
-///
-/// Copied from [activeTasks].
-@ProviderFor(activeTasks)
-final activeTasksProvider = AutoDisposeProvider<List<Task>>.internal(
-  activeTasks,
-  name: r'activeTasksProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$activeTasksHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(TaskPanelVisibility)
+final taskPanelVisibilityProvider = TaskPanelVisibilityProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ActiveTasksRef = AutoDisposeProviderRef<List<Task>>;
+/// Provider that manages the visibility state of the task panel
+final class TaskPanelVisibilityProvider
+    extends $NotifierProvider<TaskPanelVisibility, bool> {
+  /// Provider that manages the visibility state of the task panel
+  TaskPanelVisibilityProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'taskPanelVisibilityProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$taskPanelVisibilityHash();
+
+  @$internal
+  @override
+  TaskPanelVisibility create() => TaskPanelVisibility();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$taskPanelVisibilityHash() =>
     r'bf1e03f52c87066bf1d7c02ba01372f197146c5a';
 
 /// Provider that manages the visibility state of the task panel
-///
-/// Copied from [TaskPanelVisibility].
-@ProviderFor(TaskPanelVisibility)
-final taskPanelVisibilityProvider =
-    AutoDisposeNotifierProvider<TaskPanelVisibility, bool>.internal(
-      TaskPanelVisibility.new,
-      name: r'taskPanelVisibilityProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$taskPanelVisibilityHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$TaskPanelVisibility = AutoDisposeNotifier<bool>;
+abstract class _$TaskPanelVisibility extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider that manages the position and size of the task panel
+
+@ProviderFor(TaskPanelState)
+final taskPanelStateProvider = TaskPanelStateProvider._();
+
+/// Provider that manages the position and size of the task panel
+final class TaskPanelStateProvider
+    extends $NotifierProvider<TaskPanelState, PanelState> {
+  /// Provider that manages the position and size of the task panel
+  TaskPanelStateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'taskPanelStateProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$taskPanelStateHash();
+
+  @$internal
+  @override
+  TaskPanelState create() => TaskPanelState();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PanelState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PanelState>(value),
+    );
+  }
+}
+
 String _$taskPanelStateHash() => r'66d056c356a5ccf85ce348bc110ba5265278d84a';
 
 /// Provider that manages the position and size of the task panel
-///
-/// Copied from [TaskPanelState].
-@ProviderFor(TaskPanelState)
-final taskPanelStateProvider =
-    AutoDisposeNotifierProvider<TaskPanelState, PanelState>.internal(
-      TaskPanelState.new,
-      name: r'taskPanelStateProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$taskPanelStateHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$TaskPanelState = AutoDisposeNotifier<PanelState>;
+abstract class _$TaskPanelState extends $Notifier<PanelState> {
+  PanelState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<PanelState, PanelState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<PanelState, PanelState>,
+              PanelState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider that manages the active task list
+
+@ProviderFor(activeTasks)
+final activeTasksProvider = ActiveTasksProvider._();
+
+/// Provider that manages the active task list
+
+final class ActiveTasksProvider
+    extends
+        $FunctionalProvider<
+          List<Task<dynamic>>,
+          List<Task<dynamic>>,
+          List<Task<dynamic>>
+        >
+    with $Provider<List<Task<dynamic>>> {
+  /// Provider that manages the active task list
+  ActiveTasksProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'activeTasksProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$activeTasksHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<Task<dynamic>>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  List<Task<dynamic>> create(Ref ref) {
+    return activeTasks(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<Task<dynamic>> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<Task<dynamic>>>(value),
+    );
+  }
+}
+
+String _$activeTasksHash() => r'2b2587f3bff7f3e6c2396418c256eebfbc9d6b79';
+
+/// Task panel actions provider
+
+@ProviderFor(TaskPanelActions)
+final taskPanelActionsProvider = TaskPanelActionsProvider._();
+
+/// Task panel actions provider
+final class TaskPanelActionsProvider
+    extends $NotifierProvider<TaskPanelActions, void> {
+  /// Task panel actions provider
+  TaskPanelActionsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'taskPanelActionsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$taskPanelActionsHash();
+
+  @$internal
+  @override
+  TaskPanelActions create() => TaskPanelActions();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
 String _$taskPanelActionsHash() => r'46afa79a3c2f9012d5f9918a70a7c51b6a13b03e';
 
 /// Task panel actions provider
-///
-/// Copied from [TaskPanelActions].
-@ProviderFor(TaskPanelActions)
-final taskPanelActionsProvider =
-    AutoDisposeNotifierProvider<TaskPanelActions, void>.internal(
-      TaskPanelActions.new,
-      name: r'taskPanelActionsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$taskPanelActionsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$TaskPanelActions = AutoDisposeNotifier<void>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$TaskPanelActions extends $Notifier<void> {
+  void build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<void, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<void, void>,
+              void,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

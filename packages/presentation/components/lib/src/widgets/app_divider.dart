@@ -7,9 +7,7 @@ part 'app_divider.g.dart';
 
 /// Provider that provides effective app color (supports active color scheme)
 @riverpod
-AppColorScheme effectiveAppColorSchemeForDivider(
-  EffectiveAppColorSchemeForDividerRef ref,
-) {
+AppColorScheme effectiveAppColorSchemeForDivider(Ref ref) {
   // Get active color scheme
   return ref.watch(effectiveColorSchemeProvider);
 }

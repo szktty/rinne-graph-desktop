@@ -6,7 +6,7 @@ part 'settings.freezed.dart';
 part 'settings.g.dart';
 
 @freezed
-class Settings with _$Settings {
+abstract class Settings with _$Settings {
   const factory Settings({
     @Default('en') String language,
     @Default(Locale('en', 'US')) @LocaleConverter() Locale locale,

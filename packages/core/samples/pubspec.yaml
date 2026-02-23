@@ -5,7 +5,7 @@ version: 1.0.0
 
 environment:
   sdk: ^3.7.0
-  flutter: ">=3.38.0"
+  flutter: ">=3.41.2"
 
 dependencies:
   flutter:
@@ -21,7 +21,7 @@ dependencies:
   core_exchange:
     path: ../exchange
 
-  flutter_riverpod: ^2.6.1
+  flutter_riverpod: ^3.0.0
   path: any
 dev_dependencies:
   flutter_test:

@@ -7,7 +7,7 @@ part 'app_text.g.dart';
 
 /// Provider for effective theme data
 @riverpod
-AppThemeData effectiveThemeDataForText(EffectiveThemeDataForTextRef ref) {
+AppThemeData effectiveThemeDataForText(Ref ref) {
   return AppThemePresets.light;
 }
 

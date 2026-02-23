@@ -35,13 +35,13 @@ void _initializeStartupSettings(WidgetRef ref) {
 
   Future.microtask(() async {
     try {
-      final startupSettings = ref.read(startupSettingsProvider);
+      final startupSettings = ref.read(startupSettingsSyncProvider);
       if (startupSettings.isFirstLaunch) {
         debugPrint(
           '[core_stack_initialization] Marking first launch as complete',
         );
         await ref
-            .read(startupSettingsNotifierProvider.notifier)
+            .read(startupSettingsProvider.notifier)
             .markFirstLaunchComplete();
       }
     } catch (e) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 import 'package:core_themes/core_themes.dart';
 import 'package:presentation_components/presentation_components.dart';
@@ -22,7 +23,7 @@ class OutlineView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final graph = ref.watch(core_graph.activeGraphProvider);
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
-    final selectedEntityId = ref.watch(selectionStateNotifierProvider);
+    final selectedEntityId = ref.watch(selectionStateProvider);
 
     // Manages the IDs of expanded nodes
     final expandedNodes = ref.watch(outlineExpandedNodesProvider);

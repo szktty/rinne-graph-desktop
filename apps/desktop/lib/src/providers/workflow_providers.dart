@@ -8,13 +8,13 @@ part 'workflow_providers.g.dart';
 
 /// Desktop app task registry management provider
 @riverpod
-TaskRegistry taskRegistry(TaskRegistryRef ref) {
+TaskRegistry taskRegistry(Ref ref) {
   return TaskRegistry();
 }
 
 /// Provider managing the active task list
 @riverpod
-List<Task> activeTaskList(ActiveTaskListRef ref) {
+List<Task> activeTaskList(Ref ref) {
   final registry = ref.watch(taskRegistryProvider);
 
   // Get running tasks from the registry
@@ -146,7 +146,7 @@ class TaskExecutor extends _$TaskExecutor {
 
 /// タスクパネルの表示/非表示を切り替えるアクションプロバイダー
 @riverpod
-void Function() toggleTaskPanel(ToggleTaskPanelRef ref) {
+void Function() toggleTaskPanel(Ref ref) {
   final visibilityNotifier = ref.read(
     desktopTaskPanelVisibilityProvider.notifier,
   );
@@ -163,7 +163,7 @@ void Function() toggleTaskPanel(ToggleTaskPanelRef ref) {
 
 /// Convenient aliases for desktop app use
 @riverpod
-TaskPanelVisibility taskPanelVisibility(TaskPanelVisibilityRef ref) {
+TaskPanelVisibility taskPanelVisibility(Ref ref) {
   final visibility = ref.watch(desktopTaskPanelVisibilityProvider);
   final notifier = ref.read(desktopTaskPanelVisibilityProvider.notifier);
 
@@ -177,12 +177,12 @@ TaskPanelVisibility taskPanelVisibility(TaskPanelVisibilityRef ref) {
 }
 
 @riverpod
-PanelState taskPanelState(TaskPanelStateRef ref) {
+PanelState taskPanelState(Ref ref) {
   return ref.watch(desktopTaskPanelStateProvider);
 }
 
 @riverpod
-List<Task> activeTasks(ActiveTasksRef ref) {
+List<Task> activeTasks(Ref ref) {
   return ref.watch(activeTaskListProvider);
 }
 

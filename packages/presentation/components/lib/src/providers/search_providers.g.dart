@@ -6,46 +6,114 @@ part of 'search_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$searchFieldManagerHash() =>
-    r'81e0dd0a7a213391f29c84d97fd43c1903183e84';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Provider that manages the current search query.
 
-/// Provider that manages the state and actions of the search field.
-///
-/// Copied from [searchFieldManager].
-@ProviderFor(searchFieldManager)
-final searchFieldManagerProvider =
-    AutoDisposeProvider<SearchFieldManager>.internal(
-      searchFieldManager,
-      name: r'searchFieldManagerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$searchFieldManagerHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
+@ProviderFor(SearchQuery)
+final searchQueryProvider = SearchQueryProvider._();
+
+/// Provider that manages the current search query.
+final class SearchQueryProvider extends $NotifierProvider<SearchQuery, String> {
+  /// Provider that manages the current search query.
+  SearchQueryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'searchQueryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$searchQueryHash();
+
+  @$internal
+  @override
+  SearchQuery create() => SearchQuery();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
     );
+  }
+}
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SearchFieldManagerRef = AutoDisposeProviderRef<SearchFieldManager>;
 String _$searchQueryHash() => r'49c37e916e32687802556ef05ce9c1eebfcbe776';
 
 /// Provider that manages the current search query.
-///
-/// Copied from [SearchQuery].
-@ProviderFor(SearchQuery)
-final searchQueryProvider =
-    AutoDisposeNotifierProvider<SearchQuery, String>.internal(
-      SearchQuery.new,
-      name: r'searchQueryProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$searchQueryHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$SearchQuery = AutoDisposeNotifier<String>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$SearchQuery extends $Notifier<String> {
+  String build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<String, String>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<String, String>,
+              String,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider that manages the state and actions of the search field.
+
+@ProviderFor(searchFieldManager)
+final searchFieldManagerProvider = SearchFieldManagerProvider._();
+
+/// Provider that manages the state and actions of the search field.
+
+final class SearchFieldManagerProvider
+    extends
+        $FunctionalProvider<
+          SearchFieldManager,
+          SearchFieldManager,
+          SearchFieldManager
+        >
+    with $Provider<SearchFieldManager> {
+  /// Provider that manages the state and actions of the search field.
+  SearchFieldManagerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'searchFieldManagerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$searchFieldManagerHash();
+
+  @$internal
+  @override
+  $ProviderElement<SearchFieldManager> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  SearchFieldManager create(Ref ref) {
+    return searchFieldManager(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SearchFieldManager value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SearchFieldManager>(value),
+    );
+  }
+}
+
+String _$searchFieldManagerHash() =>
+    r'81e0dd0a7a213391f29c84d97fd43c1903183e84';

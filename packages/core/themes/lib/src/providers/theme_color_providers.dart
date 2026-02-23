@@ -20,7 +20,7 @@ class ThemeColorType extends _$ThemeColorType {
 
 /// Theme color scheme.
 @riverpod
-models.ThemeColorScheme themeColorScheme(ThemeColorSchemeRef ref) {
+models.ThemeColorScheme themeColorScheme(Ref ref) {
   final themeType = ref.watch(themeColorTypeProvider);
   final brightness = ref.watch(platformBrightnessProvider);
 
@@ -30,9 +30,7 @@ models.ThemeColorScheme themeColorScheme(ThemeColorSchemeRef ref) {
 /// Based on the current theme, system brightness settings, and theme color,
 /// a Provider that obtains the AppColorScheme to be actually applied.
 @riverpod
-AppColorScheme effectiveColorSchemeWithTheme(
-  EffectiveColorSchemeWithThemeRef ref,
-) {
+AppColorScheme effectiveColorSchemeWithTheme(Ref ref) {
   final themeData = ref.watch(activeThemeProvider);
   final platformBrightness = ref.watch(platformBrightnessProvider);
   final themeColorType = ref.watch(themeColorTypeProvider);

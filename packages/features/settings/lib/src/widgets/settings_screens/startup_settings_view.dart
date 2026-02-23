@@ -9,7 +9,7 @@ class StartupSettingsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settingsAsync = ref.watch(startupSettingsNotifierProvider);
+    final settingsAsync = ref.watch(startupSettingsProvider);
 
     return settingsAsync.when(
       data: (settings) => _buildContent(context, ref, settings),
@@ -75,9 +75,7 @@ class StartupSettingsView extends ConsumerWidget {
                             value: settings.autoOpenLastStack,
                             onChanged: (value) {
                               ref
-                                  .read(
-                                    startupSettingsNotifierProvider.notifier,
-                                  )
+                                  .read(startupSettingsProvider.notifier)
                                   .toggleAutoOpen(value);
                             },
                           ),
@@ -235,7 +233,7 @@ class StartupSettingsView extends ConsumerWidget {
           onChanged: (StartupErrorBehavior? newBehavior) {
             if (newBehavior != null) {
               ref
-                  .read(startupSettingsNotifierProvider.notifier)
+                  .read(startupSettingsProvider.notifier)
                   .updateSettings(
                     settings.copyWith(errorBehavior: newBehavior),
                   );
@@ -244,7 +242,7 @@ class StartupSettingsView extends ConsumerWidget {
         ),
         onTap: () {
           ref
-              .read(startupSettingsNotifierProvider.notifier)
+              .read(startupSettingsProvider.notifier)
               .updateSettings(settings.copyWith(errorBehavior: behavior));
         },
       ),

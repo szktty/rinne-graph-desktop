@@ -6,400 +6,774 @@ part of 'pathfinder_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$recentItemsManagerHash() =>
-    r'fb91ce63c84e2d5bfd928db818b67e68ce527d22';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Provider that manages the open/closed state of the pathfinder.
 
-/// Provider for the recent items manager.
-///
-/// Copied from [recentItemsManager].
-@ProviderFor(recentItemsManager)
-final recentItemsManagerProvider =
-    AutoDisposeProvider<RecentItemsManager>.internal(
-      recentItemsManager,
-      name: r'recentItemsManagerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$recentItemsManagerHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+@ProviderFor(PathfinderOpen)
+final pathfinderOpenProvider = PathfinderOpenProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef RecentItemsManagerRef = AutoDisposeProviderRef<RecentItemsManager>;
-String _$entitySearchServiceHash() =>
-    r'9bee90d574e8385b50ca00fe1b6b9acdd7dd5b40';
-
-/// Provider for the entity search service.
-///
-/// Copied from [entitySearchService].
-@ProviderFor(entitySearchService)
-final entitySearchServiceProvider =
-    AutoDisposeProvider<EntitySearchService>.internal(
-      entitySearchService,
-      name: r'entitySearchServiceProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$entitySearchServiceHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef EntitySearchServiceRef = AutoDisposeProviderRef<EntitySearchService>;
-String _$recentItemsHash() => r'e96077ef783c12632172676e0be3b33cae773c7d';
-
-/// Provider that provides a list of recent items.
-///
-/// Copied from [recentItems].
-@ProviderFor(recentItems)
-final recentItemsProvider = AutoDisposeProvider<List<PathfinderItem>>.internal(
-  recentItems,
-  name: r'recentItemsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$recentItemsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef RecentItemsRef = AutoDisposeProviderRef<List<PathfinderItem>>;
-String _$filteredItemsHash() => r'c5ca7ef7309577bf9c9fe89a014bd174bd5b8fd2';
-
-/// Provider that provides a list of filtered items.
-///
-/// Copied from [filteredItems].
-@ProviderFor(filteredItems)
-final filteredItemsProvider =
-    AutoDisposeProvider<List<PathfinderItem>>.internal(
-      filteredItems,
-      name: r'filteredItemsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$filteredItemsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef FilteredItemsRef = AutoDisposeProviderRef<List<PathfinderItem>>;
-String _$searchEntitiesHash() => r'3d09143747fe334495c9de6746d52ab863c737b0';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// Provider that searches for entities from graph data.
-///
-/// Copied from [searchEntities].
-@ProviderFor(searchEntities)
-const searchEntitiesProvider = SearchEntitiesFamily();
-
-/// Provider that searches for entities from graph data.
-///
-/// Copied from [searchEntities].
-class SearchEntitiesFamily extends Family<List<PathfinderItem>> {
-  /// Provider that searches for entities from graph data.
-  ///
-  /// Copied from [searchEntities].
-  const SearchEntitiesFamily();
-
-  /// Provider that searches for entities from graph data.
-  ///
-  /// Copied from [searchEntities].
-  SearchEntitiesProvider call(String query) {
-    return SearchEntitiesProvider(query);
-  }
-
-  @override
-  SearchEntitiesProvider getProviderOverride(
-    covariant SearchEntitiesProvider provider,
-  ) {
-    return call(provider.query);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'searchEntitiesProvider';
-}
-
-/// Provider that searches for entities from graph data.
-///
-/// Copied from [searchEntities].
-class SearchEntitiesProvider extends AutoDisposeProvider<List<PathfinderItem>> {
-  /// Provider that searches for entities from graph data.
-  ///
-  /// Copied from [searchEntities].
-  SearchEntitiesProvider(String query)
-    : this._internal(
-        (ref) => searchEntities(ref as SearchEntitiesRef, query),
-        from: searchEntitiesProvider,
-        name: r'searchEntitiesProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$searchEntitiesHash,
-        dependencies: SearchEntitiesFamily._dependencies,
-        allTransitiveDependencies:
-            SearchEntitiesFamily._allTransitiveDependencies,
-        query: query,
+/// Provider that manages the open/closed state of the pathfinder.
+final class PathfinderOpenProvider
+    extends $NotifierProvider<PathfinderOpen, bool> {
+  /// Provider that manages the open/closed state of the pathfinder.
+  PathfinderOpenProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'pathfinderOpenProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
       );
 
-  SearchEntitiesProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.query,
-  }) : super.internal();
-
-  final String query;
-
   @override
-  Override overrideWith(
-    List<PathfinderItem> Function(SearchEntitiesRef provider) create,
-  ) {
-    return ProviderOverride(
+  String debugGetCreateSourceHash() => _$pathfinderOpenHash();
+
+  @$internal
+  @override
+  PathfinderOpen create() => PathfinderOpen();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
       origin: this,
-      override: SearchEntitiesProvider._internal(
-        (ref) => create(ref as SearchEntitiesRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        query: query,
-      ),
+      providerOverride: $SyncValueProvider<bool>(value),
     );
   }
-
-  @override
-  AutoDisposeProviderElement<List<PathfinderItem>> createElement() {
-    return _SearchEntitiesProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is SearchEntitiesProvider && other.query == query;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, query.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin SearchEntitiesRef on AutoDisposeProviderRef<List<PathfinderItem>> {
-  /// The parameter `query` of this provider.
-  String get query;
-}
-
-class _SearchEntitiesProviderElement
-    extends AutoDisposeProviderElement<List<PathfinderItem>>
-    with SearchEntitiesRef {
-  _SearchEntitiesProviderElement(super.provider);
-
-  @override
-  String get query => (origin as SearchEntitiesProvider).query;
 }
 
 String _$pathfinderOpenHash() => r'f1784379d79ca58d95e450d8f8f8070864636818';
 
 /// Provider that manages the open/closed state of the pathfinder.
-///
-/// Copied from [PathfinderOpen].
-@ProviderFor(PathfinderOpen)
-final pathfinderOpenProvider =
-    AutoDisposeNotifierProvider<PathfinderOpen, bool>.internal(
-      PathfinderOpen.new,
-      name: r'pathfinderOpenProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$pathfinderOpenHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$PathfinderOpen = AutoDisposeNotifier<bool>;
+abstract class _$PathfinderOpen extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider that manages the search query for the pathfinder.
+
+@ProviderFor(PathfinderSearchQuery)
+final pathfinderSearchQueryProvider = PathfinderSearchQueryProvider._();
+
+/// Provider that manages the search query for the pathfinder.
+final class PathfinderSearchQueryProvider
+    extends $NotifierProvider<PathfinderSearchQuery, String> {
+  /// Provider that manages the search query for the pathfinder.
+  PathfinderSearchQueryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'pathfinderSearchQueryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$pathfinderSearchQueryHash();
+
+  @$internal
+  @override
+  PathfinderSearchQuery create() => PathfinderSearchQuery();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
 String _$pathfinderSearchQueryHash() =>
     r'34875d67f9d5ead855db755e9c9d50594439d65a';
 
 /// Provider that manages the search query for the pathfinder.
-///
-/// Copied from [PathfinderSearchQuery].
-@ProviderFor(PathfinderSearchQuery)
-final pathfinderSearchQueryProvider =
-    AutoDisposeNotifierProvider<PathfinderSearchQuery, String>.internal(
-      PathfinderSearchQuery.new,
-      name: r'pathfinderSearchQueryProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$pathfinderSearchQueryHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$PathfinderSearchQuery = AutoDisposeNotifier<String>;
+abstract class _$PathfinderSearchQuery extends $Notifier<String> {
+  String build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<String, String>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<String, String>,
+              String,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider that manages the selected index for the pathfinder.
+
+@ProviderFor(PathfinderSelectedIndex)
+final pathfinderSelectedIndexProvider = PathfinderSelectedIndexProvider._();
+
+/// Provider that manages the selected index for the pathfinder.
+final class PathfinderSelectedIndexProvider
+    extends $NotifierProvider<PathfinderSelectedIndex, int> {
+  /// Provider that manages the selected index for the pathfinder.
+  PathfinderSelectedIndexProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'pathfinderSelectedIndexProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$pathfinderSelectedIndexHash();
+
+  @$internal
+  @override
+  PathfinderSelectedIndex create() => PathfinderSelectedIndex();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
+  }
+}
+
 String _$pathfinderSelectedIndexHash() =>
     r'fa1b937e667b68b7d48320080a13e9a8be9ba88b';
 
 /// Provider that manages the selected index for the pathfinder.
-///
-/// Copied from [PathfinderSelectedIndex].
-@ProviderFor(PathfinderSelectedIndex)
-final pathfinderSelectedIndexProvider =
-    AutoDisposeNotifierProvider<PathfinderSelectedIndex, int>.internal(
-      PathfinderSelectedIndex.new,
-      name: r'pathfinderSelectedIndexProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$pathfinderSelectedIndexHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$PathfinderSelectedIndex = AutoDisposeNotifier<int>;
+abstract class _$PathfinderSelectedIndex extends $Notifier<int> {
+  int build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<int, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<int, int>,
+              int,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider that manages the item list for the pathfinder.
+
+@ProviderFor(PathfinderItems)
+final pathfinderItemsProvider = PathfinderItemsProvider._();
+
+/// Provider that manages the item list for the pathfinder.
+final class PathfinderItemsProvider
+    extends $NotifierProvider<PathfinderItems, List<PathfinderItem>> {
+  /// Provider that manages the item list for the pathfinder.
+  PathfinderItemsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'pathfinderItemsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$pathfinderItemsHash();
+
+  @$internal
+  @override
+  PathfinderItems create() => PathfinderItems();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<PathfinderItem> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<PathfinderItem>>(value),
+    );
+  }
+}
+
 String _$pathfinderItemsHash() => r'0e7064ba115ad84aaa0c0a900ee842642c19f534';
 
 /// Provider that manages the item list for the pathfinder.
-///
-/// Copied from [PathfinderItems].
-@ProviderFor(PathfinderItems)
-final pathfinderItemsProvider =
-    AutoDisposeNotifierProvider<PathfinderItems, List<PathfinderItem>>.internal(
-      PathfinderItems.new,
-      name: r'pathfinderItemsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$pathfinderItemsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$PathfinderItems = AutoDisposeNotifier<List<PathfinderItem>>;
+abstract class _$PathfinderItems extends $Notifier<List<PathfinderItem>> {
+  List<PathfinderItem> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<List<PathfinderItem>, List<PathfinderItem>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<PathfinderItem>, List<PathfinderItem>>,
+              List<PathfinderItem>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider for the recent items manager.
+
+@ProviderFor(recentItemsManager)
+final recentItemsManagerProvider = RecentItemsManagerProvider._();
+
+/// Provider for the recent items manager.
+
+final class RecentItemsManagerProvider
+    extends
+        $FunctionalProvider<
+          RecentItemsManager,
+          RecentItemsManager,
+          RecentItemsManager
+        >
+    with $Provider<RecentItemsManager> {
+  /// Provider for the recent items manager.
+  RecentItemsManagerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'recentItemsManagerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$recentItemsManagerHash();
+
+  @$internal
+  @override
+  $ProviderElement<RecentItemsManager> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  RecentItemsManager create(Ref ref) {
+    return recentItemsManager(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(RecentItemsManager value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<RecentItemsManager>(value),
+    );
+  }
+}
+
+String _$recentItemsManagerHash() =>
+    r'fb91ce63c84e2d5bfd928db818b67e68ce527d22';
+
+/// Provider for the entity search service.
+
+@ProviderFor(entitySearchService)
+final entitySearchServiceProvider = EntitySearchServiceProvider._();
+
+/// Provider for the entity search service.
+
+final class EntitySearchServiceProvider
+    extends
+        $FunctionalProvider<
+          EntitySearchService,
+          EntitySearchService,
+          EntitySearchService
+        >
+    with $Provider<EntitySearchService> {
+  /// Provider for the entity search service.
+  EntitySearchServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'entitySearchServiceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$entitySearchServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<EntitySearchService> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  EntitySearchService create(Ref ref) {
+    return entitySearchService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(EntitySearchService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<EntitySearchService>(value),
+    );
+  }
+}
+
+String _$entitySearchServiceHash() =>
+    r'9bee90d574e8385b50ca00fe1b6b9acdd7dd5b40';
+
+/// Provider that manages the active graph for the pathfinder.
+
+@ProviderFor(PathfinderActiveGraph)
+final pathfinderActiveGraphProvider = PathfinderActiveGraphProvider._();
+
+/// Provider that manages the active graph for the pathfinder.
+final class PathfinderActiveGraphProvider
+    extends $NotifierProvider<PathfinderActiveGraph, core_graph.Graph?> {
+  /// Provider that manages the active graph for the pathfinder.
+  PathfinderActiveGraphProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'pathfinderActiveGraphProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$pathfinderActiveGraphHash();
+
+  @$internal
+  @override
+  PathfinderActiveGraph create() => PathfinderActiveGraph();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(core_graph.Graph? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<core_graph.Graph?>(value),
+    );
+  }
+}
+
 String _$pathfinderActiveGraphHash() =>
     r'8a2d4d31925af2f98e48d72c7b1ddaafae5fa739';
 
 /// Provider that manages the active graph for the pathfinder.
-///
-/// Copied from [PathfinderActiveGraph].
-@ProviderFor(PathfinderActiveGraph)
-final pathfinderActiveGraphProvider = AutoDisposeNotifierProvider<
-  PathfinderActiveGraph,
-  core_graph.Graph?
->.internal(
-  PathfinderActiveGraph.new,
-  name: r'pathfinderActiveGraphProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$pathfinderActiveGraphHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$PathfinderActiveGraph = AutoDisposeNotifier<core_graph.Graph?>;
+abstract class _$PathfinderActiveGraph extends $Notifier<core_graph.Graph?> {
+  core_graph.Graph? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<core_graph.Graph?, core_graph.Graph?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<core_graph.Graph?, core_graph.Graph?>,
+              core_graph.Graph?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider that manages the selected entity.
+
+@ProviderFor(SelectedEntity)
+final selectedEntityProvider = SelectedEntityProvider._();
+
+/// Provider that manages the selected entity.
+final class SelectedEntityProvider
+    extends $NotifierProvider<SelectedEntity, PathfinderItem?> {
+  /// Provider that manages the selected entity.
+  SelectedEntityProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'selectedEntityProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$selectedEntityHash();
+
+  @$internal
+  @override
+  SelectedEntity create() => SelectedEntity();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PathfinderItem? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PathfinderItem?>(value),
+    );
+  }
+}
+
 String _$selectedEntityHash() => r'a9b12cc6c208f31418002a2b6e7c1d603e32a09d';
 
 /// Provider that manages the selected entity.
-///
-/// Copied from [SelectedEntity].
-@ProviderFor(SelectedEntity)
-final selectedEntityProvider =
-    AutoDisposeNotifierProvider<SelectedEntity, PathfinderItem?>.internal(
-      SelectedEntity.new,
-      name: r'selectedEntityProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$selectedEntityHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$SelectedEntity = AutoDisposeNotifier<PathfinderItem?>;
+abstract class _$SelectedEntity extends $Notifier<PathfinderItem?> {
+  PathfinderItem? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<PathfinderItem?, PathfinderItem?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<PathfinderItem?, PathfinderItem?>,
+              PathfinderItem?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider that provides a list of recent items.
+
+@ProviderFor(recentItems)
+final recentItemsProvider = RecentItemsProvider._();
+
+/// Provider that provides a list of recent items.
+
+final class RecentItemsProvider
+    extends
+        $FunctionalProvider<
+          List<PathfinderItem>,
+          List<PathfinderItem>,
+          List<PathfinderItem>
+        >
+    with $Provider<List<PathfinderItem>> {
+  /// Provider that provides a list of recent items.
+  RecentItemsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'recentItemsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$recentItemsHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<PathfinderItem>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  List<PathfinderItem> create(Ref ref) {
+    return recentItems(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<PathfinderItem> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<PathfinderItem>>(value),
+    );
+  }
+}
+
+String _$recentItemsHash() => r'e96077ef783c12632172676e0be3b33cae773c7d';
+
+/// Provider that provides a list of filtered items.
+
+@ProviderFor(filteredItems)
+final filteredItemsProvider = FilteredItemsProvider._();
+
+/// Provider that provides a list of filtered items.
+
+final class FilteredItemsProvider
+    extends
+        $FunctionalProvider<
+          List<PathfinderItem>,
+          List<PathfinderItem>,
+          List<PathfinderItem>
+        >
+    with $Provider<List<PathfinderItem>> {
+  /// Provider that provides a list of filtered items.
+  FilteredItemsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'filteredItemsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$filteredItemsHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<PathfinderItem>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  List<PathfinderItem> create(Ref ref) {
+    return filteredItems(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<PathfinderItem> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<PathfinderItem>>(value),
+    );
+  }
+}
+
+String _$filteredItemsHash() => r'c5ca7ef7309577bf9c9fe89a014bd174bd5b8fd2';
+
+/// Provider that searches for entities from graph data.
+
+@ProviderFor(searchEntities)
+final searchEntitiesProvider = SearchEntitiesFamily._();
+
+/// Provider that searches for entities from graph data.
+
+final class SearchEntitiesProvider
+    extends
+        $FunctionalProvider<
+          List<PathfinderItem>,
+          List<PathfinderItem>,
+          List<PathfinderItem>
+        >
+    with $Provider<List<PathfinderItem>> {
+  /// Provider that searches for entities from graph data.
+  SearchEntitiesProvider._({
+    required SearchEntitiesFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'searchEntitiesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$searchEntitiesHash();
+
+  @override
+  String toString() {
+    return r'searchEntitiesProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<List<PathfinderItem>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  List<PathfinderItem> create(Ref ref) {
+    final argument = this.argument as String;
+    return searchEntities(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<PathfinderItem> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<PathfinderItem>>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SearchEntitiesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$searchEntitiesHash() => r'3d09143747fe334495c9de6746d52ab863c737b0';
+
+/// Provider that searches for entities from graph data.
+
+final class SearchEntitiesFamily extends $Family
+    with $FunctionalFamilyOverride<List<PathfinderItem>, String> {
+  SearchEntitiesFamily._()
+    : super(
+        retry: null,
+        name: r'searchEntitiesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Provider that searches for entities from graph data.
+
+  SearchEntitiesProvider call(String query) =>
+      SearchEntitiesProvider._(argument: query, from: this);
+
+  @override
+  String toString() => r'searchEntitiesProvider';
+}
+
+/// Action provider for the pathfinder.
+
+@ProviderFor(PathfinderActions)
+final pathfinderActionsProvider = PathfinderActionsProvider._();
+
+/// Action provider for the pathfinder.
+final class PathfinderActionsProvider
+    extends $NotifierProvider<PathfinderActions, void> {
+  /// Action provider for the pathfinder.
+  PathfinderActionsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'pathfinderActionsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$pathfinderActionsHash();
+
+  @$internal
+  @override
+  PathfinderActions create() => PathfinderActions();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
 String _$pathfinderActionsHash() => r'040cfa51fbece254c7ae2c7fb3700f22a4f1e11d';
 
 /// Action provider for the pathfinder.
-///
-/// Copied from [PathfinderActions].
-@ProviderFor(PathfinderActions)
-final pathfinderActionsProvider =
-    AutoDisposeNotifierProvider<PathfinderActions, void>.internal(
-      PathfinderActions.new,
-      name: r'pathfinderActionsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$pathfinderActionsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$PathfinderActions = AutoDisposeNotifier<void>;
+abstract class _$PathfinderActions extends $Notifier<void> {
+  void build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<void, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<void, void>,
+              void,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Action provider for processing the selected entity.
+
+@ProviderFor(SelectedEntityActions)
+final selectedEntityActionsProvider = SelectedEntityActionsProvider._();
+
+/// Action provider for processing the selected entity.
+final class SelectedEntityActionsProvider
+    extends $NotifierProvider<SelectedEntityActions, void> {
+  /// Action provider for processing the selected entity.
+  SelectedEntityActionsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'selectedEntityActionsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$selectedEntityActionsHash();
+
+  @$internal
+  @override
+  SelectedEntityActions create() => SelectedEntityActions();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
 String _$selectedEntityActionsHash() =>
     r'b78479521d3c5736c46c4f9a48335a2cad24dfa4';
 
 /// Action provider for processing the selected entity.
-///
-/// Copied from [SelectedEntityActions].
-@ProviderFor(SelectedEntityActions)
-final selectedEntityActionsProvider =
-    AutoDisposeNotifierProvider<SelectedEntityActions, void>.internal(
-      SelectedEntityActions.new,
-      name: r'selectedEntityActionsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$selectedEntityActionsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$SelectedEntityActions = AutoDisposeNotifier<void>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$SelectedEntityActions extends $Notifier<void> {
+  void build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<void, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<void, void>,
+              void,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

@@ -38,13 +38,13 @@ class ToolbarStateManager extends _$ToolbarStateManager {
 
 /// Provider that supplies toolbar actions.
 @riverpod
-ToolbarActions toolbarActions(ToolbarActionsRef ref) {
+ToolbarActions toolbarActions(Ref ref) {
   return ToolbarActions(ref);
 }
 
 /// Toolbar actions class.
 class ToolbarActions {
-  final ToolbarActionsRef _ref;
+  final Ref _ref;
 
   ToolbarActions(this._ref);
 

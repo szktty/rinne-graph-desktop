@@ -25,7 +25,7 @@ enum TaskStatus {
 
 /// Class representing the progress of a task
 @freezed
-class TaskProgress with _$TaskProgress {
+abstract class TaskProgress with _$TaskProgress {
   const factory TaskProgress({
     /// Progress rate (0.0 to 1.0)
     required double value,
@@ -52,7 +52,7 @@ class TaskProgress with _$TaskProgress {
 
 /// Task error information
 @freezed
-class TaskError with _$TaskError {
+abstract class TaskError with _$TaskError {
   const factory TaskError({
     /// Error message
     required String message,
@@ -67,7 +67,7 @@ class TaskError with _$TaskError {
 
 /// Type of task result
 @freezed
-class TaskResult<T> with _$TaskResult<T> {
+abstract class TaskResult<T> with _$TaskResult<T> {
   /// Successful task result
   const factory TaskResult.success({required T data}) = TaskSuccess<T>;
 
@@ -107,7 +107,7 @@ enum TaskEventType {
 
 /// Class representing a task event
 @freezed
-class TaskEvent with _$TaskEvent {
+abstract class TaskEvent with _$TaskEvent {
   const factory TaskEvent({
     /// Type of event
     required TaskEventType type,

@@ -9,7 +9,7 @@ part 'selection_providers.g.dart';
 
 /// Event bus provider for selection events
 @riverpod
-EventBus<SelectionEvent> selectionEventBus(SelectionEventBusRef ref) {
+EventBus<SelectionEvent> selectionEventBus(Ref ref) {
   final eventBus = EventBus<SelectionEvent>();
 
   ref.onDispose(() {
@@ -53,9 +53,7 @@ class SelectionState {
 
 /// Dispatcher provider for dispatching selection events
 @riverpod
-void Function(SelectionEvent) selectionEventDispatcher(
-  SelectionEventDispatcherRef ref,
-) {
+void Function(SelectionEvent) selectionEventDispatcher(Ref ref) {
   final eventBus = ref.watch(selectionEventBusProvider);
 
   void dispatch(SelectionEvent event) {
@@ -145,8 +143,8 @@ class SelectionStateNotifier extends _$SelectionStateNotifier {
 
 /// Provider that provides helper functions for selection operations
 @riverpod
-SelectionActions selectionActions(SelectionActionsRef ref) {
-  final selectionNotifier = ref.read(selectionStateNotifierProvider.notifier);
+SelectionActions selectionActions(Ref ref) {
+  final selectionNotifier = ref.read(selectionStateProvider.notifier);
 
   return SelectionActions(
     selectEntity: selectionNotifier.selectEntity,

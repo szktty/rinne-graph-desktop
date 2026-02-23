@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:presentation_components/presentation_components.dart';
 import 'package:features_settings/features_settings.dart';
 import 'package:features_welcome/features_welcome.dart';
@@ -28,10 +29,10 @@ class AppActivityBar extends ConsumerWidget {
   /// Displays the welcome screen as a dialog (for stack switching)
   Future<void> _showWelcomeDialog(BuildContext context) async {
     try {
-    // showWelcomeDialog(
-    //   context,
-    //   showCloseButton: true,
-    // );
+      // showWelcomeDialog(
+      //   context,
+      //   showCloseButton: true,
+      // );
       debugPrint('Welcome dialog displayed');
     } catch (e) {
       debugPrint('Failed to display welcome dialog: $e');

@@ -12,7 +12,7 @@ part 'bridge_providers.g.dart';
 
 /// Provider that provides GraphStorage implementation
 @riverpod
-core_graph.GraphStorage desktopGraphStorage(DesktopGraphStorageRef ref) {
+core_graph.GraphStorage desktopGraphStorage(Ref ref) {
   // GraphStorage implementation for desktop app
   // Actual implementation is overridden at app startup
   throw UnimplementedError(
@@ -22,23 +22,21 @@ core_graph.GraphStorage desktopGraphStorage(DesktopGraphStorageRef ref) {
 
 /// Provider that provides StackSearchDirectory implementation
 @riverpod
-Future<Directory> desktopStackSearchDirectory(
-  DesktopStackSearchDirectoryRef ref,
-) async {
+Future<Directory> desktopStackSearchDirectory(Ref ref) async {
   final fileSystemOps = core_foundation.FileSystemService();
   return await fileSystemOps.getApplicationDocumentsDirectory();
 }
 
 /// Provides application-specific GraphStorageProvider override
 @riverpod
-core_graph.GraphStorage? overriddenGraphStorage(OverriddenGraphStorageRef ref) {
+core_graph.GraphStorage? overriddenGraphStorage(Ref ref) {
   // This provider is overridden at startup
   return null;
 }
 
 /// GraphContext provider for desktop app
 @riverpod
-core_graph.GraphContext? desktopGraphContext(DesktopGraphContextRef ref) {
+core_graph.GraphContext? desktopGraphContext(Ref ref) {
   final storage = ref.watch(overriddenGraphStorageProvider);
   if (storage == null) return null;
 
@@ -54,13 +52,13 @@ core_graph.GraphContext? desktopGraphContext(DesktopGraphContextRef ref) {
 
 /// Adapter provider for compatibility with legacy capsules
 @riverpod
-GraphCapsuleAdapter graphCapsuleAdapter(GraphCapsuleAdapterRef ref) {
+GraphCapsuleAdapter graphCapsuleAdapter(Ref ref) {
   return GraphCapsuleAdapter(ref);
 }
 
 /// StackCapsuleAdapter
 @riverpod
-StackCapsuleAdapter stackCapsuleAdapter(StackCapsuleAdapterRef ref) {
+StackCapsuleAdapter stackCapsuleAdapter(Ref ref) {
   return StackCapsuleAdapter(ref);
 }
 

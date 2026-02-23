@@ -96,7 +96,7 @@ Future<bool> _validateStack(Stack stack) async {
 
 /// Provider to asynchronously get path to application documents directory
 @riverpod
-Future<Directory> documentsDirectory(DocumentsDirectoryRef ref) async {
+Future<Directory> documentsDirectory(Ref ref) async {
   debugPrint('[stack_providers] documentsDirectory executing');
   final fileSystemService = FileSystemService();
   final dir = await fileSystemService.getApplicationDocumentsDirectory();
@@ -106,7 +106,7 @@ Future<Directory> documentsDirectory(DocumentsDirectoryRef ref) async {
 
 /// Provider to provide root directory for stack search
 @riverpod
-Future<Directory> stackSearchDirectory(StackSearchDirectoryRef ref) async {
+Future<Directory> stackSearchDirectory(Ref ref) async {
   debugPrint('[stack_providers] stackSearchDirectory executing');
   final fileSystemService = FileSystemService();
   final stacksDir = await fileSystemService.getStacksDirectory();
@@ -125,7 +125,7 @@ Future<Directory> stackSearchDirectory(StackSearchDirectoryRef ref) async {
 
 /// Provider to asynchronously get scratch stack directory
 @riverpod
-Future<Directory> scratchesDirectory(ScratchesDirectoryRef ref) async {
+Future<Directory> scratchesDirectory(Ref ref) async {
   debugPrint('[stack_providers] scratchesDirectory executing');
   final fileSystemService = FileSystemService();
   final docsDir = await fileSystemService.getApplicationDocumentsDirectory();
@@ -144,7 +144,7 @@ Future<Directory> scratchesDirectory(ScratchesDirectoryRef ref) async {
 
 /// Provider to asynchronously get sample stacks directory
 @riverpod
-Future<Directory> samplesDirectory(SamplesDirectoryRef ref) async {
+Future<Directory> samplesDirectory(Ref ref) async {
   debugPrint('[stack_providers] samplesDirectory executing');
   final fileSystemService = FileSystemService();
   final samplesDir = await fileSystemService.getSamplesDirectory();
@@ -215,7 +215,7 @@ Future<void> _ensureSampleStacksInstantiated(Directory samplesDir) async {
 
 /// Provider to provide list of sample stacks as List<Stack>
 @riverpod
-Future<List<Stack>> sampleStacksList(SampleStacksListRef ref) async {
+Future<List<Stack>> sampleStacksList(Ref ref) async {
   debugPrint('[stack_providers] sampleStacksList executing');
 
   // Watch refreshStacksTrigger to create dependency
@@ -281,7 +281,7 @@ class RefreshStacksTrigger extends _$RefreshStacksTrigger {
 
 /// Provider to provide list of available stacks (Stream<Stack>)
 @riverpod
-Stream<Stack> availableStacksStream(AvailableStacksStreamRef ref) async* {
+Stream<Stack> availableStacksStream(Ref ref) async* {
   debugPrint('[stack_providers] availableStacksStream executing');
 
   // Watch refreshStacksTrigger to create dependency
@@ -317,7 +317,7 @@ Stream<Stack> availableStacksStream(AvailableStacksStreamRef ref) async* {
 /// Provider to provide list of available stacks as List<Stack>
 /// Archived stacks are excluded
 @riverpod
-Future<List<Stack>> availableStacksList(AvailableStacksListRef ref) async {
+Future<List<Stack>> availableStacksList(Ref ref) async {
   debugPrint('[stack_providers] availableStacksList executing');
 
   // Watch refreshStacksTrigger to create dependency
@@ -374,7 +374,7 @@ Future<List<Stack>> availableStacksList(AvailableStacksListRef ref) async {
 
 /// Provider to provide list of all stacks (including archived) as List<Stack>
 @riverpod
-Future<List<Stack>> allStacksList(AllStacksListRef ref) async {
+Future<List<Stack>> allStacksList(Ref ref) async {
   debugPrint('[stack_providers] allStacksList executing');
 
   // Watch refreshStacksTrigger to create dependency

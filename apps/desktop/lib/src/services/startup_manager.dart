@@ -24,7 +24,7 @@ class StartupManager {
     }
 
     // 2. Check startup settings
-    final startupSettings = ref.read(startupSettingsProvider);
+    final startupSettings = ref.read(startupSettingsSyncProvider);
     if (startupSettings.autoOpenLastStack &&
         startupSettings.lastOpenedStackPath != null) {
       debugPrint(

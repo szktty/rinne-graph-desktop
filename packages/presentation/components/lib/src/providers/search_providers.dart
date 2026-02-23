@@ -21,13 +21,13 @@ class SearchQuery extends _$SearchQuery {
 
 /// Provider that manages the state and actions of the search field.
 @riverpod
-SearchFieldManager searchFieldManager(SearchFieldManagerRef ref) {
+SearchFieldManager searchFieldManager(Ref ref) {
   return SearchFieldManager(ref);
 }
 
 /// Search field manager class.
 class SearchFieldManager {
-  final SearchFieldManagerRef _ref;
+  final Ref _ref;
 
   SearchFieldManager(this._ref);
 

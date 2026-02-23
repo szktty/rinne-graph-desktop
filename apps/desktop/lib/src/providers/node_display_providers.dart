@@ -55,7 +55,7 @@ class NodeDisplayContentState extends _$NodeDisplayContentState {
 
 /// Node display content provider (value only)
 @riverpod
-NodeDisplayContent nodeDisplayContent(NodeDisplayContentRef ref) {
+NodeDisplayContent nodeDisplayContent(Ref ref) {
   return ref.watch(nodeDisplayContentStateProvider);
 }
 
@@ -107,7 +107,7 @@ class NodeSizeState extends _$NodeSizeState {
 
 /// Node size provider (value only)
 @riverpod
-NodeSize nodeSize(NodeSizeRef ref) {
+NodeSize nodeSize(Ref ref) {
   return ref.watch(nodeSizeStateProvider);
 }
 
@@ -145,7 +145,7 @@ class NodeVisualDataMap extends _$NodeVisualDataMap {
 /// Function provider that gets visual data for a specific entity
 @riverpod
 NodeVisualData Function(String entityId, Set<String> labels)
-nodeVisualDataForEntity(NodeVisualDataForEntityRef ref) {
+nodeVisualDataForEntity(Ref ref) {
   final visualDataMapNotifier = ref.watch(nodeVisualDataMapProvider.notifier);
 
   return (String entityId, Set<String> labels) {

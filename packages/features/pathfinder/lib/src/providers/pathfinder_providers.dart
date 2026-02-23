@@ -89,7 +89,7 @@ class PathfinderItems extends _$PathfinderItems {
 
 /// Provider for the recent items manager.
 @riverpod
-RecentItemsManager recentItemsManager(RecentItemsManagerRef ref) {
+RecentItemsManager recentItemsManager(Ref ref) {
   final manager = RecentItemsManager(maxItems: 10);
 
   // Add mock data for development
@@ -108,7 +108,7 @@ RecentItemsManager recentItemsManager(RecentItemsManagerRef ref) {
 
 /// Provider for the entity search service.
 @riverpod
-EntitySearchService entitySearchService(EntitySearchServiceRef ref) {
+EntitySearchService entitySearchService(Ref ref) {
   return EntitySearchService();
 }
 
@@ -140,14 +140,14 @@ class SelectedEntity extends _$SelectedEntity {
 
 /// Provider that provides a list of recent items.
 @riverpod
-List<PathfinderItem> recentItems(RecentItemsRef ref) {
+List<PathfinderItem> recentItems(Ref ref) {
   final manager = ref.watch(recentItemsManagerProvider);
   return manager.items;
 }
 
 /// Provider that provides a list of filtered items.
 @riverpod
-List<PathfinderItem> filteredItems(FilteredItemsRef ref) {
+List<PathfinderItem> filteredItems(Ref ref) {
   final recentItems = ref.watch(recentItemsProvider);
   final items = ref.watch(pathfinderItemsProvider);
   final searchQuery = ref.watch(pathfinderSearchQueryProvider);
@@ -167,7 +167,7 @@ List<PathfinderItem> filteredItems(FilteredItemsRef ref) {
 
 /// Provider that searches for entities from graph data.
 @riverpod
-List<PathfinderItem> searchEntities(SearchEntitiesRef ref, String query) {
+List<PathfinderItem> searchEntities(Ref ref, String query) {
   final activeGraph = ref.watch(pathfinderActiveGraphProvider);
   final searchService = ref.watch(entitySearchServiceProvider);
 

@@ -6,104 +6,260 @@ part of 'id_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$idFactoryHash() => r'933f9e439f4ef65d1df599233ef3e65843403e2b';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Provider for generating IDs.
+///
+/// Generates UUIDv7 format IDs.
+
+@ProviderFor(idFactory)
+final idFactoryProvider = IdFactoryProvider._();
 
 /// Provider for generating IDs.
 ///
 /// Generates UUIDv7 format IDs.
-///
-/// Copied from [idFactory].
-@ProviderFor(idFactory)
-final idFactoryProvider = AutoDisposeProvider<UniqueId Function()>.internal(
-  idFactory,
-  name: r'idFactoryProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$idFactoryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef IdFactoryRef = AutoDisposeProviderRef<UniqueId Function()>;
-String _$idGeneratorHash() => r'23c2c7cf655a89a840b304b5d141f1952848e835';
+final class IdFactoryProvider
+    extends
+        $FunctionalProvider<
+          UniqueId Function(),
+          UniqueId Function(),
+          UniqueId Function()
+        >
+    with $Provider<UniqueId Function()> {
+  /// Provider for generating IDs.
+  ///
+  /// Generates UUIDv7 format IDs.
+  IdFactoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'idFactoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-/// Provider that provides an ID generator.
-///
-/// Copied from [idGenerator].
-@ProviderFor(idGenerator)
-final idGeneratorProvider = AutoDisposeProvider<IdGenerator>.internal(
-  idGenerator,
-  name: r'idGeneratorProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$idGeneratorHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+  @override
+  String debugGetCreateSourceHash() => _$idFactoryHash();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef IdGeneratorRef = AutoDisposeProviderRef<IdGenerator>;
-String _$testIdGeneratorHash() => r'2302033894b3a515cccf0e3fa419fbe0f980b50b';
+  @$internal
+  @override
+  $ProviderElement<UniqueId Function()> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
-/// Provider that provides an ID generator for testing.
-///
-/// Copied from [testIdGenerator].
-@ProviderFor(testIdGenerator)
-final testIdGeneratorProvider = AutoDisposeProvider<IdGenerator>.internal(
-  testIdGenerator,
-  name: r'testIdGeneratorProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$testIdGeneratorHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+  @override
+  UniqueId Function() create(Ref ref) {
+    return idFactory(ref);
+  }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef TestIdGeneratorRef = AutoDisposeProviderRef<IdGenerator>;
-String _$inMemoryIdGeneratorHash() =>
-    r'5aab2fc9bd0926f4f5ae2be9dbd80fe595900733';
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UniqueId Function() value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UniqueId Function()>(value),
+    );
+  }
+}
 
-/// Provider that provides an in-memory ID generator.
-///
-/// Copied from [inMemoryIdGenerator].
-@ProviderFor(inMemoryIdGenerator)
-final inMemoryIdGeneratorProvider = AutoDisposeProvider<IdGenerator>.internal(
-  inMemoryIdGenerator,
-  name: r'inMemoryIdGeneratorProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$inMemoryIdGeneratorHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+String _$idFactoryHash() => r'933f9e439f4ef65d1df599233ef3e65843403e2b';
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef InMemoryIdGeneratorRef = AutoDisposeProviderRef<IdGenerator>;
+/// Provider for managing IDs.
+
+@ProviderFor(IdCollectionManager)
+final idCollectionManagerProvider = IdCollectionManagerProvider._();
+
+/// Provider for managing IDs.
+final class IdCollectionManagerProvider
+    extends $NotifierProvider<IdCollectionManager, List<UniqueId>> {
+  /// Provider for managing IDs.
+  IdCollectionManagerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'idCollectionManagerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$idCollectionManagerHash();
+
+  @$internal
+  @override
+  IdCollectionManager create() => IdCollectionManager();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<UniqueId> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<UniqueId>>(value),
+    );
+  }
+}
+
 String _$idCollectionManagerHash() =>
     r'5a63c497430769dfd222df4749eb63b72a7042ba';
 
 /// Provider for managing IDs.
-///
-/// Copied from [IdCollectionManager].
-@ProviderFor(IdCollectionManager)
-final idCollectionManagerProvider =
-    AutoDisposeNotifierProvider<IdCollectionManager, List<UniqueId>>.internal(
-      IdCollectionManager.new,
-      name: r'idCollectionManagerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$idCollectionManagerHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$IdCollectionManager = AutoDisposeNotifier<List<UniqueId>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$IdCollectionManager extends $Notifier<List<UniqueId>> {
+  List<UniqueId> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<List<UniqueId>, List<UniqueId>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<UniqueId>, List<UniqueId>>,
+              List<UniqueId>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider that provides an ID generator.
+
+@ProviderFor(idGenerator)
+final idGeneratorProvider = IdGeneratorProvider._();
+
+/// Provider that provides an ID generator.
+
+final class IdGeneratorProvider
+    extends $FunctionalProvider<IdGenerator, IdGenerator, IdGenerator>
+    with $Provider<IdGenerator> {
+  /// Provider that provides an ID generator.
+  IdGeneratorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'idGeneratorProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$idGeneratorHash();
+
+  @$internal
+  @override
+  $ProviderElement<IdGenerator> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  IdGenerator create(Ref ref) {
+    return idGenerator(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IdGenerator value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IdGenerator>(value),
+    );
+  }
+}
+
+String _$idGeneratorHash() => r'23c2c7cf655a89a840b304b5d141f1952848e835';
+
+/// Provider that provides an ID generator for testing.
+
+@ProviderFor(testIdGenerator)
+final testIdGeneratorProvider = TestIdGeneratorProvider._();
+
+/// Provider that provides an ID generator for testing.
+
+final class TestIdGeneratorProvider
+    extends $FunctionalProvider<IdGenerator, IdGenerator, IdGenerator>
+    with $Provider<IdGenerator> {
+  /// Provider that provides an ID generator for testing.
+  TestIdGeneratorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'testIdGeneratorProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$testIdGeneratorHash();
+
+  @$internal
+  @override
+  $ProviderElement<IdGenerator> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  IdGenerator create(Ref ref) {
+    return testIdGenerator(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IdGenerator value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IdGenerator>(value),
+    );
+  }
+}
+
+String _$testIdGeneratorHash() => r'2302033894b3a515cccf0e3fa419fbe0f980b50b';
+
+/// Provider that provides an in-memory ID generator.
+
+@ProviderFor(inMemoryIdGenerator)
+final inMemoryIdGeneratorProvider = InMemoryIdGeneratorProvider._();
+
+/// Provider that provides an in-memory ID generator.
+
+final class InMemoryIdGeneratorProvider
+    extends $FunctionalProvider<IdGenerator, IdGenerator, IdGenerator>
+    with $Provider<IdGenerator> {
+  /// Provider that provides an in-memory ID generator.
+  InMemoryIdGeneratorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'inMemoryIdGeneratorProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$inMemoryIdGeneratorHash();
+
+  @$internal
+  @override
+  $ProviderElement<IdGenerator> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  IdGenerator create(Ref ref) {
+    return inMemoryIdGenerator(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IdGenerator value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IdGenerator>(value),
+    );
+  }
+}
+
+String _$inMemoryIdGeneratorHash() =>
+    r'5aab2fc9bd0926f4f5ae2be9dbd80fe595900733';

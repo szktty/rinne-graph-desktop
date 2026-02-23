@@ -2,7 +2,7 @@ name: rinne_graph_desktop
 publish_to: none
 environment:
   sdk: ^3.7.0
-  flutter: '>=3.38.0'
+  flutter: '>=3.41.2'
 
 workspace:
   - apps/desktop
@@ -60,14 +60,14 @@ melos:
     bootstrap:
       environment:
         sdk: ^3.7.0
-        flutter: '>=3.38.0'
+        flutter: '>=3.41.2'
       dependencies:
-        freezed_annotation: ^2.4.4
+        freezed_annotation: ^3.0.0
         intl: ^0.19.0
         json_annotation: ^4.9.0
         go_router: ^14.6.3
-        flutter_riverpod: ^2.6.1
-        riverpod_annotation: ^2.6.1
+        flutter_riverpod: ^3.0.0
+        riverpod_annotation: ^4.0.0
         shared_preferences: ^2.2.2
         lucide_icons_flutter: ^3.0.5
         flutter_desktop_context_menu: ^0.2.0
@@ -78,16 +78,16 @@ melos:
         appkit_ui_element_colors: ^1.0.1
         textfield_tags: ^3.0.1
         file_picker: ^10.1.0
-        searchfield: ^1.3.3
+        searchfield: ^2.0.0
 
       dev_dependencies:
         build_runner: ^2.4.14
         custom_lint: ^0.7.0
-        riverpod_generator: ^2.6.2
-        riverpod_lint: ^2.3.13
-        freezed: ^2.5.7
+        riverpod_generator: ^4.0.0
+        riverpod_lint: ^4.0.0
+        freezed: ^3.0.0
         json_serializable: ^6.8.0
-        test: ^1.25.2
+        test: ^1.28.0
         kiri_check: ^1.0.0
         flutter_gen_runner: ^5.8.0
         very_good_analysis: ^9.0.0
@@ -159,6 +159,7 @@ melos:
         concurrency: 1
 flutter:
   uses-material-design: true
+
 
 dependencies:
   path_provider: ^2.1.5

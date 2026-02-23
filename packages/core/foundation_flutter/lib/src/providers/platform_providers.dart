@@ -5,11 +5,11 @@ part 'platform_providers.g.dart';
 
 /// Provider that supplies platform information.
 @riverpod
-bool isMacOSPlatform(IsMacOSPlatformRef ref) => Platform.isMacOS;
+bool isMacOSPlatform(Ref ref) => Platform.isMacOS;
 
 /// Class for managing platform information.
 @riverpod
-PlatformInfo platformInfo(PlatformInfoRef ref) {
+PlatformInfo platformInfo(Ref ref) {
   return PlatformInfo();
 }
 

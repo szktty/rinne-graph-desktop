@@ -6,69 +6,165 @@ part of 'theme_color_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$themeColorSchemeHash() => r'983cab9cc953179a36a3b97f1f8c51179b30152d';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Currently selected theme color type.
 
-/// Theme color scheme.
-///
-/// Copied from [themeColorScheme].
-@ProviderFor(themeColorScheme)
-final themeColorSchemeProvider =
-    AutoDisposeProvider<models.ThemeColorScheme>.internal(
-      themeColorScheme,
-      name: r'themeColorSchemeProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$themeColorSchemeHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
+@ProviderFor(ThemeColorType)
+final themeColorTypeProvider = ThemeColorTypeProvider._();
+
+/// Currently selected theme color type.
+final class ThemeColorTypeProvider
+    extends $NotifierProvider<ThemeColorType, models.ThemeColorType> {
+  /// Currently selected theme color type.
+  ThemeColorTypeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'themeColorTypeProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$themeColorTypeHash();
+
+  @$internal
+  @override
+  ThemeColorType create() => ThemeColorType();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(models.ThemeColorType value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<models.ThemeColorType>(value),
     );
+  }
+}
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ThemeColorSchemeRef = AutoDisposeProviderRef<models.ThemeColorScheme>;
-String _$effectiveColorSchemeWithThemeHash() =>
-    r'269075b2959b44043cc7fbf786ef616c207ad811';
-
-/// Based on the current theme, system brightness settings, and theme color,
-/// a Provider that obtains the AppColorScheme to be actually applied.
-///
-/// Copied from [effectiveColorSchemeWithTheme].
-@ProviderFor(effectiveColorSchemeWithTheme)
-final effectiveColorSchemeWithThemeProvider =
-    AutoDisposeProvider<AppColorScheme>.internal(
-      effectiveColorSchemeWithTheme,
-      name: r'effectiveColorSchemeWithThemeProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$effectiveColorSchemeWithThemeHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef EffectiveColorSchemeWithThemeRef =
-    AutoDisposeProviderRef<AppColorScheme>;
 String _$themeColorTypeHash() => r'766cb305b32f0040608d91f246bc88906035ed2d';
 
 /// Currently selected theme color type.
-///
-/// Copied from [ThemeColorType].
-@ProviderFor(ThemeColorType)
-final themeColorTypeProvider =
-    AutoDisposeNotifierProvider<ThemeColorType, models.ThemeColorType>.internal(
-      ThemeColorType.new,
-      name: r'themeColorTypeProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$themeColorTypeHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$ThemeColorType = AutoDisposeNotifier<models.ThemeColorType>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$ThemeColorType extends $Notifier<models.ThemeColorType> {
+  models.ThemeColorType build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<models.ThemeColorType, models.ThemeColorType>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<models.ThemeColorType, models.ThemeColorType>,
+              models.ThemeColorType,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Theme color scheme.
+
+@ProviderFor(themeColorScheme)
+final themeColorSchemeProvider = ThemeColorSchemeProvider._();
+
+/// Theme color scheme.
+
+final class ThemeColorSchemeProvider
+    extends
+        $FunctionalProvider<
+          models.ThemeColorScheme,
+          models.ThemeColorScheme,
+          models.ThemeColorScheme
+        >
+    with $Provider<models.ThemeColorScheme> {
+  /// Theme color scheme.
+  ThemeColorSchemeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'themeColorSchemeProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$themeColorSchemeHash();
+
+  @$internal
+  @override
+  $ProviderElement<models.ThemeColorScheme> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  models.ThemeColorScheme create(Ref ref) {
+    return themeColorScheme(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(models.ThemeColorScheme value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<models.ThemeColorScheme>(value),
+    );
+  }
+}
+
+String _$themeColorSchemeHash() => r'983cab9cc953179a36a3b97f1f8c51179b30152d';
+
+/// Based on the current theme, system brightness settings, and theme color,
+/// a Provider that obtains the AppColorScheme to be actually applied.
+
+@ProviderFor(effectiveColorSchemeWithTheme)
+final effectiveColorSchemeWithThemeProvider =
+    EffectiveColorSchemeWithThemeProvider._();
+
+/// Based on the current theme, system brightness settings, and theme color,
+/// a Provider that obtains the AppColorScheme to be actually applied.
+
+final class EffectiveColorSchemeWithThemeProvider
+    extends $FunctionalProvider<AppColorScheme, AppColorScheme, AppColorScheme>
+    with $Provider<AppColorScheme> {
+  /// Based on the current theme, system brightness settings, and theme color,
+  /// a Provider that obtains the AppColorScheme to be actually applied.
+  EffectiveColorSchemeWithThemeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'effectiveColorSchemeWithThemeProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$effectiveColorSchemeWithThemeHash();
+
+  @$internal
+  @override
+  $ProviderElement<AppColorScheme> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AppColorScheme create(Ref ref) {
+    return effectiveColorSchemeWithTheme(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AppColorScheme value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AppColorScheme>(value),
+    );
+  }
+}
+
+String _$effectiveColorSchemeWithThemeHash() =>
+    r'269075b2959b44043cc7fbf786ef616c207ad811';

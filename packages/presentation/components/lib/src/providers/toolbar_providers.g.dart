@@ -6,49 +6,123 @@ part of 'toolbar_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$toolbarActionsHash() => r'a775ad62f507a890c425b16f364406cfe0219302';
-
-/// Provider that supplies toolbar actions.
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Provider that manages the state of the toolbar.
 ///
-/// Copied from [toolbarActions].
-@ProviderFor(toolbarActions)
-final toolbarActionsProvider = AutoDisposeProvider<ToolbarActions>.internal(
-  toolbarActions,
-  name: r'toolbarActionsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$toolbarActionsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+/// Manages the selected tool and the set of enabled tools.
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ToolbarActionsRef = AutoDisposeProviderRef<ToolbarActions>;
+@ProviderFor(ToolbarStateManager)
+final toolbarStateManagerProvider = ToolbarStateManagerProvider._();
+
+/// Provider that manages the state of the toolbar.
+///
+/// Manages the selected tool and the set of enabled tools.
+final class ToolbarStateManagerProvider
+    extends $NotifierProvider<ToolbarStateManager, toolbar_state.ToolbarState> {
+  /// Provider that manages the state of the toolbar.
+  ///
+  /// Manages the selected tool and the set of enabled tools.
+  ToolbarStateManagerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'toolbarStateManagerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$toolbarStateManagerHash();
+
+  @$internal
+  @override
+  ToolbarStateManager create() => ToolbarStateManager();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(toolbar_state.ToolbarState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<toolbar_state.ToolbarState>(value),
+    );
+  }
+}
+
 String _$toolbarStateManagerHash() =>
     r'a4a5d059da2c29066a7e42e99e45098a78c6f3fc';
 
 /// Provider that manages the state of the toolbar.
 ///
 /// Manages the selected tool and the set of enabled tools.
-///
-/// Copied from [ToolbarStateManager].
-@ProviderFor(ToolbarStateManager)
-final toolbarStateManagerProvider = AutoDisposeNotifierProvider<
-  ToolbarStateManager,
-  toolbar_state.ToolbarState
->.internal(
-  ToolbarStateManager.new,
-  name: r'toolbarStateManagerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$toolbarStateManagerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$ToolbarStateManager = AutoDisposeNotifier<toolbar_state.ToolbarState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$ToolbarStateManager
+    extends $Notifier<toolbar_state.ToolbarState> {
+  toolbar_state.ToolbarState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<toolbar_state.ToolbarState, toolbar_state.ToolbarState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                toolbar_state.ToolbarState,
+                toolbar_state.ToolbarState
+              >,
+              toolbar_state.ToolbarState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider that supplies toolbar actions.
+
+@ProviderFor(toolbarActions)
+final toolbarActionsProvider = ToolbarActionsProvider._();
+
+/// Provider that supplies toolbar actions.
+
+final class ToolbarActionsProvider
+    extends $FunctionalProvider<ToolbarActions, ToolbarActions, ToolbarActions>
+    with $Provider<ToolbarActions> {
+  /// Provider that supplies toolbar actions.
+  ToolbarActionsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'toolbarActionsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$toolbarActionsHash();
+
+  @$internal
+  @override
+  $ProviderElement<ToolbarActions> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ToolbarActions create(Ref ref) {
+    return toolbarActions(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ToolbarActions value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ToolbarActions>(value),
+    );
+  }
+}
+
+String _$toolbarActionsHash() => r'a775ad62f507a890c425b16f364406cfe0219302';

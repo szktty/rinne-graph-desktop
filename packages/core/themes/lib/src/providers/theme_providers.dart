@@ -134,7 +134,7 @@ class ActiveTheme extends _$ActiveTheme {
 
 /// Provider that obtains the AppColorScheme to be actually applied, based on the current theme, system brightness settings, and theme color.
 @riverpod
-AppColorScheme effectiveColorScheme(EffectiveColorSchemeRef ref) {
+AppColorScheme effectiveColorScheme(Ref ref) {
   final themeData = ref.watch(activeThemeProvider);
   final platformBrightness = ref.watch(platformBrightnessProvider);
   final themeColorType = ref.watch(themeColorTypeProvider);
@@ -153,14 +153,14 @@ AppColorScheme effectiveColorScheme(EffectiveColorSchemeRef ref) {
 
 /// Provider that obtains the Flutter ColorScheme to be actually applied, based on the current theme and system brightness settings.
 @riverpod
-ColorScheme effectiveFlutterColorScheme(EffectiveFlutterColorSchemeRef ref) {
+ColorScheme effectiveFlutterColorScheme(Ref ref) {
   final appColorScheme = ref.watch(effectiveColorSchemeProvider);
   return appColorScheme.toColorScheme();
 }
 
 /// Provider that obtains the ThemeData to be actually applied, based on the current theme and system brightness settings.
 @riverpod
-ThemeData effectiveThemeData(EffectiveThemeDataRef ref) {
+ThemeData effectiveThemeData(Ref ref) {
   final themeData = ref.watch(activeThemeProvider);
   final platformBrightness = ref.watch(platformBrightnessProvider);
 

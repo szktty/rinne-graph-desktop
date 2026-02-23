@@ -12,9 +12,7 @@ part 'graph_providers.g.dart';
 
 /// Provider for GraphStorage for the active stack
 @riverpod
-core_graph.GraphStorage? activeStackGraphStorage(
-  ActiveStackGraphStorageRef ref,
-) {
+core_graph.GraphStorage? activeStackGraphStorage(Ref ref) {
   final activeStack = ref.watch(core_stack.activeStackProvider);
 
   if (activeStack == null) {
@@ -179,7 +177,7 @@ core_graph.Graph _createSampleGraph(core_stack.Stack activeStack) {
 class SelectedGraphEntityId extends _$SelectedGraphEntityId {
   @override
   core_graph.EntityId? build() {
-    final selectionState = ref.watch(selectionStateNotifierProvider);
+    final selectionState = ref.watch(selectionStateProvider);
     return selectionState.selectedEntityId;
   }
 
@@ -187,7 +185,7 @@ class SelectedGraphEntityId extends _$SelectedGraphEntityId {
     core_graph.EntityId? newId, {
     SelectionSource source = SelectionSource.ui,
   }) {
-    final selectionNotifier = ref.read(selectionStateNotifierProvider.notifier);
+    final selectionNotifier = ref.read(selectionStateProvider.notifier);
 
     if (newId != null) {
       selectionNotifier.selectEntity(newId, source: source);
@@ -219,7 +217,7 @@ class GraphViewCache {
 
 /// Provider for the graph view cache
 @riverpod
-GraphViewCache graphViewCache(GraphViewCacheRef ref) {
+GraphViewCache graphViewCache(Ref ref) {
   return GraphViewCache();
 }
 
@@ -227,19 +225,19 @@ GraphViewCache graphViewCache(GraphViewCacheRef ref) {
 // Legacy API Compatibility Providers
 // ========================================
 
-// GraphSelectionState is deprecated - use selectionStateNotifierProvider directly
+// GraphSelectionState is deprecated - use selectionStateProvider directly
 
 // ViewToolbarState uses presentation_components/toolbar_providers.dart
 
 /// Graph operations actions provider
 @riverpod
-GraphActions graphActions(GraphActionsRef ref) {
+GraphActions graphActions(Ref ref) {
   return GraphActions(ref);
 }
 
 /// Helper class for graph operations
 class GraphActions {
-  final GraphActionsRef _ref;
+  final Ref _ref;
 
   GraphActions(this._ref);
 
@@ -250,7 +248,7 @@ class GraphActions {
 
   /// Get selection state
   SelectionState get selectionState {
-    return _ref.read(selectionStateNotifierProvider);
+    return _ref.read(selectionStateProvider);
   }
 
   /// Select entity
@@ -259,15 +257,13 @@ class GraphActions {
     SelectionSource source = SelectionSource.ui,
   }) {
     _ref
-        .read(selectionStateNotifierProvider.notifier)
+        .read(selectionStateProvider.notifier)
         .selectEntity(entityId, source: source);
   }
 
   /// Clear selection
   void clearSelection({SelectionSource source = SelectionSource.ui}) {
-    _ref
-        .read(selectionStateNotifierProvider.notifier)
-        .clearSelection(source: source);
+    _ref.read(selectionStateProvider.notifier).clearSelection(source: source);
   }
 
   /// Check if entity exists in current graph

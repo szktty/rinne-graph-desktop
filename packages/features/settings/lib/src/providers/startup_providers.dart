@@ -9,7 +9,7 @@ part 'startup_providers.g.dart';
 
 /// Startup settings.
 @freezed
-class StartupSettings with _$StartupSettings {
+abstract class StartupSettings with _$StartupSettings {
   const factory StartupSettings({
     /// Whether to automatically open the last opened stack on startup.
     @Default(false) bool autoOpenLastStack,
@@ -112,34 +112,33 @@ class StartupSettingsNotifier extends _$StartupSettingsNotifier {
 
   /// Path of the last opened stack.を記録
   Future<void> updateLastOpenedStack(String? path) async {
-    final current = state.valueOrNull ?? const StartupSettings();
+    final current = state.value ?? const StartupSettings();
     await updateSettings(current.copyWith(lastOpenedStackPath: path));
   }
 
   /// Toggles auto-startup on/off.
   Future<void> toggleAutoOpen(bool enabled) async {
-    final current = state.valueOrNull ?? const StartupSettings();
+    final current = state.value ?? const StartupSettings();
     await updateSettings(current.copyWith(autoOpenLastStack: enabled));
   }
 
   /// Updates first launch flag (set to false when first launch is complete).
   Future<void> markFirstLaunchComplete() async {
-    final current = state.valueOrNull ?? const StartupSettings();
+    final current = state.value ?? const StartupSettings();
     await updateSettings(current.copyWith(isFirstLaunch: false));
   }
 
   /// Toggles sample stack auto-generation flag.
   Future<void> toggleSampleStackAutoGeneration(bool enabled) async {
-    final current = state.valueOrNull ?? const StartupSettings();
+    final current = state.value ?? const StartupSettings();
     await updateSettings(
       current.copyWith(enableSampleStackAutoGeneration: enabled),
     );
   }
 }
 
-/// Startup settings provider.
+/// Startup settings sync provider (returns default if async not yet loaded).
 @Riverpod(keepAlive: true)
-StartupSettings startupSettings(Ref ref) {
-  return ref.watch(startupSettingsNotifierProvider).valueOrNull ??
-      const StartupSettings();
+StartupSettings startupSettingsSync(Ref ref) {
+  return ref.watch(startupSettingsProvider).value ?? const StartupSettings();
 }

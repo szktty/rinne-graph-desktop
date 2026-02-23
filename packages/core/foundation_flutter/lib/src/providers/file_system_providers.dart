@@ -6,34 +6,34 @@ part 'file_system_providers.g.dart';
 
 /// Provider that provides a FileSystemService instance
 @riverpod
-FileSystemService fileSystemService(FileSystemServiceRef ref) {
+FileSystemService fileSystemService(Ref ref) {
   return FileSystemService();
 }
 
 /// Provider that provides the application's documents directory
 @riverpod
-Future<Directory> documentsDirectory(DocumentsDirectoryRef ref) async {
+Future<Directory> documentsDirectory(Ref ref) async {
   final service = ref.watch(fileSystemServiceProvider);
   return await service.getApplicationDocumentsDirectory();
 }
 
 /// Provider that provides the application's support directory
 @riverpod
-Future<Directory> supportDirectory(SupportDirectoryRef ref) async {
+Future<Directory> supportDirectory(Ref ref) async {
   final service = ref.watch(fileSystemServiceProvider);
   return await service.getApplicationSupportDirectory();
 }
 
 /// Provider that provides the application's temporary directory
 @riverpod
-Future<Directory> temporaryDirectory(TemporaryDirectoryRef ref) async {
+Future<Directory> temporaryDirectory(Ref ref) async {
   final service = ref.watch(fileSystemServiceProvider);
   return await service.getTemporaryDirectory();
 }
 
 /// Provider that provides file system operations
 @riverpod
-FileSystemOperations fileSystemOperations(FileSystemOperationsRef ref) {
+FileSystemOperations fileSystemOperations(Ref ref) {
   final service = ref.watch(fileSystemServiceProvider);
   return FileSystemOperations(service);
 }

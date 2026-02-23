@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:core_foundation_flutter/core_foundation_flutter.dart';
 
 /// Riverpod class for managing widget IDs.

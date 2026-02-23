@@ -6,24 +6,23 @@ part of 'startup_providers.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$StartupSettingsImpl _$$StartupSettingsImplFromJson(
-  Map<String, dynamic> json,
-) => _$StartupSettingsImpl(
-  autoOpenLastStack: json['autoOpenLastStack'] as bool? ?? false,
-  lastOpenedStackPath: json['lastOpenedStackPath'] as String?,
-  errorBehavior:
-      $enumDecodeNullable(
-        _$StartupErrorBehaviorEnumMap,
-        json['errorBehavior'],
-      ) ??
-      StartupErrorBehavior.showWelcome,
-  isFirstLaunch: json['isFirstLaunch'] as bool? ?? true,
-  enableSampleStackAutoGeneration:
-      json['enableSampleStackAutoGeneration'] as bool? ?? true,
-);
+_StartupSettings _$StartupSettingsFromJson(Map<String, dynamic> json) =>
+    _StartupSettings(
+      autoOpenLastStack: json['autoOpenLastStack'] as bool? ?? false,
+      lastOpenedStackPath: json['lastOpenedStackPath'] as String?,
+      errorBehavior:
+          $enumDecodeNullable(
+            _$StartupErrorBehaviorEnumMap,
+            json['errorBehavior'],
+          ) ??
+          StartupErrorBehavior.showWelcome,
+      isFirstLaunch: json['isFirstLaunch'] as bool? ?? true,
+      enableSampleStackAutoGeneration:
+          json['enableSampleStackAutoGeneration'] as bool? ?? true,
+    );
 
-Map<String, dynamic> _$$StartupSettingsImplToJson(
-  _$StartupSettingsImpl instance,
+Map<String, dynamic> _$StartupSettingsToJson(
+  _StartupSettings instance,
 ) => <String, dynamic>{
   'autoOpenLastStack': instance.autoOpenLastStack,
   'lastOpenedStackPath': instance.lastOpenedStackPath,
@@ -42,45 +41,104 @@ const _$StartupErrorBehaviorEnumMap = {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$startupSettingsHash() => r'67a30e14f69af12d40edaa2fca11a600abb784be';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Startup settings provider.
+
+@ProviderFor(StartupSettingsNotifier)
+final startupSettingsProvider = StartupSettingsNotifierProvider._();
 
 /// Startup settings provider.
-///
-/// Copied from [startupSettings].
-@ProviderFor(startupSettings)
-final startupSettingsProvider = Provider<StartupSettings>.internal(
-  startupSettings,
-  name: r'startupSettingsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$startupSettingsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final class StartupSettingsNotifierProvider
+    extends $AsyncNotifierProvider<StartupSettingsNotifier, StartupSettings> {
+  /// Startup settings provider.
+  StartupSettingsNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'startupSettingsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef StartupSettingsRef = ProviderRef<StartupSettings>;
+  @override
+  String debugGetCreateSourceHash() => _$startupSettingsNotifierHash();
+
+  @$internal
+  @override
+  StartupSettingsNotifier create() => StartupSettingsNotifier();
+}
+
 String _$startupSettingsNotifierHash() =>
     r'f058513565aae37c4d10046437af7bcc236691f7';
 
 /// Startup settings provider.
-///
-/// Copied from [StartupSettingsNotifier].
-@ProviderFor(StartupSettingsNotifier)
-final startupSettingsNotifierProvider =
-    AsyncNotifierProvider<StartupSettingsNotifier, StartupSettings>.internal(
-      StartupSettingsNotifier.new,
-      name: r'startupSettingsNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$startupSettingsNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$StartupSettingsNotifier = AsyncNotifier<StartupSettings>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$StartupSettingsNotifier
+    extends $AsyncNotifier<StartupSettings> {
+  FutureOr<StartupSettings> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<StartupSettings>, StartupSettings>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<StartupSettings>, StartupSettings>,
+              AsyncValue<StartupSettings>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Startup settings sync provider (returns default if async not yet loaded).
+
+@ProviderFor(startupSettingsSync)
+final startupSettingsSyncProvider = StartupSettingsSyncProvider._();
+
+/// Startup settings sync provider (returns default if async not yet loaded).
+
+final class StartupSettingsSyncProvider
+    extends
+        $FunctionalProvider<StartupSettings, StartupSettings, StartupSettings>
+    with $Provider<StartupSettings> {
+  /// Startup settings sync provider (returns default if async not yet loaded).
+  StartupSettingsSyncProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'startupSettingsSyncProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$startupSettingsSyncHash();
+
+  @$internal
+  @override
+  $ProviderElement<StartupSettings> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  StartupSettings create(Ref ref) {
+    return startupSettingsSync(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(StartupSettings value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<StartupSettings>(value),
+    );
+  }
+}
+
+String _$startupSettingsSyncHash() =>
+    r'8d99fb668bb6408fb987ba5d7e5cfa1e94cf68df';
