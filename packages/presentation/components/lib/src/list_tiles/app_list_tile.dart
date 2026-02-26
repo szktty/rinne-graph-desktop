@@ -7,9 +7,7 @@ part 'app_list_tile.g.dart';
 
 /// Provider that supplies an effective AppColorScheme.
 @riverpod
-AppColorScheme effectiveAppColorSchemeForListTile(
-  EffectiveAppColorSchemeForListTileRef ref,
-) {
+AppColorScheme effectiveAppColorSchemeForListTile(Ref ref) {
   return AppThemePresets.light.appColorScheme;
 }
 

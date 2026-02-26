@@ -182,8 +182,8 @@ class Toolbar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(toolbarStateNotifierProvider);
-    final toolbarNotifier = ref.read(toolbarStateNotifierProvider.notifier);
+    final state = ref.watch(toolbarStateProvider);
+    final toolbarNotifier = ref.read(toolbarStateProvider.notifier);
     final accessibilityConfig = ref.watch(accessibilityConfigProvider);
     final zoomScale = disableZoom ? 1.0 : accessibilityConfig.zoomScale;
 

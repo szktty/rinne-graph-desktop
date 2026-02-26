@@ -18,7 +18,7 @@ part 'graph_providers.g.dart';
 /// This is typically set during application startup and
 /// is used by graphContextProvider.
 @riverpod
-GraphStorage graphStorage(GraphStorageRef ref) {
+GraphStorage graphStorage(Ref ref) {
   // Implementation varies by application
   // Here it simply serves as a dependency injection point
   throw UnimplementedError(
@@ -31,7 +31,7 @@ GraphStorage graphStorage(GraphStorageRef ref) {
 /// This provider provides the context for the graph database.
 /// Used to share a single GraphContext instance across the entire application.
 @riverpod
-GraphContext graphContext(GraphContextRef ref) {
+GraphContext graphContext(Ref ref) {
   final storage = ref.watch(graphStorageProvider);
   final context = GraphContext(storage: storage);
 
@@ -170,7 +170,7 @@ Entity? selectedEntity(Ref ref) {
 ///
 /// Provider for creating, retrieving, updating, and deleting nodes through GraphContext.
 @riverpod
-NodeOperations nodeOperations(NodeOperationsRef ref) {
+NodeOperations nodeOperations(Ref ref) {
   final context = ref.watch(graphContextProvider);
   return NodeOperations(context);
 }
@@ -179,7 +179,7 @@ NodeOperations nodeOperations(NodeOperationsRef ref) {
 ///
 /// Provider for creating, retrieving, updating, and deleting links through GraphContext.
 @riverpod
-LinkOperations linkOperations(LinkOperationsRef ref) {
+LinkOperations linkOperations(Ref ref) {
   final context = ref.watch(graphContextProvider);
   return LinkOperations(context);
 }
@@ -188,7 +188,7 @@ LinkOperations linkOperations(LinkOperationsRef ref) {
 ///
 /// Provider for saving, retrieving, and deleting binary data through GraphContext.
 @riverpod
-BinaryDataOperations binaryDataOperations(BinaryDataOperationsRef ref) {
+BinaryDataOperations binaryDataOperations(Ref ref) {
   final context = ref.watch(graphContextProvider);
   return BinaryDataOperations(context);
 }
@@ -197,7 +197,7 @@ BinaryDataOperations binaryDataOperations(BinaryDataOperationsRef ref) {
 ///
 /// Provider for executing transactions through GraphContext.
 @riverpod
-TransactionOperations transactionOperations(TransactionOperationsRef ref) {
+TransactionOperations transactionOperations(Ref ref) {
   final context = ref.watch(graphContextProvider);
   return TransactionOperations(context);
 }
@@ -207,7 +207,7 @@ TransactionOperations transactionOperations(TransactionOperationsRef ref) {
 /// This provider retrieves statistics from the graph database.
 /// Returns AsyncValue so UI can properly handle async state.
 @riverpod
-Future<StorageStatistics> graphStatistics(GraphStatisticsRef ref) async {
+Future<StorageStatistics> graphStatistics(Ref ref) async {
   final context = ref.watch(graphContextProvider);
   return context.getStatistics();
 }
@@ -216,7 +216,7 @@ Future<StorageStatistics> graphStatistics(GraphStatisticsRef ref) async {
 ///
 /// Retrieves metadata such as node labels, link types, and property keys.
 @riverpod
-Future<GraphMetadata> graphMetadata(GraphMetadataRef ref) async {
+Future<GraphMetadata> graphMetadata(Ref ref) async {
   final context = ref.watch(graphContextProvider);
 
   final results = await Future.wait([
@@ -236,9 +236,7 @@ Future<GraphMetadata> graphMetadata(GraphMetadataRef ref) async {
 ///
 /// Factory provider that generates query builders for nodes.
 @riverpod
-GraphQuery<Node> Function() nodeQueryBuilderFactory(
-  NodeQueryBuilderFactoryRef ref,
-) {
+GraphQuery<Node> Function() nodeQueryBuilderFactory(Ref ref) {
   return () => GraphQuery<Node>(entityType: Node);
 }
 
@@ -246,9 +244,7 @@ GraphQuery<Node> Function() nodeQueryBuilderFactory(
 ///
 /// Factory provider that generates query builders for links.
 @riverpod
-GraphQuery<Link> Function() linkQueryBuilderFactory(
-  LinkQueryBuilderFactoryRef ref,
-) {
+GraphQuery<Link> Function() linkQueryBuilderFactory(Ref ref) {
   return () => GraphQuery<Link>(entityType: Link);
 }
 
@@ -257,7 +253,7 @@ GraphQuery<Link> Function() linkQueryBuilderFactory(
 /// Retrieves a list of nodes based on specific conditions and returns as AsyncValue.
 /// This provider caches query results so UI can display the latest data.
 @riverpod
-Future<List<Node>> nodesList(NodesListRef ref, GraphQuery<Node> query) async {
+Future<List<Node>> nodesList(Ref ref, GraphQuery<Node> query) async {
   final nodeOps = ref.watch(nodeOperationsProvider);
   final result = await nodeOps.queryNodes(query);
   return result.items;
@@ -268,7 +264,7 @@ Future<List<Node>> nodesList(NodesListRef ref, GraphQuery<Node> query) async {
 /// Retrieves a list of links based on specific conditions and returns as AsyncValue.
 /// This provider caches query results so UI can display the latest data.
 @riverpod
-Future<List<Link>> linksList(LinksListRef ref, GraphQuery<Link> query) async {
+Future<List<Link>> linksList(Ref ref, GraphQuery<Link> query) async {
   final linkOps = ref.watch(linkOperationsProvider);
   final result = await linkOps.queryLinks(query);
   return result.items;

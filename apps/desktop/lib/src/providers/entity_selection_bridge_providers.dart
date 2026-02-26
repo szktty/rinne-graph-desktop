@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
 import 'package:presentation_components/presentation_components.dart';
@@ -74,7 +75,7 @@ class EntitySelectionBridge extends _$EntitySelectionBridge {
     });
 
     // Directly monitor selection state
-    ref.listen(selectionStateNotifierProvider, (previous, next) {
+    ref.listen(selectionStateProvider, (previous, next) {
       final entityId = next.selectedEntityId;
       debugPrint(
         '[EntitySelectionBridge] Selection state changed: ${previous?.selectedEntityId} -> $entityId',

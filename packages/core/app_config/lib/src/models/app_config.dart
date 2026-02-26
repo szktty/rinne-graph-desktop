@@ -5,7 +5,7 @@ part 'app_config.g.dart';
 
 /// Application-wide configuration
 @freezed
-class AppConfig with _$AppConfig {
+abstract class AppConfig with _$AppConfig {
   const factory AppConfig({
     /// Configuration name (for identification)
     @Default('default') String name,
@@ -29,7 +29,7 @@ class AppConfig with _$AppConfig {
 
 /// Debug-related configuration
 @freezed
-class DebugConfig with _$DebugConfig {
+abstract class DebugConfig with _$DebugConfig {
   const factory DebugConfig({
     /// Whether to force enable debug mode
     @Default(null) bool? forceDebugMode,
@@ -50,7 +50,7 @@ class DebugConfig with _$DebugConfig {
 
 /// Startup configuration
 @freezed
-class StartupConfig with _$StartupConfig {
+abstract class StartupConfig with _$StartupConfig {
   const factory StartupConfig({
     /// Whether to automatically open the last opened stack on startup
     @Default(null) bool? autoOpenLastStack,
@@ -92,7 +92,7 @@ enum StartupErrorBehavior {
 
 /// Development configuration
 @freezed
-class DevelopmentConfig with _$DevelopmentConfig {
+abstract class DevelopmentConfig with _$DevelopmentConfig {
   const factory DevelopmentConfig({
     /// Whether to perform full reset of all settings
     @Default(false) bool resetAllSettings,

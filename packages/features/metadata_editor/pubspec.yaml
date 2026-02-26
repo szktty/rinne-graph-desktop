@@ -7,7 +7,7 @@ publish_to: none
 
 environment:
   sdk: ^3.7.0
-  flutter: ">=3.38.0"
+  flutter: ">=3.41.2"
 
 dependencies:
   core_foundation_flutter:
@@ -22,15 +22,15 @@ dependencies:
     sdk: flutter
   lucide_icons_flutter: ^3.0.5
   figma_squircle: ^0.6.3
-  flutter_riverpod: ^2.6.1
-  riverpod_annotation: ^2.6.1
+  flutter_riverpod: ^3.0.0
+  riverpod_annotation: ^4.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
   very_good_analysis: ^9.0.0
-  riverpod_generator: ^2.6.2
+  riverpod_generator: ^4.0.0
   build_runner: ^2.4.14
 
 # For information on the generic Dart part of this file, see the

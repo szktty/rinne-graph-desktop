@@ -50,6 +50,3 @@ class AutoSaveSettingsNotifier extends _$AutoSaveSettingsNotifier {
     // TODO: Save settings to storage
   }
 }
-
-// Alias for backward compatibility
-final autoSaveSettingsProvider = autoSaveSettingsNotifierProvider;

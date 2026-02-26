@@ -159,7 +159,7 @@ class SearchError extends _$SearchError {
 
 /// Search execution service provider
 @riverpod
-SearchExecutionService? searchExecutionService(SearchExecutionServiceRef ref) {
+SearchExecutionService? searchExecutionService(Ref ref) {
   final activeGraphStorage = ref.watch(activeStackGraphStorageProvider);
   if (activeGraphStorage == null) return null;
   return SearchExecutionService(activeGraphStorage);
@@ -167,9 +167,7 @@ SearchExecutionService? searchExecutionService(SearchExecutionServiceRef ref) {
 
 /// Search pattern translation service provider
 @riverpod
-SearchPatternTranslator searchPatternTranslator(
-  SearchPatternTranslatorRef ref,
-) {
+SearchPatternTranslator searchPatternTranslator(Ref ref) {
   return SearchPatternTranslator();
 }
 

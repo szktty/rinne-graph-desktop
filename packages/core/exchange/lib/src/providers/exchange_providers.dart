@@ -7,7 +7,7 @@ part 'exchange_providers.g.dart';
 
 /// Provider for stack exchange service
 @riverpod
-StackExchangeService stackExchangeService(StackExchangeServiceRef ref) {
+StackExchangeService stackExchangeService(Ref ref) {
   return StackExchangeService(ref: ref);
 }
 

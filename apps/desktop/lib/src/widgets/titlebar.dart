@@ -158,9 +158,7 @@ class Titlebar extends ConsumerWidget {
     // Set graph data for pathfinder (only when necessary)
     if (pathfinderState.activeGraph != graph) {
       Future(() {
-        ref
-            .read(pathfinderStateNotifierProvider.notifier)
-            .setActiveGraph(graph);
+        ref.read(pathfinderStateProvider.notifier).setActiveGraph(graph);
       });
     }
 
@@ -171,12 +169,12 @@ class Titlebar extends ConsumerWidget {
         debugPrint('Search: $value');
         if (graph != null && value.isNotEmpty) {
           final results = ref
-              .read(pathfinderStateNotifierProvider.notifier)
+              .read(pathfinderStateProvider.notifier)
               .searchEntities(value);
           debugPrint('Search results: ${results.length} items');
           if (results.isNotEmpty) {
             ref
-                .read(pathfinderStateNotifierProvider.notifier)
+                .read(pathfinderStateProvider.notifier)
                 .addRecentItem(results.first);
           }
         }

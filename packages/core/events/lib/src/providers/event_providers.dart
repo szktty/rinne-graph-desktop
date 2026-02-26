@@ -19,13 +19,13 @@ SignalEventBus<T> signalEventBus<T extends Event>(SignalEventBusRef<T> ref) {
 
 /// Provider managing the global event bus
 @riverpod
-GlobalEventBus globalEventBus(GlobalEventBusRef ref) {
+GlobalEventBus globalEventBus(Ref ref) {
   return GlobalEventBus();
 }
 
 /// Provider offering event operations
 @riverpod
-EventOperations eventOperations(EventOperationsRef ref) {
+EventOperations eventOperations(Ref ref) {
   return EventOperations(ref);
 }
 

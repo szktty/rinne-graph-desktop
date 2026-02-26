@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 import 'package:presentation_components/presentation_components.dart';
 
@@ -19,7 +20,7 @@ class ActivityBarState extends _$ActivityBarState {
 
 /// Alias for selected activity index for compatibility
 @riverpod
-int selectedActivityIndex(SelectedActivityIndexRef ref) {
+int selectedActivityIndex(Ref ref) {
   return ref.watch(activityBarStateProvider);
 }
 
@@ -256,15 +257,9 @@ class PathfinderStateNotifier extends _$PathfinderStateNotifier {
   }
 }
 
-/// Alias for pathfinder state
-@riverpod
-PathfinderState pathfinderState(PathfinderStateRef ref) {
-  return ref.watch(pathfinderStateNotifierProvider);
-}
-
 /// Provider for current stack path (overrides core_graph provider)
 // @riverpod
-// String? currentStackPath(CurrentStackPathRef ref) {
+// String? currentStackPath(Ref ref) {
 //   final activeStack = ref.watch(activeStackProvider);
 //   return activeStack?.path;
 // }

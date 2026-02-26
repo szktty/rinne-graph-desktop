@@ -5,7 +5,7 @@ part 'localization_providers.g.dart';
 
 /// List of supported locales
 @riverpod
-List<Locale> supportedLocales(SupportedLocalesRef ref) {
+List<Locale> supportedLocales(Ref ref) {
   return const [Locale('ja', 'JP'), Locale('en', 'US')];
 }
 
@@ -44,6 +44,6 @@ class LocalizationNotifier extends _$LocalizationNotifier {
 /// Provider that provides the current locale.
 /// Retrieved from LocalizationNotifier state.
 @riverpod
-Locale currentLocale(CurrentLocaleRef ref) {
+Locale currentLocale(Ref ref) {
   return ref.watch(localizationNotifierProvider);
 }

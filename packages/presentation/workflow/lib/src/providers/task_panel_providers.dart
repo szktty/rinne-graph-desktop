@@ -63,7 +63,7 @@ class TaskPanelState extends _$TaskPanelState {
 
 /// Provider that manages the active task list
 @riverpod
-List<Task> activeTasks(ActiveTasksRef ref) {
+List<Task> activeTasks(Ref ref) {
   // TODO: Integrate with actual task management system
   // Currently returns fixed sample data
   return [

@@ -6,142 +6,304 @@ part of 'app_config_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appConfigHash() => r'f2322b22a1e512d6fb438c0992b739dae1a9cec8';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Command-line arguments provider
+/// Set when application starts
 
-/// Provider for getting current application configuration
-///
-/// Copied from [appConfig].
-@ProviderFor(appConfig)
-final appConfigProvider = AutoDisposeProvider<AppConfig>.internal(
-  appConfig,
-  name: r'appConfigProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$appConfigHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(CommandLineArgs)
+final commandLineArgsProvider = CommandLineArgsProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AppConfigRef = AutoDisposeProviderRef<AppConfig>;
-String _$debugConfigHash() => r'1a3cd00fdbde34da28878a9bed7a2724a4b77366';
+/// Command-line arguments provider
+/// Set when application starts
+final class CommandLineArgsProvider
+    extends $NotifierProvider<CommandLineArgs, List<String>> {
+  /// Command-line arguments provider
+  /// Set when application starts
+  CommandLineArgsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'commandLineArgsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-/// Debug configuration provider
-///
-/// Copied from [debugConfig].
-@ProviderFor(debugConfig)
-final debugConfigProvider = AutoDisposeProvider<DebugConfig>.internal(
-  debugConfig,
-  name: r'debugConfigProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$debugConfigHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+  @override
+  String debugGetCreateSourceHash() => _$commandLineArgsHash();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef DebugConfigRef = AutoDisposeProviderRef<DebugConfig>;
-String _$startupConfigHash() => r'8f6cb3023befd2d7a0d7921d1406387f3ce67a57';
+  @$internal
+  @override
+  CommandLineArgs create() => CommandLineArgs();
 
-/// Startup configuration provider
-///
-/// Copied from [startupConfig].
-@ProviderFor(startupConfig)
-final startupConfigProvider = AutoDisposeProvider<StartupConfig>.internal(
-  startupConfig,
-  name: r'startupConfigProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$startupConfigHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef StartupConfigRef = AutoDisposeProviderRef<StartupConfig>;
-String _$developmentConfigHash() => r'43621dbf5a91953d7c00e8b01c1964d57b759192';
-
-/// Development configuration provider
-///
-/// Copied from [developmentConfig].
-@ProviderFor(developmentConfig)
-final developmentConfigProvider =
-    AutoDisposeProvider<DevelopmentConfig>.internal(
-      developmentConfig,
-      name: r'developmentConfigProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$developmentConfigHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
     );
+  }
+}
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef DevelopmentConfigRef = AutoDisposeProviderRef<DevelopmentConfig>;
-String _$availableConfigsHash() => r'031e9449677f512b9994882bf553c928c920b7c1';
-
-/// Provider for list of available configuration files (development)
-///
-/// Copied from [availableConfigs].
-@ProviderFor(availableConfigs)
-final availableConfigsProvider =
-    AutoDisposeFutureProvider<List<String>>.internal(
-      availableConfigs,
-      name: r'availableConfigsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$availableConfigsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AvailableConfigsRef = AutoDisposeFutureProviderRef<List<String>>;
 String _$commandLineArgsHash() => r'40e2cadf2d88403ac8d6ad787b14b7bdaafc4aaf';
 
 /// Command-line arguments provider
 /// Set when application starts
-///
-/// Copied from [CommandLineArgs].
-@ProviderFor(CommandLineArgs)
-final commandLineArgsProvider =
-    NotifierProvider<CommandLineArgs, List<String>>.internal(
-      CommandLineArgs.new,
-      name: r'commandLineArgsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$commandLineArgsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$CommandLineArgs = Notifier<List<String>>;
+abstract class _$CommandLineArgs extends $Notifier<List<String>> {
+  List<String> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<List<String>, List<String>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<String>, List<String>>,
+              List<String>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Application configuration provider
+
+@ProviderFor(AppConfigNotifier)
+final appConfigProvider = AppConfigNotifierProvider._();
+
+/// Application configuration provider
+final class AppConfigNotifierProvider
+    extends $AsyncNotifierProvider<AppConfigNotifier, AppConfig> {
+  /// Application configuration provider
+  AppConfigNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appConfigProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appConfigNotifierHash();
+
+  @$internal
+  @override
+  AppConfigNotifier create() => AppConfigNotifier();
+}
+
 String _$appConfigNotifierHash() => r'abc7f8d2075b6df559effc5b532bcb8ce10b7400';
 
 /// Application configuration provider
-///
-/// Copied from [AppConfigNotifier].
-@ProviderFor(AppConfigNotifier)
-final appConfigNotifierProvider =
-    AsyncNotifierProvider<AppConfigNotifier, AppConfig>.internal(
-      AppConfigNotifier.new,
-      name: r'appConfigNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$appConfigNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$AppConfigNotifier = AsyncNotifier<AppConfig>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$AppConfigNotifier extends $AsyncNotifier<AppConfig> {
+  FutureOr<AppConfig> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<AppConfig>, AppConfig>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<AppConfig>, AppConfig>,
+              AsyncValue<AppConfig>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Debug configuration provider
+
+@ProviderFor(debugConfig)
+final debugConfigProvider = DebugConfigProvider._();
+
+/// Debug configuration provider
+
+final class DebugConfigProvider
+    extends $FunctionalProvider<DebugConfig, DebugConfig, DebugConfig>
+    with $Provider<DebugConfig> {
+  /// Debug configuration provider
+  DebugConfigProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugConfigProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugConfigHash();
+
+  @$internal
+  @override
+  $ProviderElement<DebugConfig> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  DebugConfig create(Ref ref) {
+    return debugConfig(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DebugConfig value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DebugConfig>(value),
+    );
+  }
+}
+
+String _$debugConfigHash() => r'dd27d44aeba65bb3c3ba2199c037546a1f6ed310';
+
+/// Startup configuration provider
+
+@ProviderFor(startupConfig)
+final startupConfigProvider = StartupConfigProvider._();
+
+/// Startup configuration provider
+
+final class StartupConfigProvider
+    extends $FunctionalProvider<StartupConfig, StartupConfig, StartupConfig>
+    with $Provider<StartupConfig> {
+  /// Startup configuration provider
+  StartupConfigProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'startupConfigProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$startupConfigHash();
+
+  @$internal
+  @override
+  $ProviderElement<StartupConfig> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  StartupConfig create(Ref ref) {
+    return startupConfig(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(StartupConfig value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<StartupConfig>(value),
+    );
+  }
+}
+
+String _$startupConfigHash() => r'a8e7c213f556b2a051da82a1b300f7318e153b3d';
+
+/// Development configuration provider
+
+@ProviderFor(developmentConfig)
+final developmentConfigProvider = DevelopmentConfigProvider._();
+
+/// Development configuration provider
+
+final class DevelopmentConfigProvider
+    extends
+        $FunctionalProvider<
+          DevelopmentConfig,
+          DevelopmentConfig,
+          DevelopmentConfig
+        >
+    with $Provider<DevelopmentConfig> {
+  /// Development configuration provider
+  DevelopmentConfigProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'developmentConfigProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$developmentConfigHash();
+
+  @$internal
+  @override
+  $ProviderElement<DevelopmentConfig> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  DevelopmentConfig create(Ref ref) {
+    return developmentConfig(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DevelopmentConfig value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DevelopmentConfig>(value),
+    );
+  }
+}
+
+String _$developmentConfigHash() => r'1b2617f3e6892ac00950c2920b9a62ef24beb775';
+
+/// Provider for list of available configuration files (development)
+
+@ProviderFor(availableConfigs)
+final availableConfigsProvider = AvailableConfigsProvider._();
+
+/// Provider for list of available configuration files (development)
+
+final class AvailableConfigsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>
+        >
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+  /// Provider for list of available configuration files (development)
+  AvailableConfigsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'availableConfigsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$availableConfigsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<String>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<String>> create(Ref ref) {
+    return availableConfigs(ref);
+  }
+}
+
+String _$availableConfigsHash() => r'a3cbddb0e93065ec40658d2120214e588baa0308';

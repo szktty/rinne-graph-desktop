@@ -6,77 +6,222 @@ part of 'entity_properties_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$selectedEntityPropertiesHash() =>
-    r'87386aabe04aaaab6fc88e0989fe3aa44514984d';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Provider that provides entity properties in map format
+///
+/// Dynamically extracts all properties from the selected entity and
+/// returns them as a map of key-value pairs.
+/// Internal information (e.g., app_custom_id, type) is filtered.
+
+@ProviderFor(selectedEntityProperties)
+final selectedEntityPropertiesProvider = SelectedEntityPropertiesProvider._();
 
 /// Provider that provides entity properties in map format
 ///
 /// Dynamically extracts all properties from the selected entity and
 /// returns them as a map of key-value pairs.
 /// Internal information (e.g., app_custom_id, type) is filtered.
-///
-/// Copied from [selectedEntityProperties].
-@ProviderFor(selectedEntityProperties)
-final selectedEntityPropertiesProvider =
-    Provider<Map<String, dynamic>>.internal(
-      selectedEntityProperties,
-      name: r'selectedEntityPropertiesProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$selectedEntityPropertiesHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SelectedEntityPropertiesRef = ProviderRef<Map<String, dynamic>>;
-String _$selectedEntityPropertyKeysHash() =>
-    r'3d70f32fcf72fab41129c432f2b9aa2f49bf9afe';
+final class SelectedEntityPropertiesProvider
+    extends
+        $FunctionalProvider<
+          Map<String, dynamic>,
+          Map<String, dynamic>,
+          Map<String, dynamic>
+        >
+    with $Provider<Map<String, dynamic>> {
+  /// Provider that provides entity properties in map format
+  ///
+  /// Dynamically extracts all properties from the selected entity and
+  /// returns them as a map of key-value pairs.
+  /// Internal information (e.g., app_custom_id, type) is filtered.
+  SelectedEntityPropertiesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'selectedEntityPropertiesProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$selectedEntityPropertiesHash();
+
+  @$internal
+  @override
+  $ProviderElement<Map<String, dynamic>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  Map<String, dynamic> create(Ref ref) {
+    return selectedEntityProperties(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<String, dynamic> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<String, dynamic>>(value),
+    );
+  }
+}
+
+String _$selectedEntityPropertiesHash() =>
+    r'87386aabe04aaaab6fc88e0989fe3aa44514984d';
 
 /// Provider that provides a list of entity property keys
-///
-/// Copied from [selectedEntityPropertyKeys].
-@ProviderFor(selectedEntityPropertyKeys)
-final selectedEntityPropertyKeysProvider = Provider<List<String>>.internal(
-  selectedEntityPropertyKeys,
-  name: r'selectedEntityPropertyKeysProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$selectedEntityPropertyKeysHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SelectedEntityPropertyKeysRef = ProviderRef<List<String>>;
-String _$selectedEntityLabelsHash() =>
-    r'aad99e4a40c821b574249c214d6f4b06e5673315';
+@ProviderFor(selectedEntityPropertyKeys)
+final selectedEntityPropertyKeysProvider =
+    SelectedEntityPropertyKeysProvider._();
+
+/// Provider that provides a list of entity property keys
+
+final class SelectedEntityPropertyKeysProvider
+    extends $FunctionalProvider<List<String>, List<String>, List<String>>
+    with $Provider<List<String>> {
+  /// Provider that provides a list of entity property keys
+  SelectedEntityPropertyKeysProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'selectedEntityPropertyKeysProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$selectedEntityPropertyKeysHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<String> create(Ref ref) {
+    return selectedEntityPropertyKeys(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+}
+
+String _$selectedEntityPropertyKeysHash() =>
+    r'3d70f32fcf72fab41129c432f2b9aa2f49bf9afe';
 
 /// Provider that provides entity labels
 ///
 /// Gets the label set of a Node or the type of a Link.
 /// Converts the label set to a list for Nodes, and returns the type as a single-element list for Links.
-///
-/// Copied from [selectedEntityLabels].
-@ProviderFor(selectedEntityLabels)
-final selectedEntityLabelsProvider = Provider<List<String>>.internal(
-  selectedEntityLabels,
-  name: r'selectedEntityLabelsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$selectedEntityLabelsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SelectedEntityLabelsRef = ProviderRef<List<String>>;
+@ProviderFor(selectedEntityLabels)
+final selectedEntityLabelsProvider = SelectedEntityLabelsProvider._();
+
+/// Provider that provides entity labels
+///
+/// Gets the label set of a Node or the type of a Link.
+/// Converts the label set to a list for Nodes, and returns the type as a single-element list for Links.
+
+final class SelectedEntityLabelsProvider
+    extends $FunctionalProvider<List<String>, List<String>, List<String>>
+    with $Provider<List<String>> {
+  /// Provider that provides entity labels
+  ///
+  /// Gets the label set of a Node or the type of a Link.
+  /// Converts the label set to a list for Nodes, and returns the type as a single-element list for Links.
+  SelectedEntityLabelsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'selectedEntityLabelsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$selectedEntityLabelsHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<String> create(Ref ref) {
+    return selectedEntityLabels(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+}
+
+String _$selectedEntityLabelsHash() =>
+    r'aad99e4a40c821b574249c214d6f4b06e5673315';
+
+/// Provider that manages property values being edited
+///
+/// Temporarily holds property values that the user is editing.
+/// Updates the entity using this value upon saving.
+
+@ProviderFor(EditingEntityProperties)
+final editingEntityPropertiesProvider = EditingEntityPropertiesProvider._();
+
+/// Provider that manages property values being edited
+///
+/// Temporarily holds property values that the user is editing.
+/// Updates the entity using this value upon saving.
+final class EditingEntityPropertiesProvider
+    extends $NotifierProvider<EditingEntityProperties, Map<String, dynamic>> {
+  /// Provider that manages property values being edited
+  ///
+  /// Temporarily holds property values that the user is editing.
+  /// Updates the entity using this value upon saving.
+  EditingEntityPropertiesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'editingEntityPropertiesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$editingEntityPropertiesHash();
+
+  @$internal
+  @override
+  EditingEntityProperties create() => EditingEntityProperties();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<String, dynamic> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<String, dynamic>>(value),
+    );
+  }
+}
+
 String _$editingEntityPropertiesHash() =>
     r'265b4a48f222670f91d53983a70aba81aa83b4c7';
 
@@ -84,24 +229,72 @@ String _$editingEntityPropertiesHash() =>
 ///
 /// Temporarily holds property values that the user is editing.
 /// Updates the entity using this value upon saving.
-///
-/// Copied from [EditingEntityProperties].
-@ProviderFor(EditingEntityProperties)
-final editingEntityPropertiesProvider = AutoDisposeNotifierProvider<
-  EditingEntityProperties,
-  Map<String, dynamic>
->.internal(
-  EditingEntityProperties.new,
-  name: r'editingEntityPropertiesProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$editingEntityPropertiesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$EditingEntityProperties = AutoDisposeNotifier<Map<String, dynamic>>;
+abstract class _$EditingEntityProperties
+    extends $Notifier<Map<String, dynamic>> {
+  Map<String, dynamic> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<Map<String, dynamic>, Map<String, dynamic>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Map<String, dynamic>, Map<String, dynamic>>,
+              Map<String, dynamic>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider that manages changes in property names being edited
+///
+/// Tracks changes in property names (key changes).
+/// Format: {oldKey: newKey}
+
+@ProviderFor(EditingPropertyNameChanges)
+final editingPropertyNameChangesProvider =
+    EditingPropertyNameChangesProvider._();
+
+/// Provider that manages changes in property names being edited
+///
+/// Tracks changes in property names (key changes).
+/// Format: {oldKey: newKey}
+final class EditingPropertyNameChangesProvider
+    extends $NotifierProvider<EditingPropertyNameChanges, Map<String, String>> {
+  /// Provider that manages changes in property names being edited
+  ///
+  /// Tracks changes in property names (key changes).
+  /// Format: {oldKey: newKey}
+  EditingPropertyNameChangesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'editingPropertyNameChangesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$editingPropertyNameChangesHash();
+
+  @$internal
+  @override
+  EditingPropertyNameChanges create() => EditingPropertyNameChanges();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<String, String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<String, String>>(value),
+    );
+  }
+}
+
 String _$editingPropertyNameChangesHash() =>
     r'6f31930f8df9bf40e62438c08f1dd4a46d5d122f';
 
@@ -109,24 +302,71 @@ String _$editingPropertyNameChangesHash() =>
 ///
 /// Tracks changes in property names (key changes).
 /// Format: {oldKey: newKey}
-///
-/// Copied from [EditingPropertyNameChanges].
-@ProviderFor(EditingPropertyNameChanges)
-final editingPropertyNameChangesProvider = AutoDisposeNotifierProvider<
-  EditingPropertyNameChanges,
-  Map<String, String>
->.internal(
-  EditingPropertyNameChanges.new,
-  name: r'editingPropertyNameChangesProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$editingPropertyNameChangesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$EditingPropertyNameChanges = AutoDisposeNotifier<Map<String, String>>;
+abstract class _$EditingPropertyNameChanges
+    extends $Notifier<Map<String, String>> {
+  Map<String, String> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<Map<String, String>, Map<String, String>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Map<String, String>, Map<String, String>>,
+              Map<String, String>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Provider that manages property names being edited
+///
+/// Tracks the currently edited property names.
+/// Format: {key: editingName}
+
+@ProviderFor(EditingPropertyNames)
+final editingPropertyNamesProvider = EditingPropertyNamesProvider._();
+
+/// Provider that manages property names being edited
+///
+/// Tracks the currently edited property names.
+/// Format: {key: editingName}
+final class EditingPropertyNamesProvider
+    extends $NotifierProvider<EditingPropertyNames, Map<String, String>> {
+  /// Provider that manages property names being edited
+  ///
+  /// Tracks the currently edited property names.
+  /// Format: {key: editingName}
+  EditingPropertyNamesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'editingPropertyNamesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$editingPropertyNamesHash();
+
+  @$internal
+  @override
+  EditingPropertyNames create() => EditingPropertyNames();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<String, String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<String, String>>(value),
+    );
+  }
+}
+
 String _$editingPropertyNamesHash() =>
     r'3fa489696ff448f46939fa99f0e02c5b9b56c7ed';
 
@@ -134,44 +374,87 @@ String _$editingPropertyNamesHash() =>
 ///
 /// Tracks the currently edited property names.
 /// Format: {key: editingName}
-///
-/// Copied from [EditingPropertyNames].
-@ProviderFor(EditingPropertyNames)
-final editingPropertyNamesProvider = AutoDisposeNotifierProvider<
-  EditingPropertyNames,
-  Map<String, String>
->.internal(
-  EditingPropertyNames.new,
-  name: r'editingPropertyNamesProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$editingPropertyNamesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$EditingPropertyNames = AutoDisposeNotifier<Map<String, String>>;
+abstract class _$EditingPropertyNames extends $Notifier<Map<String, String>> {
+  Map<String, String> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<Map<String, String>, Map<String, String>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Map<String, String>, Map<String, String>>,
+              Map<String, String>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Entity save action provider
+///
+/// Saves the entity being edited to the database.
+
+@ProviderFor(SaveEntityAction)
+final saveEntityActionProvider = SaveEntityActionProvider._();
+
+/// Entity save action provider
+///
+/// Saves the entity being edited to the database.
+final class SaveEntityActionProvider
+    extends $NotifierProvider<SaveEntityAction, void> {
+  /// Entity save action provider
+  ///
+  /// Saves the entity being edited to the database.
+  SaveEntityActionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'saveEntityActionProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$saveEntityActionHash();
+
+  @$internal
+  @override
+  SaveEntityAction create() => SaveEntityAction();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
 String _$saveEntityActionHash() => r'4c274b46efa5ef15e3dc8fb61c9151af0fa414c1';
 
 /// Entity save action provider
 ///
 /// Saves the entity being edited to the database.
-///
-/// Copied from [SaveEntityAction].
-@ProviderFor(SaveEntityAction)
-final saveEntityActionProvider =
-    AutoDisposeNotifierProvider<SaveEntityAction, void>.internal(
-      SaveEntityAction.new,
-      name: r'saveEntityActionProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$saveEntityActionHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$SaveEntityAction = AutoDisposeNotifier<void>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$SaveEntityAction extends $Notifier<void> {
+  void build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<void, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<void, void>,
+              void,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

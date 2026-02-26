@@ -57,7 +57,7 @@ class GraphEditorScreen extends ConsumerWidget {
     final viewType = ViewType.fromString(viewTypeString);
 
     // Get selection state
-    final selectionState = ref.watch(selectionStateNotifierProvider);
+    final selectionState = ref.watch(selectionStateProvider);
 
     // Get selection actions
     final graphActions = ref.read(graph_providers.graphActionsProvider);

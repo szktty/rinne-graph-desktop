@@ -88,7 +88,7 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
     debugPrint('[AppGraphView.build] Rebuilding AppGraphView');
 
     // Get selection state
-    final selectionState = ref.watch(selectionStateNotifierProvider);
+    final selectionState = ref.watch(selectionStateProvider);
 
     // Get graph view cache
     final cache = ref.watch(graphViewCacheProvider);
@@ -836,4 +836,3 @@ class _EnhancedInteractiveViewerState
     _dragStartOffset = null;
   }
 }
-

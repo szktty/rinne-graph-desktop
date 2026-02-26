@@ -43,36 +43,29 @@ class AppConfigNotifier extends _$AppConfigNotifier {
   }
 }
 
-/// Provider for getting current application configuration
-@riverpod
-AppConfig appConfig(AppConfigRef ref) {
-  final asyncConfig = ref.watch(appConfigNotifierProvider);
-  return asyncConfig.valueOrNull ?? const AppConfig();
-}
-
 /// Debug configuration provider
 @riverpod
-DebugConfig debugConfig(DebugConfigRef ref) {
-  final config = ref.watch(appConfigProvider);
+DebugConfig debugConfig(Ref ref) {
+  final config = ref.watch(appConfigProvider).value ?? const AppConfig();
   return config.debug;
 }
 
 /// Startup configuration provider
 @riverpod
-StartupConfig startupConfig(StartupConfigRef ref) {
-  final config = ref.watch(appConfigProvider);
+StartupConfig startupConfig(Ref ref) {
+  final config = ref.watch(appConfigProvider).value ?? const AppConfig();
   return config.startup;
 }
 
 /// Development configuration provider
 @riverpod
-DevelopmentConfig developmentConfig(DevelopmentConfigRef ref) {
-  final config = ref.watch(appConfigProvider);
+DevelopmentConfig developmentConfig(Ref ref) {
+  final config = ref.watch(appConfigProvider).value ?? const AppConfig();
   return config.development;
 }
 
 /// Provider for list of available configuration files (development)
 @riverpod
-Future<List<String>> availableConfigs(AvailableConfigsRef ref) async {
+Future<List<String>> availableConfigs(Ref ref) async {
   return await AppConfigLoader.getAvailableConfigs();
 }

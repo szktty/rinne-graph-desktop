@@ -6,7 +6,7 @@ part 'archive_providers.g.dart';
 
 /// Provider that provides a list of archived entities.
 @riverpod
-Future<List<ArchivedEntity>> archivedEntities(ArchivedEntitiesRef ref) async {
+Future<List<ArchivedEntity>> archivedEntities(Ref ref) async {
   // TODO: Retrieve archived entities from the actual database
   // Currently returns mock data
   return [

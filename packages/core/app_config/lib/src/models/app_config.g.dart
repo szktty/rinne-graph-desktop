@@ -6,27 +6,26 @@ part of 'app_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AppConfigImpl _$$AppConfigImplFromJson(Map<String, dynamic> json) =>
-    _$AppConfigImpl(
-      name: json['name'] as String? ?? 'default',
-      description: json['description'] as String?,
-      debug:
-          json['debug'] == null
-              ? const DebugConfig()
-              : DebugConfig.fromJson(json['debug'] as Map<String, dynamic>),
-      startup:
-          json['startup'] == null
-              ? const StartupConfig()
-              : StartupConfig.fromJson(json['startup'] as Map<String, dynamic>),
-      development:
-          json['development'] == null
-              ? const DevelopmentConfig()
-              : DevelopmentConfig.fromJson(
-                json['development'] as Map<String, dynamic>,
-              ),
-    );
+_AppConfig _$AppConfigFromJson(Map<String, dynamic> json) => _AppConfig(
+  name: json['name'] as String? ?? 'default',
+  description: json['description'] as String?,
+  debug:
+      json['debug'] == null
+          ? const DebugConfig()
+          : DebugConfig.fromJson(json['debug'] as Map<String, dynamic>),
+  startup:
+      json['startup'] == null
+          ? const StartupConfig()
+          : StartupConfig.fromJson(json['startup'] as Map<String, dynamic>),
+  development:
+      json['development'] == null
+          ? const DevelopmentConfig()
+          : DevelopmentConfig.fromJson(
+            json['development'] as Map<String, dynamic>,
+          ),
+);
 
-Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
+Map<String, dynamic> _$AppConfigToJson(_AppConfig instance) =>
     <String, dynamic>{
       'name': instance.name,
       'description': instance.description,
@@ -35,15 +34,14 @@ Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
       'development': instance.development,
     };
 
-_$DebugConfigImpl _$$DebugConfigImplFromJson(Map<String, dynamic> json) =>
-    _$DebugConfigImpl(
-      forceDebugMode: json['forceDebugMode'] as bool? ?? null,
-      enableDebugLogging: json['enableDebugLogging'] as bool? ?? null,
-      enableScreenshotServer: json['enableScreenshotServer'] as bool? ?? false,
-      enableVerboseLogging: json['enableVerboseLogging'] as bool? ?? false,
-    );
+_DebugConfig _$DebugConfigFromJson(Map<String, dynamic> json) => _DebugConfig(
+  forceDebugMode: json['forceDebugMode'] as bool? ?? null,
+  enableDebugLogging: json['enableDebugLogging'] as bool? ?? null,
+  enableScreenshotServer: json['enableScreenshotServer'] as bool? ?? false,
+  enableVerboseLogging: json['enableVerboseLogging'] as bool? ?? false,
+);
 
-Map<String, dynamic> _$$DebugConfigImplToJson(_$DebugConfigImpl instance) =>
+Map<String, dynamic> _$DebugConfigToJson(_DebugConfig instance) =>
     <String, dynamic>{
       'forceDebugMode': instance.forceDebugMode,
       'enableDebugLogging': instance.enableDebugLogging,
@@ -51,8 +49,8 @@ Map<String, dynamic> _$$DebugConfigImplToJson(_$DebugConfigImpl instance) =>
       'enableVerboseLogging': instance.enableVerboseLogging,
     };
 
-_$StartupConfigImpl _$$StartupConfigImplFromJson(Map<String, dynamic> json) =>
-    _$StartupConfigImpl(
+_StartupConfig _$StartupConfigFromJson(Map<String, dynamic> json) =>
+    _StartupConfig(
       autoOpenLastStack: json['autoOpenLastStack'] as bool? ?? null,
       lastOpenedStackPath: json['lastOpenedStackPath'] as String? ?? null,
       errorBehavior:
@@ -67,8 +65,8 @@ _$StartupConfigImpl _$$StartupConfigImplFromJson(Map<String, dynamic> json) =>
       enableDevStacks: json['enableDevStacks'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$StartupConfigImplToJson(
-  _$StartupConfigImpl instance,
+Map<String, dynamic> _$StartupConfigToJson(
+  _StartupConfig instance,
 ) => <String, dynamic>{
   'autoOpenLastStack': instance.autoOpenLastStack,
   'lastOpenedStackPath': instance.lastOpenedStackPath,
@@ -84,20 +82,18 @@ const _$StartupErrorBehaviorEnumMap = {
   StartupErrorBehavior.openLastSuccessful: 'openLastSuccessful',
 };
 
-_$DevelopmentConfigImpl _$$DevelopmentConfigImplFromJson(
-  Map<String, dynamic> json,
-) => _$DevelopmentConfigImpl(
-  resetAllSettings: json['resetAllSettings'] as bool? ?? false,
-  resetDatabase: json['resetDatabase'] as bool? ?? false,
-  generateTestData: json['generateTestData'] as bool? ?? false,
-  enableUiDevMode: json['enableUiDevMode'] as bool? ?? false,
-);
+_DevelopmentConfig _$DevelopmentConfigFromJson(Map<String, dynamic> json) =>
+    _DevelopmentConfig(
+      resetAllSettings: json['resetAllSettings'] as bool? ?? false,
+      resetDatabase: json['resetDatabase'] as bool? ?? false,
+      generateTestData: json['generateTestData'] as bool? ?? false,
+      enableUiDevMode: json['enableUiDevMode'] as bool? ?? false,
+    );
 
-Map<String, dynamic> _$$DevelopmentConfigImplToJson(
-  _$DevelopmentConfigImpl instance,
-) => <String, dynamic>{
-  'resetAllSettings': instance.resetAllSettings,
-  'resetDatabase': instance.resetDatabase,
-  'generateTestData': instance.generateTestData,
-  'enableUiDevMode': instance.enableUiDevMode,
-};
+Map<String, dynamic> _$DevelopmentConfigToJson(_DevelopmentConfig instance) =>
+    <String, dynamic>{
+      'resetAllSettings': instance.resetAllSettings,
+      'resetDatabase': instance.resetDatabase,
+      'generateTestData': instance.generateTestData,
+      'enableUiDevMode': instance.enableUiDevMode,
+    };

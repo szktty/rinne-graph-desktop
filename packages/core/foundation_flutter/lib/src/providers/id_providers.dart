@@ -7,7 +7,7 @@ part 'id_providers.g.dart';
 ///
 /// Generates UUIDv7 format IDs.
 @riverpod
-UniqueId Function() idFactory(IdFactoryRef ref) {
+UniqueId Function() idFactory(Ref ref) {
   return () => UniqueId();
 }
 
@@ -38,19 +38,19 @@ class IdCollectionManager extends _$IdCollectionManager {
 
 /// Provider that provides an ID generator.
 @riverpod
-IdGenerator idGenerator(IdGeneratorRef ref) {
+IdGenerator idGenerator(Ref ref) {
   return RiverpodUuidV7Generator();
 }
 
 /// Provider that provides an ID generator for testing.
 @riverpod
-IdGenerator testIdGenerator(TestIdGeneratorRef ref) {
+IdGenerator testIdGenerator(Ref ref) {
   return RiverpodTestIdGenerator();
 }
 
 /// Provider that provides an in-memory ID generator.
 @riverpod
-IdGenerator inMemoryIdGenerator(InMemoryIdGeneratorRef ref) {
+IdGenerator inMemoryIdGenerator(Ref ref) {
   return RiverpodInMemoryIdGenerator();
 }
 

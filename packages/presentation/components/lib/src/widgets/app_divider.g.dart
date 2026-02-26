@@ -6,69 +6,146 @@ part of 'app_divider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Provider that provides effective app color (supports active color scheme)
+
+@ProviderFor(effectiveAppColorSchemeForDivider)
+final effectiveAppColorSchemeForDividerProvider =
+    EffectiveAppColorSchemeForDividerProvider._();
+
+/// Provider that provides effective app color (supports active color scheme)
+
+final class EffectiveAppColorSchemeForDividerProvider
+    extends $FunctionalProvider<AppColorScheme, AppColorScheme, AppColorScheme>
+    with $Provider<AppColorScheme> {
+  /// Provider that provides effective app color (supports active color scheme)
+  EffectiveAppColorSchemeForDividerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'effectiveAppColorSchemeForDividerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() =>
+      _$effectiveAppColorSchemeForDividerHash();
+
+  @$internal
+  @override
+  $ProviderElement<AppColorScheme> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AppColorScheme create(Ref ref) {
+    return effectiveAppColorSchemeForDivider(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AppColorScheme value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AppColorScheme>(value),
+    );
+  }
+}
+
 String _$effectiveAppColorSchemeForDividerHash() =>
     r'9a2c0b1085b9c14e1b9e381fbe0be253ddd7ec57';
 
-/// Provider that provides effective app color (supports active color scheme)
-///
-/// Copied from [effectiveAppColorSchemeForDivider].
-@ProviderFor(effectiveAppColorSchemeForDivider)
-final effectiveAppColorSchemeForDividerProvider =
-    AutoDisposeProvider<AppColorScheme>.internal(
-      effectiveAppColorSchemeForDivider,
-      name: r'effectiveAppColorSchemeForDividerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$effectiveAppColorSchemeForDividerHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+/// Provider to get AppDivider color
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef EffectiveAppColorSchemeForDividerRef =
-    AutoDisposeProviderRef<AppColorScheme>;
-String _$appDividerColorHash() => r'6e5c3bceb61ee019c267555ac651b4e024636518';
+@ProviderFor(appDividerColor)
+final appDividerColorProvider = AppDividerColorProvider._();
 
 /// Provider to get AppDivider color
-///
-/// Copied from [appDividerColor].
-@ProviderFor(appDividerColor)
-final appDividerColorProvider = AutoDisposeProvider<Color>.internal(
-  appDividerColor,
-  name: r'appDividerColorProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$appDividerColorHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AppDividerColorRef = AutoDisposeProviderRef<Color>;
-String _$appVerticalDividerColorHash() =>
-    r'6f2153c536ad25701bd6fdbd87b950cab5bdcc60';
+final class AppDividerColorProvider
+    extends $FunctionalProvider<Color, Color, Color>
+    with $Provider<Color> {
+  /// Provider to get AppDivider color
+  AppDividerColorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appDividerColorProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appDividerColorHash();
+
+  @$internal
+  @override
+  $ProviderElement<Color> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Color create(Ref ref) {
+    return appDividerColor(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Color value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Color>(value),
+    );
+  }
+}
+
+String _$appDividerColorHash() => r'6e5c3bceb61ee019c267555ac651b4e024636518';
 
 /// Provider to get AppVerticalDivider color
-///
-/// Copied from [appVerticalDividerColor].
-@ProviderFor(appVerticalDividerColor)
-final appVerticalDividerColorProvider = AutoDisposeProvider<Color>.internal(
-  appVerticalDividerColor,
-  name: r'appVerticalDividerColorProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$appVerticalDividerColorHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AppVerticalDividerColorRef = AutoDisposeProviderRef<Color>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+@ProviderFor(appVerticalDividerColor)
+final appVerticalDividerColorProvider = AppVerticalDividerColorProvider._();
+
+/// Provider to get AppVerticalDivider color
+
+final class AppVerticalDividerColorProvider
+    extends $FunctionalProvider<Color, Color, Color>
+    with $Provider<Color> {
+  /// Provider to get AppVerticalDivider color
+  AppVerticalDividerColorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appVerticalDividerColorProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appVerticalDividerColorHash();
+
+  @$internal
+  @override
+  $ProviderElement<Color> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Color create(Ref ref) {
+    return appVerticalDividerColor(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Color value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Color>(value),
+    );
+  }
+}
+
+String _$appVerticalDividerColorHash() =>
+    r'6f2153c536ad25701bd6fdbd87b950cab5bdcc60';

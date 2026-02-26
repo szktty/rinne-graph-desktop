@@ -6,27 +6,51 @@ part of 'app_text.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$effectiveThemeDataForTextHash() =>
-    r'f587fec324348c1bb953a477750654175d69946b';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Provider for effective theme data
+
+@ProviderFor(effectiveThemeDataForText)
+final effectiveThemeDataForTextProvider = EffectiveThemeDataForTextProvider._();
 
 /// Provider for effective theme data
-///
-/// Copied from [effectiveThemeDataForText].
-@ProviderFor(effectiveThemeDataForText)
-final effectiveThemeDataForTextProvider =
-    AutoDisposeProvider<AppThemeData>.internal(
-      effectiveThemeDataForText,
-      name: r'effectiveThemeDataForTextProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$effectiveThemeDataForTextHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef EffectiveThemeDataForTextRef = AutoDisposeProviderRef<AppThemeData>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class EffectiveThemeDataForTextProvider
+    extends $FunctionalProvider<AppThemeData, AppThemeData, AppThemeData>
+    with $Provider<AppThemeData> {
+  /// Provider for effective theme data
+  EffectiveThemeDataForTextProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'effectiveThemeDataForTextProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$effectiveThemeDataForTextHash();
+
+  @$internal
+  @override
+  $ProviderElement<AppThemeData> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AppThemeData create(Ref ref) {
+    return effectiveThemeDataForText(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AppThemeData value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AppThemeData>(value),
+    );
+  }
+}
+
+String _$effectiveThemeDataForTextHash() =>
+    r'f587fec324348c1bb953a477750654175d69946b';
