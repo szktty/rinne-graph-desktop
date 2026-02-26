@@ -47,7 +47,7 @@ melos run fix
 
 ## Monorepo Architecture (Melos)
 
-The project is a Dart workspace managed by Melos. Flutter SDK: 3.41.2+, Dart SDK: 3.7.0+. FVM is configured (`.fvmrc`).
+The project is a Dart workspace managed by Melos. Flutter SDK: 3.41.2+, Dart SDK: 3.11.0+. FVM is configured (`.fvmrc`).
 
 ### Package Layout
 

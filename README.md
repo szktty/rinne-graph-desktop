@@ -30,8 +30,8 @@ App is a personal database organizer that uses a graph database structure to hel
 
 ### Prerequisites
 
-- Flutter 3.29.0 or higher
-- Dart 3.7.0 or higher
+- Flutter 3.41.2 or higher
+- Dart 3.11.0 or higher
 - Melos (monorepo management tool)
 
 ### Supported Platforms

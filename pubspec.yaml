@@ -1,7 +1,7 @@
 name: rinne_graph_desktop
 publish_to: none
 environment:
-  sdk: ^3.7.0
+  sdk: ^3.11.0
   flutter: '>=3.41.2'
 
 workspace:
@@ -59,7 +59,7 @@ melos:
   command:
     bootstrap:
       environment:
-        sdk: ^3.7.0
+        sdk: ^3.11.0
         flutter: '>=3.41.2'
       dependencies:
         freezed_annotation: ^3.0.0

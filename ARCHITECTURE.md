@@ -110,7 +110,7 @@ rinne-graph-desktop/
 | Item | Details |
 |---|---|
 | **Description** | The main user interface of the application. |
-| **Technology** | Flutter 3.38.2, Dart 3.7+ |
+| **Technology** | Flutter 3.41.2, Dart 3.11+ |
 | **State Management** | Riverpod |
 | **Deployment** | macOS App Bundle, Windows Executable, Linux Executable |
 
@@ -255,8 +255,8 @@ Presentation Layer ──► Features Layer ──► Core Layer ──► Found
 
 | Tool | Version | Purpose |
 |---|---|---|
-| Flutter | 3.38.2 | UI Framework |
-| Dart | 3.7.0+ | Programming Language |
+| Flutter | 3.41.2 | UI Framework |
+| Dart | 3.11.0+ | Programming Language |
 | Melos | Latest | Monorepo Management |
 
 ### Key Commands
