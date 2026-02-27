@@ -92,7 +92,25 @@ This project is in early development. If you encounter bugs or have suggestions:
 
 ## 📄 License
 
-This project is licensed under the AGPLv3. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPLv3)**. See the [LICENSE](LICENSE) file for details.
+
+### Commercial License
+
+A **commercial license** will be available in the future for organizations or individuals who need to use RinneGraph without the obligations of the AGPLv3 (e.g., source disclosure requirements for network-deployed services, internal enterprise use).
+
+If you are interested in a future commercial license or have any licensing inquiries, please contact:
+
+**contact@szktty.jp**
+
+---
+
+**日本語 / Japanese**
+
+本プロジェクトは現在 **AGPLv3** で公開しています。将来的には商用ライセンス（Proprietary License）を提供する予定です。
+
+AGPLv3 の制約（ソースコード公開義務など）を回避したい方、または組織内部での利用を検討されている方は、下記の連絡先までお問い合わせください。
+
+**contact@szktty.jp**
 
 ## Versioning
 
