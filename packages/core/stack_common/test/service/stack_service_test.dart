@@ -28,43 +28,45 @@ void main() {
       }
     });
 
-    test('createStack should create a valid stack directory structure',
-        () async {
-      final stackName = 'MyTestStack';
-      final stack = await stackService.createStack(tempDir, stackName);
+    test(
+      'createStack should create a valid stack directory structure',
+      () async {
+        final stackName = 'MyTestStack';
+        final stack = await stackService.createStack(tempDir, stackName);
 
-      // Verify the top-level directory
-      expect(stack.directory.path, endsWith('.stack'));
-      expect(await stack.directory.exists(), isTrue);
+        // Verify the top-level directory
+        expect(stack.directory.path, endsWith('.stack'));
+        expect(await stack.directory.exists(), isTrue);
 
-      // Verify metadata
-      expect(stack.info.name, stackName);
-      expect(stack.isScratch, isFalse);
+        // Verify metadata
+        expect(stack.info.name, stackName);
+        expect(stack.isScratch, isFalse);
 
-      // Verify subdirectories
-      final metaDir = Directory(p.join(stack.directory.path, 'meta'));
-      final dataDir = Directory(p.join(stack.directory.path, 'data'));
-      final assetsDir = Directory(p.join(stack.directory.path, 'assets'));
-      final datasetsDir = Directory(p.join(stack.directory.path, 'datasets'));
-      final filtersDir = Directory(p.join(stack.directory.path, 'filters'));
+        // Verify subdirectories
+        final metaDir = Directory(p.join(stack.directory.path, 'meta'));
+        final dataDir = Directory(p.join(stack.directory.path, 'data'));
+        final assetsDir = Directory(p.join(stack.directory.path, 'assets'));
+        final datasetsDir = Directory(p.join(stack.directory.path, 'datasets'));
+        final filtersDir = Directory(p.join(stack.directory.path, 'filters'));
 
-      expect(await metaDir.exists(), isTrue);
-      expect(await dataDir.exists(), isTrue);
-      expect(await assetsDir.exists(), isTrue);
-      expect(await datasetsDir.exists(), isTrue);
-      expect(await filtersDir.exists(), isTrue);
+        expect(await metaDir.exists(), isTrue);
+        expect(await dataDir.exists(), isTrue);
+        expect(await assetsDir.exists(), isTrue);
+        expect(await datasetsDir.exists(), isTrue);
+        expect(await filtersDir.exists(), isTrue);
 
-      // Verify metadata files
-      final infoFile = File(p.join(metaDir.path, 'info.json'));
-      final settingsFile = File(p.join(metaDir.path, 'settings.json'));
-      expect(await infoFile.exists(), isTrue);
-      expect(await settingsFile.exists(), isTrue);
+        // Verify metadata files
+        final infoFile = File(p.join(metaDir.path, 'info.json'));
+        final settingsFile = File(p.join(metaDir.path, 'settings.json'));
+        expect(await infoFile.exists(), isTrue);
+        expect(await settingsFile.exists(), isTrue);
 
-      // Verify graph.db
-      final dbFile = File(p.join(dataDir.path, 'graph.db'));
-      expect(await dbFile.exists(), isTrue);
-      expect(await dbFile.length(), greaterThan(0));
-    });
+        // Verify graph.db
+        final dbFile = File(p.join(dataDir.path, 'graph.db'));
+        expect(await dbFile.exists(), isTrue);
+        expect(await dbFile.length(), greaterThan(0));
+      },
+    );
 
     test('updateStack should save changes to metadata', () async {
       final stackName = 'UpdatableStack';
@@ -78,8 +80,9 @@ void main() {
 
       // Reload the metadata to verify the change
       final metadataLoader = StackMetadataService();
-      final (reloadedInfo, _) =
-          await metadataLoader.loadMetadata(originalStack.directory);
+      final (reloadedInfo, _) = await metadataLoader.loadMetadata(
+        originalStack.directory,
+      );
 
       expect(reloadedInfo, isNotNull);
       expect(reloadedInfo!.name, newName);
@@ -115,20 +118,30 @@ void main() {
       final createdStack = await stackService.createStack(tempDir, stackName);
 
       // Simulate a "fresh" load by getting the stack again
-      final loadedStacks = await stackService.listAvailableStacks(tempDir).toList();
+      final loadedStacks =
+          await stackService.listAvailableStacks(tempDir).toList();
 
       expect(loadedStacks.length, greaterThanOrEqualTo(1));
-      final loadedStack = loadedStacks.firstWhere((s) => s.info.name == stackName);
+      final loadedStack = loadedStacks.firstWhere(
+        (s) => s.info.name == stackName,
+      );
 
       // Verify basic properties
       expect(loadedStack.info.name, createdStack.info.name);
-      expect(loadedStack.info.createdAt.toIso8601String(),
-          createdStack.info.createdAt.toIso8601String()); // Compare ISO string for DateTime equality
+      expect(
+        loadedStack.info.createdAt.toIso8601String(),
+        createdStack.info.createdAt.toIso8601String(),
+      ); // Compare ISO string for DateTime equality
       expect(loadedStack.directory.path, createdStack.directory.path);
-      expect(loadedStack.settings.defaultView, createdStack.settings.defaultView);
+      expect(
+        loadedStack.settings.defaultView,
+        createdStack.settings.defaultView,
+      );
 
       // Verify graph.db exists
-      final dbFile = File(p.join(loadedStack.directory.path, 'data', 'graph.db'));
+      final dbFile = File(
+        p.join(loadedStack.directory.path, 'data', 'graph.db'),
+      );
       expect(await dbFile.exists(), isTrue);
     });
   });

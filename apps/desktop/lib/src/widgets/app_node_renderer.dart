@@ -108,10 +108,7 @@ class AppNodeRenderer extends ConsumerWidget {
     return BoxDecoration(
       shape: BoxShape.circle,
       color: colorScheme.appSpecific.graph.nodeBase,
-      border: Border.all(
-        color: _nodeBorderColor(),
-        width: 4.0,
-      ),
+      border: Border.all(color: _nodeBorderColor(), width: 4.0),
     );
   }
 
@@ -152,8 +149,9 @@ class AppNodeRenderer extends ConsumerWidget {
                 _shortId(),
                 style: TextStyle(
                   fontSize: 9.0,
-                  color: colorScheme.appSpecific.graph.nodeText
-                      .withValues(alpha: 0.5),
+                  color: colorScheme.appSpecific.graph.nodeText.withValues(
+                    alpha: 0.5,
+                  ),
                   height: 1.0,
                 ),
                 textAlign: TextAlign.center,
@@ -211,8 +209,9 @@ class AppNodeRenderer extends ConsumerWidget {
                   _shortId(),
                   style: TextStyle(
                     fontSize: 9.0,
-                    color: colorScheme.appSpecific.graph.nodeText
-                        .withValues(alpha: 0.5),
+                    color: colorScheme.appSpecific.graph.nodeText.withValues(
+                      alpha: 0.5,
+                    ),
                     height: 1.0,
                   ),
                   textAlign: TextAlign.center,

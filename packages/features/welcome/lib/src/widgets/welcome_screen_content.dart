@@ -102,110 +102,108 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
                             AppTab(id: 'my_stacks', label: 'My Stacks'),
                             AppTab(id: 'samples', label: 'Samples'),
                           ],
-                        contents: [
-                          AppTabContent(
-                            id: 'my_stacks',
-                            content: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    const Expanded(
-                                      child: WelcomeScreenGridHeader(),
-                                    ),
-                                    if (stacksAsync
-                                        case AsyncData(
-                                          :final value,
-                                        ))
-                                      WelcomeLanguageFilterDropdown(
-                                        stacks: value,
+                          contents: [
+                            AppTabContent(
+                              id: 'my_stacks',
+                              content: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Expanded(
+                                        child: WelcomeScreenGridHeader(),
                                       ),
-                                  ],
-                                ),
-                                Expanded(
-                                  child: WelcomeScreenStackGrid(
-                                    stacksAsync: stacksAsync,
-                                    selectedStack: selectedStack,
-                                    onStackSelected: (stack) {
-                                      // Toggle selection state
-                                      if (selectedStack == stack) {
-                                        ref
-                                            .read(
-                                              selectedWelcomeStackProvider
-                                                  .notifier,
-                                            )
-                                            .clearSelection();
-                                      } else {
-                                        ref
-                                            .read(
-                                              selectedWelcomeStackProvider
-                                                  .notifier,
-                                            )
-                                            .selectStack(stack);
-                                      }
-                                    },
-                                    onStackDoubleClicked:
-                                        _onStackDoubleClicked,
-                                    onStackAction: _handleStackAction,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          AppTabContent(
-                            id: 'samples',
-                            content: Consumer(
-                              builder: (context, ref, _) {
-                                final sampleStacksAsync = ref.watch(
-                                  core_stack.sampleStacksListProvider,
-                                );
-                                return Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Expanded(
-                                          child: WelcomeScreenGridHeader(),
+                                      if (stacksAsync case AsyncData(
+                                        :final value,
+                                      ))
+                                        WelcomeLanguageFilterDropdown(
+                                          stacks: value,
                                         ),
-                                        if (sampleStacksAsync
-                                            case AsyncData(
-                                              :final value,
-                                            ))
-                                          WelcomeLanguageFilterDropdown(
-                                            stacks: value,
-                                          ),
-                                      ],
+                                    ],
+                                  ),
+                                  Expanded(
+                                    child: WelcomeScreenStackGrid(
+                                      stacksAsync: stacksAsync,
+                                      selectedStack: selectedStack,
+                                      onStackSelected: (stack) {
+                                        // Toggle selection state
+                                        if (selectedStack == stack) {
+                                          ref
+                                              .read(
+                                                selectedWelcomeStackProvider
+                                                    .notifier,
+                                              )
+                                              .clearSelection();
+                                        } else {
+                                          ref
+                                              .read(
+                                                selectedWelcomeStackProvider
+                                                    .notifier,
+                                              )
+                                              .selectStack(stack);
+                                        }
+                                      },
+                                      onStackDoubleClicked:
+                                          _onStackDoubleClicked,
+                                      onStackAction: _handleStackAction,
                                     ),
-                                    Expanded(
-                                      child: WelcomeScreenStackGrid(
-                                        stacksAsync: sampleStacksAsync,
-                                        selectedStack: selectedStack,
-                                        onStackSelected: (stack) {
-                                          if (selectedStack == stack) {
-                                            ref
-                                                .read(
-                                                  selectedWelcomeStackProvider
-                                                      .notifier,
-                                                )
-                                                .clearSelection();
-                                          } else {
-                                            ref
-                                                .read(
-                                                  selectedWelcomeStackProvider
-                                                      .notifier,
-                                                )
-                                                .selectStack(stack);
-                                          }
-                                        },
-                                        onStackDoubleClicked:
-                                            _onStackDoubleClicked,
-                                        onStackAction: _handleStackAction,
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                            AppTabContent(
+                              id: 'samples',
+                              content: Consumer(
+                                builder: (context, ref, _) {
+                                  final sampleStacksAsync = ref.watch(
+                                    core_stack.sampleStacksListProvider,
+                                  );
+                                  return Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Expanded(
+                                            child: WelcomeScreenGridHeader(),
+                                          ),
+                                          if (sampleStacksAsync case AsyncData(
+                                            :final value,
+                                          ))
+                                            WelcomeLanguageFilterDropdown(
+                                              stacks: value,
+                                            ),
+                                        ],
+                                      ),
+                                      Expanded(
+                                        child: WelcomeScreenStackGrid(
+                                          stacksAsync: sampleStacksAsync,
+                                          selectedStack: selectedStack,
+                                          onStackSelected: (stack) {
+                                            if (selectedStack == stack) {
+                                              ref
+                                                  .read(
+                                                    selectedWelcomeStackProvider
+                                                        .notifier,
+                                                  )
+                                                  .clearSelection();
+                                            } else {
+                                              ref
+                                                  .read(
+                                                    selectedWelcomeStackProvider
+                                                        .notifier,
+                                                  )
+                                                  .selectStack(stack);
+                                            }
+                                          },
+                                          onStackDoubleClicked:
+                                              _onStackDoubleClicked,
+                                          onStackAction: _handleStackAction,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         );
                       }(),
                     ),
@@ -368,5 +366,4 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
       debugPrint('onStackSelected callback is null');
     }
   }
-
 }

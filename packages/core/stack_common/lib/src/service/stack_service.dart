@@ -19,8 +19,8 @@ class StackService {
   StackService({
     StackLocatorService? locator,
     StackMetadataService? metadataLoader,
-  })  : _locator = locator ?? StackLocatorService(),
-        _metadataLoader = metadataLoader ?? StackMetadataService();
+  }) : _locator = locator ?? StackLocatorService(),
+       _metadataLoader = metadataLoader ?? StackMetadataService();
   final StackLocatorService _locator;
   final StackMetadataService _metadataLoader;
 
@@ -81,7 +81,10 @@ class StackService {
   Future<Stack> createStack(Directory baseDir, String name) async {
     final stackDir = Directory(p.join(baseDir.path, '$name.stack'));
     if (await stackDir.exists()) {
-      throw FileSystemException('Stack directory already exists', stackDir.path);
+      throw FileSystemException(
+        'Stack directory already exists',
+        stackDir.path,
+      );
     }
 
     // Create all required directories
@@ -107,11 +110,7 @@ class StackService {
 
     await _metadataLoader.saveMetadata(stackDir, info, settings);
 
-    return Stack(
-      directory: stackDir,
-      info: info,
-      settings: settings,
-    );
+    return Stack(directory: stackDir, info: info, settings: settings);
   }
 
   /// Updates the metadata of an existing stack.

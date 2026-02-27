@@ -39,7 +39,6 @@ class WelcomeScreenActionButtons extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-
         AppButton.primary(
           label: 'Create New Stack...',
           onPressed: () => _showNewStackCreationDialog(context, ref),
@@ -56,7 +55,6 @@ class WelcomeScreenActionButtons extends ConsumerWidget {
             showImportDialog(context);
           },
         ),
-
       ],
     );
   }

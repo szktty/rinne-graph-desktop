@@ -72,10 +72,7 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(
-                color: colorScheme.base.divider,
-                width: 1.0,
-              ),
+              bottom: BorderSide(color: colorScheme.base.divider, width: 1.0),
             ),
           ),
           child: Row(
@@ -166,10 +163,7 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppText(
-              'Properties',
-              variant: AppTextVariant.sectionTitlePrimary,
-            ),
+            AppText('Properties', variant: AppTextVariant.sectionTitlePrimary),
             const SizedBox(height: 12),
             if (currentPropertyKeys.isEmpty)
               Padding(

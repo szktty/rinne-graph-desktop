@@ -523,7 +523,9 @@ class MenuBuilder {
                   variant: AppTextVariant.bodyText,
                 ),
                 footer: buildDialogFooterHelper(
-                  colorScheme: ref.read(core_themes.effectiveColorSchemeProvider),
+                  colorScheme: ref.read(
+                    core_themes.effectiveColorSchemeProvider,
+                  ),
                   cancelLabel: 'キャンセル',
                   confirmLabel: '破棄して続行',
                   isDestructive: true,
@@ -533,7 +535,9 @@ class MenuBuilder {
               );
 
               if (confirmed == true) {
-                ref.read(core_stack.activeStackProvider.notifier).setStack(null);
+                ref
+                    .read(core_stack.activeStackProvider.notifier)
+                    .setStack(null);
               }
             } else {
               // No active stack, just show the welcome screen

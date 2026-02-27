@@ -23,10 +23,7 @@ class WelcomeLanguageFilterDropdown extends ConsumerWidget {
   /// The stacks to derive language options from.
   final List<core_stack.Stack> stacks;
 
-  const WelcomeLanguageFilterDropdown({
-    required this.stacks,
-    super.key,
-  });
+  const WelcomeLanguageFilterDropdown({required this.stacks, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

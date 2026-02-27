@@ -286,4 +286,3 @@ class GlobalPropertyTypeDefinition {
     return true;
   }
 }
-
