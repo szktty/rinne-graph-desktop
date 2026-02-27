@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2026 SUZUKI Tetsuya
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Commercial
+ *
+ * This file is part of RinneGraph.
+ * For commercial licensing inquiries, please contact: contact@szktty.jp
+ */
+
 // Re-export core_stack_common
 export 'package:core_stack_common/core_stack_common.dart'
     hide StackService, StackSource, FileSystemStackSource;

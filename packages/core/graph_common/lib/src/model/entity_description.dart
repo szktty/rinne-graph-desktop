@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2026 SUZUKI Tetsuya
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Commercial
+ *
+ * This file is part of RinneGraph.
+ * For commercial licensing inquiries, please contact: contact@szktty.jp
+ */
+
 import 'package:collection/collection.dart';
 import 'package:core_graph_common/src/model/property_type.dart';
 import 'package:core_graph_common/src/model/property_value_transformer.dart';
