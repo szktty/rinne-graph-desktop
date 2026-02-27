@@ -82,7 +82,7 @@ flutter build windows
 
 This project is in early development. If you encounter bugs or have suggestions:
 
-1.  Check existing [Issues](https://github.com/szktty/rinne_graph_desktop/issues) to avoid duplicates (Replace with actual public URL)
+1.  Check existing [Issues](https://github.com/szktty/rinne-graph-desktop/issues) to avoid duplicates (Replace with actual public URL)
 2.  Create a new issue with detailed information:
     *   Steps to reproduce
     *   Expected vs actual behavior

@@ -175,7 +175,7 @@ class _UpdateCheckDialogState extends ConsumerState<UpdateCheckDialog> {
               TextButton(
                 onPressed: () async {
                   final url = Uri.parse(
-                    'https://github.com/szktty/rinne_graph_desktop/releases',
+                    'https://github.com/szktty/rinne-graph-desktop/releases',
                   );
                   if (await canLaunchUrl(url)) {
                     await launchUrl(url);
