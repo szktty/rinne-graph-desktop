@@ -10,7 +10,7 @@
 
 **⚠️ WORK IN PROGRESS - ALPHA STAGE ⚠️**
 
-RinneGraph is a graph-based personal knowledge management application. It helps users manage and organize their personal knowledge using a property graph database approach, allowing for intuitive visualization and navigation of interconnected information.
+RinneGraph is a graph-based personal knowledge management application that runs fully **local and offline — no graph database server required**. It helps users manage and organize their personal knowledge using a property graph database approach, allowing for intuitive visualization and navigation of interconnected information.
 
 ## 🚧 Project Status
 
@@ -29,6 +29,7 @@ App is a personal database organizer that uses a graph database structure to hel
 
 ## 💡 Features
 
+- **Local-first & offline** — works entirely on your device, no graph database server required
 - Organize personal data using a graph database structure (nodes and links)
 - Visualize relationships between different pieces of information
 - Search and navigate through your data efficiently
