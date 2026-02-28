@@ -6,6 +6,8 @@
 [![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows-lightgrey)](README.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
+![RinneGraph Screenshot](docs/images/screenshot.png)
+
 **⚠️ WORK IN PROGRESS - ALPHA STAGE ⚠️**
 
 RinneGraph is a graph-based personal knowledge management application. It helps users manage and organize their personal knowledge using a property graph database approach, allowing for intuitive visualization and navigation of interconnected information.
