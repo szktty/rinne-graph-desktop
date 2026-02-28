@@ -1,5 +1,7 @@
 # RinneGraph
 
+[![CLA assistant](https://cla-assistant.io/readme/badge/szktty/rinne-graph-desktop)](https://cla-assistant.io/szktty/rinne-graph-desktop)
+
 **⚠️ WORK IN PROGRESS - ALPHA STAGE ⚠️**
 
 RinneGraph is a graph-based personal knowledge management application. It helps users manage and organize their personal knowledge using a property graph database approach, allowing for intuitive visualization and navigation of interconnected information.
@@ -94,6 +96,10 @@ This project is in early development. If you encounter bugs or have suggestions:
 
 This project is licensed under the **GNU Affero General Public License v3.0 (AGPLv3)**. See the [LICENSE](LICENSE) file for details.
 
+### Contributing & CLA
+
+Contributions are welcome! By submitting a Pull Request, you agree to the [Contributor License Agreement (CLA)](https://gist.github.com/szktty/098a5717a813146dd797e557400a31c1). See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
 ### Commercial License
 
 A **commercial license** will be available in the future for organizations or individuals who need to use RinneGraph without the obligations of the AGPLv3 (e.g., source disclosure requirements for network-deployed services, internal enterprise use).
@@ -107,6 +113,8 @@ If you are interested in a future commercial license or have any licensing inqui
 **日本語 / Japanese**
 
 本プロジェクトは現在 **AGPLv3** で公開しています。将来的には商用ライセンス（Proprietary License）を提供する予定です。
+
+コントリビューションを歓迎します。プルリクエストの送信前に [Contributor License Agreement (CLA)](https://gist.github.com/szktty/098a5717a813146dd797e557400a31c1) をご確認ください。詳細は [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
 
 AGPLv3 の制約（ソースコード公開義務など）を回避したい方、または組織内部での利用を検討されている方は、下記の連絡先までお問い合わせください。
 
