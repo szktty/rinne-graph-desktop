@@ -27,6 +27,12 @@ RinneGraph is a graph-based personal knowledge management application that runs 
 
 App is a personal database organizer that uses a graph database structure to help users manage and organize their personal knowledge. It allows users to visualize relationships between different pieces of information and search and navigate through their data efficiently.
 
+## 🔍 How is RinneGraph Different?
+
+Tools like Obsidian and Logseq also offer graph views, but their underlying data model is still **files** — the graph is a visualization of links between documents. RinneGraph is different: the data model itself is a property graph, where any entity can be a node and any relationship can be an edge, each carrying its own properties. This finer-grained structure lets you represent knowledge that doesn't fit neatly into documents or outlines.
+
+At the same time, full-featured graph databases like Neo4j or ArangoDB require a server process and are built for developers. RinneGraph brings that expressive data model to a **local, offline, GUI-first desktop app** — no server, no setup, just your data on your device.
+
 ## 💡 Features
 
 - **Local-first & offline** — works entirely on your device, no graph database server required
