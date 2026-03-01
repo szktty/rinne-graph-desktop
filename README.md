@@ -1,5 +1,7 @@
 # RinneGraph
 
+[日本語](README.ja.md)
+
 [![CLA assistant](https://cla-assistant.io/readme/badge/szktty/rinne-graph-desktop)](https://cla-assistant.io/szktty/rinne-graph-desktop)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.2-blue?logo=flutter)](https://flutter.dev)
@@ -118,18 +120,6 @@ Contributions are welcome! By submitting a Pull Request, you agree to the [Contr
 A **commercial license** will be available in the future for organizations or individuals who need to use RinneGraph without the obligations of the AGPLv3 (e.g., source disclosure requirements for network-deployed services, internal enterprise use).
 
 If you are interested in a future commercial license or have any licensing inquiries, please contact:
-
-**contact@szktty.jp**
-
----
-
-**日本語 / Japanese**
-
-本プロジェクトは現在 **AGPLv3** で公開しています。将来的には商用ライセンス（Proprietary License）を提供する予定です。
-
-コントリビューションを歓迎します。プルリクエストの送信前に [Contributor License Agreement (CLA)](https://gist.github.com/szktty/098a5717a813146dd797e557400a31c1) をご確認ください。詳細は [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
-
-AGPLv3 の制約（ソースコード公開義務など）を回避したい方、または組織内部での利用を検討されている方は、下記の連絡先までお問い合わせください。
 
 **contact@szktty.jp**
 
