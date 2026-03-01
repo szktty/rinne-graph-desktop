@@ -12,11 +12,11 @@
 
 **⚠️ WORK IN PROGRESS - ALPHA STAGE ⚠️**
 
-RinneGraph is a graph-based personal knowledge management application that runs fully **local and offline — no graph database server required**. It helps users manage and organize their personal knowledge using a property graph database approach, allowing for intuitive visualization and navigation of interconnected information.
+RinneGraph is a **local and offline** graph-based personal knowledge management app. It visualizes the connections between pieces of information, helping you intuitively grasp the bigger picture.
 
 ## 🚧 Project Status
 
-**This project is in early Alpha stage and under active development.**
+**This project is in Alpha stage.**
 
 - ❌ **Not ready for production use**
 - ❌ **Features are incomplete and may not work as expected**
@@ -29,7 +29,7 @@ RinneGraph is a graph-based personal knowledge management application that runs 
 
 Tools like Obsidian and Logseq also offer graph views, but their underlying data model is still **files** — the graph is a visualization of links between documents. RinneGraph is different: the data model itself is a property graph, where any entity can be a node and any relationship can be an edge, each carrying its own properties. This finer-grained structure lets you represent knowledge that doesn't fit neatly into documents or outlines.
 
-At the same time, full-featured graph databases like Neo4j or ArangoDB require a server process and are built for developers. RinneGraph brings that expressive data model to a **local, offline, GUI-first desktop app** — no server, no setup, just your data on your device.
+At the same time, full-featured graph databases like Neo4j or ArangoDB require a server, are built for developers, and do not support macOS, Windows, or mobile as desktop apps. RinneGraph brings that expressive data model to a **local, offline, GUI-first desktop app** — no server, no setup, and your data stays yours alone.
 
 ## 💡 Features
 
