@@ -147,4 +147,4 @@ This dual approach ensures the project's versioning is both tool-compatible and 
 
 ## 💖 Sponsorship
 
-RinneGraph is a personal open-source project developed in my spare time. If you find it useful, consider supporting development via [GitHub Sponsors](https://github.com/sponsors/szktty). Any support is greatly appreciated and helps keep the project going.
+RinneGraph is a personal project. If it interests you, your support via [GitHub Sponsors](https://github.com/sponsors/szktty) would be greatly appreciated and is a huge encouragement to keep development going.
