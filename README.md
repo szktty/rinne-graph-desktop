@@ -144,3 +144,7 @@ Human-readable version string shown in the app's "About" screen.
 -   **Example:** `Alpha Build 25.10.13.1 (a1b2c3d)`
 
 This dual approach ensures the project's versioning is both tool-compatible and human-friendly, providing clarity and traceability.
+
+## 💖 Sponsorship
+
+RinneGraph is a personal open-source project developed in my spare time. If you find it useful, consider supporting development via [GitHub Sponsors](https://github.com/sponsors/szktty). Any support is greatly appreciated and helps keep the project going.
