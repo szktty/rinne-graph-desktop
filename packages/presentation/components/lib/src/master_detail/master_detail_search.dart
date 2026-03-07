@@ -1,9 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fonde_ui/src/widgets/master_detail/master_detail_search.dart'
-    show fondeSearchedItemsProvider;
 
-export 'package:fonde_ui/src/widgets/master_detail/master_detail_search.dart'
-    show fondeSearchedItemsProvider;
+import '../providers/search_providers.dart';
 
 /// A provider that returns a filtered list of items from searchable items and a search query.
 ///
@@ -13,8 +10,16 @@ Provider<List<T>> searchedItemsProvider<T>({
   required List<T> items,
   required List<String> Function(T) getSearchKeywords,
 }) {
-  return fondeSearchedItemsProvider<T>(
-    items: items,
-    getSearchKeywords: getSearchKeywords,
-  );
+  return Provider<List<T>>((ref) {
+    final query = ref.watch(searchQueryProvider).toLowerCase();
+
+    if (query.isEmpty) {
+      return items;
+    }
+
+    return items.where((item) {
+      final keywords = getSearchKeywords(item);
+      return keywords.any((keyword) => keyword.toLowerCase().contains(query));
+    }).toList();
+  });
 }
