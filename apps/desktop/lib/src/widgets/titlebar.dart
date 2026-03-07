@@ -47,8 +47,8 @@ class Titlebar extends ConsumerWidget {
     final activeStack = ref.watch(core_stack.activeStackProvider);
 
     // Sidebar visibility status
-    final isPrimarySidebarVisible = ref.watch(primarySidebarStateProvider);
-    final isSecondarySidebarVisible = ref.watch(secondarySidebarStateProvider);
+    final isPrimarySidebarVisible = ref.watch(fondePrimarySidebarStateProvider);
+    final isSecondarySidebarVisible = ref.watch(fondeSecondarySidebarStateProvider);
 
     // Register commands
     if (!commandsRegistered) {
@@ -88,7 +88,7 @@ class Titlebar extends ConsumerWidget {
                           ? AppIcons.panelLeftClose
                           : AppIcons.panelLeft,
                   onPressed: () {
-                    ref.read(primarySidebarStateProvider.notifier).toggle();
+                    ref.read(fondePrimarySidebarStateProvider.notifier).toggle();
                   },
                   tooltip:
                       isPrimarySidebarVisible
