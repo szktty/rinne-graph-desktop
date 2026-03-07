@@ -22,6 +22,25 @@ export 'src/models/app_font_config.dart' show FontConfig;
 export 'src/presets.dart';
 // src/capsules.dart removed - migrated to theme_providers.dart
 export 'src/providers/theme_providers.dart';
+
+// Re-export key Fonde UI types/providers used by downstream packages
+export 'package:fonde_ui/fonde_ui.dart'
+    show
+        FondeThemeData,
+        FondeThemePresets,
+        FondeColorScheme,
+        FondeAccessibilityConfig,
+        FondeColorScope,
+        FondeColorScopeHelper;
+export 'package:fonde_ui/fonde_ui_riverpod.dart'
+    show
+        fondeActiveThemeProvider,
+        fondeEffectiveColorSchemeProvider,
+        fondeEffectiveThemeDataProvider,
+        fondeAccessibilityConfigProvider,
+        fondePrimarySidebarStateProvider,
+        fondeSecondarySidebarStateProvider,
+        fondePerScreenSecondarySidebarStateProvider;
 export 'src/utils.dart';
 export 'src/color_extensions.dart';
 export 'src/accessibility_utils.dart';

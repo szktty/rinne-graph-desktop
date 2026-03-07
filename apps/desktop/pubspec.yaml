@@ -88,7 +88,7 @@ dependencies:
       url: https://github.com/szktty/plough.git
       ref: develop
   path_provider: ^2.1.5
-  macos_ui: ^2.1.9
+  macos_window_utils: ^1.5.0
   appkit_ui_element_colors: ^1.0.1
   package_info_plus: ^8.3.0
   file_picker: ^10.1.0
@@ -99,6 +99,11 @@ dependencies:
   shelf: ^1.4.0
   shelf_router: ^1.1.4
   url_launcher: ^6.3.2
+
+  fonde_ui:
+    git:
+      url: https://github.com/szktty/fonde-ui.git
+      ref: develop
 
   rinne_graph:
     git:

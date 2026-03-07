@@ -325,8 +325,6 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
 
   /// Create custom behavior to directly control selection state changes
   plough.GraphViewBehavior _createCustomBehavior() {
-    final themeConfig = ref.read(activeThemeProvider);
-
     // Function to handle selection state changes
     void handleSelectionChange(String? entityId) {
       debugPrint(
@@ -348,7 +346,6 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
     }
 
     return _AppGraphBehavior(
-      themeConfig: themeConfig,
       selectionChangeCallback: handleSelectionChange,
       ref: ref,
     );
@@ -357,13 +354,11 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
 
 /// Custom behavior class - directly control selection state changes
 class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
-  final ThemeConfig themeConfig;
   final void Function(String?) selectionChangeCallback;
   final WidgetRef ref;
   String? _lastSelectedId;
 
   _AppGraphBehavior({
-    required this.themeConfig,
     required this.selectionChangeCallback,
     required this.ref,
   });

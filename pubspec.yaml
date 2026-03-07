@@ -4,6 +4,10 @@ environment:
   sdk: ^3.11.0
   flutter: '>=3.41.2'
 
+dependency_overrides:
+  fonde_ui:
+    path: ../fonde-ui-private
+
 workspace:
   - apps/desktop
   - packages/app

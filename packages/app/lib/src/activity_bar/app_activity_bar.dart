@@ -9,7 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:presentation_components/presentation_components.dart';
+import 'package:fonde_ui/fonde_ui.dart';
 import 'package:features_settings/features_settings.dart';
 import 'package:features_welcome/features_welcome.dart';
 
@@ -20,7 +20,7 @@ final selectedActivityItemProvider = StateProvider<AppActivityItemType>(
   (ref) => AppActivityItemType.lens,
 );
 
-/// Application-specific activity bar
+/// Application-specific launch bar (activity bar)
 class AppActivityBar extends ConsumerWidget {
   const AppActivityBar({super.key});
 
@@ -37,10 +37,6 @@ class AppActivityBar extends ConsumerWidget {
   /// Displays the welcome screen as a dialog (for stack switching)
   Future<void> _showWelcomeDialog(BuildContext context) async {
     try {
-      // showWelcomeDialog(
-      //   context,
-      //   showCloseButton: true,
-      // );
       debugPrint('Welcome dialog displayed');
     } catch (e) {
       debugPrint('Failed to display welcome dialog: $e');
@@ -51,13 +47,13 @@ class AppActivityBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedType = ref.watch(selectedActivityItemProvider);
 
-    return ActivityBar(
+    return FondeLaunchBar(
       selectedIndex: selectedType.index,
       topItems:
           AppActivityItemType.values
               .where((type) => type.isMainItem)
               .map(
-                (type) => type.toActivityBarItem(
+                (type) => type.toLaunchBarItem(
                   logicalIndex: type.index,
                   onTap:
                       () =>
@@ -71,14 +67,12 @@ class AppActivityBar extends ConsumerWidget {
           AppActivityItemType.values
               .where((type) => !type.isMainItem)
               .map(
-                (type) => type.toActivityBarItem(
+                (type) => type.toLaunchBarItem(
                   logicalIndex: type.index,
                   onTap: () {
                     if (type == AppActivityItemType.settings) {
-                      // 設定画面をダイアログとして表示
                       _showSettingsDialog(context);
                     } else if (type == AppActivityItemType.stackSwitcher) {
-                      // ウェルカム画面をダイアログとして表示
                       _showWelcomeDialog(context);
                     } else {
                       ref.read(selectedActivityItemProvider.notifier).state =

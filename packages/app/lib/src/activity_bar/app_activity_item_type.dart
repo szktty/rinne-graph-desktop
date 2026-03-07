@@ -7,6 +7,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:fonde_ui/fonde_ui.dart';
 import 'package:presentation_components/presentation_components.dart';
 
 /// Activity bar item types
@@ -45,12 +46,12 @@ enum AppActivityItemType {
 
 // Extension methods for AppActivityItemType
 extension AppActivityItemTypeX on AppActivityItemType {
-  ActivityBarItem toActivityBarItem({
+  FondeLaunchBarItem toLaunchBarItem({
     required int logicalIndex,
     String? badge,
     VoidCallback? onTap,
   }) {
-    return ActivityBarItem(
+    return FondeLaunchBarItem(
       icon: icon,
       label: label,
       logicalIndex: logicalIndex,
