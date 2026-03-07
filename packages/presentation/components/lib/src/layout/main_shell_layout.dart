@@ -78,15 +78,15 @@ class _MainShellLayoutState extends ConsumerState<MainShellLayout> {
 
     // Watch the visibility state of the sidebars
     final sidebarVisible = widget.showPrimarySidebar;
-    final secondarySidebarVisible = ref.watch(secondarySidebarStateProvider);
+    final secondarySidebarVisible = ref.watch(fondeSecondarySidebarStateProvider);
 
     // If the sidebar is hidden, use CollapsedSidebarLayout
     if (!sidebarVisible) {
       return CollapsedSidebarLayout(
         toolbar: widget.toolbar,
         mainContent: _buildMainContent(context, zoomScale, 288.0 * zoomScale),
-        activityBar: widget.activityBar,
-        showActivityBar: widget.showActivityBar,
+        launchBar: widget.activityBar,
+        showLaunchBar: widget.showActivityBar,
         zoomScale: zoomScale,
         borderScale: borderScale,
         disableZoom: widget.disableZoom,
@@ -151,9 +151,9 @@ class _MainShellLayoutState extends ConsumerState<MainShellLayout> {
           switch (area.id) {
             case 'primary_sidebar':
               return ResizableSidebarArea(
-                activityBar: widget.activityBar,
+                launchBar: widget.activityBar,
                 primarySidebar: widget.primarySidebar,
-                showActivityBar: widget.showActivityBar,
+                showLaunchBar: widget.showActivityBar,
                 showPrimarySidebar: widget.showPrimarySidebar,
                 showToolbar: widget.showToolbar,
                 zoomScale: zoomScale,

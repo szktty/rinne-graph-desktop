@@ -1,50 +1,11 @@
-/*
- * Copyright (c) 2026 SUZUKI Tetsuya
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Commercial
- *
- * This file is part of RinneGraph.
- * For commercial licensing inquiries, please contact: contact@szktty.jp
- */
-
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'master_detail_state.g.dart';
-
-/// Management of selection state.
-@riverpod
-class SelectedItem extends _$SelectedItem {
-  @override
-  String? build() {
-    return null;
-  }
-
-  void setSelectedId(String? id) {
-    state = id;
-  }
-}
-
-/// Management of master width.
-@riverpod
-class MasterWidth extends _$MasterWidth {
-  @override
-  double build() {
-    return 280.0; // Default value
-  }
-
-  void setWidth(double width) {
-    state = width;
-  }
-}
-
-/// Management of detail display visibility.
-@riverpod
-class DetailVisibility extends _$DetailVisibility {
-  @override
-  bool build() {
-    return false; // Default is hidden
-  }
-
-  void setVisible(bool visible) {
-    state = visible;
-  }
-}
+// Delegate to Fonde UI master_detail_state.
+export 'package:fonde_ui/src/widgets/master_detail/master_detail_state.dart'
+    show
+        SelectedItem,
+        MasterWidth,
+        DetailVisibility;
+export 'package:fonde_ui/src/widgets/master_detail/master_detail_state.g.dart'
+    show
+        selectedItemProvider,
+        masterWidthProvider,
+        detailVisibilityProvider;
