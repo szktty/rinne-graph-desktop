@@ -155,13 +155,13 @@ class ActivityBarColors {
 
 /// Class defining sidebar colors
 class SideBarColors {
-  /// Sidebar overall background
+  /// FondeSidebar overall background
   final Color background;
 
   /// Divider between sections
   final Color divider;
 
-  /// Section header color
+  /// FondeSection header color
   final Color groupHeader;
 
   /// Selected item background

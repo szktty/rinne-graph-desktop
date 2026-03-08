@@ -41,19 +41,19 @@ class LabelTableView extends ConsumerWidget {
 
     return Container(
       color: appColorScheme.base.background,
-      child: AppTableView<_LabelTableRow>(
+      child: FondeTableView<_LabelTableRow>(
         data: tableData,
         keyExtractor: (row) => row.label.id,
         columns: [
           // Tag column (name + color)
-          AppTableColumn<_LabelTableRow>(
+          FondeTableColumn<_LabelTableRow>(
             id: 'tag',
             title: 'Name',
             width: 500, // より大きな幅を設定してエリア横幅いっぱいに
             cellBuilder:
                 (row, isSelected) => Align(
                   alignment: Alignment.centerLeft,
-                  child: TagView(
+                  child: FondeTagView(
                     label: row.label.name,
                     color: row.label.color,
                     isSelected: isSelected,
@@ -61,7 +61,7 @@ class LabelTableView extends ConsumerWidget {
                 ),
           ),
           // Usage count column
-          AppTableColumn<_LabelTableRow>(
+          FondeTableColumn<_LabelTableRow>(
             id: 'usageCount',
             title: 'Usage Count',
             width: 100,
@@ -92,9 +92,9 @@ class LabelTableView extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AppIcon(
-            AppIcons.tag,
-            size: AppIconSize.xlarge,
+          FondeIcon(
+            FondeIcons.tag,
+            size: FondeIconSize.xlarge,
             customColor: colorScheme.base.foreground.withAlpha(128),
           ),
           const SizedBox(height: 16),

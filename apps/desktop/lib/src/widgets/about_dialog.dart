@@ -97,7 +97,7 @@ class _AboutDialogContentState extends ConsumerState<AboutDialogContent> {
     AppColorScheme colorScheme,
     String systemInfo,
   ) {
-    return AppExpansionTile(
+    return FondeExpansionTile(
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

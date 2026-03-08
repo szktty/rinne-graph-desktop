@@ -13,35 +13,36 @@ import 'package:presentation_components/presentation_components.dart';
 /// Activity bar item types
 enum AppActivityItemType {
   // Main features
-  lens(
-    icon: AppIcons.graphNavigation,
-    label: 'Graph Navigation',
-    isMainItem: true,
-  ),
-  labelList(icon: AppIcons.tag, label: 'Label List', isMainItem: true),
-  propertyList(
-    icon: AppIcons.properties,
-    label: 'Property List',
-    isMainItem: true,
-  ),
+  lens(label: 'Graph Navigation', isMainItem: true),
+  labelList(label: 'Label List', isMainItem: true),
+  propertyList(label: 'Property List', isMainItem: true),
 
   // Meta features
-  stackSwitcher(
-    icon: AppIcons.stacks,
-    label: 'Stack Switcher',
-    isMainItem: false,
-  ),
-  settings(icon: AppIcons.settings, label: 'Settings', isMainItem: false);
+  stackSwitcher(label: 'Stack Switcher', isMainItem: false),
+  settings(label: 'Settings', isMainItem: false);
 
   const AppActivityItemType({
-    required this.icon,
     required this.label,
     required this.isMainItem,
   });
 
-  final IconData icon;
   final String label;
   final bool isMainItem;
+
+  IconData get icon {
+    switch (this) {
+      case AppActivityItemType.lens:
+        return FondeIcons.graphNavigation;
+      case AppActivityItemType.labelList:
+        return FondeIcons.tag;
+      case AppActivityItemType.propertyList:
+        return FondeIcons.properties;
+      case AppActivityItemType.stackSwitcher:
+        return FondeIcons.stacks;
+      case AppActivityItemType.settings:
+        return FondeIcons.settings;
+    }
+  }
 }
 
 // Extension methods for AppActivityItemType

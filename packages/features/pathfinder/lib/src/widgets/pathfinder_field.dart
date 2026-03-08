@@ -45,11 +45,11 @@ class PathfinderField extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Material(
         color: Colors.transparent,
-        child: AppTextField(
+        child: FondeTextField(
           enabled: isEnabled,
           hintText: displayHintText,
           prefixIcon: Icon(
-            AppIcons.search,
+            FondeIcons.search,
             size: 18,
             color:
                 isEnabled

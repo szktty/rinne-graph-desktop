@@ -104,13 +104,13 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
         const SizedBox(height: 16),
 
         // Divider
-        AppDivider(),
+        FondeDivider(),
 
         // Options section
         Expanded(
-          child: AppScrollView(
+          child: FondeScrollView(
             controller: _scrollController,
-            child: Section(
+            child: FondeSection(
               showDividers: false,
               children: [
                 _buildOptionsSection(
@@ -203,7 +203,7 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
               Stack(
                 children: [
                   Center(
-                    child: AppDropdownMenu<String>(
+                    child: FondeDropdownMenu<String>(
                       initialSelection: _getImportModeString(
                         _options.importMode,
                       ),
@@ -220,7 +220,7 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
                           value: 'Add',
                           label: 'Add',
                           leadingIcon: Icon(
-                            AppIcons.importAdd,
+                            FondeIcons.importAdd,
                             size: 16,
                             color: textColor,
                           ),
@@ -229,7 +229,7 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
                           value: 'Update',
                           label: 'Update',
                           leadingIcon: Icon(
-                            AppIcons.importUpdate,
+                            FondeIcons.importUpdate,
                             size: 16,
                             color: textColor,
                           ),
@@ -238,7 +238,7 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
                           value: 'Replace',
                           label: 'Replace',
                           leadingIcon: Icon(
-                            AppIcons.importReplace,
+                            FondeIcons.importReplace,
                             size: 16,
                             color: textColor,
                           ),
@@ -247,7 +247,7 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
                           value: 'Skip',
                           label: 'Skip',
                           leadingIcon: Icon(
-                            AppIcons.x,
+                            FondeIcons.x,
                             size: 16,
                             color: textColor,
                           ),
@@ -260,7 +260,7 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
                     right: 16,
                     child: IconButton(
                       icon: Icon(
-                        AppIcons.info,
+                        FondeIcons.info,
                         size: 14,
                         color: textColor.withValues(alpha: 0.7),
                       ),
@@ -352,15 +352,15 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // CSV Format Options Section
-        FormList(
+        // CSV Format Options FondeSection
+        FondeFormList(
           title: 'CSV Options',
           labelWidth: 150,
           children: [
-            FormItemRow(
+            FondeFormItemRow(
               label: 'Character Set',
               labelWidth: 150,
-              child: AppDropdownMenu<String>(
+              child: FondeDropdownMenu<String>(
                 initialSelection: _options.characterEncoding,
                 onSelected:
                     (value) => setState(() {
@@ -377,10 +377,10 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
                     }).toList(),
               ),
             ),
-            FormItemRow(
+            FondeFormItemRow(
               label: 'Delimiter',
               labelWidth: 150,
-              child: AppDropdownMenu<String>(
+              child: FondeDropdownMenu<String>(
                 initialSelection: _options.csvDelimiter,
                 onSelected:
                     (value) => setState(() {
@@ -395,12 +395,12 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
                     }).toList(),
               ),
             ),
-            FormItemRow(
+            FondeFormItemRow(
               label: 'CSV Header',
               labelWidth: 150,
               child: Row(
                 children: [
-                  AppCheckbox(
+                  FondeCheckbox(
                     value: _options.firstRowIsHeader,
                     onChanged:
                         (value) => setState(() {
@@ -421,17 +421,17 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
           ],
         ),
 
-        AppDivider(),
+        FondeDivider(),
 
-        // Error Handling Section
-        FormList(
+        // Error Handling FondeSection
+        FondeFormList(
           title: 'Error Handling',
           labelWidth: 150,
           children: [
-            FormItemRow(
+            FondeFormItemRow(
               label: 'Error Handling',
               labelWidth: 150,
-              child: AppDropdownMenu<String>(
+              child: FondeDropdownMenu<String>(
                 initialSelection: _getErrorHandlingString(
                   _options.errorHandling,
                 ),
@@ -453,17 +453,17 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
           ],
         ),
 
-        AppDivider(),
+        FondeDivider(),
 
-        // Binary File Options Section
-        FormList(
+        // Binary File Options FondeSection
+        FondeFormList(
           title: 'Binary File Options',
           labelWidth: 150,
           children: [
-            FormItemRow(
+            FondeFormItemRow(
               label: 'File Processing',
               labelWidth: 150,
-              child: AppDropdownMenu<String>(
+              child: FondeDropdownMenu<String>(
                 initialSelection: _getBinaryFileModeString(
                   _options.binaryFileMode,
                 ),
@@ -482,10 +482,10 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
                     }).toList(),
               ),
             ),
-            FormItemRow(
+            FondeFormItemRow(
               label: 'Max File Size',
               labelWidth: 150,
-              child: AppDropdownMenu<String>(
+              child: FondeDropdownMenu<String>(
                 initialSelection: '${_options.maxFileSizeMB}MB',
                 onSelected:
                     (value) => setState(() {
@@ -548,7 +548,7 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
                 ),
                 child: Row(
                   children: [
-                    Icon(AppIcons.stacks, size: 20, color: textColor),
+                    Icon(FondeIcons.stacks, size: 20, color: textColor),
                     const SizedBox(width: 8),
                     Expanded(
                       child: AppText(
@@ -563,7 +563,7 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
                       ),
                     ),
                     Icon(
-                      AppIcons.chevronDown,
+                      FondeIcons.chevronDown,
                       size: 16,
                       color: colorScheme.uiAreas.sideBar.inactiveItemText,
                     ),
@@ -666,12 +666,12 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        AppButton.cancel(
+        FondeButton.cancel(
           label: 'Cancel',
           onPressed: () => Navigator.of(context).pop(),
         ),
         const SizedBox(width: 16),
-        AppButton.primary(
+        FondeButton.primary(
           label: 'Import',
           onPressed: _selectedFiles.isEmpty ? null : handleImport,
         ),
@@ -686,7 +686,7 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
       child: Row(
         children: [
           Icon(
-            AppIcons.info,
+            FondeIcons.info,
             size: 14,
             color: subTextColor.withValues(alpha: 0.7),
           ),
@@ -736,7 +736,7 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    AppIcons.import,
+                    FondeIcons.import,
                     size: 18,
                     color:
                         isDragOver
@@ -745,7 +745,7 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
                   ),
                   const SizedBox(width: 8),
                   Icon(
-                    AppIcons.plus,
+                    FondeIcons.plus,
                     size: 16,
                     color:
                         isDragOver
@@ -802,13 +802,13 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
             color: subTextColor,
           ),
           const SizedBox(width: 8),
-          AppIconButton(
+          FondeIconButton(
             onPressed: () {
               setState(() {
                 _selectedFiles.removeAt(index);
               });
             },
-            icon: AppIcons.x,
+            icon: FondeIcons.x,
             iconSize: 16,
             iconColor: subTextColor,
             tooltip: 'Remove file',
@@ -821,13 +821,13 @@ class _ImportDialogContentState extends ConsumerState<ImportDialogContent> {
   IconData _getFileIcon(ImportFileType type) {
     switch (type) {
       case ImportFileType.csv:
-        return AppIcons.table;
+        return FondeIcons.table;
       case ImportFileType.json:
-        return AppIcons.fileText;
+        return FondeIcons.fileText;
       case ImportFileType.stack:
-        return AppIcons.stacks;
+        return FondeIcons.stacks;
       case ImportFileType.manifest:
-        return AppIcons.settings;
+        return FondeIcons.settings;
     }
   }
 
@@ -1155,7 +1155,7 @@ class _ImportModeInfoDialog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildModeExplanation(
-                    icon: AppIcons.importAdd,
+                    icon: FondeIcons.importAdd,
                     title: '追加 (Add)',
                     description: 'Add all data as new data',
                     details: [
@@ -1166,7 +1166,7 @@ class _ImportModeInfoDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   _buildModeExplanation(
-                    icon: AppIcons.importUpdate,
+                    icon: FondeIcons.importUpdate,
                     title: '更新 (Update)',
                     description:
                         'Update existing data. Unspecified properties are maintained',
@@ -1179,7 +1179,7 @@ class _ImportModeInfoDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   _buildModeExplanation(
-                    icon: AppIcons.importReplace,
+                    icon: FondeIcons.importReplace,
                     title: '置換 (Replace)',
                     description:
                         'Replace existing data. Unspecified properties are deleted',
@@ -1192,7 +1192,7 @@ class _ImportModeInfoDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   _buildModeExplanation(
-                    icon: AppIcons.x,
+                    icon: FondeIcons.x,
                     title: 'スキップ (Skip)',
                     description: 'Do not update if existing data is present',
                     details: [
@@ -1209,7 +1209,7 @@ class _ImportModeInfoDialog extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              AppButton.primary(
+              FondeButton.primary(
                 label: 'Close',
                 onPressed: () => Navigator.of(context).pop(),
               ),
@@ -1351,19 +1351,19 @@ class _ImportDialogFooter extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Padding(
-            padding: const EdgeInsets.all(AppSpacingValues.xl), // 20px
-            child: AppButton.cancel(
+            padding: const EdgeInsets.all(FondeSpacingValues.xl), // 20px
+            child: FondeButton.cancel(
               label: 'Cancel',
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(
-              top: AppSpacingValues.xl,
-              right: AppSpacingValues.xl,
-              bottom: AppSpacingValues.xl,
+              top: FondeSpacingValues.xl,
+              right: FondeSpacingValues.xl,
+              bottom: FondeSpacingValues.xl,
             ),
-            child: AppButton.primary(
+            child: FondeButton.primary(
               label: 'Import',
               onPressed: () {
                 // Access the state through GlobalKey and trigger import

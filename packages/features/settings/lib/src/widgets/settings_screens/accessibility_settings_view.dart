@@ -20,7 +20,7 @@ class AccessibilitySettingsView extends ConsumerWidget {
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
     final accessibilityConfig = ref.watch(fondeAccessibilityConfigProvider);
 
-    return AppCard(
+    return FondePanel(
       margin: EdgeInsets.zero,
       padding: const EdgeInsets.all(24.0),
       borderSide: BorderSide.none,
@@ -40,15 +40,15 @@ class AccessibilitySettingsView extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Only zoom scale setting
-            FormList(
-              child: FormItemColumn(
+            FondeFormList(
+              child: FondeFormItemColumn(
                 label: 'Zoom Scale',
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Decrease button (with border)
-                    AppIconButton(
-                      icon: AppIcons.arrowLeft,
+                    FondeIconButton(
+                      icon: FondeIcons.arrowLeft,
                       iconSize: 16.0,
                       backgroundColor: appColorScheme.uiAreas.panel.background,
                       border: BorderSide(
@@ -80,8 +80,8 @@ class AccessibilitySettingsView extends ConsumerWidget {
                     ),
                     const SizedBox(width: 8),
                     // Increase button (with border)
-                    AppIconButton(
-                      icon: AppIcons.arrowRight,
+                    FondeIconButton(
+                      icon: FondeIcons.arrowRight,
                       iconSize: 16.0,
                       backgroundColor: appColorScheme.uiAreas.panel.background,
                       border: BorderSide(

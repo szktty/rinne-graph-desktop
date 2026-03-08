@@ -43,7 +43,7 @@ class StatusMessage extends ConsumerWidget {
         if (status == TaskStatus.failed && error != null)
           _buildMessageContainer(
             ref: ref,
-            icon: AppIcons.error,
+            icon: FondeIcons.error,
             message: error!.message,
           ),
       ],
@@ -60,14 +60,14 @@ class StatusMessage extends ConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
-      child: AppRectangleBorder(
-        cornerRadius: AppBorderRadiusValues.small,
+      child: FondeRectangleBorder(
+        cornerRadius: FondeBorderRadiusValues.small,
         color: appColorScheme.status.error.withValues(alpha: 0.1),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Row(
             children: [
-              AppIcon(icon, color: AppIconColor.error, size: AppIconSize.small),
+              FondeIcon(icon, color: FondeIconColor.error, size: FondeIconSize.small),
               const SizedBox(width: 8),
               Expanded(
                 child: AppText(message, variant: AppTextVariant.bodyText),
@@ -111,11 +111,11 @@ class ActionButtons extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         // Cancel button (displayed only while running)
-        if (isRunning) AppButton.cancel(label: 'Cancel', onPressed: onCancel),
+        if (isRunning) FondeButton.cancel(label: 'Cancel', onPressed: onCancel),
 
         // OK button (displayed on completion/failure/cancellation)
         if (isFinished)
-          AppButton.primary(
+          FondeButton.primary(
             label: 'OK',
             onPressed: () {
               Navigator.of(context).pop();

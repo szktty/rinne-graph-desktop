@@ -23,7 +23,7 @@ class AppearanceSettingsView extends ConsumerWidget {
     final currentThemeType = ref.watch(core_themes.themeColorTypeProvider);
     final appColorScheme = ref.watch(core_themes.effectiveColorSchemeProvider);
 
-    return AppCard(
+    return FondePanel(
       margin: EdgeInsets.zero,
       padding: const EdgeInsets.all(24.0),
       borderSide: BorderSide.none,
@@ -43,7 +43,7 @@ class AppearanceSettingsView extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Theme mode settings
-            FormList(
+            FondeFormList(
               title: 'Theme Mode',
               child: Row(
                 children: [
@@ -55,7 +55,7 @@ class AppearanceSettingsView extends ConsumerWidget {
                       appColorScheme: appColorScheme,
                       mode: ThemeMode.system,
                       title: 'System',
-                      icon: AppIcons.settings,
+                      icon: FondeIcons.settings,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -67,7 +67,7 @@ class AppearanceSettingsView extends ConsumerWidget {
                       appColorScheme: appColorScheme,
                       mode: ThemeMode.light,
                       title: 'Light',
-                      icon: AppIcons.sun,
+                      icon: FondeIcons.sun,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -79,17 +79,17 @@ class AppearanceSettingsView extends ConsumerWidget {
                       appColorScheme: appColorScheme,
                       mode: ThemeMode.dark,
                       title: 'Dark',
-                      icon: AppIcons.moon,
+                      icon: FondeIcons.moon,
                     ),
                   ),
                 ],
               ),
             ),
 
-            const AppSpacing.xxxl(),
+            const FondeSpacing.xxxl(),
 
             // テーマカラー設定
-            FormList(
+            FondeFormList(
               title: 'Theme Color',
               child: _buildThemeColorGrid(context, ref, currentThemeType),
             ),
@@ -137,10 +137,10 @@ class AppearanceSettingsView extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AppIcon(
+            FondeIcon(
               icon,
-              size: AppIconSize.large,
-              color: AppIconColor.onSurface,
+              size: FondeIconSize.large,
+              color: FondeIconColor.onSurface,
             ),
             const SizedBox(height: 8),
             AppText(

@@ -36,7 +36,7 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
         _buildHeader(appColorScheme),
         // Scrollable content
         Expanded(
-          child: AppScrollView(
+          child: FondeScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -79,7 +79,7 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                icon: const Icon(AppIcons.save),
+                icon: Icon(FondeIcons.save),
                 iconSize: 18.0,
                 tooltip: 'Save',
                 onPressed: () => _saveProperties(context, ref),
@@ -87,7 +87,7 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
               ),
               const SizedBox(width: 4.0),
               IconButton(
-                icon: const Icon(AppIcons.rotateCcw),
+                icon: Icon(FondeIcons.rotateCcw),
                 iconSize: 18.0,
                 tooltip: 'Cancel',
                 onPressed: () => _cancelEditing(ref),
@@ -229,7 +229,7 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
               ),
               const SizedBox(height: 4),
               // Property value
-              AppTextField(
+              FondeTextField(
                 controller: controller,
                 onChanged: onChanged,
                 hintText: 'Enter value',

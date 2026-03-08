@@ -25,15 +25,15 @@ class GraphNavigatorSidebarContent extends ConsumerWidget {
 
     // Tab definition (filter menu removed, only navigator and search)
     final tabs = [
-      const AppTab(
+      FondeTab(
         id: 'navigation',
-        icon: AppIcons.bookmarks,
+        icon: FondeIcons.bookmarks,
         tooltip: 'Navigator',
         closeable: false,
       ),
-      const AppTab(
+      FondeTab(
         id: 'search',
-        icon: AppIcons.search,
+        icon: FondeIcons.search,
         tooltip: 'Search',
         closeable: false,
       ),
@@ -41,11 +41,11 @@ class GraphNavigatorSidebarContent extends ConsumerWidget {
 
     // Tab content definition
     final contents = [
-      const AppTabContent(id: 'navigation', content: NavigationTabContent()),
-      const AppTabContent(id: 'search', content: _SearchTabContent()),
+      FondeTabContent(id: 'navigation', content: NavigationTabContent()),
+      FondeTabContent(id: 'search', content: _SearchTabContent()),
     ];
 
-    return AppTabView(
+    return FondeTabView(
       tabs: tabs,
       contents: contents,
       initialSelectedTabId: selectedTab == 0 ? 'navigation' : 'search',
@@ -115,7 +115,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
               TextFormField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(
-                    AppIcons.search,
+                    FondeIcons.search,
                     size: 18,
                     color: colorScheme.primary,
                   ),
@@ -152,7 +152,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
         // --- Exploration Options ---
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: AppExpansionTile(
+          child: FondeExpansionTile(
             title: AppText(
               'Exploration Options',
               variant: AppTextVariant.captionText,
@@ -164,12 +164,12 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
               vertical: 8.0,
             ),
             tilePadding: EdgeInsets.zero,
-            iconPosition: ExpansionIconPosition.trailing,
+            iconPosition: FondeExpansionIconPosition.trailing,
             children: [
               _buildExplorationOptionRow(
                 context: context,
                 label: 'Depth:',
-                child: AppDropdownMenu<int>(
+                child: FondeDropdownMenu<int>(
                   initialSelection: explorationOptions.depth,
                   onSelected: (value) {
                     if (value == null) return;
@@ -211,7 +211,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
 
         const Divider(),
 
-        // --- Advanced Search Section ---
+        // --- Advanced Search FondeSection ---
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: AppText(
@@ -419,7 +419,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
     final themeData = ref.watch(effectiveThemeDataProvider);
     final colorScheme = ref.watch(effectiveFlutterColorSchemeProvider);
     final bool isNode = entity.type == PatternEntityType.node;
-    final iconData = isNode ? AppIcons.circle : AppIcons.link;
+    final iconData = isNode ? FondeIcons.circle : FondeIcons.link;
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
     final iconColor =
         isNode ? appColorScheme.appSpecific.graph.nodeBase : Colors.grey;
@@ -443,7 +443,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
       key: ValueKey(entity.id),
       children: [
         // Node pattern tile
-        AppExpansionTile(
+        FondeExpansionTile(
           key: ValueKey('${entity.id}_expansion'),
           controller: nodeController,
           title: Row(
@@ -475,7 +475,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
               ),
               const Spacer(),
               IconButton(
-                icon: Icon(AppIcons.x, size: 16, color: Colors.red.shade300),
+                icon: Icon(FondeIcons.x, size: 16, color: Colors.red.shade300),
                 onPressed: () {
                   ref
                       .read(searchPatternStateProvider.notifier)
@@ -524,7 +524,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
                   },
                   decoration: InputDecoration(
                     prefixIcon: Icon(
-                      AppIcons.search,
+                      FondeIcons.search,
                       size: 18,
                       color: colorScheme.onSurfaceVariant,
                     ),
@@ -551,7 +551,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
                   },
                   child: Row(
                     children: [
-                      Icon(AppIcons.plus, size: 16, color: iconColor),
+                      Icon(FondeIcons.plus, size: 16, color: iconColor),
                       const SizedBox(width: 4),
                       AppText(
                         'Add Property Condition',
@@ -593,15 +593,15 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
     IconData getDirectionIcon(LinkDirection direction) {
       switch (direction) {
         case LinkDirection.outgoing:
-          return AppIcons.arrowRight;
+          return FondeIcons.arrowRight;
         case LinkDirection.incoming:
-          return AppIcons.arrowLeft;
+          return FondeIcons.arrowLeft;
         case LinkDirection.both:
-          return AppIcons.arrowLeftRight;
+          return FondeIcons.arrowLeftRight;
       }
     }
 
-    final directionDropdown = AppDropdownMenu<LinkDirection>(
+    final directionDropdown = FondeDropdownMenu<LinkDirection>(
       initialSelection: config.direction,
       onSelected: (newDirection) {
         if (newDirection != null) {
@@ -633,7 +633,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
               .toList(),
     );
 
-    return AppExpansionTile(
+    return FondeExpansionTile(
       key: ValueKey('${previousNodeId}_link_expansion'),
       controller: controller,
       title: directionDropdown,
@@ -659,7 +659,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
                 .addLinkConfiguration(previousNodeId, updatedConfig);
           },
           decoration: InputDecoration(
-            prefixIcon: Icon(AppIcons.stickyNote, size: 18, color: iconColor),
+            prefixIcon: Icon(FondeIcons.stickyNote, size: 18, color: iconColor),
             hintText: 'Type',
             isDense: true,
             border: OutlineInputBorder(
@@ -687,7 +687,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
           },
           decoration: InputDecoration(
             prefixIcon: Icon(
-              AppIcons.search,
+              FondeIcons.search,
               size: 18,
               color: colorScheme.onSurfaceVariant,
             ),
@@ -714,7 +714,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
           },
           child: Row(
             children: [
-              Icon(AppIcons.plus, size: 16, color: iconColor),
+              Icon(FondeIcons.plus, size: 16, color: iconColor),
               const SizedBox(width: 4),
               AppText(
                 'Add Property Condition',
@@ -761,7 +761,7 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              AppIcons.plus,
+              FondeIcons.plus,
               size: 18,
               color: appColorScheme.appSpecific.graph.nodeBase,
             ),

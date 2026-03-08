@@ -11,7 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation_components/presentation_components.dart';
 
 void main() {
-  testWidgets('AppTabView can display tabs and switch between them', (
+  testWidgets('FondeTabView can display tabs and switch between them', (
     WidgetTester tester,
   ) async {
     // Mock data for the tab view
@@ -22,22 +22,22 @@ void main() {
     ];
 
     final contents = [
-      const AppTabContent(
+      FondeTabContent(
         id: 'tab1',
         content: _TestContent(text: 'Content of Tab 1'),
       ),
-      const AppTabContent(
+      FondeTabContent(
         id: 'tab2',
         content: _TestContent(text: 'Content of Tab 2'),
       ),
-      const AppTabContent(
+      FondeTabContent(
         id: 'tab3',
         content: _TestContent(text: 'Content of Tab 3'),
       ),
     ];
 
     await tester.pumpWidget(
-      MaterialApp(home: AppTabView(tabs: tabs, contents: contents)),
+      MaterialApp(home: FondeTabView(tabs: tabs, contents: contents)),
     );
 
     // Verify that the first tab is selected
@@ -53,20 +53,20 @@ void main() {
     expect(find.text('Content of Tab 1'), findsNothing);
   });
 
-  testWidgets('AppTabView handles custom styling', (WidgetTester tester) async {
+  testWidgets('FondeTabView handles custom styling', (WidgetTester tester) async {
     final tabs = [
       const AppTab(id: 'tab1', label: 'Tab 1'),
       const AppTab(id: 'tab2', label: 'Tab 2'),
     ];
 
     final contents = [
-      const AppTabContent(id: 'tab1', content: _TestContent(text: 'Content 1')),
-      const AppTabContent(id: 'tab2', content: _TestContent(text: 'Content 2')),
+      FondeTabContent(id: 'tab1', content: _TestContent(text: 'Content 1')),
+      FondeTabContent(id: 'tab2', content: _TestContent(text: 'Content 2')),
     ];
 
     await tester.pumpWidget(
       MaterialApp(
-        home: AppTabView(
+        home: FondeTabView(
           tabs: tabs,
           contents: contents,
           tabBarPosition: TabBarPosition.bottom,
@@ -75,7 +75,7 @@ void main() {
       ),
     );
 
-    expect(find.byType(AppTabView), findsOneWidget);
+    expect(find.byType(FondeTabView), findsOneWidget);
     expect(find.text('Tab 1'), findsOneWidget);
     expect(find.text('Content 1'), findsOneWidget);
   });

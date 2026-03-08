@@ -354,14 +354,14 @@ class MenuBuilder {
         const PlatformMenuItemGroup(
           members: <PlatformMenuItem>[
             PlatformMenuItem(
-              label: 'Show/Hide Sidebar',
+              label: 'Show/Hide FondeSidebar',
               shortcut: SingleActivator(LogicalKeyboardKey.digit1, meta: true),
             ),
             PlatformMenuItem(
               label: 'Show/Hide Detail Panel',
               shortcut: SingleActivator(LogicalKeyboardKey.digit2, meta: true),
             ),
-            PlatformMenuItem(label: 'Show/Hide Toolbar'),
+            PlatformMenuItem(label: 'Show/Hide FondeToolbar'),
           ],
         ),
         const PlatformMenuItemGroup(

@@ -75,7 +75,7 @@ class _FilterSearchFieldState extends ConsumerState<_FilterSearchField> {
       _controller.text = filterState.searchQuery;
     }
 
-    return AppTextField(
+    return FondeTextField(
       controller: _controller,
       hintText: 'Filter...',
       prefixIcon: const Icon(Icons.search, size: 18),

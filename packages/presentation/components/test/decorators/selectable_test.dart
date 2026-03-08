@@ -72,7 +72,7 @@ void main() {
       expect(find.byType(Container), findsOneWidget);
     });
 
-    testWidgets('works correctly in combination with AppCard', (
+    testWidgets('works correctly in combination with FondePanel', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -81,7 +81,7 @@ void main() {
             home: Scaffold(
               body: Selectable(
                 isSelected: true,
-                child: AppCard(child: Text('Selectable Card')),
+                child: FondePanel(child: Text('Selectable Card')),
               ),
             ),
           ),
@@ -89,7 +89,7 @@ void main() {
       );
 
       expect(find.text('Selectable Card'), findsOneWidget);
-      expect(find.byType(AppCard), findsOneWidget);
+      expect(find.byType(FondePanel), findsOneWidget);
       expect(find.byType(Selectable), findsOneWidget);
       // Verify that the container for the selected state exists
       expect(find.byType(Container), findsAtLeastNWidgets(1));

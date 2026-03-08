@@ -6,8 +6,9 @@
  * For commercial licensing inquiries, please contact: contact@szktty.jp
  */
 
+import 'package:fonde_ui/fonde_ui_riverpod.dart'
+    show FondeToolbarState, FondeToolbarItemData;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../toolbar/toolbar_state.dart' as toolbar_state;
 
 part 'toolbar_providers.g.dart';
 
@@ -17,8 +18,8 @@ part 'toolbar_providers.g.dart';
 @riverpod
 class ToolbarStateManager extends _$ToolbarStateManager {
   @override
-  toolbar_state.ToolbarState build() {
-    return const toolbar_state.ToolbarState();
+  FondeToolbarState build() {
+    return const FondeToolbarState();
   }
 
   /// Selects a tool.
@@ -39,7 +40,7 @@ class ToolbarStateManager extends _$ToolbarStateManager {
   }
 
   /// Updates the state.
-  void updateState(toolbar_state.ToolbarState newState) {
+  void updateState(FondeToolbarState newState) {
     state = newState;
   }
 }

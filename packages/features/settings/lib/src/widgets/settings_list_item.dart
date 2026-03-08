@@ -61,22 +61,22 @@ class SettingsListItem extends ConsumerWidget {
             ? colorScheme.interactive.button.primaryText
             : colorScheme.base.foreground;
 
-    Widget listItem = AppBorderContainer(
+    Widget listItem = FondeBorderContainer(
       backgroundColor: backgroundColor,
-      borderRadius: BorderRadius.circular(AppBorderRadiusValues.small),
+      borderRadius: BorderRadius.circular(FondeBorderRadiusValues.small),
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: AppSpacingValues.md * zoomScale, // 12px
-          vertical: AppSpacingValues.sm * zoomScale, // 8px
+          horizontal: FondeSpacingValues.md * zoomScale, // 12px
+          vertical: FondeSpacingValues.sm * zoomScale, // 8px
         ),
         child: Row(
           children: [
-            AppIcon(
+            FondeIcon(
               item.icon,
-              size: AppIconSize.medium,
+              size: FondeIconSize.medium,
               customColor: iconColor,
             ),
-            SizedBox(width: AppSpacingValues.md * zoomScale),
+            SizedBox(width: FondeSpacingValues.md * zoomScale),
             Expanded(
               child: AppText(
                 item.title,
@@ -85,7 +85,7 @@ class SettingsListItem extends ConsumerWidget {
               ),
             ),
             if (item.badge != null) ...[
-              SizedBox(width: AppSpacingValues.md * zoomScale),
+              SizedBox(width: FondeSpacingValues.md * zoomScale),
               item.badge!,
             ],
           ],

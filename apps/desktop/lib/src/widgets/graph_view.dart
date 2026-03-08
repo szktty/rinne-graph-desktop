@@ -678,7 +678,7 @@ class _NodeDisplaySettingsButtonState
               });
             },
             icon: Icon(
-              AppIcons.display,
+              FondeIcons.display,
               size: 20,
               color: colorScheme.base.foreground,
             ),

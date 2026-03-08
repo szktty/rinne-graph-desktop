@@ -106,7 +106,7 @@ class _PathfinderDialogState extends ConsumerState<PathfinderDialog> {
             }
           }
         },
-        child: AppTextField(
+        child: FondeTextField(
           controller: _controller,
           hintText: 'Search path...',
           prefixIcon: Icon(

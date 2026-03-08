@@ -21,7 +21,7 @@ class LabelListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        // Toolbar
+        // FondeToolbar
         const LabelListToolbar(),
 
         // Main content

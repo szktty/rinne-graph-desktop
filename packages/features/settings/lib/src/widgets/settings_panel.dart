@@ -64,7 +64,7 @@ class _SettingsPanelState extends ConsumerState<SettingsPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final query = ref.watch(searchQueryProvider);
+    final query = ref.watch(fondeSearchQueryProvider);
     final filteredItems = searchSettings(
       items: widget.items,
       getSearchKeywords: (item) => item.keywords,
@@ -81,7 +81,7 @@ class _SettingsPanelState extends ConsumerState<SettingsPanel> {
       }
     });
 
-    return MasterDetailLayout(
+    return FondeMasterDetailLayout(
       items: filteredItems.map((item) => item.id).toList(),
       initialSelectedId: widget.initialSelectedId,
       masterPadding: const EdgeInsets.only(top: 20.0, right: 20.0),
@@ -103,18 +103,18 @@ class _SettingsPanelState extends ConsumerState<SettingsPanel> {
                     top: 0,
                     bottom: 8,
                   ),
-                  child: AppSearchField(
+                  child: FondeSearchField(
                     hint: widget.searchPlaceholder,
                     value: query,
                     onChange: (text) {
-                      ref.read(searchQueryProvider.notifier).updateQuery(text);
+                      ref.read(fondeSearchQueryProvider.notifier).updateQuery(text);
                     },
                     onClear:
                         query.isNotEmpty
                             ? () {
                               _searchController.clear();
                               ref
-                                  .read(searchQueryProvider.notifier)
+                                  .read(fondeSearchQueryProvider.notifier)
                                   .clearQuery();
                             }
                             : null,
@@ -141,12 +141,12 @@ class _SettingsPanelState extends ConsumerState<SettingsPanel> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AppIcon(
-                      AppIcons.search,
-                      size: AppIconSize.xlarge,
-                      color: AppIconColor.onSurfaceVariant,
+                    FondeIcon(
+                      FondeIcons.search,
+                      size: FondeIconSize.xlarge,
+                      color: FondeIconColor.onSurfaceVariant,
                     ),
-                    AppSpacing.lg(),
+                    FondeSpacing.lg(),
                     AppText(
                       'No settings found for "$query"',
                       variant: AppTextVariant.bodyText,

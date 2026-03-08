@@ -14,7 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class MenuActions {
   /// Displays the new stack creation dialog
   static void showCreateStackDialog(BuildContext context) {
-    AppSnackBar.showInfo(
+    FondeSnackBar.showInfo(
       context: context,
       message: 'Please create a new stack in the stack collection screen',
       duration: const Duration(seconds: 2),
@@ -23,7 +23,7 @@ class MenuActions {
 
   /// Creates a sample stack
   static void createSampleStack(BuildContext context) async {
-    AppSnackBar.showInfo(
+    FondeSnackBar.showInfo(
       context: context,
       message: 'Sample stack creation feature is under development',
       duration: const Duration(seconds: 2),
@@ -32,7 +32,7 @@ class MenuActions {
 
   /// Closes the active stack
   static void closeActiveStack(BuildContext context) {
-    AppSnackBar.showInfo(
+    FondeSnackBar.showInfo(
       context: context,
       message: 'Closing stack feature is under development',
       duration: const Duration(seconds: 2),

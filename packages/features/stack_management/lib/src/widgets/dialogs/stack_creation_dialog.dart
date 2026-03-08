@@ -100,11 +100,11 @@ class _StackCreationDialogState extends ConsumerState<StackCreationDialog> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Stack name input
-          FormItemRow(
+          FondeFormItemRow(
             label: 'Stack Name',
             labelWidth: 80,
             spacing: 12,
-            child: AppTextField(
+            child: FondeTextField(
               hintText: 'Enter stack name',
               errorText:
                   nameText.trim().isEmpty && nameText.isNotEmpty
@@ -114,14 +114,14 @@ class _StackCreationDialogState extends ConsumerState<StackCreationDialog> {
               autofocus: true,
             ),
           ),
-          const AppSpacing.vertical(AppSpacingValues.lg),
+          const FondeSpacing.vertical(FondeSpacingValues.lg),
 
           // Save location input
-          FormItemRow(
+          FondeFormItemRow(
             label: 'Save Location',
             labelWidth: 80,
             spacing: 12,
-            child: AppTextField(
+            child: FondeTextField(
               controller: TextEditingController(text: savePathText),
               hintText: 'Select save folder',
               errorText:
@@ -134,7 +134,7 @@ class _StackCreationDialogState extends ConsumerState<StackCreationDialog> {
                 width:
                     24.0, // Field height 32px - top/bottom padding 8px = 24px
                 height: 24.0,
-                child: AppIconButton(
+                child: FondeIconButton(
                   onPressed: () => _selectDirectory(setSavePathText),
                   icon: Icons.folder_open,
                   tooltip: 'Select folder',
@@ -147,18 +147,18 @@ class _StackCreationDialogState extends ConsumerState<StackCreationDialog> {
               ),
             ),
           ),
-          const AppSpacing.vertical(AppSpacingValues.xxl),
+          const FondeSpacing.vertical(FondeSpacingValues.xxl),
 
           // Buttons (right-aligned)
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              AppButton.cancel(
+              FondeButton.cancel(
                 label: 'Cancel',
                 onPressed: () => Navigator.of(context).pop(null),
               ),
-              const AppSpacing.horizontal(AppSpacingValues.lg),
-              AppButton.primary(
+              const FondeSpacing.horizontal(FondeSpacingValues.lg),
+              FondeButton.primary(
                 label: 'Create',
                 enabled: canCreate,
                 onPressed:

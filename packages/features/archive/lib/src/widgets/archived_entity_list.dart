@@ -35,8 +35,8 @@ class ArchivedEntityList extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AppIcon(
-                  AppIcons.clear,
+                FondeIcon(
+                  FondeIcons.clear,
                   customSize: 48,
                   customColor: appColorScheme.status.error,
                 ),
@@ -69,8 +69,8 @@ class ArchivedEntityList extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AppIcon(
-              AppIcons.archiveOutlined,
+            FondeIcon(
+              FondeIcons.archiveOutlined,
               customSize: 64,
               customColor: colorScheme.base.foreground.withValues(alpha: 0.3),
             ),
@@ -121,8 +121,8 @@ class _ArchivedEntityListItem extends ConsumerWidget {
         child: Row(
           children: [
             // Entity type icon
-            AppIcon(
-              entity.isNode ? AppIcons.circle : AppIcons.link,
+            FondeIcon(
+              entity.isNode ? FondeIcons.circle : FondeIcons.link,
               customSize: 20,
               customColor: appColorScheme.base.foreground.withValues(
                 alpha: 0.7,

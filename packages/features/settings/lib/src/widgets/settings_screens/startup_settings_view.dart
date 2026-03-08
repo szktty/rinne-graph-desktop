@@ -24,7 +24,7 @@ class StartupSettingsView extends ConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error:
           (error, stack) =>
-              Center(child: BodyText('Failed to load settings: $error')),
+              Center(child: FondeBodyText('Failed to load settings: $error')),
     );
   }
 
@@ -42,14 +42,14 @@ class StartupSettingsView extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const BodyText(
+              FondeBodyText(
                 'You can configure application startup behavior.',
                 color: Colors.black54,
               ),
               const SizedBox(height: 16),
 
               // Auto-startup settings
-              FormList(
+              FondeFormList(
                 title: 'Auto-load Stack',
                 child: Container(
                   padding: const EdgeInsets.all(16),
@@ -68,11 +68,11 @@ class StartupSettingsView extends ConsumerWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                BodyText(
+                                FondeBodyText(
                                   'Automatically open the last opened stack on startup',
                                 ),
                                 SizedBox(height: 4),
-                                BodyText(
+                                FondeBodyText(
                                   'If enabled, the application will automatically load the previously used stack on startup',
                                   color: Colors.black54,
                                 ),
@@ -92,7 +92,7 @@ class StartupSettingsView extends ConsumerWidget {
 
                       if (settings.autoOpenLastStack) ...[
                         const SizedBox(height: 24),
-                        const BodyText('最後に開いたスタック:'),
+                        FondeBodyText('最後に開いたスタック:'),
                         const SizedBox(height: 8),
                         Container(
                           padding: const EdgeInsets.all(12),
@@ -107,7 +107,7 @@ class StartupSettingsView extends ConsumerWidget {
                           child: Row(
                             children: [
                               Icon(
-                                AppIcons.database,
+                                FondeIcons.database,
                                 size: 16,
                                 color:
                                     Theme.of(
@@ -116,7 +116,7 @@ class StartupSettingsView extends ConsumerWidget {
                               ),
                               const SizedBox(width: 8),
                               Expanded(
-                                child: BodyText(
+                                child: FondeBodyText(
                                   settings.lastOpenedStackPath ??
                                       'No stack opened yet',
                                   color:
@@ -138,7 +138,7 @@ class StartupSettingsView extends ConsumerWidget {
 
               // Error behavior settings
               if (settings.autoOpenLastStack) ...[
-                FormList(
+                FondeFormList(
                   title: 'Behavior when stack not found',
                   child: Container(
                     padding: const EdgeInsets.all(16),
@@ -174,7 +174,7 @@ class StartupSettingsView extends ConsumerWidget {
               const SizedBox(height: 32),
 
               // 起動設定についての説明
-              FormList(
+              FondeFormList(
                 title: 'About Startup Settings',
                 child: Container(
                   padding: const EdgeInsets.all(16),
@@ -188,13 +188,13 @@ class StartupSettingsView extends ConsumerWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(AppIcons.info, size: 20, color: Colors.blue),
+                          Icon(FondeIcons.info, size: 20, color: Colors.blue),
                           SizedBox(width: 12),
-                          BodyText('Explanation of startup settings'),
+                          FondeBodyText('Explanation of startup settings'),
                         ],
                       ),
                       SizedBox(height: 12),
-                      BodyText(
+                      FondeBodyText(
                         '• コマンドライン引数で指定されたスタックは、この設定より優先されます\n'
                         '• Each time a stack is opened, it is automatically recorded as the "last opened stack"\n'
                         '• スタックファイルが移動または削除された場合は、エラーが発生します\n'
@@ -233,8 +233,8 @@ class StartupSettingsView extends ConsumerWidget {
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        title: BodyText(title),
-        subtitle: BodyText(subtitle, color: Colors.black54),
+        title: FondeBodyText(title),
+        subtitle: FondeBodyText(subtitle, color: Colors.black54),
         trailing: Radio<StartupErrorBehavior>(
           value: behavior,
           groupValue: settings.errorBehavior,

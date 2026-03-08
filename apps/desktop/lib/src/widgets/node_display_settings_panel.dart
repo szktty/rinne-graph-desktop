@@ -144,7 +144,7 @@ class _DraggableNodeDisplaySettingsPanelState
       mainAxisSize: MainAxisSize.min,
       children: [
         // Display content settings
-        AppExpansionTile(
+        FondeExpansionTile(
           title: AppText('Display Content', variant: AppTextVariant.itemTitle),
           initiallyExpanded: true,
           children: [
@@ -180,7 +180,7 @@ class _DraggableNodeDisplaySettingsPanelState
         const SizedBox(height: 16),
 
         // Node size settings
-        AppExpansionTile(
+        FondeExpansionTile(
           title: AppText('Node Size', variant: AppTextVariant.itemTitle),
           initiallyExpanded: true,
           children: [

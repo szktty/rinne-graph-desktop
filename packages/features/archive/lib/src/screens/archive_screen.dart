@@ -57,7 +57,7 @@ class _ArchiveScreenState extends ConsumerState<ArchiveScreen> {
                   child: Row(
                     children: [
                       Icon(
-                        AppIcons.archiveOutlined,
+                        FondeIcons.archiveOutlined,
                         size: 20,
                         color: appColorScheme.base.foreground,
                       ),
@@ -106,7 +106,7 @@ class _ArchiveScreenState extends ConsumerState<ArchiveScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              AppIcons.archiveOutlined,
+              FondeIcons.archiveOutlined,
               size: 64,
               color: colorScheme.base.foreground.withValues(alpha: 0.3),
             ),
@@ -149,7 +149,7 @@ class _ArchiveEntityEditor extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  entity.isNode ? AppIcons.circle : AppIcons.link,
+                  entity.isNode ? FondeIcons.circle : FondeIcons.link,
                   size: 20,
                   color: appColorScheme.base.foreground,
                 ),
@@ -270,13 +270,13 @@ class _ArchiveEntityEditor extends ConsumerWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            AppButton.primary(
+            FondeButton.primary(
               label: 'Restore',
               onPressed: () {
                 // TODO: Implement restore process
               },
             ),
-            AppButton.destructive(
+            FondeButton.destructive(
               label: 'Delete Permanently',
               onPressed: () {
                 // TODO: Implement permanent delete process

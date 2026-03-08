@@ -125,15 +125,15 @@ class PathfinderItemWidget extends ConsumerWidget {
   IconData _getIconForItemType(PathfinderItemType type) {
     switch (type) {
       case PathfinderItemType.stack:
-        return AppIcons.layers;
+        return FondeIcons.layers;
       case PathfinderItemType.node:
-        return AppIcons.circle;
+        return FondeIcons.circle;
       case PathfinderItemType.link:
-        return AppIcons.link;
+        return FondeIcons.link;
       case PathfinderItemType.command:
-        return AppIcons.terminal;
+        return FondeIcons.terminal;
       case PathfinderItemType.searchResult:
-        return AppIcons.search;
+        return FondeIcons.search;
     }
   }
 

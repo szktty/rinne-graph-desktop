@@ -11,12 +11,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation_components/presentation_components.dart';
 
 void main() {
-  group('AppScrollView', () {
+  group('FondeScrollView', () {
     testWidgets('renders child widget correctly', (WidgetTester tester) async {
       const testChild = Text('Test Content');
 
       await tester.pumpWidget(
-        const MaterialApp(home: AppScrollView(child: testChild)),
+        const MaterialApp(home: FondeScrollView(child: testChild)),
       );
 
       expect(find.text('Test Content'), findsOneWidget);
@@ -25,7 +25,7 @@ void main() {
     testWidgets('applies correct default physics', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: AppScrollView(
+          home: FondeScrollView(
             child: SizedBox(height: 1000, child: Text('Scrollable Content')),
           ),
         ),
@@ -45,7 +45,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: AppScrollView(
+          home: FondeScrollView(
             controller: controller,
             child: const SizedBox(
               height: 1000,
@@ -65,7 +65,7 @@ void main() {
     testWidgets('supports horizontal scrolling', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: AppScrollView(
+          home: FondeScrollView(
             scrollDirection: Axis.horizontal,
             child: SizedBox(width: 1000, child: Text('Horizontal Content')),
           ),
@@ -82,7 +82,7 @@ void main() {
 
       await tester.pumpWidget(
         const MaterialApp(
-          home: AppScrollView(
+          home: FondeScrollView(
             padding: customPadding,
             child: Text('Padded Content'),
           ),

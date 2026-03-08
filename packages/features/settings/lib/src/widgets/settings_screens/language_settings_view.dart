@@ -28,13 +28,13 @@ class LanguageSettingsView extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const BodyText(
+              FondeBodyText(
                 'Please select the display language and region settings for the application.',
                 color: Colors.black54,
               ),
               const SizedBox(height: 16),
 
-              FormList(
+              FondeFormList(
                 title: 'Display Language',
                 child: Column(
                   children: [
@@ -65,7 +65,7 @@ class LanguageSettingsView extends ConsumerWidget {
 
               const SizedBox(height: 32),
 
-              FormList(
+              FondeFormList(
                 title: 'Applying Language Settings',
                 child: Container(
                   padding: const EdgeInsets.all(16),
@@ -76,10 +76,10 @@ class LanguageSettingsView extends ConsumerWidget {
                   ),
                   child: const Row(
                     children: [
-                      Icon(AppIcons.info, size: 20, color: Colors.blue),
+                      Icon(FondeIcons.info, size: 20, color: Colors.blue),
                       SizedBox(width: 12),
                       Expanded(
-                        child: BodyText(
+                        child: FondeBodyText(
                           'Changes to language settings will take effect after restarting the application.',
                         ),
                       ),
@@ -134,8 +134,8 @@ class LanguageSettingsView extends ConsumerWidget {
             }
           },
         ),
-        title: BodyText(title),
-        subtitle: BodyText(subtitle, color: Colors.black54),
+        title: FondeBodyText(title),
+        subtitle: FondeBodyText(subtitle, color: Colors.black54),
         onTap: () {
           settingsNotifier.updateSettings(
             settingsData.copyWith(language: languageCode, locale: locale),

@@ -93,7 +93,7 @@ class LinkConfiguration {
   final bool isExpanded; // UI state: expanded or not
 
   // Fixed icon and color for UI display (example)
-  static const IconData iconData = AppIcons.link;
+  static IconData get iconData => FondeIcons.link;
   static const Color iconColor = Colors.grey;
 
   const LinkConfiguration({

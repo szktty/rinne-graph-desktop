@@ -43,7 +43,7 @@ class TableViewScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                AppIcons.table,
+                FondeIcons.table,
                 size: 64,
                 color: colorScheme.primary.withValues(alpha: 0.5),
               ),
@@ -67,8 +67,8 @@ class TableViewScreen extends ConsumerWidget {
     // In actual implementation, more appropriate state management should be used
 
     // Column definition
-    final columns = <AppTableColumn<core_graph.Node>>[
-      AppTableColumn<core_graph.Node>(
+    final columns = <FondeTableColumn<core_graph.Node>>[
+      FondeTableColumn<core_graph.Node>(
         id: 'id',
         title: 'ID',
         width: 80.0,
@@ -96,7 +96,7 @@ class TableViewScreen extends ConsumerWidget {
       // Add columns for each property key
       for (final key in propertyKeys) {
         columns.add(
-          AppTableColumn<core_graph.Node>(
+          FondeTableColumn<core_graph.Node>(
             id: key,
             title: key,
             width: 120.0,
@@ -118,7 +118,7 @@ class TableViewScreen extends ConsumerWidget {
 
     // Add label column
     columns.add(
-      AppTableColumn<core_graph.Node>(
+      FondeTableColumn<core_graph.Node>(
         id: 'labels',
         title: 'Labels',
         width: 120.0,
@@ -168,7 +168,7 @@ class TableViewScreen extends ConsumerWidget {
           // Switch display based on view type
           if (viewType == 'table')
             Expanded(
-              child: AppTableView<core_graph.Node>(
+              child: FondeTableView<core_graph.Node>(
                 columns: columns,
                 data: nodes,
                 keyExtractor: (node) => node.id.value,
@@ -182,7 +182,7 @@ class TableViewScreen extends ConsumerWidget {
                 title: 'Graph View',
                 description:
                     'Graph database network visualization will be displayed here',
-                icon: AppIcons.share2,
+                icon: FondeIcons.share2,
               ),
             )
           else
@@ -202,13 +202,13 @@ class TableViewScreen extends ConsumerWidget {
   IconData _getIconForViewType(String viewType) {
     switch (viewType) {
       case 'table':
-        return AppIcons.table;
+        return FondeIcons.table;
       case 'network':
-        return AppIcons.graphNavigation;
+        return FondeIcons.graphNavigation;
       case 'card':
-        return AppIcons.table;
+        return FondeIcons.table;
       case 'calendar':
-        return AppIcons.calendar;
+        return FondeIcons.calendar;
       case 'gantt':
         return Icons.bar_chart;
       default:

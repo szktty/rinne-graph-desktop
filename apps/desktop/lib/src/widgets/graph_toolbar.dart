@@ -35,10 +35,10 @@ enum ViewMode {
   IconData get icon {
     switch (this) {
       case ViewMode.graph:
-        return AppIcons
+        return FondeIcons
             .graphNavigation; // Use graphNavigation instead of network
       case ViewMode.table:
-        return AppIcons.table;
+        return FondeIcons.table;
     }
   }
 }
@@ -71,7 +71,7 @@ enum GraphLayoutType {
       case GraphLayoutType.force:
         return Icons.shuffle; // Use standard icon for shuffle
       case GraphLayoutType.circle:
-        return AppIcons.circle;
+        return FondeIcons.circle;
       case GraphLayoutType.tree:
         return Icons.account_tree; // Use account_tree instead of gitBranch
       case GraphLayoutType.grid:
@@ -124,7 +124,7 @@ class GraphToolbar extends ConsumerWidget {
       debugPrint('Layout changed to: $layout');
     }
 
-    // Compliant with design guidelines: 48px height and AppDivider border
+    // Compliant with design guidelines: 48px height and FondeDivider border
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -167,8 +167,8 @@ class GraphToolbar extends ConsumerWidget {
             ],
           ),
         ),
-        // Bottom border using AppDivider
-        const AppDivider(height: 0, thickness: 1.0),
+        // Bottom border using FondeDivider
+        const FondeDivider(height: 0, thickness: 1.0),
       ],
     );
   }
@@ -186,7 +186,7 @@ class _ViewModeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppSegmentedButton<ViewMode>(
+    return FondeSegmentedButton<ViewMode>(
       selected: {currentMode},
       segments:
           ViewMode.values
@@ -224,7 +224,7 @@ class _CreateNodeButton extends ConsumerWidget {
       height: 32,
       child: IconButton(
         icon: Icon(
-          AppIcons.plus,
+          FondeIcons.plus,
           size: 18 * zoomScale,
           color: appColorScheme.base.foreground,
         ),
@@ -259,7 +259,7 @@ class _CreateLinkButton extends ConsumerWidget {
       height: 32,
       child: IconButton(
         icon: Icon(
-          AppIcons.link,
+          FondeIcons.link,
           size: 18 * zoomScale,
           color:
               isLinkCreationModeActive
@@ -290,7 +290,7 @@ class _GraphOperationTools extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         // Zoom in
-        AppIconButton(
+        FondeIconButton(
           icon: Icons.zoom_in, // Use standard icon for zoomIn
           tooltip: 'Zoom in',
           onPressed: onZoomIn,
@@ -302,7 +302,7 @@ class _GraphOperationTools extends StatelessWidget {
         const SizedBox(width: 4),
 
         // Zoom out
-        AppIconButton(
+        FondeIconButton(
           icon: Icons.zoom_out, // Use standard icon for zoomOut
           tooltip: 'Zoom out',
           onPressed: onZoomOut,
@@ -367,7 +367,7 @@ class _DisplayOptionsButton extends ConsumerWidget {
       height: 32,
       child: IconButton(
         icon: Icon(
-          AppIcons.display, // Changed to glasses icon
+          FondeIcons.display, // Changed to glasses icon
           size: 18 * zoomScale,
           color: appColorScheme.base.foreground,
         ),
@@ -403,7 +403,7 @@ class NodeDisplaySettingsContent extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Display content settings
-          AppExpansionTile(
+          FondeExpansionTile(
             title: AppText(
               'Display Content',
               variant: AppTextVariant.itemTitle,
@@ -442,7 +442,7 @@ class NodeDisplaySettingsContent extends ConsumerWidget {
           const SizedBox(height: 16),
 
           // Node size settings
-          AppExpansionTile(
+          FondeExpansionTile(
             title: AppText('Node Size', variant: AppTextVariant.itemTitle),
             initiallyExpanded: true,
             children: [

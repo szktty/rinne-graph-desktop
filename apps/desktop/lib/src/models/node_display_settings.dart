@@ -69,7 +69,7 @@ class NodeVisualData {
   /// default icon based on common keywords
   static IconData getDefaultIconForLabels(Set<String> labels) {
     if (labels.isEmpty) {
-      return AppIcons.circle;
+      return FondeIcons.circle;
     }
 
     // Convert labels to lowercase and check for common keywords
@@ -83,7 +83,7 @@ class NodeVisualData {
           label.contains('actor') ||
           label.contains('director'),
     )) {
-      return AppIcons.circle;
+      return FondeIcons.circle;
     }
 
     // Document-related
@@ -93,32 +93,32 @@ class NodeVisualData {
           label.contains('file') ||
           label.contains('note'),
     )) {
-      return AppIcons.fileText;
+      return FondeIcons.fileText;
     }
 
     // Project/folder-related
     if (lowerLabels.any(
       (label) => label.contains('project') || label.contains('folder'),
     )) {
-      return AppIcons.folder;
+      return FondeIcons.folder;
     }
 
     // Task/work-related
     if (lowerLabels.any(
       (label) => label.contains('task') || label.contains('todo'),
     )) {
-      return AppIcons.check;
+      return FondeIcons.check;
     }
 
     // Link/relation-related
     if (lowerLabels.any(
       (label) => label.contains('link') || label.contains('relation'),
     )) {
-      return AppIcons.link;
+      return FondeIcons.link;
     }
 
     // Default to circle icon
-    return AppIcons.circle;
+    return FondeIcons.circle;
   }
 
   /// Create empty NodeVisualData

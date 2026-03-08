@@ -26,43 +26,43 @@ class TabbedRecordEditor extends ConsumerWidget {
     final tabState = ref.watch(tabViewStateProvider);
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
 
-    // Define tabs for use in AppTabView
+    // Define tabs for use in FondeTabView
     final tabs = [
-      AppTab(
+      FondeTab(
         id: 'info',
-        icon: AppIcons.id,
+        icon: FondeIcons.id,
         tooltip: 'Information',
         closeable: false,
       ),
-      AppTab(
+      FondeTab(
         id: 'properties',
-        icon: AppIcons.properties,
+        icon: FondeIcons.properties,
         tooltip: 'Properties',
         closeable: false,
       ),
-      AppTab(
+      FondeTab(
         id: 'links',
-        icon: AppIcons.connections,
+        icon: FondeIcons.connections,
         tooltip: 'Links',
         closeable: false,
       ),
-      AppTab(
+      FondeTab(
         id: 'display',
-        icon: AppIcons.display,
+        icon: FondeIcons.display,
         tooltip: 'Display',
         closeable: false,
       ),
     ];
 
-    // Define content for use in AppTabView
+    // Define content for use in FondeTabView
     final contents = [
-      AppTabContent(id: 'info', content: EntityInfoTab(entity: entity)),
-      AppTabContent(
+      FondeTabContent(id: 'info', content: EntityInfoTab(entity: entity)),
+      FondeTabContent(
         id: 'properties',
         content: EntityPropertiesTab(entity: entity),
       ),
-      AppTabContent(id: 'links', content: EntityLinksTab(entity: entity)),
-      AppTabContent(id: 'display', content: EntityDisplayTab(entity: entity)),
+      FondeTabContent(id: 'links', content: EntityLinksTab(entity: entity)),
+      FondeTabContent(id: 'display', content: EntityDisplayTab(entity: entity)),
     ];
 
     return DecoratedBox(
@@ -72,7 +72,7 @@ class TabbedRecordEditor extends ConsumerWidget {
         ),
         color: appColorScheme.base.background,
       ),
-      child: AppTabView(
+      child: FondeTabView(
         tabs: tabs,
         contents: contents,
         initialSelectedTabId: tabState ?? 'info',
@@ -126,10 +126,10 @@ class _EntityInfoTabState extends ConsumerState<EntityInfoTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Basic information section
-          FormList(
+          FondeFormList(
             title: 'Basic Information',
             children: [
-              FormItemColumn(
+              FondeFormItemColumn(
                 label: 'ID',
                 child: SelectableText(
                   widget.entity.id.value,
@@ -143,12 +143,12 @@ class _EntityInfoTabState extends ConsumerState<EntityInfoTab> {
 
           // Label information (for nodes)
           if (isNode) ...[
-            FormList(
+            FondeFormList(
               title: 'Labels',
               children: [
-                FormItemColumn(
+                FondeFormItemColumn(
                   label: 'Label List',
-                  child: AppTagsField(
+                  child: FondeTagsField(
                     initialTags: (widget.entity as Node).labels.toList(),
                     hintText: 'Enter label...',
                     validator: (tag) {
@@ -173,21 +173,21 @@ class _EntityInfoTabState extends ConsumerState<EntityInfoTab> {
 
           // Link information (for links)
           if (!isNode && widget.entity is Link) ...[
-            FormList(
+            FondeFormList(
               title: 'Link Information',
               children: [
-                FormItemColumn(
+                FondeFormItemColumn(
                   label: 'Type',
                   child: SelectableText((widget.entity as Link).type),
                 ),
-                FormItemColumn(
+                FondeFormItemColumn(
                   label: 'Source Node',
                   child: SelectableText(
                     (widget.entity as Link).sourceId.value,
                     style: const TextStyle(fontFamily: 'monospace'),
                   ),
                 ),
-                FormItemColumn(
+                FondeFormItemColumn(
                   label: 'Target Node',
                   child: SelectableText(
                     (widget.entity as Link).targetId.value,
@@ -200,12 +200,12 @@ class _EntityInfoTabState extends ConsumerState<EntityInfoTab> {
           ],
 
           // Memo section
-          FormList(
+          FondeFormList(
             title: 'Memo',
             children: [
-              FormItemColumn(
+              FondeFormItemColumn(
                 label: 'Memo Content',
-                child: AppTextField(
+                child: FondeTextField(
                   controller: _memoController,
                   maxLines: 5,
                   hintText: 'Enter memo...',
@@ -220,14 +220,14 @@ class _EntityInfoTabState extends ConsumerState<EntityInfoTab> {
           const SizedBox(height: 16),
 
           // Date information section
-          FormList(
+          FondeFormList(
             title: 'Date Information',
             children: [
-              FormItemColumn(
+              FondeFormItemColumn(
                 label: 'Created Date',
                 child: const SelectableText('2023-06-15 10:30:00'),
               ),
-              FormItemColumn(
+              FondeFormItemColumn(
                 label: 'Updated Date',
                 child: const SelectableText('2023-06-20 15:45:22'),
               ),
@@ -237,12 +237,12 @@ class _EntityInfoTabState extends ConsumerState<EntityInfoTab> {
           const SizedBox(height: 24),
 
           // Delete button
-          FormList(
+          FondeFormList(
             title: 'Actions',
             children: [
-              FormItemColumn(
+              FondeFormItemColumn(
                 label: 'Delete Entity',
-                child: AppButton(
+                child: FondeButton(
                   label: 'Delete',
                   leadingIcon: const Icon(Icons.delete, color: Colors.red),
                   onPressed: () {
@@ -275,12 +275,12 @@ class EntityPropertiesTab extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Property management section
-          FormList(
+          FondeFormList(
             title: 'Property Management',
             children: [
-              FormItemColumn(
+              FondeFormItemColumn(
                 label: 'New Property',
-                child: AppButton(
+                child: FondeButton(
                   label: 'Add Property',
                   leadingIcon: const Icon(Icons.add),
                   onPressed: () {
@@ -295,7 +295,7 @@ class EntityPropertiesTab extends ConsumerWidget {
 
           // Property list
           if (properties.isEmpty)
-            FormList(
+            FondeFormList(
               title: 'Property List',
               child: const Center(
                 child: Padding(
@@ -308,7 +308,7 @@ class EntityPropertiesTab extends ConsumerWidget {
               ),
             )
           else
-            FormList(
+            FondeFormList(
               title: 'Property List',
               collapsible: true,
               initiallyExpanded: true,
@@ -331,7 +331,7 @@ class EntityPropertiesTab extends ConsumerWidget {
     );
   }
 
-  // Helper to build property item as FormItemColumn
+  // Helper to build property item as FondeFormItemColumn
   Widget _buildPropertyFormItem(
     BuildContext context,
     String name,
@@ -340,12 +340,12 @@ class EntityPropertiesTab extends ConsumerWidget {
   ) {
     final displayValue = value?.toString() ?? '(none)';
 
-    return FormItemColumn(
+    return FondeFormItemColumn(
       label: name,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppTextField(
+          FondeTextField(
             readOnly: true,
             controller: TextEditingController(text: displayValue),
           ),
@@ -353,7 +353,7 @@ class EntityPropertiesTab extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: AppButton(
+                child: FondeButton(
                   label: 'Edit',
                   leadingIcon: const Icon(Icons.edit, size: 16),
                   onPressed: () {
@@ -363,7 +363,7 @@ class EntityPropertiesTab extends ConsumerWidget {
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: AppButton(
+                child: FondeButton(
                   label: 'Delete',
                   leadingIcon: const Icon(
                     Icons.delete,
@@ -400,12 +400,12 @@ class EntityLinksTab extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Link management section
-          FormList(
+          FondeFormList(
             title: 'Link Management',
             children: [
-              FormItemColumn(
+              FondeFormItemColumn(
                 label: 'New Link',
-                child: AppButton(
+                child: FondeButton(
                   label: 'Add Link',
                   leadingIcon: const Icon(Icons.add),
                   onPressed: () {
@@ -420,7 +420,7 @@ class EntityLinksTab extends ConsumerWidget {
 
           if (isNode) ...[
             // Incoming links section
-            FormList(
+            FondeFormList(
               title: 'Incoming Links',
               collapsible: true,
               initiallyExpanded: true,
@@ -443,7 +443,7 @@ class EntityLinksTab extends ConsumerWidget {
             const SizedBox(height: 16),
 
             // Outgoing links section
-            FormList(
+            FondeFormList(
               title: 'Outgoing Links',
               collapsible: true,
               initiallyExpanded: true,
@@ -457,7 +457,7 @@ class EntityLinksTab extends ConsumerWidget {
               ],
             ),
           ] else
-            FormList(
+            FondeFormList(
               title: 'Link Information',
               child: const Center(
                 child: Padding(
@@ -474,7 +474,7 @@ class EntityLinksTab extends ConsumerWidget {
     );
   }
 
-  // Helper to build link item as FormItemColumn
+  // Helper to build link item as FondeFormItemColumn
   Widget _buildLinkFormItem(
     BuildContext context,
     String linkType,
@@ -484,7 +484,7 @@ class EntityLinksTab extends ConsumerWidget {
     final direction = isIncoming ? '←' : '→';
     final linkDescription = '$linkType $direction $nodeLabel';
 
-    return FormItemColumn(
+    return FondeFormItemColumn(
       label: linkType,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -494,7 +494,7 @@ class EntityLinksTab extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: AppButton(
+                child: FondeButton(
                   label: 'Edit',
                   leadingIcon: const Icon(Icons.edit, size: 16),
                   onPressed: () {
@@ -504,7 +504,7 @@ class EntityLinksTab extends ConsumerWidget {
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: AppButton(
+                child: FondeButton(
                   label: 'Delete',
                   leadingIcon: const Icon(
                     Icons.delete,
@@ -572,7 +572,7 @@ class _EntityDisplayTabState extends ConsumerState<EntityDisplayTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Color settings section
-          FormItemColumn(
+          FondeFormItemColumn(
             label: 'Color',
             child: Wrap(
               spacing: 8.0,

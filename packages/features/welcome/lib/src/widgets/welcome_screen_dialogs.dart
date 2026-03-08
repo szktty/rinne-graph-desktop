@@ -19,7 +19,7 @@ import 'package:core_samples/core_samples.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:features_welcome/src/widgets/welcome_models.dart';
 import 'package:features_welcome/src/providers/welcome_providers.dart';
-import 'package:core_foundation_flutter/core_foundation_flutter.dart'; // debugLog, AppSnackBar のために追加
+import 'package:core_foundation_flutter/core_foundation_flutter.dart'; // debugLog, FondeSnackBar のために追加
 import 'package:features_welcome/src/services/debug_stack_operations.dart'; // DebugStackOperations のために追加
 
 import '../widgets/welcome_screen_helpers.dart';
@@ -53,7 +53,7 @@ Future<void> showStackInFinderHelper(
       } else {
         debugPrint('Failed to open Finder: ${result.stderr}');
         if (context.mounted) {
-          AppSnackBar.showError(
+          FondeSnackBar.showError(
             context: context,
             message: 'Failed to open folder in Finder',
           );
@@ -70,7 +70,7 @@ Future<void> showStackInFinderHelper(
           'Cannot launch file manager for path: ${stackDirectory.path}',
         );
         if (context.mounted) {
-          AppSnackBar.showError(
+          FondeSnackBar.showError(
             context: context,
             message: 'Failed to open folder in file manager',
           );
@@ -80,7 +80,7 @@ Future<void> showStackInFinderHelper(
   } catch (e) {
     debugPrint('Error opening stack in file manager: $e');
     if (context.mounted) {
-      AppSnackBar.showError(
+      FondeSnackBar.showError(
         context: context,
         message: 'Error opening folder: $e',
       );
@@ -115,7 +115,7 @@ void showArchiveConfirmationDialogHelper(
               'Archived stacks will not appear in your stack collection.',
               colorScheme,
             ),
-            AppSpacing.sm(),
+            FondeSpacing.sm(),
             buildWarningItemHelper(
               'You can restore this change at any time.',
               colorScheme,
@@ -123,12 +123,12 @@ void showArchiveConfirmationDialogHelper(
           ],
         ),
         actions: [
-          AppButton.cancel(
+          FondeButton.cancel(
             label: 'Cancel',
             onPressed: () => Navigator.of(context).pop(false),
           ),
           const SizedBox(width: 12),
-          AppButton.destructive(
+          FondeButton.destructive(
             label: 'Archive',
             onPressed: () => Navigator.of(context).pop(true),
           ),
@@ -216,7 +216,7 @@ void showInstallConfirmationDialogHelper(
           variant: AppTextVariant.bodyText,
           color: colorScheme.base.foreground,
         ),
-        AppSpacing.sm(),
+        FondeSpacing.sm(),
         if (manifest.description != null &&
             manifest.description!.isNotEmpty) ...[
           AppText(
@@ -224,10 +224,10 @@ void showInstallConfirmationDialogHelper(
             variant: AppTextVariant.captionText,
             color: colorScheme.base.foreground,
           ),
-          AppSpacing.sm(),
+          FondeSpacing.sm(),
         ],
         buildWarningItemHelper('A new stack will be created.', colorScheme),
-        AppSpacing.sm(),
+        FondeSpacing.sm(),
         buildWarningItemHelper(
           'After installation, it will appear in your active stacks list.',
           colorScheme,
@@ -289,7 +289,7 @@ Future<void> installSampleStackTemplateHelper(
         // }
       } else {
         // Display error message
-        AppSnackBar.showError(
+        FondeSnackBar.showError(
           context: context,
           message: 'Failed to install sample stack',
         );
@@ -297,7 +297,7 @@ Future<void> installSampleStackTemplateHelper(
     }
   } catch (e) {
     if (context.mounted) {
-      AppSnackBar.showError(context: context, message: 'An error occurred: $e');
+      FondeSnackBar.showError(context: context, message: 'An error occurred: $e');
     }
   }
 }
@@ -363,13 +363,13 @@ void showInstallationSuccessDialogHelper(
             ),
           ],
         ),
-        AppSpacing.md(),
+        FondeSpacing.md(),
         AppText(
           'Installed stack: ${manifest.displayName}',
           variant: AppTextVariant.captionText,
           color: colorScheme.base.foreground,
         ),
-        AppSpacing.md(),
+        FondeSpacing.md(),
         AppText(
           'It now appears in your active stacks list.',
           variant: AppTextVariant.captionText,
@@ -399,21 +399,21 @@ Widget buildDialogFooterHelper({
       border: Border(top: BorderSide(color: colorScheme.base.border, width: 1)),
     ),
     child: Padding(
-      padding: const EdgeInsets.all(AppSpacingValues.xl),
+      padding: const EdgeInsets.all(FondeSpacingValues.xl),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           if (cancelLabel != null && onCancel != null) ...[
-            AppButton.cancel(label: cancelLabel, onPressed: onCancel),
+            FondeButton.cancel(label: cancelLabel, onPressed: onCancel),
             const SizedBox(width: 12),
           ],
           if (confirmLabel != null && onConfirm != null)
             isDestructive
-                ? AppButton.destructive(
+                ? FondeButton.destructive(
                   label: confirmLabel,
                   onPressed: onConfirm,
                 )
-                : AppButton.primary(label: confirmLabel, onPressed: onConfirm),
+                : FondeButton.primary(label: confirmLabel, onPressed: onConfirm),
         ],
       ), // Row を閉じる
     ), // Padding を閉じる (ここが欠けていた)
@@ -455,9 +455,9 @@ void showDebugArchiveAllConfirmationHelper(
               'This operation will archive all active stacks.',
               colorScheme,
             ),
-            AppSpacing.sm(),
+            FondeSpacing.sm(),
             buildWarningItemHelper('Use for debug purposes only.', colorScheme),
-            AppSpacing.sm(),
+            FondeSpacing.sm(),
             buildWarningItemHelper(
               'You can restore these changes individually.',
               colorScheme,
@@ -465,12 +465,12 @@ void showDebugArchiveAllConfirmationHelper(
           ],
         ),
         actions: [
-          AppButton.cancel(
+          FondeButton.cancel(
             label: 'Cancel',
             onPressed: () => Navigator.of(context).pop(false),
           ),
           const SizedBox(width: 12),
-          AppButton.destructive(
+          FondeButton.destructive(
             label: 'Archive all',
             onPressed: () => Navigator.of(context).pop(true),
           ),
@@ -506,22 +506,22 @@ void showDebugDeleteAllConfirmationHelper(BuildContext context, WidgetRef ref) {
               '⚠️ This operation will permanently delete all stacks.',
               colorScheme,
             ),
-            AppSpacing.sm(),
+            FondeSpacing.sm(),
             buildWarningItemHelper(
               '⚠️ This operation cannot be undone.',
               colorScheme,
             ),
-            AppSpacing.sm(),
+            FondeSpacing.sm(),
             buildWarningItemHelper('Use for debug purposes only.', colorScheme),
           ],
         ),
         actions: [
-          AppButton.cancel(
+          FondeButton.cancel(
             label: 'Cancel',
             onPressed: () => Navigator.of(context).pop(false),
           ),
           const SizedBox(width: 12),
-          AppButton.destructive(
+          FondeButton.destructive(
             label: 'Delete all',
             onPressed: () => Navigator.of(context).pop(true),
           ),

@@ -11,11 +11,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_split_view/multi_split_view.dart';
 import 'package:core_themes/core_themes.dart';
 
+import 'package:fonde_ui/fonde_ui.dart'
+    show FondeSecondarySidebarTitlebar, FondeCollapsedSidebarLayout,
+         FondeResizableSidebarArea;
+
 import '../providers/sidebar_width_provider.dart';
 import '../providers/sidebar_state_providers.dart';
-import '../toolbar/secondary_sidebar_titlebar.dart';
-import 'collapsed_sidebar_layout.dart';
-import 'resizable_sidebar_area.dart';
 
 /// The main shell layout of the application.
 ///
@@ -80,9 +81,9 @@ class _MainShellLayoutState extends ConsumerState<MainShellLayout> {
     final sidebarVisible = widget.showPrimarySidebar;
     final secondarySidebarVisible = ref.watch(fondeSecondarySidebarStateProvider);
 
-    // If the sidebar is hidden, use CollapsedSidebarLayout
+    // If the sidebar is hidden, use FondeCollapsedSidebarLayout
     if (!sidebarVisible) {
-      return CollapsedSidebarLayout(
+      return FondeCollapsedSidebarLayout(
         toolbar: widget.toolbar,
         mainContent: _buildMainContent(context, zoomScale, 288.0 * zoomScale),
         launchBar: widget.activityBar,
@@ -150,7 +151,7 @@ class _MainShellLayoutState extends ConsumerState<MainShellLayout> {
         builder: (context, area) {
           switch (area.id) {
             case 'primary_sidebar':
-              return ResizableSidebarArea(
+              return FondeResizableSidebarArea(
                 launchBar: widget.activityBar,
                 primarySidebar: widget.primarySidebar,
                 showLaunchBar: widget.showActivityBar,
@@ -174,7 +175,7 @@ class _MainShellLayoutState extends ConsumerState<MainShellLayout> {
               return Column(
                 children: [
                   // Toolbar for the secondary sidebar
-                  const SecondarySidebarTitlebar(),
+                  const FondeSecondarySidebarTitlebar(),
 
                   // Content of the secondary sidebar
                   Expanded(
@@ -190,7 +191,7 @@ class _MainShellLayoutState extends ConsumerState<MainShellLayout> {
     );
   }
 
-  /// Build the main content area (for CollapsedSidebarLayout).
+  /// Build the main content area (for FondeCollapsedSidebarLayout).
   Widget _buildMainContent(
     BuildContext context,
     double zoomScale,

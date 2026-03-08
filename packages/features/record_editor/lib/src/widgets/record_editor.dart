@@ -34,7 +34,7 @@ class RecordEditor extends ConsumerWidget {
     final isNode = entity.kind == EntityKind.node;
 
     // Define reusable Divider
-    const divider = AppDivider();
+    const divider = FondeDivider();
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -310,7 +310,7 @@ class RecordEditor extends ConsumerWidget {
             ),
             // Add property button
             IconButton(
-              icon: const Icon(AppIcons.plus),
+              icon: Icon(FondeIcons.plus),
               tooltip: 'Add property',
               onPressed:
                   isLocked
@@ -325,8 +325,8 @@ class RecordEditor extends ConsumerWidget {
       ],
     );
 
-    // Create collapsible section using AppExpansionTile
-    return AppExpansionTile(
+    // Create collapsible section using FondeExpansionTile
+    return FondeExpansionTile(
       title: headerRow,
       initiallyExpanded: true, // Initially expanded
       childrenPadding: const EdgeInsets.only(top: 8.0),
@@ -379,7 +379,7 @@ class RecordEditor extends ConsumerWidget {
       children: [
         Text('Connections', style: theme.textTheme.titleMedium),
         IconButton(
-          icon: const Icon(AppIcons.plus),
+          icon: Icon(FondeIcons.plus),
           tooltip: 'Add connection',
           onPressed: () {
             // TODO: Add connection dialog
@@ -388,8 +388,8 @@ class RecordEditor extends ConsumerWidget {
       ],
     );
 
-    // Create collapsible section using AppExpansionTile
-    return AppExpansionTile(
+    // Create collapsible section using FondeExpansionTile
+    return FondeExpansionTile(
       title: headerRow,
       initiallyExpanded: true, // Initially expanded
       childrenPadding: const EdgeInsets.only(top: 8.0),
@@ -427,8 +427,8 @@ class RecordEditor extends ConsumerWidget {
     // Link info section header
     Widget headerRow = Text('Link Info', style: theme.textTheme.titleMedium);
 
-    // Create collapsible section using AppExpansionTile
-    return AppExpansionTile(
+    // Create collapsible section using FondeExpansionTile
+    return FondeExpansionTile(
       title: headerRow,
       initiallyExpanded: true, // Initially expanded
       childrenPadding: const EdgeInsets.only(top: 8.0),
@@ -453,7 +453,7 @@ class RecordEditor extends ConsumerWidget {
           if (isArchived) ...[
             // Show restore button if archived
             ElevatedButton.icon(
-              icon: const Icon(AppIcons.archiveOutlined),
+              icon: Icon(FondeIcons.archiveOutlined),
               label: const Text('Restore'),
               onPressed: () {
                 // TODO: Restore processing
@@ -462,7 +462,7 @@ class RecordEditor extends ConsumerWidget {
           ] else ...[
             // Show normal actions if not archived
             ElevatedButton.icon(
-              icon: const Icon(AppIcons.archiveOutlined),
+              icon: Icon(FondeIcons.archiveOutlined),
               label: const Text('Archive'),
               onPressed: () {
                 // TODO: Archive processing
@@ -470,14 +470,14 @@ class RecordEditor extends ConsumerWidget {
             ),
           ],
           ElevatedButton.icon(
-            icon: const Icon(AppIcons.copy),
+            icon: Icon(FondeIcons.copy),
             label: const Text('Duplicate'),
             onPressed: () {
               // TODO: Duplicate processing
             },
           ),
           ElevatedButton.icon(
-            icon: const Icon(AppIcons.timeline),
+            icon: Icon(FondeIcons.timeline),
             label: const Text('History'),
             onPressed: () {
               // TODO: Show history
@@ -490,8 +490,8 @@ class RecordEditor extends ConsumerWidget {
     // Actions section header
     Widget headerRow = Text('Actions', style: theme.textTheme.titleMedium);
 
-    // Create collapsible section using AppExpansionTile
-    return AppExpansionTile(
+    // Create collapsible section using FondeExpansionTile
+    return FondeExpansionTile(
       title: headerRow,
       initiallyExpanded: true, // Initially expanded
       childrenPadding: const EdgeInsets.only(top: 8.0),
@@ -567,7 +567,7 @@ class RecordEditor extends ConsumerWidget {
           ),
           const Spacer(),
           IconButton(
-            icon: const Icon(AppIcons.edit, size: 16),
+            icon: Icon(FondeIcons.edit, size: 16),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
             tooltip: 'Edit',
@@ -577,7 +577,7 @@ class RecordEditor extends ConsumerWidget {
           ),
           const SizedBox(width: 8),
           IconButton(
-            icon: const Icon(AppIcons.deleteOutline, size: 16),
+            icon: Icon(FondeIcons.deleteOutline, size: 16),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
             tooltip: 'Delete',

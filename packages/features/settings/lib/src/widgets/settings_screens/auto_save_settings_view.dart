@@ -28,13 +28,13 @@ class AutoSaveSettingsView extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const BodyText(
+              FondeBodyText(
                 'You can configure the automatic data saving feature.',
                 color: Colors.black54,
               ),
               const SizedBox(height: 16),
 
-              FormList(
+              FondeFormList(
                 title: 'Auto-Save',
                 child: Container(
                   padding: const EdgeInsets.all(16),
@@ -53,9 +53,9 @@ class AutoSaveSettingsView extends ConsumerWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                BodyText('Enable Auto-Save'),
+                                FondeBodyText('Enable Auto-Save'),
                                 SizedBox(height: 4),
-                                BodyText(
+                                FondeBodyText(
                                   'Automatically saves data at the specified interval.',
                                   color: Colors.black54,
                                 ),
@@ -76,7 +76,7 @@ class AutoSaveSettingsView extends ConsumerWidget {
                       ),
                       if (settings.enabled) ...[
                         const SizedBox(height: 16),
-                        const BodyText('Save Interval'),
+                        FondeBodyText('Save Interval'),
                         const SizedBox(height: 8),
                         ..._buildIntervalOptions(ref, settings),
                       ],
@@ -87,7 +87,7 @@ class AutoSaveSettingsView extends ConsumerWidget {
 
               const SizedBox(height: 32),
 
-              FormList(
+              FondeFormList(
                 title: 'About Auto-Save',
                 child: Container(
                   padding: const EdgeInsets.all(16),
@@ -101,13 +101,13 @@ class AutoSaveSettingsView extends ConsumerWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(AppIcons.info, size: 20, color: Colors.blue),
+                          Icon(FondeIcons.info, size: 20, color: Colors.blue),
                           SizedBox(width: 12),
-                          BodyText('Description of the Auto-Save Feature'),
+                          FondeBodyText('Description of the Auto-Save Feature'),
                         ],
                       ),
                       SizedBox(height: 12),
-                      BodyText(
+                      FondeBodyText(
                         '• Data is saved automatically when graph data changes.\n'
                         '• It periodically checks for saves at the set interval.\n'
                         '• Manual saving (Cmd+S) can also be used.\n'
@@ -158,7 +158,7 @@ class AutoSaveSettingsView extends ConsumerWidget {
             horizontal: 16,
             vertical: 4,
           ),
-          title: BodyText(title),
+          title: FondeBodyText(title),
           trailing: Radio<Duration>(
             value: duration,
             groupValue: settings.interval,

@@ -12,18 +12,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:presentation_components/presentation_components.dart';
 
 void main() {
-  group('AppSplitButton Widget Tests', () {
-    late List<AppSplitButtonAction> testActions;
+  group('FondeSplitButton Widget Tests', () {
+    late List<FondeSplitButtonAction> testActions;
 
     setUp(() {
       testActions = [
-        AppSplitButtonAction(label: 'Action 1', onPressed: () {}),
-        AppSplitButtonAction(
+        FondeSplitButtonAction(label: 'Action 1', onPressed: () {}),
+        FondeSplitButtonAction(
           label: 'Action 2',
           onPressed: () {},
           icon: const Icon(Icons.star, size: 16),
         ),
-        AppSplitButtonAction(
+        FondeSplitButtonAction(
           label: 'Disabled Action',
           onPressed: () {},
           enabled: false,
@@ -34,13 +34,13 @@ void main() {
     Widget createTestWidget({
       String primaryLabel = 'Primary Action',
       VoidCallback? onPrimaryPressed,
-      List<AppSplitButtonAction>? actions,
+      List<FondeSplitButtonAction>? actions,
       bool enabled = true,
     }) {
       return ProviderScope(
         child: MaterialApp(
           home: Scaffold(
-            body: AppSplitButton(
+            body: FondeSplitButton(
               primaryLabel: primaryLabel,
               onPrimaryPressed: onPrimaryPressed,
               actions: actions ?? testActions,
@@ -51,7 +51,7 @@ void main() {
       );
     }
 
-    testWidgets('Basic AppSplitButton display test', (
+    testWidgets('Basic FondeSplitButton display test', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(createTestWidget());
@@ -100,7 +100,7 @@ void main() {
     ) async {
       bool action1Pressed = false;
       final actionsWithCallback = [
-        AppSplitButtonAction(
+        FondeSplitButtonAction(
           label: 'Test Action',
           onPressed: () => action1Pressed = true,
         ),
@@ -153,7 +153,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: AppSplitButton(
+              body: FondeSplitButton(
                 primaryLabel: 'Save',
                 primaryIcon: const Icon(Icons.save, size: 16),
                 onPrimaryPressed: () {},
@@ -175,7 +175,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: AppSplitButton(
+              body: FondeSplitButton(
                 primaryLabel: 'Custom Size',
                 onPrimaryPressed: () {},
                 actions: testActions,
@@ -192,7 +192,7 @@ void main() {
       final container = tester.widget<Container>(
         find
             .descendant(
-              of: find.byType(AppSplitButton),
+              of: find.byType(FondeSplitButton),
               matching: find.byType(Container),
             )
             .first,

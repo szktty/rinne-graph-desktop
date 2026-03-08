@@ -95,15 +95,15 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
                         );
                         final initialTabId =
                             hasUserStacks ? 'my_stacks' : 'samples';
-                        return AppTabView(
+                        return FondeTabView(
                           key: ValueKey('welcome_tab_$initialTabId'),
                           initialSelectedTabId: initialTabId,
-                          tabs: const [
-                            AppTab(id: 'my_stacks', label: 'My Stacks'),
-                            AppTab(id: 'samples', label: 'Samples'),
+                          tabs: [
+                            FondeTab(id: 'my_stacks', label: 'My Stacks'),
+                            FondeTab(id: 'samples', label: 'Samples'),
                           ],
                           contents: [
-                            AppTabContent(
+                            FondeTabContent(
                               id: 'my_stacks',
                               content: Column(
                                 children: [
@@ -150,7 +150,7 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
                                 ],
                               ),
                             ),
-                            AppTabContent(
+                            FondeTabContent(
                               id: 'samples',
                               content: Consumer(
                                 builder: (context, ref, _) {
@@ -296,12 +296,12 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
             variant: AppTextVariant.bodyText,
             color: colorScheme.base.foreground,
           ),
-          AppSpacing.sm(),
+          FondeSpacing.sm(),
           buildWarningItemHelper(
             'The current stack data will be deleted and regenerated from the template.',
             colorScheme,
           ),
-          AppSpacing.sm(),
+          FondeSpacing.sm(),
           buildWarningItemHelper(
             'Any changes you have made to this sample stack will be lost.',
             colorScheme,

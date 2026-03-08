@@ -11,7 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_themes/core_themes.dart';
 
 import '../typography/app_text.dart';
-import 'app_divider.dart';
+import 'package:fonde_ui/fonde_ui.dart' show FondeDivider, FondeVerticalDivider;
 
 /// A page-level component with a "left-aligned title + divider + content" structure.
 ///
@@ -128,7 +128,7 @@ class AppPage extends ConsumerWidget {
 
               // Divider (optional)
               if (showDivider) ...[
-                AppDivider(
+                FondeDivider(
                   color: dividerColor,
                   thickness: dividerThickness,
                   indent: dividerIndent,
@@ -163,7 +163,7 @@ class AppPage extends ConsumerWidget {
 
               // Divider (optional)
               if (showDivider) ...[
-                AppDivider(
+                FondeDivider(
                   color: dividerColor,
                   thickness: dividerThickness,
                   indent: dividerIndent,

@@ -13,13 +13,13 @@ import 'package:presentation_components/presentation_components.dart';
 import 'package:core_themes/core_themes.dart';
 
 void main() {
-  group('AppSnackBar Tests', () {
+  group('FondeSnackBar Tests', () {
     // Test widget wrapper
     Widget createTestWidget(Widget child) {
       return ProviderScope(child: MaterialApp(home: Scaffold(body: child)));
     }
 
-    testWidgets('AppSnackBar.show displays snackbar with correct message', (
+    testWidgets('FondeSnackBar.show displays snackbar with correct message', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -28,10 +28,10 @@ void main() {
             builder: (context) {
               return ElevatedButton(
                 onPressed: () {
-                  AppSnackBar.show(
+                  FondeSnackBar.show(
                     context: context,
                     message: 'Test SnackBar Message',
-                    type: AppSnackBarType.info,
+                    type: FondeSnackBarType.info,
                   );
                 },
                 child: const Text('Show SnackBar'),
@@ -50,7 +50,7 @@ void main() {
       expect(find.text('Test SnackBar Message'), findsOneWidget);
     });
 
-    testWidgets('AppSnackBar.showSuccess displays success snackbar', (
+    testWidgets('FondeSnackBar.showSuccess displays success snackbar', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -59,7 +59,7 @@ void main() {
             builder: (context) {
               return ElevatedButton(
                 onPressed: () {
-                  AppSnackBar.showSuccess(
+                  FondeSnackBar.showSuccess(
                     context: context,
                     message: 'Success!',
                   );
@@ -80,10 +80,10 @@ void main() {
       expect(find.text('Success!'), findsOneWidget);
 
       // Verify that the success icon is displayed
-      expect(find.byIcon(AppIcons.check), findsOneWidget);
+      expect(find.byIcon(FondeIcons.check), findsOneWidget);
     });
 
-    testWidgets('AppSnackBar.showError displays error snackbar', (
+    testWidgets('FondeSnackBar.showError displays error snackbar', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -92,7 +92,7 @@ void main() {
             builder: (context) {
               return ElevatedButton(
                 onPressed: () {
-                  AppSnackBar.showError(
+                  FondeSnackBar.showError(
                     context: context,
                     message: 'Error occurred!',
                   );
@@ -113,10 +113,10 @@ void main() {
       expect(find.text('Error occurred!'), findsOneWidget);
 
       // Verify that the error icon is displayed
-      expect(find.byIcon(AppIcons.error), findsOneWidget);
+      expect(find.byIcon(FondeIcons.error), findsOneWidget);
     });
 
-    testWidgets('AppSnackBar.showWarning displays warning snackbar', (
+    testWidgets('FondeSnackBar.showWarning displays warning snackbar', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -125,7 +125,7 @@ void main() {
             builder: (context) {
               return ElevatedButton(
                 onPressed: () {
-                  AppSnackBar.showWarning(
+                  FondeSnackBar.showWarning(
                     context: context,
                     message: 'Warning!',
                   );
@@ -146,10 +146,10 @@ void main() {
       expect(find.text('Warning!'), findsOneWidget);
 
       // Verify that the warning icon is displayed (currently uses the error icon)
-      expect(find.byIcon(AppIcons.error), findsOneWidget);
+      expect(find.byIcon(FondeIcons.error), findsOneWidget);
     });
 
-    testWidgets('AppSnackBar.showInfo displays info snackbar', (
+    testWidgets('FondeSnackBar.showInfo displays info snackbar', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -158,7 +158,7 @@ void main() {
             builder: (context) {
               return ElevatedButton(
                 onPressed: () {
-                  AppSnackBar.showInfo(
+                  FondeSnackBar.showInfo(
                     context: context,
                     message: 'Information',
                   );
@@ -179,10 +179,10 @@ void main() {
       expect(find.text('Information'), findsOneWidget);
 
       // Verify that the info icon is displayed
-      expect(find.byIcon(AppIcons.info), findsOneWidget);
+      expect(find.byIcon(FondeIcons.info), findsOneWidget);
     });
 
-    testWidgets('AppSnackBar with action button displays action', (
+    testWidgets('FondeSnackBar with action button displays action', (
       WidgetTester tester,
     ) async {
       bool actionPressed = false;
@@ -193,10 +193,10 @@ void main() {
             builder: (context) {
               return ElevatedButton(
                 onPressed: () {
-                  AppSnackBar.show(
+                  FondeSnackBar.show(
                     context: context,
                     message: 'Message with action',
-                    type: AppSnackBarType.info,
+                    type: FondeSnackBarType.info,
                     actionLabel: 'UNDO',
                     onActionPressed: () {
                       actionPressed = true;
@@ -229,7 +229,7 @@ void main() {
       expect(actionPressed, isTrue);
     });
 
-    testWidgets('AppSnackBar with custom icon displays custom icon', (
+    testWidgets('FondeSnackBar with custom icon displays custom icon', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -238,11 +238,11 @@ void main() {
             builder: (context) {
               return ElevatedButton(
                 onPressed: () {
-                  AppSnackBar.show(
+                  FondeSnackBar.show(
                     context: context,
                     message: 'Custom Icon SnackBar',
-                    type: AppSnackBarType.info,
-                    icon: AppIcons.star,
+                    type: FondeSnackBarType.info,
+                    icon: FondeIcons.star,
                   );
                 },
                 child: const Text('Show Custom Icon'),
@@ -261,10 +261,10 @@ void main() {
       expect(find.text('Custom Icon SnackBar'), findsOneWidget);
 
       // Verify that the custom icon is displayed
-      expect(find.byIcon(AppIcons.star), findsOneWidget);
+      expect(find.byIcon(FondeIcons.star), findsOneWidget);
     });
 
-    testWidgets('AppSnackBar respects accessibility zoom scale', (
+    testWidgets('FondeSnackBar respects accessibility zoom scale', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -287,10 +287,10 @@ void main() {
                 builder: (context) {
                   return ElevatedButton(
                     onPressed: () {
-                      AppSnackBar.show(
+                      FondeSnackBar.show(
                         context: context,
                         message: 'Zoom Test',
-                        type: AppSnackBarType.info,
+                        type: FondeSnackBarType.info,
                       );
                     },
                     child: const Text('Show Zoom Test'),
@@ -315,7 +315,7 @@ void main() {
       expect(containerFinder, findsWidgets);
     });
 
-    testWidgets('AppSnackBar hides current snackbar before showing new one', (
+    testWidgets('FondeSnackBar hides current snackbar before showing new one', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -326,20 +326,20 @@ void main() {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      AppSnackBar.show(
+                      FondeSnackBar.show(
                         context: context,
                         message: 'First SnackBar',
-                        type: AppSnackBarType.info,
+                        type: FondeSnackBarType.info,
                       );
                     },
                     child: const Text('Show First'),
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      AppSnackBar.show(
+                      FondeSnackBar.show(
                         context: context,
                         message: 'Second SnackBar',
-                        type: AppSnackBarType.success,
+                        type: FondeSnackBarType.success,
                       );
                     },
                     child: const Text('Show Second'),

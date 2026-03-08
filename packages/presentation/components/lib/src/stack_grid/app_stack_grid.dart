@@ -11,14 +11,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_themes/core_themes.dart';
 
-import 'package:presentation_components/src/widgets/app_gesture_detector.dart';
+import 'package:fonde_ui/fonde_ui.dart'
+    show FondeGestureDetector, FondePageIndicator, FondeBorderRadiusValues,
+         FondeRectangleBorder, FondePopupMenu, FondePopupMenuItem,
+         FondePopupMenuDivider, FondePopupMenuEntry, FondePopupMenuItemEntry,
+         FondePopupMenuDividerEntry;
+import 'package:fonde_ui/src/widgets/widgets/fonde_rectangle_border.dart'
+    show fondeBorderRadiusProvider;
 
-import '../page_indicator/app_page_indicator.dart';
-import '../styling/app_border_radius.dart';
 import '../typography/app_text.dart';
-import '../widgets/app_rectangle_border.dart';
 import '../icons/app_icons.dart';
-import '../widgets/app_popup_menu.dart';
 
 /// Class to hold card dimension information
 class CardDimensions {
@@ -102,7 +104,7 @@ class AppStackGrid extends ConsumerStatefulWidget {
   final void Function(StackData stack, String action)? onStackAction;
 
   /// Callback to generate custom action menu items
-  final List<AppPopupMenuEntry<String>> Function(StackData stack)?
+  final List<FondePopupMenuEntry<String>> Function(StackData stack)?
   customActionItems;
 
   /// Currently selected stack
@@ -248,7 +250,7 @@ class _AppStackGridState extends ConsumerState<AppStackGrid> {
         if (widget.showPageIndicator &&
             (_totalPages > 1 || widget.forceShowPagination)) ...[
           const SizedBox(height: 16),
-          AppPageIndicator(
+          FondePageIndicator(
             dotsCount: _totalPages,
             position: _currentPage.toDouble(),
             onDotTapped: (index) => _goToPage(index),
@@ -452,14 +454,14 @@ class _AppStackGridState extends ConsumerState<AppStackGrid> {
               height: cardHeight,
               child: Material(
                 type: MaterialType.transparency,
-                child: AppGestureDetector(
+                child: FondeGestureDetector(
                   onTap: () => widget.onStackSelected?.call(stack),
                   onTapCancel: () {
                     // Empty implementation to enable immediate execution mode
                   },
                   onDoubleTap: () => widget.onStackDoubleClicked?.call(stack),
-                  child: AppRectangleBorder(
-                    cornerRadius: AppBorderRadiusValues.small,
+                  child: FondeRectangleBorder(
+                    cornerRadius: FondeBorderRadiusValues.small,
                     side: BorderSide(
                       color: colorScheme.status.info,
                       width: 2,
@@ -521,7 +523,7 @@ class _StackCardWithHover extends ConsumerStatefulWidget {
   final VoidCallback onTap;
   final VoidCallback onDoubleTap;
   final void Function(StackData stack, String action)? onStackAction;
-  final List<AppPopupMenuEntry<String>> Function(StackData stack)?
+  final List<FondePopupMenuEntry<String>> Function(StackData stack)?
   customActionItems;
 
   @override
@@ -541,7 +543,7 @@ class _StackCardWithHoverState extends ConsumerState<_StackCardWithHover> {
       child: Stack(
         children: [
           // Main stack card
-          AppGestureDetector(
+          FondeGestureDetector(
             onTap: widget.onTap,
             onTapCancel: () {
               // Provide onTapCancel to enable immediate execution mode
@@ -549,8 +551,8 @@ class _StackCardWithHoverState extends ConsumerState<_StackCardWithHover> {
               // (deselection not needed - double-tap means "select and open")
             },
             onDoubleTap: widget.onDoubleTap,
-            child: AppRectangleBorder(
-              cornerRadius: AppBorderRadiusValues.small,
+            child: FondeRectangleBorder(
+              cornerRadius: FondeBorderRadiusValues.small,
               // Card background is transparent (no highlight on thumbnail)
               color: Colors.transparent,
               side:
@@ -570,8 +572,8 @@ class _StackCardWithHoverState extends ConsumerState<_StackCardWithHover> {
                   // Thumbnail section (using calculated dimensions, no highlight)
                   SizedBox(
                     height: widget.dimensions.thumbnailHeight,
-                    child: AppRectangleBorder(
-                      cornerRadius: AppBorderRadiusValues.small,
+                    child: FondeRectangleBorder(
+                      cornerRadius: FondeBorderRadiusValues.small,
                       side: const BorderSide(
                         color: Colors.transparent,
                         width: 0,
@@ -714,13 +716,13 @@ class _StackActionButton extends ConsumerWidget {
   final StackData stack;
   final AppColorScheme colorScheme;
   final void Function(StackData stack, String action) onStackAction;
-  final List<AppPopupMenuEntry<String>> Function(StackData stack)?
+  final List<FondePopupMenuEntry<String>> Function(StackData stack)?
   customActionItems;
   final ValueChanged<bool>? onMenuOpenChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return AppPopupMenu<String>.circleActionButton(
+    return FondePopupMenu<String>.circleActionButton(
       icon: AppIcons.ellipsis,
       iconSize: 16,
       iconColor: colorScheme.interactive.actionButton.iconColor,
@@ -732,8 +734,8 @@ class _StackActionButton extends ConsumerWidget {
       items:
           customActionItems?.call(stack) ??
           [
-            AppPopupMenuItemEntry<String>(
-              AppPopupMenuItem<String>(
+            FondePopupMenuItemEntry<String>(
+              FondePopupMenuItem<String>(
                 value: 'archive',
                 title: 'Archive',
                 icon: Icons.archive_outlined,

@@ -283,13 +283,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menu_background_tasks => 'Background Tasks...';
 
   @override
-  String get menu_show_hide_sidebar => 'Show/Hide Sidebar';
+  String get menu_show_hide_sidebar => 'Show/Hide FondeSidebar';
 
   @override
   String get menu_show_hide_detail_panel => 'Show/Hide Detail Panel';
 
   @override
-  String get menu_show_hide_toolbar => 'Show/Hide Toolbar';
+  String get menu_show_hide_toolbar => 'Show/Hide FondeToolbar';
 
   @override
   String get menu_graph_view => 'Graph View';

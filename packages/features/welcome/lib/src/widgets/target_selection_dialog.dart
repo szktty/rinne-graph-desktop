@@ -150,9 +150,9 @@ class _TargetSelectionDialogContentState
         Row(
           children: [
             Expanded(
-              child: AppButton(
+              child: FondeButton(
                 label: 'Create New Stack',
-                leadingIcon: Icon(AppIcons.plus, size: 16),
+                leadingIcon: Icon(FondeIcons.plus, size: 16),
                 onPressed: () => _showNewStackCreationPanel(),
               ),
             ),
@@ -212,12 +212,12 @@ class _TargetSelectionDialogContentState
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            AppButton(
+            FondeButton(
               label: 'Cancel',
               onPressed: () => Navigator.of(context).pop(),
             ),
             const SizedBox(width: 16),
-            AppButton.primary(
+            FondeButton.primary(
               label: 'Select',
               enabled: _selectedStack != null,
               onPressed:
@@ -246,7 +246,7 @@ class _TargetSelectionDialogContentState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(AppIcons.info, size: 48),
+            Icon(FondeIcons.info, size: 48),
             const SizedBox(height: 16),
             AppText('Error: $error', variant: AppTextVariant.bodyText),
           ],
@@ -298,7 +298,7 @@ class _TargetSelectionDialogContentState
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                AppIcons.stacks,
+                FondeIcons.stacks,
                 size: 64,
                 color: colorScheme.uiAreas.sideBar.inactiveItemText.withValues(
                   alpha: 0.5,

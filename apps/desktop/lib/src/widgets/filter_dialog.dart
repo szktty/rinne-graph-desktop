@@ -59,7 +59,7 @@ class _FilterDialogState extends ConsumerState<FilterDialog> {
           Row(
             children: [
               Expanded(
-                child: AppSearchField(
+                child: FondeSearchField(
                   value: _searchController.text,
                   hint: 'Filter...',
                   onChange: (value) {
@@ -109,7 +109,7 @@ class _FilterDialogState extends ConsumerState<FilterDialog> {
   ) {
     final nodeLabels = ref.watch(availableNodeLabelsProvider);
 
-    return AppExpansionTile(
+    return FondeExpansionTile(
       title: AppText('Nodes', variant: AppTextVariant.sectionTitleUtility),
       initiallyExpanded: true,
       childrenPadding: const EdgeInsets.all(16),
@@ -129,7 +129,7 @@ class _FilterDialogState extends ConsumerState<FilterDialog> {
   ) {
     final linkTypes = ref.watch(availableLinkTypesProvider);
 
-    return AppExpansionTile(
+    return FondeExpansionTile(
       title: AppText('Links', variant: AppTextVariant.sectionTitleUtility),
       initiallyExpanded: true,
       childrenPadding: const EdgeInsets.all(16),
@@ -149,7 +149,7 @@ class _FilterDialogState extends ConsumerState<FilterDialog> {
   ) {
     final properties = ref.watch(availablePropertiesProvider);
 
-    return AppExpansionTile(
+    return FondeExpansionTile(
       title: AppText('Properties', variant: AppTextVariant.sectionTitleUtility),
       initiallyExpanded: true,
       childrenPadding: const EdgeInsets.all(16),
@@ -240,7 +240,7 @@ class _FilterDialogState extends ConsumerState<FilterDialog> {
   }
 
   Widget _buildActionDropdown(FilterNotifier filterNotifier) {
-    return AppDropdownMenu<String>(
+    return FondeDropdownMenu<String>(
       showAsActionIcon: true,
       dropdownMenuEntries: [
         DropdownMenuEntry(value: 'select_all', label: 'Select All'),
@@ -277,16 +277,16 @@ class _FilterDialogState extends ConsumerState<FilterDialog> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacingValues.xl),
+        padding: const EdgeInsets.all(FondeSpacingValues.xl),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            AppButton.cancel(
+            FondeButton.cancel(
               label: 'Cancel',
               onPressed: () => Navigator.of(context).pop(),
             ),
             const SizedBox(width: 12),
-            AppButton.primary(
+            FondeButton.primary(
               label: 'Apply',
               onPressed: () {
                 // TODO: Apply filter processing

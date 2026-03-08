@@ -87,7 +87,7 @@ void main() {
       expect(find.text('Success!'), findsOneWidget);
 
       // Verify that the success icon is displayed
-      expect(find.byIcon(AppIcons.check), findsOneWidget);
+      expect(find.byIcon(FondeIcons.check), findsOneWidget);
     });
 
     testWidgets('AppToast.showError displays error toast', (
@@ -121,7 +121,7 @@ void main() {
       expect(find.text('Error occurred!'), findsOneWidget);
 
       // Verify that the error icon is displayed
-      expect(find.byIcon(AppIcons.error), findsOneWidget);
+      expect(find.byIcon(FondeIcons.error), findsOneWidget);
     });
 
     testWidgets('AppToast.showWarning displays warning toast', (
@@ -155,7 +155,7 @@ void main() {
       expect(find.text('Warning!'), findsOneWidget);
 
       // Verify that the warning icon is displayed (currently using error icon)
-      expect(find.byIcon(AppIcons.error), findsOneWidget);
+      expect(find.byIcon(FondeIcons.error), findsOneWidget);
     });
 
     testWidgets('AppToast.showInfo displays info toast', (
@@ -189,7 +189,7 @@ void main() {
       expect(find.text('Information'), findsOneWidget);
 
       // Verify that the info icon is displayed
-      expect(find.byIcon(AppIcons.info), findsOneWidget);
+      expect(find.byIcon(FondeIcons.info), findsOneWidget);
     });
 
     testWidgets('AppToast with custom icon displays custom icon', (
@@ -215,7 +215,7 @@ void main() {
         targetKey: targetKey,
         message: 'Custom Icon Toast',
         type: AppToastType.info,
-        icon: AppIcons.star,
+        icon: FondeIcons.star,
       );
 
       await tester.pump();
@@ -225,7 +225,7 @@ void main() {
       expect(find.text('Custom Icon Toast'), findsOneWidget);
 
       // Verify that the custom icon is displayed
-      expect(find.byIcon(AppIcons.star), findsOneWidget);
+      expect(find.byIcon(FondeIcons.star), findsOneWidget);
     });
 
     testWidgets('AppToast respects accessibility zoom scale', (

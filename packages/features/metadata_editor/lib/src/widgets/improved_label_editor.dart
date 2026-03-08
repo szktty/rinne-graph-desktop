@@ -106,7 +106,7 @@ class ImprovedLabelEditor extends ConsumerWidget {
               // Label name
               _buildFormRow(
                 label: 'ラベル名',
-                child: AppTextField(
+                child: FondeTextField(
                   controller: TextEditingController(text: label.name),
                   onChanged: (value) {
                     // TODO: Value update processing
@@ -121,7 +121,7 @@ class ImprovedLabelEditor extends ConsumerWidget {
               // Description
               _buildFormRow(
                 label: '説明',
-                child: AppTextField(
+                child: FondeTextField(
                   controller: TextEditingController(
                     text: label.description ?? '',
                   ),

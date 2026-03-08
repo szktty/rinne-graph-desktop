@@ -44,7 +44,7 @@ class WelcomeScreenStackGrid extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(AppIcons.info, size: 48),
+            Icon(FondeIcons.info, size: 48),
             const SizedBox(height: 16),
             AppText('Error: $error', variant: AppTextVariant.bodyText),
           ],
@@ -142,32 +142,32 @@ class WelcomeScreenStackGrid extends ConsumerWidget {
           final isArchived = isStackArchivedHelper(originalStack);
 
           return [
-            AppPopupMenuItemEntry<String>(
-              AppPopupMenuItem<String>(
+            FondePopupMenuItemEntry<String>(
+              FondePopupMenuItem<String>(
                 value: 'open',
                 title: 'Open',
-                icon: AppIcons.folderOpen,
+                icon: FondeIcons.folderOpen,
                 onSelected: () => onStackAction(stackData, 'open'),
               ),
             ),
-            AppPopupMenuItemEntry<String>(
-              AppPopupMenuItem<String>(
+            FondePopupMenuItemEntry<String>(
+              FondePopupMenuItem<String>(
                 value: 'info',
                 title: 'View info',
-                icon: AppIcons.info,
+                icon: FondeIcons.info,
                 onSelected: () => onStackAction(stackData, 'info'),
               ),
             ),
-            AppPopupMenuItemEntry<String>(
-              AppPopupMenuItem<String>(
+            FondePopupMenuItemEntry<String>(
+              FondePopupMenuItem<String>(
                 value: 'show_in_finder',
                 title: 'Show in Finder',
-                icon: AppIcons.folder,
+                icon: FondeIcons.folder,
                 onSelected: () => onStackAction(stackData, 'show_in_finder'),
               ),
             ),
-            AppPopupMenuItemEntry<String>(
-              AppPopupMenuItem<String>(
+            FondePopupMenuItemEntry<String>(
+              FondePopupMenuItem<String>(
                 value: 'archive',
                 title: isArchived ? 'Restore' : 'Archive',
                 icon:
@@ -178,8 +178,8 @@ class WelcomeScreenStackGrid extends ConsumerWidget {
               ),
             ),
             if (originalStack.info.sampleTemplateId != null)
-              AppPopupMenuItemEntry<String>(
-                AppPopupMenuItem<String>(
+              FondePopupMenuItemEntry<String>(
+                FondePopupMenuItem<String>(
                   value: 'reload',
                   title: 'Reload',
                   icon: Icons.refresh,
@@ -191,32 +191,32 @@ class WelcomeScreenStackGrid extends ConsumerWidget {
 
         // Default action menu
         return [
-          AppPopupMenuItemEntry<String>(
-            AppPopupMenuItem<String>(
+          FondePopupMenuItemEntry<String>(
+            FondePopupMenuItem<String>(
               value: 'open',
               title: 'Open',
-              icon: AppIcons.folderOpen,
+              icon: FondeIcons.folderOpen,
               onSelected: () => onStackAction(stackData, 'open'),
             ),
           ),
-          AppPopupMenuItemEntry<String>(
-            AppPopupMenuItem<String>(
+          FondePopupMenuItemEntry<String>(
+            FondePopupMenuItem<String>(
               value: 'info',
               title: 'View info',
-              icon: AppIcons.info,
+              icon: FondeIcons.info,
               onSelected: () => onStackAction(stackData, 'info'),
             ),
           ),
-          AppPopupMenuItemEntry<String>(
-            AppPopupMenuItem<String>(
+          FondePopupMenuItemEntry<String>(
+            FondePopupMenuItem<String>(
               value: 'show_in_finder',
               title: 'Show in Finder',
-              icon: AppIcons.folder,
+              icon: FondeIcons.folder,
               onSelected: () => onStackAction(stackData, 'show_in_finder'),
             ),
           ),
-          AppPopupMenuItemEntry<String>(
-            AppPopupMenuItem<String>(
+          FondePopupMenuItemEntry<String>(
+            FondePopupMenuItem<String>(
               value: 'archive',
               title: 'Archive',
               icon: Icons.archive_outlined,

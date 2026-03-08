@@ -136,7 +136,7 @@ class _OutlineItemWidgetState extends ConsumerState<OutlineItemWidget> {
                             padding: EdgeInsets.zero,
                             icon: Icon(
                               isExpanded
-                                  ? AppIcons.chevronDown
+                                  ? FondeIcons.chevronDown
                                   : Icons.chevron_right,
                               size: 14,
                               color:
@@ -154,7 +154,7 @@ class _OutlineItemWidgetState extends ConsumerState<OutlineItemWidget> {
                 const SizedBox(width: 4),
                 // Node icon
                 Icon(
-                  AppIcons.circle,
+                  FondeIcons.circle,
                   size: 16,
                   color: widget.appColorScheme.appSpecific.graph.nodeIcon,
                 ),

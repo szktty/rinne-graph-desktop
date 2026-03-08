@@ -252,7 +252,7 @@ class AdvancedPropertyFilterPanel extends ConsumerWidget {
                 ),
               ),
               Expanded(
-                child: AppDropdownMenu<FilterOperator>(
+                child: FondeDropdownMenu<FilterOperator>(
                   initialSelection: filter.operator,
                   onSelected: (operator) {
                     if (operator != null) {
@@ -662,7 +662,7 @@ class _AddFilterDialogState extends State<AddFilterDialog> {
               onChanged: (value) => setState(() => _property = value),
             ),
             const SizedBox(height: 16),
-            AppDropdownMenu<PropertyType>(
+            FondeDropdownMenu<PropertyType>(
               initialSelection: _propertyType,
               onSelected: (type) {
                 if (type != null) {

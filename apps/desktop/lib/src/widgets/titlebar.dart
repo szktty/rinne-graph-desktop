@@ -11,7 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_themes/core_themes.dart';
 import 'package:features_pathfinder/pathfinder.dart';
 import 'package:presentation_components/presentation_components.dart'
-    hide Sidebar;
+    hide FondeSidebar;
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 
@@ -46,7 +46,7 @@ class Titlebar extends ConsumerWidget {
     // Get currently selected stack
     final activeStack = ref.watch(core_stack.activeStackProvider);
 
-    // Sidebar visibility status
+    // FondeSidebar visibility status
     final isPrimarySidebarVisible = ref.watch(fondePrimarySidebarStateProvider);
     final isSecondarySidebarVisible = ref.watch(fondeSecondarySidebarStateProvider);
 
@@ -81,12 +81,12 @@ class Titlebar extends ConsumerWidget {
               // Left area (sidebar toggle button)
               Padding(
                 padding: const EdgeInsets.only(left: 16.0),
-                child: AppIconButton(
+                child: FondeIconButton(
                   iconSize: 20,
                   icon:
                       isPrimarySidebarVisible
-                          ? AppIcons.panelLeftClose
-                          : AppIcons.panelLeft,
+                          ? FondeIcons.panelLeftClose
+                          : FondeIcons.panelLeft,
                   onPressed: () {
                     ref.read(fondePrimarySidebarStateProvider.notifier).toggle();
                   },
@@ -108,8 +108,8 @@ class Titlebar extends ConsumerWidget {
                   child: IconButton(
                     icon: Icon(
                       isSecondarySidebarVisible
-                          ? AppIcons.panelRightClose
-                          : AppIcons.panelRight,
+                          ? FondeIcons.panelRightClose
+                          : FondeIcons.panelRight,
                       size: 20,
                     ),
                     onPressed:

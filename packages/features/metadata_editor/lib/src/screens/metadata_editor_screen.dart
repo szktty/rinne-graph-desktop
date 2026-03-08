@@ -75,7 +75,7 @@ class MetadataEditorScreen extends ConsumerWidget {
           const SizedBox(height: 32),
 
           // Segmented button
-          AppSegmentedButton<int>(
+          FondeSegmentedButton<int>(
             segments: const [
               ButtonSegment<int>(value: 0, label: Text('Labels')),
               ButtonSegment<int>(value: 1, label: Text('Property Types')),

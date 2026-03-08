@@ -141,10 +141,10 @@ class _ImportProgressDialogContentState
           Center(
             child: Icon(
               _isCompleted
-                  ? AppIcons.check
+                  ? FondeIcons.check
                   : _isCancelled
-                  ? AppIcons.x
-                  : AppIcons.import,
+                  ? FondeIcons.x
+                  : FondeIcons.import,
               size: 64,
               color:
                   _isCompleted
@@ -220,13 +220,13 @@ class _ImportProgressDialogContentState
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               if (_isImporting)
-                AppButton(
+                FondeButton(
                   label: 'Cancel',
                   onPressed: _cancelImport,
                   textColor: colorScheme.base.foreground,
                 ),
               if (_isCompleted || _isCancelled || _errorMessage != null)
-                AppButton.primary(label: 'OK', onPressed: _closeDialog),
+                FondeButton.primary(label: 'OK', onPressed: _closeDialog),
             ],
           ),
         ],

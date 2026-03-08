@@ -110,11 +110,11 @@ class AppWarningDialog extends StatelessWidget {
       // Remove minHeight to adjust dynamically based on content
       showDivider: false,
       footer: Padding(
-        padding: const EdgeInsets.all(AppSpacingValues.xl),
+        padding: const EdgeInsets.all(FondeSpacingValues.xl),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            AppButton.cancel(
+            FondeButton.cancel(
               label: cancelLabel,
               onPressed: () {
                 Navigator.of(context).pop(false);
@@ -123,14 +123,14 @@ class AppWarningDialog extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             isDestructive
-                ? AppButton.destructive(
+                ? FondeButton.destructive(
                   label: confirmLabel,
                   onPressed: () {
                     Navigator.of(context).pop(true);
                     onConfirm?.call();
                   },
                 )
-                : AppButton.primary(
+                : FondeButton.primary(
                   label: confirmLabel,
                   onPressed: () {
                     Navigator.of(context).pop(true);
@@ -207,19 +207,19 @@ class AppErrorDialog extends ConsumerWidget {
       // Remove minHeight to adjust dynamically based on content
       showDivider: false,
       footer: Padding(
-        padding: const EdgeInsets.all(AppSpacingValues.xl),
+        padding: const EdgeInsets.all(FondeSpacingValues.xl),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             // Copy button for error details (only if details exist)
             if (details != null)
-              AppIconButton(
-                icon: AppIcons.copy,
+              FondeIconButton(
+                icon: FondeIcons.copy,
                 onPressed: () => _copyErrorDetails(context),
                 tooltip: 'Copy error details',
               ),
             const SizedBox(width: 8),
-            AppButton.primary(
+            FondeButton.primary(
               label: 'OK',
               onPressed: () {
                 Navigator.of(context).pop();
@@ -236,10 +236,10 @@ class AppErrorDialog extends ConsumerWidget {
           Column(
             children: [
               const SizedBox(height: 4), // Adjust icon to align with title
-              AppIcon(
-                AppIcons.error,
-                size: AppIconSize.large,
-                color: AppIconColor.error,
+              FondeIcon(
+                FondeIcons.error,
+                size: FondeIconSize.large,
+                color: FondeIconColor.error,
               ),
             ],
           ),

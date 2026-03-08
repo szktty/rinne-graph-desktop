@@ -142,16 +142,16 @@ class _StackInfoDialogState extends ConsumerState<StackInfoDialog> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacingValues.xl),
+          padding: const EdgeInsets.all(FondeSpacingValues.xl),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              AppButton.cancel(
+              FondeButton.cancel(
                 label: 'Cancel',
                 onPressed: () => Navigator.of(context).pop(),
               ),
               const SizedBox(width: 12),
-              AppButton.primary(label: 'OK', onPressed: _handleOk),
+              FondeButton.primary(label: 'OK', onPressed: _handleOk),
             ],
           ),
         ),
@@ -180,10 +180,10 @@ class _StackInfoDialogState extends ConsumerState<StackInfoDialog> {
             ),
             child: Row(
               children: [
-                AppIcon(
-                  AppIcons.error,
-                  size: AppIconSize.medium,
-                  color: AppIconColor.error,
+                FondeIcon(
+                  FondeIcons.error,
+                  size: FondeIconSize.medium,
+                  color: FondeIconColor.error,
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -202,7 +202,7 @@ class _StackInfoDialogState extends ConsumerState<StackInfoDialog> {
         // Edit stack name
         _buildSection(
           title: 'Stack Name',
-          child: AppTextField(
+          child: FondeTextField(
             controller: _nameController,
             hintText: 'Enter stack name',
           ),
@@ -321,10 +321,10 @@ class _StackInfoDialogState extends ConsumerState<StackInfoDialog> {
   Widget _buildErrorItem(String error, AppColorScheme colorScheme) {
     return Row(
       children: [
-        AppIcon(
-          AppIcons.error,
-          size: AppIconSize.small,
-          color: AppIconColor.error,
+        FondeIcon(
+          FondeIcons.error,
+          size: FondeIconSize.small,
+          color: FondeIconColor.error,
         ),
         const SizedBox(width: 4),
         Expanded(
