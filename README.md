@@ -88,6 +88,15 @@ flutter build windows
 ```
 
 
+## 🔗 Related Projects
+
+RinneGraph is powered by companion libraries developed by the same author:
+
+- **[Fonde UI](https://github.com/szktty/fonde-ui)** — Desktop-first Flutter UI library, developed specifically for RinneGraph
+- **[rinne_graph](https://github.com/szktty/rinne_graph)** — Embedded graph database backed by SQLite
+- **[plough](https://github.com/szktty/plough)** — Network graph rendering library for Flutter
+- **[kiri_check](https://github.com/szktty/kiri_check)** — Property-based testing library for Dart
+
 ## 📚 Documentation
 
 - [Development Strategy](docs/strategy/governance/DEVELOPMENT_STRATEGY.md) - Project development approach and release cycle
