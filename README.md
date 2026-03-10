@@ -36,10 +36,10 @@ At the same time, full-featured graph databases like Neo4j or ArangoDB require a
 ## 💡 Features
 
 - **Local-first & offline** — works entirely on your device, no graph database server required
-- Organize personal data using a graph database structure (nodes and links)
-- Visualize relationships between different pieces of information
-- Search and navigate through your data efficiently
-- Manage data in self-contained "stacks" (portable database units)
+- **Graph-based structure** — organize data using nodes and links, each with their own properties
+- **Visualization** — see relationships between your data at a glance
+- **Search & navigation** — find and navigate through your data efficiently
+- **Stacks** — manage data in self-contained, portable database units
 
 ## 🚀 Quick Start
 
