@@ -116,7 +116,10 @@ This project is in early development. If you encounter bugs or have suggestions:
 
 ## 📄 License
 
-This project is licensed under the **GNU Affero General Public License v3.0 (AGPLv3)**. See the [LICENSE](LICENSE) file for details.
+This project is dual-licensed:
+
+- **[GNU Affero General Public License v3.0 (AGPLv3)](LICENSE)** — for open-source use
+- **Commercial License** — for organizations or individuals who need to use RinneGraph without the AGPLv3 obligations (available in the future)
 
 ### Contributing & CLA
 
