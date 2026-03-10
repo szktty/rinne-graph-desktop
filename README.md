@@ -43,11 +43,7 @@ At the same time, full-featured graph databases like Neo4j or ArangoDB require a
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-- Flutter 3.41.2 or higher
-- Dart 3.11.0 or higher
-- Melos (monorepo management tool)
+Download the latest release for your platform from the [Releases page](https://github.com/szktty/rinne-graph-desktop/releases).
 
 ### Supported Platforms
 
@@ -55,6 +51,14 @@ At the same time, full-featured graph databases like Neo4j or ArangoDB require a
 - ✅ **Windows** (Experimental support)
 
 **Note**: Windows support is experimental. The application should build and run, but some features may not work as expected. Feedback is welcome!
+
+## 🔨 Building from Source
+
+### Prerequisites
+
+- Flutter 3.41.2 or higher
+- Dart 3.11.0 or higher
+- Melos (monorepo management tool)
 
 ### Setup
 
