@@ -12,7 +12,9 @@
 
 **⚠️ WORK IN PROGRESS - ALPHA STAGE ⚠️**
 
-RinneGraph is a **local and offline** graph-based personal knowledge management app. It visualizes the connections between pieces of information, helping you intuitively grasp the bigger picture.
+**Everything is linked.**
+
+RinneGraph lets you shape and visualize your own world of connected ideas. The app builds your information as a graph-based link database. And your data is yours — RinneGraph runs locally and offline, with no server and no cloud.
 
 ## 🚧 Project Status
 
