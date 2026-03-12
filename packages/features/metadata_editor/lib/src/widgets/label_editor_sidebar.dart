@@ -54,7 +54,7 @@ class _LabelEditorSidebarState extends ConsumerState<LabelEditorSidebar> {
       children: [
         // Edit form
         Expanded(
-          child: AppScrollView(
+          child: FondeScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -97,7 +97,7 @@ class _LabelEditorSidebarState extends ConsumerState<LabelEditorSidebar> {
   }
 
   Widget _buildStatistics(LabelItem label) {
-    return AppContainer(
+    return FondeContainer(
       padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

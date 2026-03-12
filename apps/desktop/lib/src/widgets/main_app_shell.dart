@@ -9,8 +9,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:presentation_components/presentation_components.dart'
-    hide Toolbar;
+import 'package:fonde_ui/fonde_ui.dart';
+import 'package:fonde_ui/fonde_ui_riverpod.dart';
+import 'package:presentation_components/presentation_components.dart';
 import 'package:features_updates/updates.dart' as features_updates;
 import 'package:app/app.dart';
 import 'package:presentation_workflow/presentation_workflow.dart'
@@ -58,13 +59,11 @@ class MainAppShell extends ConsumerWidget {
     // Monitor stack loading errors
     ref.listen<ErrorDialogData?>(stackLoadingErrorProvider, (previous, next) {
       if (next != null && next.hasError && context.mounted) {
-        // If an error occurs, display a dialog
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           await showAppErrorDialogFromData(
             context,
             errorData: next,
             onOkPressed: () {
-              // Clear the error
               ref.read(stackLoadingErrorProvider.notifier).state = null;
             },
           );
@@ -87,7 +86,6 @@ class MainAppShell extends ConsumerWidget {
       (previous, next) {
         next.whenData((result) {
           if (result.updateAvailable && context.mounted) {
-            // If an update is available, display a dialog
             WidgetsBinding.instance.addPostFrameCallback((_) async {
               await features_updates.showUpdateCheckDialog(context);
             });
@@ -99,13 +97,12 @@ class MainAppShell extends ConsumerWidget {
     // Register commands
     if (!shellState.commandsRegistered) {
       Future(() {
-        // Register in-app commands
         registerCoreCommands(ref);
         ref.read(shellStateManagerProvider.notifier).markCommandsRegistered();
       });
     }
 
-    // Development stacks auto-import - get from configuration file
+    // Development stacks auto-import
     final startupConfig = ref.watch(startupConfigProvider);
     final actualEnableDevStacks =
         startupConfig.enableDevStacks || enableDevStacks;
@@ -120,26 +117,18 @@ class MainAppShell extends ConsumerWidget {
       debugPrint('MainAppShell: Starting dev stack import process...');
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         debugPrint(
-          'MainAppShell: Post-frame callback executing for dev stack import',
-        );
-        // Development test stack feature planned for future implementation
-        // For details, see "Future development test stack concept" in packages/core/samples/README.md
-        debugPrint(
           'Development stacks feature planned for future implementation',
         );
       });
     }
 
-    // Automatic display logic for the welcome page
-    // If no stack is open, do not navigate to the lens to display the welcome dialog
     final selectedActivityType = ref.watch(selectedActivityItemProvider);
-    // If no stack is open, the welcome dialog is displayed in _buildStackManagementContent
 
-    // Since AppActivityBar is used, defining activity bar items is unnecessary
-
-    // Get the sidebar visibility state (using the new unified provider)
-    final isPrimarySidebarVisible = ref.watch(primarySidebarStateProvider);
-    final isSecondarySidebarVisible = ref.watch(secondarySidebarStateProvider);
+    // Get the sidebar visibility state
+    final isPrimarySidebarVisible = ref.watch(fondePrimarySidebarStateProvider);
+    final isSecondarySidebarVisible = ref.watch(
+      fondeSecondarySidebarStateProvider,
+    );
 
     // Get workflow state
     final panelVisibility = ref.watch(
@@ -151,18 +140,17 @@ class MainAppShell extends ConsumerWidget {
       presentation_workflow.taskPanelActionsProvider.notifier,
     );
 
-    // If no stack is open, display the welcome dialog
+    // If no stack is open, display the welcome screen
     if (activeStack == null) {
       return _buildStackManagementContent(ref);
     }
 
     return widgets.Stack(
       children: [
-        MainShellLayout(
-          toolbar: const MainAreaTitlebar(), // Title bar for the main area
-          activityBar: ActivityBarBuilder.buildBar(),
-          showActivityBar:
-              true, // Activity bar is always displayed (except on the welcome screen)
+        FondeScaffold(
+          toolbar: const FondeMainAreaTitlebar(),
+          launchBar: ActivityBarBuilder.buildBar(),
+          showLaunchBar: true,
           primarySidebar: SidebarBuilder.buildPrimary(selectedActivityType),
           secondarySidebar: SidebarBuilder.buildSecondary(selectedActivityType),
           showPrimarySidebar: SidebarBuilder.shouldShowPrimary(
@@ -198,32 +186,26 @@ class MainAppShell extends ConsumerWidget {
   }
 
   Widget _buildStackManagementContent(WidgetRef ref) {
-    return MainContentArea(
+    return FondeMainContentArea(
       child: WelcomeScreenContent(
         onCreateNewStack: () {
-          // Implement create new stack logic
           debugPrint('Create new stack from WelcomeScreenContent');
         },
         onOpenStack: () {
-          // Implement open existing stack logic
           debugPrint('Open existing stack from WelcomeScreenContent');
         },
         onImportStack: () {
-          // Implement import data logic
           debugPrint('Import data from WelcomeScreenContent');
         },
         onStackSelected: (selectedStack) async {
           final navContext = navigatorKey?.currentContext;
           if (navContext == null) return;
 
-          bool stackLoadedSuccessfully = false;
-
           try {
             debugPrint(
               'Opening stack from WelcomeScreenContent: ${selectedStack.directory.path}',
             );
 
-            // Execute sequentially to ensure state is updated reliably
             ref
                 .read(core_stack.activeStackProvider.notifier)
                 .setStack(selectedStack);
@@ -233,13 +215,11 @@ class MainAppShell extends ConsumerWidget {
             ref.read(selectedActivityItemProvider.notifier).state =
                 AppActivityItemType.lens;
 
-            stackLoadedSuccessfully = true;
             debugPrint('Stack successfully loaded and UI updated');
           } catch (e, stackTrace) {
             debugPrint('Error opening stack: $e');
             debugPrint('Stack trace: $stackTrace');
 
-            // Show error dialog
             if (navContext.mounted) {
               await showAppErrorDialog(
                 navContext,
@@ -251,8 +231,6 @@ class MainAppShell extends ConsumerWidget {
           }
         },
         onGoToMainScreen: () {
-          // This callback is less relevant for a full-screen welcome,
-          // but can be used for any necessary cleanup if the app transitions away
           debugPrint('Go to main screen from WelcomeScreenContent');
         },
       ),

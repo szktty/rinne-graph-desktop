@@ -28,7 +28,7 @@ class _MetadataManagementViewState
   Widget build(BuildContext context) {
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
 
-    return AppCard(
+    return FondePanel(
       margin: EdgeInsets.zero,
       padding: const EdgeInsets.all(24.0),
       borderSide: BorderSide.none,
@@ -51,7 +51,7 @@ class _MetadataManagementViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Segment Button
-          AppSegmentedButton<int>(
+          FondeSegmentedButton<int>(
             segments: const [
               ButtonSegment<int>(value: 0, label: Text('Labels')),
               ButtonSegment<int>(value: 1, label: Text('Property Types')),
@@ -79,7 +79,7 @@ class _MetadataManagementViewState
 
   /// Label Management UI
   Widget _buildLabelManagement() {
-    return AppContainer(
+    return FondeContainer(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +104,7 @@ class _MetadataManagementViewState
 
   /// Property Type Management UI
   Widget _buildPropertyTypeManagement() {
-    return AppContainer(
+    return FondeContainer(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +153,7 @@ class _MetadataManagementViewState
           ],
         ),
         const SizedBox(height: 8),
-        const AppDivider(),
+        const FondeDivider(),
         const SizedBox(height: 8),
 
         // Label List
@@ -169,15 +169,15 @@ class _MetadataManagementViewState
                   width: 100,
                   child: Row(
                     children: [
-                      AppIconButton(
-                        icon: AppIcons.edit,
+                      FondeIconButton(
+                        icon: FondeIcons.edit,
                         onPressed: () {
                           // Edit action
                         },
                       ),
                       const SizedBox(width: 8),
-                      AppIconButton(
-                        icon: AppIcons.x,
+                      FondeIconButton(
+                        icon: FondeIcons.x,
                         onPressed: () {
                           // Delete action
                         },
@@ -195,7 +195,7 @@ class _MetadataManagementViewState
         // Add Button
         Row(
           children: [
-            AppButton.primary(
+            FondeButton.primary(
               label: 'Add Label',
               onPressed: () {
                 // Add action
@@ -245,7 +245,7 @@ class _MetadataManagementViewState
           ],
         ),
         const SizedBox(height: 8),
-        const AppDivider(),
+        const FondeDivider(),
         const SizedBox(height: 8),
 
         // Property Type List
@@ -278,15 +278,15 @@ class _MetadataManagementViewState
                   width: 100,
                   child: Row(
                     children: [
-                      AppIconButton(
-                        icon: AppIcons.edit,
+                      FondeIconButton(
+                        icon: FondeIcons.edit,
                         onPressed: () {
                           // Edit action
                         },
                       ),
                       const SizedBox(width: 8),
-                      AppIconButton(
-                        icon: AppIcons.x,
+                      FondeIconButton(
+                        icon: FondeIcons.x,
                         onPressed: () {
                           // Delete action
                         },
@@ -304,7 +304,7 @@ class _MetadataManagementViewState
         // Add Button
         Row(
           children: [
-            AppButton.primary(
+            FondeButton.primary(
               label: 'Add Property Type',
               onPressed: () {
                 // Add action

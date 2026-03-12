@@ -7,6 +7,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:fonde_ui/fonde_ui.dart' show FondeColorScheme;
 import '../color_extensions.dart';
 import 'color_structure.dart';
 import 'theme_color_scheme.dart';
@@ -499,6 +500,21 @@ class AppColorScheme {
       status: statusColors,
       appSpecific: appSpecificColors,
       theme: themeColorScheme,
+    );
+  }
+
+  /// Create an [AppColorScheme] from a [FondeColorScheme].
+  ///
+  /// App-specific colors (graph, metadata, table) are derived from the Fonde
+  /// color scheme using the same logic as [fromColorScheme].
+  factory AppColorScheme.fromFondeColorScheme(
+    FondeColorScheme fondeScheme, {
+    ThemeColorType themeType = ThemeColorType.blue,
+  }) {
+    // Delegate to the existing factory via ColorScheme round-trip.
+    return AppColorScheme.fromColorScheme(
+      fondeScheme.toColorScheme(),
+      themeType: themeType,
     );
   }
 

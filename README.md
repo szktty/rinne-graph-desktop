@@ -12,7 +12,9 @@
 
 **⚠️ WORK IN PROGRESS - ALPHA STAGE ⚠️**
 
-RinneGraph is a **local and offline** graph-based personal knowledge management app. It visualizes the connections between pieces of information, helping you intuitively grasp the bigger picture.
+**Everything is linked.**
+
+RinneGraph lets you shape and visualize your own world of connected ideas. The app builds your information as a graph-based link database. And your data is yours — RinneGraph runs locally and offline, with no server and no cloud.
 
 ## 🚧 Project Status
 
@@ -34,18 +36,14 @@ At the same time, full-featured graph databases like Neo4j or ArangoDB require a
 ## 💡 Features
 
 - **Local-first & offline** — works entirely on your device, no graph database server required
-- Organize personal data using a graph database structure (nodes and links)
-- Visualize relationships between different pieces of information
-- Search and navigate through your data efficiently
-- Manage data in self-contained "stacks" (portable database units)
+- **Graph-based structure** — organize data using nodes and links, each with their own properties
+- **Visualization** — see relationships between your data at a glance
+- **Search & navigation** — find and navigate through your data efficiently
+- **Stacks** — manage data in self-contained, portable database units
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-- Flutter 3.41.2 or higher
-- Dart 3.11.0 or higher
-- Melos (monorepo management tool)
+Download the latest release for your platform from the [Releases page](https://github.com/szktty/rinne-graph-desktop/releases).
 
 ### Supported Platforms
 
@@ -53,6 +51,14 @@ At the same time, full-featured graph databases like Neo4j or ArangoDB require a
 - ✅ **Windows** (Experimental support)
 
 **Note**: Windows support is experimental. The application should build and run, but some features may not work as expected. Feedback is welcome!
+
+## 🔨 Building from Source
+
+### Prerequisites
+
+- Flutter 3.41.2 or higher
+- Dart 3.11.0 or higher
+- Melos (monorepo management tool)
 
 ### Setup
 
@@ -86,6 +92,15 @@ flutter build windows
 ```
 
 
+## 🔗 Related Projects
+
+RinneGraph is powered by companion libraries developed by the same author:
+
+- **[Fonde UI](https://github.com/szktty/fonde-ui)** — Desktop-first Flutter UI library, developed specifically for RinneGraph
+- **[rinne_graph](https://github.com/szktty/rinne_graph)** — Embedded graph database backed by SQLite
+- **[plough](https://github.com/szktty/plough)** — Network graph rendering library for Flutter
+- **[kiri_check](https://github.com/szktty/kiri_check)** — Property-based testing library for Dart
+
 ## 📚 Documentation
 
 - [Development Strategy](docs/strategy/governance/DEVELOPMENT_STRATEGY.md) - Project development approach and release cycle
@@ -105,7 +120,10 @@ This project is in early development. If you encounter bugs or have suggestions:
 
 ## 📄 License
 
-This project is licensed under the **GNU Affero General Public License v3.0 (AGPLv3)**. See the [LICENSE](LICENSE) file for details.
+This project is dual-licensed:
+
+- **[GNU Affero General Public License v3.0 (AGPLv3)](LICENSE)** — for open-source use
+- **Commercial License** — for organizations or individuals who need to use RinneGraph without the AGPLv3 obligations (available in the future)
 
 ### Contributing & CLA
 

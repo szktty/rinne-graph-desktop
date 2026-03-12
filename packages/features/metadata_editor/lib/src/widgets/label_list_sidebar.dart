@@ -67,19 +67,19 @@ class LabelListSidebar extends ConsumerWidget {
     IconData icon;
     switch (filter) {
       case QuickAccessFilter.all:
-        icon = AppIcons.list;
+        icon = FondeIcons.list;
         break;
       case QuickAccessFilter.starred:
-        icon = AppIcons.star;
+        icon = FondeIcons.star;
         break;
       case QuickAccessFilter.recentlyModified:
-        icon = AppIcons.timeline;
+        icon = FondeIcons.timeline;
         break;
       case QuickAccessFilter.recentlyAdded:
-        icon = AppIcons.plus;
+        icon = FondeIcons.plus;
         break;
       case QuickAccessFilter.unused:
-        icon = AppIcons.archiveOutlined;
+        icon = FondeIcons.archiveOutlined;
         break;
     }
 
@@ -94,9 +94,9 @@ class LabelListSidebar extends ConsumerWidget {
       ),
       child: ListTile(
         dense: true,
-        leading: AppIcon(
+        leading: FondeIcon(
           icon,
-          size: AppIconSize.small,
+          size: FondeIconSize.small,
           customColor:
               isSelected
                   ? colorScheme.theme.primaryColor

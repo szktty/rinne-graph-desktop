@@ -37,7 +37,7 @@ class OutlineView extends ConsumerWidget {
     final expandedNodes = ref.watch(outlineExpandedNodesProvider);
 
     if (graph == null || graph.nodes.isEmpty) {
-      return AppOutlineView<core_graph.Node>(
+      return FondeOutlineView<core_graph.Node>(
         items: const [],
         itemBuilder: (_, __, ___, ____, _____) => const SizedBox.shrink(),
         childrenBuilder: (_) => [],
@@ -49,7 +49,7 @@ class OutlineView extends ConsumerWidget {
     final displayNodes =
         rootNodes.isNotEmpty ? rootNodes : graph.nodes.values.toList();
 
-    return AppOutlineView<core_graph.Node>(
+    return FondeOutlineView<core_graph.Node>(
       items: displayNodes,
       selectedItem:
           selectedEntityId.selectedEntityId != null
@@ -103,7 +103,7 @@ class OutlineView extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            AppIcons.listTree,
+            FondeIcons.listTree,
             color: appColorScheme.appSpecific.graph.nodeIcon,
           ),
           const SizedBox(width: 8),
@@ -134,7 +134,7 @@ class OutlineView extends ConsumerWidget {
   Widget _buildNodeTitle(core_graph.Node node) {
     return Row(
       children: [
-        Icon(AppIcons.circle, size: 16),
+        Icon(FondeIcons.circle, size: 16),
         const SizedBox(width: 8),
         Expanded(child: Text(_getNodeDisplayName(node))),
       ],

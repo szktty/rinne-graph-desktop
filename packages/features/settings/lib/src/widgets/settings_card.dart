@@ -14,7 +14,7 @@ import 'package:core_themes/core_themes.dart';
 /// Card component exclusively for settings screens.
 ///
 /// A card for grouping and displaying setting items.
-/// Based on AppCard, it applies styling suitable for settings screens.
+/// Based on FondePanel, it applies styling suitable for settings screens.
 class SettingsCard extends ConsumerWidget {
   /// The header part of the card.
   final Widget? header;
@@ -63,7 +63,7 @@ class SettingsCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return AppCard(
+    return FondePanel(
       header: header,
       content: content,
       margin: margin ?? const EdgeInsets.only(bottom: 16.0),
@@ -209,7 +209,7 @@ class SettingsSectionCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = ref.watch(effectiveColorSchemeProvider);
 
-    return AppCard(
+    return FondePanel(
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

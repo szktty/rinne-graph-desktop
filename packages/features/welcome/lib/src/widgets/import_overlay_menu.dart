@@ -142,7 +142,7 @@ class _ImportOverlayMenuState extends ConsumerState<ImportOverlayMenu> {
   Widget build(BuildContext context) {
     return CompositedTransformTarget(
       link: _layerLink,
-      child: AppIconButton(
+      child: FondeIconButton(
         onPressed: _showOverlay,
         icon: Icons.upload_file,
         iconSize: 24,

@@ -31,7 +31,7 @@ void main() {
 
         expect(find.text('Test Dialog Content'), findsOneWidget);
         expect(find.byType(Dialog), findsOneWidget);
-        expect(find.byType(AppPhysicalModelVariants), findsOneWidget);
+        expect(find.byType(FondePhysicalModelVariants), findsOneWidget);
       });
 
       testWidgets('displays with custom dimensions', (tester) async {
@@ -155,7 +155,7 @@ void main() {
 
         expect(find.text('Custom Color Dialog'), findsOneWidget);
 
-        final physicalModel = find.byType(AppPhysicalModelVariants);
+        final physicalModel = find.byType(FondePhysicalModelVariants);
         expect(physicalModel, findsOneWidget);
       });
     });
@@ -269,7 +269,7 @@ void main() {
 
         // Check the widget hierarchy
         expect(find.byType(Dialog), findsOneWidget);
-        expect(find.byType(AppPhysicalModelVariants), findsOneWidget);
+        expect(find.byType(FondePhysicalModelVariants), findsOneWidget);
         expect(find.byType(Container), findsOneWidget);
         expect(find.text('Hierarchy Test'), findsOneWidget);
       });

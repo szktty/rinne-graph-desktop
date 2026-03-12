@@ -13,7 +13,7 @@ import 'package:core_themes/core_themes.dart';
 
 import '../providers/label_list_providers.dart';
 
-/// Toolbar for the label list.
+/// FondeToolbar for the label list.
 class LabelListToolbar extends ConsumerWidget {
   const LabelListToolbar({super.key});
 
@@ -36,9 +36,9 @@ class LabelListToolbar extends ConsumerWidget {
         child: Row(
           children: [
             // Add button
-            AppButton(
+            FondeButton(
               label: 'Add',
-              leadingIcon: Icon(AppIcons.plus),
+              leadingIcon: Icon(FondeIcons.plus),
               onPressed: () {
                 _showAddLabelDialog(context, ref);
               },
@@ -47,7 +47,7 @@ class LabelListToolbar extends ConsumerWidget {
             const SizedBox(width: 16),
 
             // Sort menu button
-            AppDropdownMenu<LabelSortMethod>(
+            FondeDropdownMenu<LabelSortMethod>(
               initialSelection: sortMethod,
               dropdownMenuEntries:
                   LabelSortMethod.values.map((method) {
@@ -70,10 +70,10 @@ class LabelListToolbar extends ConsumerWidget {
             Expanded(
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 300),
-                child: AppTextField(
+                child: FondeTextField(
                   controller: TextEditingController(text: searchQuery),
                   hintText: 'Search labels...',
-                  prefixIcon: Icon(AppIcons.search),
+                  prefixIcon: Icon(FondeIcons.search),
                   onChanged: (String value) {
                     ref.read(labelSearchQueryProvider.notifier).state = value;
                   },

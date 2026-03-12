@@ -30,13 +30,13 @@ class SettingsView extends ConsumerWidget {
       initialSelectedId: 'appearance', // Select appearance menu by default
       searchable: false,
       emptySelectionBuilder:
-          (context) => const Center(
+          (context) => Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(AppIcons.settings, size: 48, color: Colors.black38),
-                SizedBox(height: 16),
-                BodyText('Select a setting item from the left menu'),
+                Icon(FondeIcons.settings, size: 48, color: Colors.black38),
+                const SizedBox(height: 16),
+                FondeBodyText('Select a setting item from the left menu'),
               ],
             ),
           ),
@@ -47,7 +47,7 @@ class SettingsView extends ConsumerWidget {
   static final List<SettingsItem> _defaultSettingsItems = [
     SettingsItem(
       id: 'appearance',
-      icon: AppIcons.appearance,
+      icon: FondeIcons.appearance,
       title: 'Appearance',
       builder: () => const AppearanceSettingsView(),
       keywords: const [
@@ -68,7 +68,7 @@ class SettingsView extends ConsumerWidget {
 
     SettingsItem(
       id: 'metadata-management',
-      icon: AppIcons.tag,
+      icon: FondeIcons.tag,
       title: 'Metadata Management',
       builder: () => const MetadataManagementView(),
       keywords: const [
@@ -88,7 +88,7 @@ class SettingsView extends ConsumerWidget {
     // Keyboard shortcut customization feature to be implemented in the future
     // SettingsItem(
     //   id: 'keyboard-shortcuts',
-    //   icon: AppIcons.keyboard,
+    //   icon: FondeIcons.keyboard,
     //   title: 'Keyboard Shortcuts',
     //   builder: () => const AdvancedKeyboardShortcutsView(),
     //   keywords: const [
@@ -106,7 +106,7 @@ class SettingsView extends ConsumerWidget {
     // ),
     SettingsItem(
       id: 'accessibility',
-      icon: AppIcons.accessibility,
+      icon: FondeIcons.accessibility,
       title: 'Accessibility',
       builder: () => const AccessibilitySettingsView(),
       keywords: const [

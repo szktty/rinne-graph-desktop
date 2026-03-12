@@ -9,6 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_themes/core_themes.dart';
+import 'package:fonde_ui/fonde_ui_riverpod.dart';
 import 'package:presentation_components/presentation_components.dart';
 
 class AccessibilitySettingsView extends ConsumerWidget {
@@ -17,8 +18,9 @@ class AccessibilitySettingsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
+    final accessibilityConfig = ref.watch(fondeAccessibilityConfigProvider);
 
-    return AppCard(
+    return FondePanel(
       margin: EdgeInsets.zero,
       padding: const EdgeInsets.all(24.0),
       borderSide: BorderSide.none,
@@ -38,15 +40,15 @@ class AccessibilitySettingsView extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Only zoom scale setting
-            FormList(
-              child: FormItemColumn(
+            FondeFormList(
+              child: FondeFormItemColumn(
                 label: 'Zoom Scale',
                 child: Row(
-                  mainAxisSize: MainAxisSize.min, // Set to minimum size
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     // Decrease button (with border)
-                    AppIconButton(
-                      icon: AppIcons.arrowLeft,
+                    FondeIconButton(
+                      icon: FondeIcons.arrowLeft,
                       iconSize: 16.0,
                       backgroundColor: appColorScheme.uiAreas.panel.background,
                       border: BorderSide(
@@ -54,15 +56,15 @@ class AccessibilitySettingsView extends ConsumerWidget {
                         width: 1.0,
                       ),
                       onPressed: () {
-                        final currentZoom =
-                            ref.read(accessibilityConfigProvider).zoomScale;
-                        final newZoom = (currentZoom - 0.1).clamp(0.5, 2.0);
+                        final newZoom =
+                            (accessibilityConfig.zoomScale - 0.1).clamp(
+                              0.5,
+                              2.0,
+                            );
                         ref
-                            .read(accessibilityConfigProvider.notifier)
+                            .read(fondeAccessibilityConfigProvider.notifier)
                             .updateConfig(
-                              ref
-                                  .read(accessibilityConfigProvider)
-                                  .copyWith(zoomScale: newZoom),
+                              accessibilityConfig.copyWith(zoomScale: newZoom),
                             );
                       },
                     ),
@@ -71,15 +73,15 @@ class AccessibilitySettingsView extends ConsumerWidget {
                     SizedBox(
                       width: 60,
                       child: AppText(
-                        '${(ref.watch(accessibilityConfigProvider).zoomScale * 100).round()}%',
+                        '${(accessibilityConfig.zoomScale * 100).round()}%',
                         variant: AppTextVariant.bodyText,
                         textAlign: TextAlign.center,
                       ),
                     ),
                     const SizedBox(width: 8),
                     // Increase button (with border)
-                    AppIconButton(
-                      icon: AppIcons.arrowRight,
+                    FondeIconButton(
+                      icon: FondeIcons.arrowRight,
                       iconSize: 16.0,
                       backgroundColor: appColorScheme.uiAreas.panel.background,
                       border: BorderSide(
@@ -87,15 +89,15 @@ class AccessibilitySettingsView extends ConsumerWidget {
                         width: 1.0,
                       ),
                       onPressed: () {
-                        final currentZoom =
-                            ref.read(accessibilityConfigProvider).zoomScale;
-                        final newZoom = (currentZoom + 0.1).clamp(0.5, 2.0);
+                        final newZoom =
+                            (accessibilityConfig.zoomScale + 0.1).clamp(
+                              0.5,
+                              2.0,
+                            );
                         ref
-                            .read(accessibilityConfigProvider.notifier)
+                            .read(fondeAccessibilityConfigProvider.notifier)
                             .updateConfig(
-                              ref
-                                  .read(accessibilityConfigProvider)
-                                  .copyWith(zoomScale: newZoom),
+                              accessibilityConfig.copyWith(zoomScale: newZoom),
                             );
                       },
                     ),

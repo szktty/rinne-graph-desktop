@@ -106,7 +106,7 @@ void main() {
       expect(tapDownCalled, isTrue);
     });
 
-    testWidgets('Works correctly in combination with AppCard', (
+    testWidgets('Works correctly in combination with FondePanel', (
       WidgetTester tester,
     ) async {
       bool tapped = false;
@@ -117,7 +117,7 @@ void main() {
             home: Scaffold(
               body: Tappable(
                 onTap: () => tapped = true,
-                child: AppCard(child: Text('Tappable Card')),
+                child: FondePanel(child: Text('Tappable Card')),
               ),
             ),
           ),
@@ -125,7 +125,7 @@ void main() {
       );
 
       expect(find.text('Tappable Card'), findsOneWidget);
-      expect(find.byType(AppCard), findsOneWidget);
+      expect(find.byType(FondePanel), findsOneWidget);
       expect(find.byType(Tappable), findsOneWidget);
 
       await tester.tap(find.text('Tappable Card'));
@@ -147,7 +147,7 @@ void main() {
                 onTap: () => tapped = true,
                 child: Selectable(
                   isSelected: true,
-                  child: AppCard(child: Text('Selectable and Tappable Card')),
+                  child: FondePanel(child: Text('Selectable and Tappable Card')),
                 ),
               ),
             ),
@@ -156,7 +156,7 @@ void main() {
       );
 
       expect(find.text('Selectable and Tappable Card'), findsOneWidget);
-      expect(find.byType(AppCard), findsOneWidget);
+      expect(find.byType(FondePanel), findsOneWidget);
       expect(find.byType(Selectable), findsOneWidget);
       expect(find.byType(Tappable), findsOneWidget);
 

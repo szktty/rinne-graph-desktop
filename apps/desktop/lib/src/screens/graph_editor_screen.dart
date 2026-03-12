@@ -26,15 +26,25 @@ import 'widgets/outline_view_widget.dart';
 
 /// Definition of view types
 enum ViewType {
-  table('table', 'Table', AppIcons.table),
-  graph('graph', 'Graph', AppIcons.share2),
-  outline('outline', 'Outline', AppIcons.list);
+  table('table', 'Table'),
+  graph('graph', 'Graph'),
+  outline('outline', 'Outline');
 
-  const ViewType(this.value, this.displayName, this.icon);
+  const ViewType(this.value, this.displayName);
 
   final String value;
   final String displayName;
-  final IconData icon;
+
+  IconData get icon {
+    switch (this) {
+      case ViewType.table:
+        return FondeIcons.table;
+      case ViewType.graph:
+        return FondeIcons.share2;
+      case ViewType.outline:
+        return FondeIcons.list;
+    }
+  }
 
   /// Gets ViewType from string
   static ViewType fromString(String value) {

@@ -1,11 +1,3 @@
-/*
- * Copyright (c) 2026 SUZUKI Tetsuya
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Commercial
- *
- * This file is part of RinneGraph.
- * For commercial licensing inquiries, please contact: contact@szktty.jp
- */
-
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
@@ -291,13 +283,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menu_background_tasks => 'Background Tasks...';
 
   @override
-  String get menu_show_hide_sidebar => 'Show/Hide Sidebar';
+  String get menu_show_hide_sidebar => 'Show/Hide FondeSidebar';
 
   @override
   String get menu_show_hide_detail_panel => 'Show/Hide Detail Panel';
 
   @override
-  String get menu_show_hide_toolbar => 'Show/Hide Toolbar';
+  String get menu_show_hide_toolbar => 'Show/Hide FondeToolbar';
 
   @override
   String get menu_graph_view => 'Graph View';

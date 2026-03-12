@@ -11,6 +11,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  fonde_ui:
+    git:
+      url: https://github.com/szktty/fonde-ui.git
+      ref: develop
   freezed_annotation: ^3.0.0
   json_annotation: ^4.9.0
   flutter_riverpod: ^3.0.0

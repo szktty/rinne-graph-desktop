@@ -35,7 +35,7 @@ class NavigationTabContent extends ConsumerWidget {
                 children: [
                   // Navigation items (no section title)
                   DatasetItem(
-                    icon: AppIcons.database,
+                    icon: FondeIcons.database,
                     name: 'All',
                     nodeCount: 0,
                     linkCount: 0,
@@ -45,7 +45,7 @@ class NavigationTabContent extends ConsumerWidget {
                     },
                   ),
                   DatasetItem(
-                    icon: AppIcons.star,
+                    icon: FondeIcons.star,
                     name: 'Starred',
                     nodeCount: 0,
                     linkCount: 0,
@@ -55,7 +55,7 @@ class NavigationTabContent extends ConsumerWidget {
                     },
                   ),
                   DatasetItem(
-                    icon: AppIcons.circle,
+                    icon: FondeIcons.circle,
                     name: 'All Nodes',
                     nodeCount: 0,
                     linkCount: 0,
@@ -65,7 +65,7 @@ class NavigationTabContent extends ConsumerWidget {
                     },
                   ),
                   DatasetItem(
-                    icon: AppIcons.arrowRight,
+                    icon: FondeIcons.arrowRight,
                     name: 'All Links',
                     nodeCount: 0,
                     linkCount: 0,
@@ -75,7 +75,7 @@ class NavigationTabContent extends ConsumerWidget {
                     },
                   ),
                   DatasetItem(
-                    icon: AppIcons.timeline,
+                    icon: FondeIcons.timeline,
                     name: 'Recently Modified Items',
                     nodeCount: 0,
                     linkCount: 0,
@@ -85,7 +85,7 @@ class NavigationTabContent extends ConsumerWidget {
                     },
                   ),
                   DatasetItem(
-                    icon: AppIcons.plus,
+                    icon: FondeIcons.plus,
                     name: 'Recently Added Items',
                     nodeCount: 0,
                     linkCount: 0,
@@ -97,7 +97,7 @@ class NavigationTabContent extends ConsumerWidget {
 
                   // Separator
                   const SizedBox(height: 8),
-                  const AppDivider(),
+                  const FondeDivider(),
                   const SizedBox(height: 8),
 
                   // Archived items
@@ -113,7 +113,7 @@ class NavigationTabContent extends ConsumerWidget {
                               .length;
 
                       return DatasetItem(
-                        icon: AppIcons.archiveOutlined,
+                        icon: FondeIcons.archiveOutlined,
                         name: 'Archived',
                         nodeCount: nodeCount,
                         linkCount: linkCount,
@@ -128,7 +128,7 @@ class NavigationTabContent extends ConsumerWidget {
                     },
                     loading:
                         () => DatasetItem(
-                          icon: AppIcons.archiveOutlined,
+                          icon: FondeIcons.archiveOutlined,
                           name: 'Archived',
                           nodeCount: 0,
                           linkCount: 0,
@@ -137,7 +137,7 @@ class NavigationTabContent extends ConsumerWidget {
                         ),
                     error:
                         (error, stack) => DatasetItem(
-                          icon: AppIcons.archiveOutlined,
+                          icon: FondeIcons.archiveOutlined,
                           name: 'Archived',
                           nodeCount: 0,
                           linkCount: 0,
@@ -202,7 +202,7 @@ class DatasetSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Section header
+        // FondeSection header
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Row(
@@ -307,7 +307,7 @@ class DatasetItem extends ConsumerWidget {
               ),
               if (onEdit != null || onDelete != null)
                 PopupMenuButton<String>(
-                  icon: Icon(AppIcons.ellipsis, size: 14),
+                  icon: Icon(FondeIcons.ellipsis, size: 14),
                   iconSize: 14,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -318,7 +318,7 @@ class DatasetItem extends ConsumerWidget {
                             value: 'edit',
                             child: Row(
                               children: [
-                                Icon(AppIcons.settings, size: 14),
+                                Icon(FondeIcons.settings, size: 14),
                                 const SizedBox(width: 8),
                                 const Text('Edit'),
                               ],
@@ -329,7 +329,7 @@ class DatasetItem extends ConsumerWidget {
                             value: 'delete',
                             child: Row(
                               children: [
-                                Icon(AppIcons.x, size: 14),
+                                Icon(FondeIcons.x, size: 14),
                                 const SizedBox(width: 8),
                                 const Text('Delete'),
                               ],
@@ -379,7 +379,7 @@ class DatasetSectionAsync extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Section header
+        // FondeSection header
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Row(
@@ -487,18 +487,18 @@ class DatasetItemFromDataset extends StatelessWidget {
         final presetType = dataset.metadata['preset_type'] as String?;
         switch (presetType) {
           case 'all':
-            return AppIcons.database;
+            return FondeIcons.database;
           case 'recent':
-            return AppIcons.timeline;
+            return FondeIcons.timeline;
           case 'bookmarks':
-            return AppIcons.star;
+            return FondeIcons.star;
           default:
-            return AppIcons.database;
+            return FondeIcons.database;
         }
       case DatasetType.saved:
-        return AppIcons.save;
+        return FondeIcons.save;
       case DatasetType.temporary:
-        return AppIcons.timeline;
+        return FondeIcons.timeline;
     }
   }
 

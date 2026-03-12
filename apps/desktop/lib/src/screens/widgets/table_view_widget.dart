@@ -39,7 +39,7 @@ class TableViewWidget extends ConsumerWidget {
     // Build table view column definition
     final columns = _buildTableColumns(nodes, themeData, colorScheme);
 
-    return AppTableView<core_graph.Node>(
+    return FondeTableView<core_graph.Node>(
       columns: columns,
       data: nodes,
       keyExtractor: (node) => node.id.value,
@@ -61,15 +61,15 @@ class TableViewWidget extends ConsumerWidget {
   }
 
   /// Builds table view column definition
-  List<AppTableColumn<core_graph.Node>> _buildTableColumns(
+  List<FondeTableColumn<core_graph.Node>> _buildTableColumns(
     List<core_graph.Node> nodes,
     ThemeData themeData,
     ColorScheme colorScheme,
   ) {
     // Theme is supplied by caller
 
-    final columns = <AppTableColumn<core_graph.Node>>[
-      AppTableColumn<core_graph.Node>(
+    final columns = <FondeTableColumn<core_graph.Node>>[
+      FondeTableColumn<core_graph.Node>(
         id: 'id',
         title: 'ID',
         width: 80.0,
@@ -97,7 +97,7 @@ class TableViewWidget extends ConsumerWidget {
       // Add columns for each property key
       for (final key in propertyKeys) {
         columns.add(
-          AppTableColumn<core_graph.Node>(
+          FondeTableColumn<core_graph.Node>(
             id: key,
             title: key,
             width: 120.0,
@@ -122,7 +122,7 @@ class TableViewWidget extends ConsumerWidget {
 
     // Add label column
     columns.add(
-      AppTableColumn<core_graph.Node>(
+      FondeTableColumn<core_graph.Node>(
         id: 'labels',
         title: 'Labels',
         width: 120.0,

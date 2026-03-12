@@ -188,8 +188,8 @@ class _TaskProgressModalState extends ConsumerState<TaskProgressModal> {
             children: [
               // Progress bar
               Expanded(
-                child: AppRectangleBorder(
-                  cornerRadius: AppBorderRadiusValues.small,
+                child: FondeRectangleBorder(
+                  cornerRadius: FondeBorderRadiusValues.small,
                   child:
                       widget.useSteppedAnimation
                           ? SteppedProgressBar(

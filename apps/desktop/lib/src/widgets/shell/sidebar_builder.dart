@@ -15,7 +15,7 @@ import 'package:features_metadata_editor/metadata_editor.dart'
 
 import '../graph_navigator_sidebar.dart';
 
-/// Sidebar builder (primary/secondary display and control)
+/// FondeSidebar builder (primary/secondary display and control)
 class SidebarBuilder {
   const SidebarBuilder._();
 
@@ -35,7 +35,7 @@ class SidebarBuilder {
       default:
         sidebarContent = const _UnimplementedSidebarPlaceholder();
     }
-    return Sidebar(child: sidebarContent);
+    return FondeSidebar(child: sidebarContent);
   }
 
   static Widget buildSecondary(AppActivityItemType selectedType) {
@@ -48,7 +48,7 @@ class SidebarBuilder {
               metadata_editor.selectedLabelForEditProvider,
             );
             if (selectedLabel != null) {
-              return const Sidebar(child: metadata_editor.LabelEditorSidebar());
+              return FondeSidebar(child: metadata_editor.LabelEditorSidebar());
             }
             return const SizedBox.shrink();
           },
@@ -97,7 +97,7 @@ class _UnimplementedSidebarPlaceholder extends ConsumerWidget {
     final selectedType = ref.watch(selectedActivityItemProvider);
     return Center(
       child: AppText(
-        '${selectedType.label} Sidebar (unimplemented)',
+        '${selectedType.label} FondeSidebar (unimplemented)',
         variant: AppTextVariant.bodyText,
       ),
     );

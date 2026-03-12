@@ -11,8 +11,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_themes/core_themes.dart';
 import 'package:presentation_components/presentation_components.dart';
 
-class Toolbar extends ConsumerWidget {
-  const Toolbar({super.key});
+class FondeToolbar extends ConsumerWidget {
+  const FondeToolbar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -77,7 +77,7 @@ class _AppPanelState extends ConsumerState<AppPanel> {
       top: position.dy,
       width: size.width,
       height: size.height,
-      child: AppPhysicalModelVariants.panel(
+      child: FondePhysicalModelVariants.panel(
         isDragging: isDragging,
         animationDuration: const Duration(milliseconds: 150),
         child: Container(

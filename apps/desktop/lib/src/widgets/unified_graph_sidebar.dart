@@ -32,12 +32,12 @@ class UnifiedGraphSidebarContent extends ConsumerWidget {
             segments: [
               ButtonSegment(
                 value: 0,
-                icon: Icon(AppIcons.listTree, size: 16),
+                icon: Icon(FondeIcons.listTree, size: 16),
                 label: const Text('Browse'),
               ),
               ButtonSegment(
                 value: 1,
-                icon: Icon(AppIcons.search, size: 16),
+                icon: Icon(FondeIcons.search, size: 16),
                 label: const Text('Search'),
               ),
             ],
@@ -80,10 +80,10 @@ class _BrowseTabContent extends ConsumerWidget {
         // Quick search field
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: AppTextField(
+          child: FondeTextField(
             hintText: 'Quick Search...',
             prefixIcon: Icon(
-              AppIcons.search,
+              FondeIcons.search,
               color: appColorScheme.uiAreas.sideBar.inactiveItemText,
             ),
             // backgroundColor: appColorScheme.uiAreas.sideBar.background.lighten(0.1),
@@ -118,7 +118,7 @@ class _BrowseTabContent extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  AppIcons.listTree,
+                  FondeIcons.listTree,
                   size: 48,
                   color: appColorScheme.uiAreas.sideBar.inactiveItemText
                       .withValues(alpha: 0.5),
@@ -161,7 +161,7 @@ class _SearchTabContent extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            AppIcons.search,
+            FondeIcons.search,
             size: 48,
             color: appColorScheme.base.foreground.withAlpha(128),
           ),

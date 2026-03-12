@@ -39,17 +39,17 @@ class WelcomeScreenActionButtons extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppButton.primary(
+        FondeButton.primary(
           label: 'Create New Stack...',
           onPressed: () => _showNewStackCreationDialog(context, ref),
         ),
         const SizedBox(height: 16),
-        AppButton.normal(
+        FondeButton.normal(
           label: 'Open Existing Stack...',
           onPressed: () => _showOpenStackDialog(context, ref),
         ),
         const SizedBox(height: 16),
-        AppButton.normal(
+        FondeButton.normal(
           label: 'Import Data...',
           onPressed: () {
             showImportDialog(context);
@@ -107,7 +107,7 @@ class WelcomeScreenActionButtons extends ConsumerWidget {
           // Validate if stackDir exists
           if (!await stackDir.exists()) {
             if (context.mounted) {
-              AppSnackBar.showError(
+              FondeSnackBar.showError(
                 context: context,
                 message: 'Invalid stack path: $selectedPath.',
               );
@@ -131,7 +131,7 @@ class WelcomeScreenActionButtons extends ConsumerWidget {
           } else {
             debugPrint('Failed to load stack info from ${stackDir.path}');
             if (context.mounted) {
-              AppSnackBar.showError(
+              FondeSnackBar.showError(
                 context: context,
                 message:
                     'Failed to load stack info from ${stackDir.path}. '
@@ -142,7 +142,7 @@ class WelcomeScreenActionButtons extends ConsumerWidget {
         } catch (e) {
           debugPrint('Error opening stack: $e');
           if (context.mounted) {
-            AppSnackBar.showError(
+            FondeSnackBar.showError(
               context: context,
               message: 'An error occurred while opening stack: $e',
             );
@@ -153,7 +153,7 @@ class WelcomeScreenActionButtons extends ConsumerWidget {
     } catch (e) {
       debugPrint('Error opening stack: $e');
       if (context.mounted) {
-        AppSnackBar.showError(
+        FondeSnackBar.showError(
           context: context,
           message: 'Failed to open stack: $e',
         );

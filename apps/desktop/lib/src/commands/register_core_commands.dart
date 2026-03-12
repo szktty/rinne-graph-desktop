@@ -70,7 +70,7 @@ void registerCoreCommands(WidgetRef ref) {
     // 2) Toggle/show/hide secondary sidebar
     AppCommand(
       id: 'sidebar.secondary.toggle',
-      title: 'Toggle Secondary Sidebar',
+      title: 'Toggle Secondary FondeSidebar',
       category: 'sidebar',
       run: (ref, args) async {
         ref.read(screenBasedSecondarySidebarStateProvider.notifier).toggle();
@@ -79,7 +79,7 @@ void registerCoreCommands(WidgetRef ref) {
     ),
     AppCommand(
       id: 'sidebar.secondary.show',
-      title: 'Show Secondary Sidebar',
+      title: 'Show Secondary FondeSidebar',
       category: 'sidebar',
       run: (ref, args) async {
         ref.read(screenBasedSecondarySidebarStateProvider.notifier).show();
@@ -88,7 +88,7 @@ void registerCoreCommands(WidgetRef ref) {
     ),
     AppCommand(
       id: 'sidebar.secondary.hide',
-      title: 'Hide Secondary Sidebar',
+      title: 'Hide Secondary FondeSidebar',
       category: 'sidebar',
       run: (ref, args) async {
         ref.read(screenBasedSecondarySidebarStateProvider.notifier).hide();
@@ -98,8 +98,8 @@ void registerCoreCommands(WidgetRef ref) {
 
     // 3) Switch unified sidebar tab (0: browse / 1: search)
     AppCommand(
-      id: 'unifiedSidebar.setTab',
-      title: 'Set Unified Sidebar Tab',
+      id: 'unifiedFondeSidebar.setTab',
+      title: 'Set Unified FondeSidebar Tab',
       category: 'navigation',
       run: (ref, args) async {
         final tab = (args['tab'] as num?)?.toInt() ?? 0;
@@ -108,8 +108,8 @@ void registerCoreCommands(WidgetRef ref) {
       },
     ),
     AppCommand(
-      id: 'unifiedSidebar.setBrowse',
-      title: 'Switch Unified Sidebar to Browse Tab',
+      id: 'unifiedFondeSidebar.setBrowse',
+      title: 'Switch Unified FondeSidebar to Browse Tab',
       category: 'navigation',
       run: (ref, args) async {
         ref.read(unifiedSidebarTabProvider.notifier).setBrowseTab();
@@ -117,8 +117,8 @@ void registerCoreCommands(WidgetRef ref) {
       },
     ),
     AppCommand(
-      id: 'unifiedSidebar.setSearch',
-      title: 'Switch Unified Sidebar to Search Tab',
+      id: 'unifiedFondeSidebar.setSearch',
+      title: 'Switch Unified FondeSidebar to Search Tab',
       category: 'navigation',
       run: (ref, args) async {
         ref.read(unifiedSidebarTabProvider.notifier).setSearchTab();
@@ -129,7 +129,7 @@ void registerCoreCommands(WidgetRef ref) {
     // 4) Explicitly set secondary sidebar visibility state
     AppCommand(
       id: 'sidebar.secondary.setVisible',
-      title: 'Set Secondary Sidebar Visibility',
+      title: 'Set Secondary FondeSidebar Visibility',
       category: 'sidebar',
       run: (ref, args) async {
         final visible = (args['visible'] as bool?) ?? true;

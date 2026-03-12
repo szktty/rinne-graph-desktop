@@ -59,7 +59,7 @@ class _PropertyTypeManagementTabState
 
   @override
   Widget build(BuildContext context) {
-    return AppScrollView(
+    return FondeScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -76,7 +76,7 @@ class _PropertyTypeManagementTabState
                       'Property Type Management',
                       variant: AppTextVariant.sectionTitlePrimary,
                     ),
-                    AppButton.primary(
+                    FondeButton.primary(
                       label: 'Add Property Type',
                       onPressed: _showAddPropertyTypeDialog,
                     ),
@@ -116,7 +116,7 @@ class _PropertyTypeManagementTabState
       );
     }
 
-    return AppContainer(
+    return FondeContainer(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
@@ -147,7 +147,7 @@ class _PropertyTypeManagementTabState
             ],
           ),
           const SizedBox(height: 8),
-          const AppDivider(),
+          const FondeDivider(),
           const SizedBox(height: 8),
 
           // Property type list
@@ -180,14 +180,14 @@ class _PropertyTypeManagementTabState
                     width: 100,
                     child: Row(
                       children: [
-                        AppIconButton(
-                          icon: AppIcons.edit,
+                        FondeIconButton(
+                          icon: FondeIcons.edit,
                           onPressed:
                               () => _showEditPropertyTypeDialog(propertyType),
                         ),
                         const SizedBox(width: 8),
-                        AppIconButton(
-                          icon: AppIcons.x,
+                        FondeIconButton(
+                          icon: FondeIcons.x,
                           onPressed:
                               () => _showDeletePropertyTypeDialog(propertyType),
                         ),

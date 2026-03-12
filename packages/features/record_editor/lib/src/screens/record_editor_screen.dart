@@ -36,9 +36,9 @@ class RecordEditorScreen extends ConsumerWidget {
 }
 
 /// Record editor activity bar item
-class RecordEditorActivityBarItem extends ActivityBarItem {
+class RecordEditorFondeLaunchBarItem extends FondeLaunchBarItem {
   /// Constructor
-  RecordEditorActivityBarItem({
+  RecordEditorFondeLaunchBarItem({
     required VoidCallback onTap,
     required super.logicalIndex,
   }) : super(icon: Icons.edit_note, label: 'Record Editor', onTap: onTap);

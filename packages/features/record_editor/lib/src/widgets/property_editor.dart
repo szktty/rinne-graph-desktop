@@ -89,7 +89,7 @@ class _PropertyEditorState extends ConsumerState<PropertyEditor> {
     final dragHandleWidget =
         _isHovered && !isDragging
             ? Icon(
-              AppIcons.gripVertical,
+              FondeIcons.gripVertical,
               size: 16,
               color:
                   widget.isLocked
@@ -111,7 +111,7 @@ class _PropertyEditorState extends ConsumerState<PropertyEditor> {
         margin: const EdgeInsets.symmetric(vertical: 4),
         child: ReorderableDragStartListener(
           index: widget.index, // Index passed from ReorderableListView.builder
-          child: AppContainer(
+          child: FondeContainer(
             leadingWidget: dragHandleWidget,
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -181,7 +181,7 @@ class _PropertyEditorState extends ConsumerState<PropertyEditor> {
                         widget.isLocked
                             ? null
                             : () => setState(() => _isEditing = true),
-                    child: AppTextField(
+                    child: FondeTextField(
                       readOnly: true,
                       enabled:
                           true, // Set enabled to true to make text color normal
@@ -305,7 +305,7 @@ class _PropertyEditorState extends ConsumerState<PropertyEditor> {
       // Boolean type
       editor = Row(
         children: [
-          AppCheckbox(
+          FondeCheckbox(
             value: value == true,
             onChanged: (newValue) {
               onChanged(newValue);
@@ -353,7 +353,7 @@ class _PropertyEditorState extends ConsumerState<PropertyEditor> {
             onSave();
           }
         },
-        child: AppTextField(
+        child: FondeTextField(
           keyboardType: TextInputType.number,
           controller: TextEditingController(text: value?.toString() ?? ''),
           onChanged: (text) {
@@ -378,7 +378,7 @@ class _PropertyEditorState extends ConsumerState<PropertyEditor> {
             onSave();
           }
         },
-        child: AppTextField(
+        child: FondeTextField(
           controller: TextEditingController(text: value?.toString() ?? ''),
           onChanged: onChanged,
           maxLines: isLongText ? 5 : 1,
@@ -396,7 +396,7 @@ class _PropertyEditorState extends ConsumerState<PropertyEditor> {
             onSave();
           }
         },
-        child: AppTextField(
+        child: FondeTextField(
           controller: TextEditingController(text: value?.toString() ?? ''),
           onChanged: onChanged,
           keyboardType: TextInputType.emailAddress,
@@ -414,7 +414,7 @@ class _PropertyEditorState extends ConsumerState<PropertyEditor> {
             onSave();
           }
         },
-        child: AppTextField(
+        child: FondeTextField(
           controller: TextEditingController(text: value?.toString() ?? ''),
           onChanged: onChanged,
           contentPadding: const EdgeInsets.symmetric(

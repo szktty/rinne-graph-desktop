@@ -13,19 +13,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation_components/presentation_components.dart';
 
 void main() {
-  group('AppIcon', () {
+  group('FondeIcon', () {
     testWidgets('renders with default size and color', (tester) async {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
             theme: AppThemeData.lightTheme().toThemeData(),
-            home: const Scaffold(body: AppIcon(AppIcons.search)),
+            home: const Scaffold(body: FondeIcon(FondeIcons.search)),
           ),
         ),
       );
 
       expect(find.byType(Icon), findsOneWidget);
-      expect(find.byIcon(AppIcons.search), findsOneWidget);
+      expect(find.byIcon(FondeIcons.search), findsOneWidget);
     });
 
     testWidgets('applies zoom scale when enabled', (tester) async {
@@ -44,7 +44,7 @@ void main() {
           child: MaterialApp(
             theme: AppThemeData.lightTheme().toThemeData(),
             home: const Scaffold(
-              body: AppIcon(AppIcons.settings, size: AppIconSize.standard),
+              body: FondeIcon(FondeIcons.settings, size: FondeIconSize.standard),
             ),
           ),
         ),
@@ -70,9 +70,9 @@ void main() {
           child: MaterialApp(
             theme: AppThemeData.lightTheme().toThemeData(),
             home: const Scaffold(
-              body: AppIcon(
-                AppIcons.settings,
-                size: AppIconSize.standard,
+              body: FondeIcon(
+                FondeIcons.settings,
+                size: FondeIconSize.standard,
                 disableZoom: true,
               ),
             ),
@@ -90,9 +90,9 @@ void main() {
           child: MaterialApp(
             theme: AppThemeData.lightTheme().toThemeData(),
             home: const Scaffold(
-              body: AppIcon(
-                AppIcons.check,
-                size: AppIconSize.small,
+              body: FondeIcon(
+                FondeIcons.check,
+                size: FondeIconSize.small,
                 customSize: 28.0,
               ),
             ),
@@ -112,8 +112,8 @@ void main() {
             home: const Scaffold(
               body: Column(
                 children: [
-                  AppIcon(AppIcons.info, color: AppIconColor.primary),
-                  AppIcon(AppIcons.x, color: AppIconColor.error),
+                  FondeIcon(FondeIcons.info, color: FondeIconColor.primary),
+                  FondeIcon(FondeIcons.x, color: FondeIconColor.error),
                 ],
               ),
             ),
@@ -132,9 +132,9 @@ void main() {
           child: MaterialApp(
             theme: AppThemeData.lightTheme().toThemeData(),
             home: const Scaffold(
-              body: AppIcon(
-                AppIcons.star,
-                color: AppIconColor.primary,
+              body: FondeIcon(
+                FondeIcons.star,
+                color: FondeIconColor.primary,
                 customColor: customColor,
               ),
             ),
@@ -154,7 +154,7 @@ void main() {
           child: MaterialApp(
             theme: AppThemeData.lightTheme().toThemeData(),
             home: const Scaffold(
-              body: AppIcon(AppIcons.search, semanticLabel: semanticLabel),
+              body: FondeIcon(FondeIcons.search, semanticLabel: semanticLabel),
             ),
           ),
         ),
@@ -175,7 +175,7 @@ void main() {
           ProviderScope(
             child: MaterialApp(
               theme: AppThemeData.lightTheme().toThemeData(),
-              home: Scaffold(body: AppIconFactories.small(AppIcons.plus)),
+              home: Scaffold(body: FondeIconFactories.small(FondeIcons.plus)),
             ),
           ),
         );
@@ -189,7 +189,7 @@ void main() {
           ProviderScope(
             child: MaterialApp(
               theme: AppThemeData.lightTheme().toThemeData(),
-              home: Scaffold(body: AppIconFactories.error(AppIcons.x)),
+              home: Scaffold(body: FondeIconFactories.error(FondeIcons.x)),
             ),
           ),
         );
@@ -206,11 +206,11 @@ void main() {
             home: const Scaffold(
               body: Column(
                 children: [
-                  AppIcon(AppIcons.star, size: AppIconSize.small),
-                  AppIcon(AppIcons.star, size: AppIconSize.medium),
-                  AppIcon(AppIcons.star, size: AppIconSize.standard),
-                  AppIcon(AppIcons.star, size: AppIconSize.large),
-                  AppIcon(AppIcons.star, size: AppIconSize.xlarge),
+                  FondeIcon(FondeIcons.star, size: FondeIconSize.small),
+                  FondeIcon(FondeIcons.star, size: FondeIconSize.medium),
+                  FondeIcon(FondeIcons.star, size: FondeIconSize.standard),
+                  FondeIcon(FondeIcons.star, size: FondeIconSize.large),
+                  FondeIcon(FondeIcons.star, size: FondeIconSize.xlarge),
                 ],
               ),
             ),

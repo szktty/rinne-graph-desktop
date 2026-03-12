@@ -12,15 +12,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:presentation_components/presentation_components.dart';
 
 void main() {
-  group('Section Widget Tests', () {
+  group('FondeSection Widget Tests', () {
     Widget createTestWidget(Widget child) {
       return ProviderScope(child: MaterialApp(home: Scaffold(body: child)));
     }
 
-    testWidgets('Basic Section display test', (WidgetTester tester) async {
+    testWidgets('Basic FondeSection display test', (WidgetTester tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          Section(
+          FondeSection(
             title: Text('Test Title'),
             description: Text('Test Description'),
             children: [Text('Item 1'), Text('Item 2'), Text('Item 3')],
@@ -37,10 +37,10 @@ void main() {
       expect(find.text('Item 3'), findsOneWidget);
     });
 
-    testWidgets('Section without dividers test', (WidgetTester tester) async {
+    testWidgets('FondeSection without dividers test', (WidgetTester tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          Section(
+          FondeSection(
             showDividers: false,
             children: [Text('Item 1'), Text('Item 2')],
           ),
@@ -52,10 +52,10 @@ void main() {
       expect(find.byType(Divider), findsNothing);
     });
 
-    testWidgets('Section with dividers test', (WidgetTester tester) async {
+    testWidgets('FondeSection with dividers test', (WidgetTester tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          Section(
+          FondeSection(
             showDividers: true,
             children: [Text('Item 1'), Text('Item 2')],
           ),
@@ -73,7 +73,7 @@ void main() {
 
       await tester.pumpWidget(
         createTestWidget(
-          Section(padding: customPadding, children: [Text('Test Item')]),
+          FondeSection(padding: customPadding, children: [Text('Test Item')]),
         ),
       );
 
@@ -88,7 +88,7 @@ void main() {
 
       await tester.pumpWidget(
         createTestWidget(
-          Section(
+          FondeSection(
             backgroundColor: backgroundColor,
             children: [Text('Test Item')],
           ),

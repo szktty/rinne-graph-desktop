@@ -45,7 +45,7 @@ class TaskProgressBar extends ConsumerWidget {
     const double linearProgressHeight = 8.0;
 
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
-    final borderRadius = ref.watch(appBorderRadiusProvider);
+    final borderRadius = ref.watch(fondeBorderRadiusProvider);
 
     // When cancelled, stop animation and maintain current value
     if (isCancelled) {

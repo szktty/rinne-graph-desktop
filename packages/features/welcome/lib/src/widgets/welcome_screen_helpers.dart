@@ -58,14 +58,14 @@ Future<void> executeDebugArchiveAllHelper(
     final result = await debugOps.archiveAllStacks();
 
     if (context.mounted) {
-      AppSnackBar.showInfo(context: context, message: result.message);
+      FondeSnackBar.showInfo(context: context, message: result.message);
     }
 
     debugLog('Debug operation completed: ${result.toString()}');
   } catch (e) {
     debugLog('Error in debug archive operation: $e');
     if (context.mounted) {
-      AppSnackBar.showError(
+      FondeSnackBar.showError(
         context: context,
         message: 'Error during archive operation: $e',
       );
@@ -83,14 +83,14 @@ Future<void> executeDebugDeleteAllHelper(
     final result = await debugOps.deleteAllStacks();
 
     if (context.mounted) {
-      AppSnackBar.showInfo(context: context, message: result.message);
+      FondeSnackBar.showInfo(context: context, message: result.message);
     }
 
     debugLog('Debug operation completed: ${result.toString()}');
   } catch (e) {
     debugLog('Error in debug delete operation: $e');
     if (context.mounted) {
-      AppSnackBar.showError(
+      FondeSnackBar.showError(
         context: context,
         message: 'Error during delete operation: $e',
       );

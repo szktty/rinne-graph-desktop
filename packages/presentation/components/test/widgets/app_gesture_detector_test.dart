@@ -11,7 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:presentation_components/src/widgets/app_gesture_detector.dart';
 
 void main() {
-  group('AppGestureDetector', () {
+  group('FondeGestureDetector', () {
     late DateTime mockTime;
     late List<String> callLog;
 
@@ -34,7 +34,7 @@ void main() {
     }) {
       return MaterialApp(
         home: Scaffold(
-          body: AppGestureDetector(
+          body: FondeGestureDetector(
             onTap: onTap,
             onTapCancel: onTapCancel,
             onDoubleTap: onDoubleTap,
@@ -311,7 +311,7 @@ void main() {
 
         await tester.pumpWidget(
           const MaterialApp(
-            home: Scaffold(body: AppGestureDetector(child: testChild)),
+            home: Scaffold(body: FondeGestureDetector(child: testChild)),
           ),
         );
 
@@ -475,7 +475,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
-              body: AppGestureDetector(
+              body: FondeGestureDetector(
                 onTap: onTap,
                 child: SizedBox(
                   key: const Key('test-container'),

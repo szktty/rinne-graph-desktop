@@ -9,7 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_themes/core_themes.dart';
-import '../text_field/app_text_field.dart';
+import 'package:fonde_ui/fonde_ui.dart' show FondeTextField;
 
 /// A field for searching navigation items.
 class NavigationSearchField extends ConsumerWidget {
@@ -73,7 +73,7 @@ class NavigationSearchField extends ConsumerWidget {
 
     return Container(
       padding: padding * zoomScale,
-      child: AppTextField(
+      child: FondeTextField(
         controller: controller,
         focusNode: focusNode,
         autofocus: autofocus,

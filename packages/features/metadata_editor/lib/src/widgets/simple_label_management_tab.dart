@@ -69,13 +69,13 @@ class SimpleLabelManagementTab extends ConsumerWidget {
                         children: [
                           // 検索フィールド
                           Expanded(
-                            child: AppTextField(
+                            child: FondeTextField(
                               controller: TextEditingController(
                                 text: searchQuery,
                               ),
                               hintText: 'Search labels...',
                               prefixIcon: Icon(
-                                AppIcons.search,
+                                FondeIcons.search,
                                 size: 18,
                                 color:
                                     appColorScheme
@@ -87,7 +87,7 @@ class SimpleLabelManagementTab extends ConsumerWidget {
                                   searchQuery.isNotEmpty
                                       ? IconButton(
                                         icon: Icon(
-                                          AppIcons.x,
+                                          FondeIcons.x,
                                           size: 16,
                                           color:
                                               appColorScheme
@@ -121,7 +121,7 @@ class SimpleLabelManagementTab extends ConsumerWidget {
                               // TODO: Show filter menu
                             },
                             icon: Icon(
-                              AppIcons.listFilter,
+                              FondeIcons.listFilter,
                               size: 18,
                               color:
                                   appColorScheme
@@ -138,7 +138,7 @@ class SimpleLabelManagementTab extends ConsumerWidget {
                               // TODO: Show sort menu
                             },
                             icon: Icon(
-                              AppIcons.arrowUpDown,
+                              FondeIcons.arrowUpDown,
                               size: 18,
                               color:
                                   appColorScheme
@@ -153,7 +153,7 @@ class SimpleLabelManagementTab extends ConsumerWidget {
                           IconButton(
                             onPressed: labelActions.createNewLabel,
                             icon: Icon(
-                              AppIcons.plus,
+                              FondeIcons.plus,
                               size: 18,
                               color:
                                   appColorScheme
@@ -213,13 +213,13 @@ class SimpleLabelManagementTab extends ConsumerWidget {
     required dynamic labelActions,
   }) {
     if (labels.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(AppIcons.tag, size: 48, color: Colors.grey),
-            SizedBox(height: 16),
-            Text('No labels found', style: TextStyle(color: Colors.grey)),
+            Icon(FondeIcons.tag, size: 48, color: Colors.grey),
+            const SizedBox(height: 16),
+            const Text('No labels found', style: TextStyle(color: Colors.grey)),
           ],
         ),
       );
@@ -255,13 +255,13 @@ class SimpleLabelManagementTab extends ConsumerWidget {
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1.0),
-      child: AppListTile(
+      child: FondeListTile(
         isSelected: isSelected,
         onTap: onTap,
         title: Row(
           children: [
-            // Label name (enclosed in AppRectangleBorder)
-            AppRectangleBorder(
+            // Label name (enclosed in FondeRectangleBorder)
+            FondeRectangleBorder(
               color: label.color ?? Colors.grey,
               padding: const EdgeInsets.symmetric(
                 horizontal: 8.0,
@@ -284,7 +284,7 @@ class SimpleLabelManagementTab extends ConsumerWidget {
         ),
         trailing: PopupMenuButton<String>(
           icon: Icon(
-            AppIcons.ellipsis,
+            FondeIcons.ellipsis,
             size: 16,
             color: appColorScheme.appSpecific.metadata.propertyValue,
           ),
@@ -359,13 +359,13 @@ class SimpleLabelManagementTab extends ConsumerWidget {
 
   /// Builds the empty state.
   Widget _buildEmptyState(BuildContext context) {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(AppIcons.mousePointerClick, size: 48, color: Colors.grey),
-          SizedBox(height: 16),
-          Text(
+          Icon(FondeIcons.mousePointerClick, size: 48, color: Colors.grey),
+          const SizedBox(height: 16),
+          const Text(
             'Select a label to view details',
             style: TextStyle(color: Colors.grey),
           ),

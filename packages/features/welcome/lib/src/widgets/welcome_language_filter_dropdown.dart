@@ -70,10 +70,10 @@ class WelcomeLanguageFilterDropdown extends ConsumerWidget {
       ),
     ];
 
-    return AppDropdownMenu<String>(
+    return FondeDropdownMenu<String>(
       initialSelection: currentFilter ?? _allLanguagesValue,
       dropdownMenuEntries: entries,
-      position: AppDropdownMenuPosition.below,
+      position: FondeDropdownMenuPosition.below,
       onSelected: (value) {
         if (value == null || value.isEmpty) {
           ref.read(welcomeLanguageFilterProvider.notifier).setFilter(null);

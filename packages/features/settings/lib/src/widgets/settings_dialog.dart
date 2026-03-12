@@ -26,12 +26,12 @@ Future<bool?> showSettingsDialog(BuildContext context) async {
     width: 1000,
     heightRatio: 0.8, // 80% of window height
     padding: const EdgeInsets.fromLTRB(
-      AppSpacingValues.xxxl, // Left: 32px
+      FondeSpacingValues.xxxl, // Left: 32px
       0, // Top: 0px (no space between header and main area)
-      AppSpacingValues.xxxl, // Right: 32px
+      FondeSpacingValues.xxxl, // Right: 32px
       0, // Bottom: 0px (space between action area is managed by AppDialog)
     ),
-    headerBottomSpacing: AppSpacingValues.xl, // 20px
+    headerBottomSpacing: FondeSpacingValues.xl, // 20px
     dividerHorizontalPadding: 0.0,
     footer: _SettingsDialogFooter(
       onCancel: () => Navigator.of(context).pop(false),
@@ -62,15 +62,15 @@ class _SettingsDialogFooter extends ConsumerWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          vertical: AppSpacingValues.xl, // Vertical: 20px
-          horizontal: AppSpacingValues.xxxl, // Horizontal: 32px
+          vertical: FondeSpacingValues.xl, // Vertical: 20px
+          horizontal: FondeSpacingValues.xxxl, // Horizontal: 32px
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            AppButton(label: 'Cancel', onPressed: onCancel),
-            const AppSpacing.md(),
-            AppButton.primary(label: 'OK', onPressed: onOk),
+            FondeButton(label: 'Cancel', onPressed: onCancel),
+            const FondeSpacing.md(),
+            FondeButton.primary(label: 'OK', onPressed: onOk),
           ],
         ),
       ),
@@ -89,16 +89,16 @@ class SettingsDialogContent extends ConsumerWidget {
       initialSelectedId: 'appearance', // Select appearance menu by default
       searchable: false,
       emptySelectionBuilder:
-          (context) => const Center(
+          (context) => Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AppIcon(
-                  AppIcons.settings,
-                  size: AppIconSize.xlarge,
-                  color: AppIconColor.onSurfaceVariant,
+                FondeIcon(
+                  FondeIcons.settings,
+                  size: FondeIconSize.xlarge,
+                  color: FondeIconColor.onSurfaceVariant,
                 ),
-                AppSpacing.lg(),
+                FondeSpacing.lg(),
                 AppText(
                   '左側のメニューから設定項目を選択してください',
                   variant: AppTextVariant.bodyText,
@@ -113,7 +113,7 @@ class SettingsDialogContent extends ConsumerWidget {
   static final List<SettingsItem> _defaultSettingsItems = [
     SettingsItem(
       id: 'appearance',
-      icon: AppIcons.appearance,
+      icon: FondeIcons.appearance,
       title: 'Appearance',
       builder: () => const AppearanceSettingsView(),
       keywords: const [
@@ -131,7 +131,7 @@ class SettingsDialogContent extends ConsumerWidget {
     ),
     SettingsItem(
       id: 'accessibility',
-      icon: AppIcons.accessibility,
+      icon: FondeIcons.accessibility,
       title: 'Accessibility',
       builder: () => const AccessibilitySettingsView(),
       keywords: const ['Accessibility', 'Zoom', 'Animation'],

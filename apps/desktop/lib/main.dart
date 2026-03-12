@@ -7,17 +7,17 @@
  */
 
 import 'dart:async';
-import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:app/app.dart';
 import 'package:plough/plough.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:core_themes/core_themes.dart' as core_themes;
-import 'package:macos_ui/macos_ui.dart' as macos_ui;
+import 'package:fonde_ui/fonde_ui.dart';
+import 'package:fonde_ui/fonde_ui_riverpod.dart';
 import 'package:core_foundation_flutter/core_foundation_flutter.dart';
 import 'package:core_app_config/core_app_config.dart';
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
+import 'package:core_settings/core_settings.dart';
 
 import 'src/widgets/menu_builder.dart';
 import 'src/widgets/main_app_shell.dart';
@@ -47,11 +47,6 @@ Future<void> main(List<String> args) async {
           ) ==
           'true';
 
-  // macOS UI settings
-  // Initialization of macos_ui package is not required
-
-  // Main window settings are handled within DesktopApp
-
   await DesktopApp.run(
     arguments: args,
     mainWindowBuilder:
@@ -62,7 +57,11 @@ Future<void> main(List<String> args) async {
   );
 }
 
-// AppApp with ProviderScope for Riverpod
+// Global NavigatorKey (used for settings dialogs, etc.)
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+/// Root app widget. Wraps ProviderScope with app-level overrides, then
+/// delegates theme/MaterialApp setup to FondeApp via [_AppBody].
 class DesktopAppApp extends StatelessWidget {
   const DesktopAppApp({
     super.key,
@@ -75,7 +74,6 @@ class DesktopAppApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Wrap with ProviderScope to enable Riverpod state management
     return ProviderScope(
       overrides: [
         // Set command line arguments
@@ -88,7 +86,7 @@ class DesktopAppApp extends StatelessWidget {
               (throw StateError('No active stack graph storage'));
         }),
       ],
-      child: _AppMaterialApp(
+      child: _AppBody(
         enableDevStacks: enableDevStacks,
         commandLineArgs: commandLineArgs,
       ),
@@ -96,12 +94,15 @@ class DesktopAppApp extends StatelessWidget {
   }
 }
 
-// Global NavigatorKey (used for settings dialogs, etc.)
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
-// _AppMaterialApp with PlatformMenuBar for macOS
-class _AppMaterialApp extends ConsumerWidget {
-  const _AppMaterialApp({
+/// Inner widget that reads Fonde providers and builds the MaterialApp.
+///
+/// Because [FondeApp] also creates a ProviderScope internally, we do NOT use
+/// [FondeApp] here — we already have one from [DesktopAppApp]. Instead we
+/// read Fonde's theme providers directly and build our own MaterialApp so we
+/// can attach [navigatorKey], [navigatorObservers], and the macOS
+/// [PlatformMenuBar].
+class _AppBody extends ConsumerWidget {
+  const _AppBody({
     this.enableDevStacks = false,
     this.commandLineArgs = const [],
   });
@@ -111,127 +112,81 @@ class _AppMaterialApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appThemeData = ref.watch(core_themes.activeThemeProvider);
-    final themeMode = appThemeData.themeMode;
-    debugPrint('themeMode: $themeMode');
+    final themeData = ref.watch(fondeEffectiveThemeDataProvider);
+    final themeMode = ref.watch(fondeActiveThemeProvider).themeMode;
 
-    // Basic settings for keyboard shortcuts
-    final finalShortcuts = <ShortcutActivator, Intent>{};
-    final finalActions = <Type, Action<Intent>>{};
+    // Persist & restore accessibility config via settings storage
+    final accessibilityConfig = ref.watch(fondeAccessibilityConfigProvider);
+    _syncAccessibilityConfig(ref, accessibilityConfig);
 
-    // Use new color scheme system
-    final colorScheme = ref.watch(
-      core_themes.effectiveColorSchemeWithThemeProvider,
-    );
-    final themeData = ref.watch(core_themes.effectiveThemeDataProvider);
-    final flutterColorScheme = ref.watch(
-      core_themes.effectiveFlutterColorSchemeProvider,
-    );
+    // Persist & restore active theme via settings storage
+    _syncActiveTheme(ref);
 
-    // Build app depending on platform
-    if (Platform.isMacOS) {
-      // Add macOS specific PlatformMenuBar
-      // Apply app-specific theme while using MacosThemeData
-
-      return macos_ui.MacosApp(
-        title: 'App',
-        themeMode: themeMode,
-        debugShowCheckedModeBanner: false,
-        navigatorKey: navigatorKey,
-        navigatorObservers: [ref.watch(dialogRouteObserverProvider)],
-        home: PlatformMenuBar(
-          menus: MenuBuilder.buildMenus(context, ref, navigatorKey),
-          child: ScaffoldMessenger(
-            child: Scaffold(
-              // Provide Scaffold and ScaffoldMessenger
-              body: Material(
-                // Provide Material context
-                type: MaterialType.canvas,
-                child: Theme(
-                  // Apply Material theme on top of MacosApp
-                  data: themeData.copyWith(
-                    colorScheme: flutterColorScheme,
-                    textTheme: themeData.textTheme,
-                  ),
-                  child: Shortcuts(
-                    shortcuts: finalShortcuts,
-                    child: Actions(
-                      actions: finalActions,
-                      child: ProviderScope(
-                        overrides: [
-                          core_themes.defaultColorScopeProvider
-                              .overrideWithValue(
-                                core_themes.ColorScope(
-                                  text: colorScheme.base.foreground,
-                                  background: colorScheme.base.background,
-                                  border: colorScheme.base.border,
-                                  selection: colorScheme.base.selection,
-                                  hover: colorScheme.base.selection.withValues(
-                                    alpha: 0.1,
-                                  ),
-                                  accent: colorScheme.theme.primaryColor,
-                                  disabled: colorScheme.base.foreground
-                                      .withValues(alpha: 0.3),
-                                ),
-                              ),
-                        ],
-                        child: MainAppShell(
-                          enableDevStacks: enableDevStacks,
-                          commandLineArgs: commandLineArgs,
-                          globalActivityBarNavigator:
-                              _globalActivityBarNavigator,
-                          navigatorKey: navigatorKey,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+    return MaterialApp(
+      title: 'RinneGraph',
+      navigatorKey: navigatorKey,
+      navigatorObservers: [ref.watch(dialogRouteObserverProvider)],
+      theme: themeData,
+      darkTheme: themeData,
+      themeMode: themeMode,
+      debugShowCheckedModeBanner: false,
+      home: PlatformMenuBar(
+        menus: MenuBuilder.buildMenus(context, ref, navigatorKey),
+        child: ScaffoldMessenger(
+          child: Scaffold(
+            body: Material(
+              type: MaterialType.canvas,
+              child: MainAppShell(
+                enableDevStacks: enableDevStacks,
+                commandLineArgs: commandLineArgs,
+                globalActivityBarNavigator: _globalActivityBarNavigator,
+                navigatorKey: navigatorKey,
               ),
             ),
           ),
         ),
-      );
-    } else {
-      // MaterialApp for Windows/Linux
-      // Use standard MaterialApp, not macOS specific PlatformMenuBar
-      return MaterialApp(
-        title: 'App',
-        navigatorKey: navigatorKey,
-        navigatorObservers: [ref.watch(dialogRouteObserverProvider)],
-        theme: themeData.copyWith(
-          colorScheme: flutterColorScheme,
-          textTheme: themeData.textTheme,
-        ),
-        darkTheme: themeData.copyWith(
-          colorScheme: flutterColorScheme,
-          textTheme: themeData.textTheme,
-        ),
-        themeMode: themeMode,
-        debugShowCheckedModeBanner: false,
-        shortcuts: finalShortcuts,
-        actions: finalActions,
-        home: ProviderScope(
-          overrides: [
-            core_themes.defaultColorScopeProvider.overrideWithValue(
-              core_themes.ColorScope(
-                text: colorScheme.base.foreground,
-                background: colorScheme.base.background,
-                border: colorScheme.base.border,
-                selection: colorScheme.base.selection,
-                hover: colorScheme.base.selection.withValues(alpha: 0.1),
-                accent: colorScheme.theme.primaryColor,
-                disabled: colorScheme.base.foreground.withValues(alpha: 0.3),
-              ),
+      ),
+    );
+  }
+
+  /// Loads and applies saved accessibility config on first build.
+  void _syncAccessibilityConfig(
+    WidgetRef ref,
+    FondeAccessibilityConfig current,
+  ) {
+    // Only load once (when still at default values).
+    if (current != const FondeAccessibilityConfig()) return;
+    Future.microtask(() async {
+      final storage = ref.read(settingsStorageServiceProvider);
+      final json = await storage.getString('accessibility_config');
+      if (json != null && json.isNotEmpty) {
+        try {
+          final config = FondeAccessibilityConfig.fromJson(
+            Map<String, dynamic>.from(
+              (json as dynamic) is Map
+                  ? json as Map<String, dynamic>
+                  : <String, dynamic>{},
             ),
-          ],
-          child: MainAppShell(
-            enableDevStacks: enableDevStacks,
-            commandLineArgs: commandLineArgs,
-            globalActivityBarNavigator: _globalActivityBarNavigator,
-            navigatorKey: navigatorKey,
-          ),
-        ),
+          );
+          ref
+              .read(fondeAccessibilityConfigProvider.notifier)
+              .updateConfig(config);
+        } catch (_) {}
+      }
+    });
+  }
+
+  /// Loads and applies saved theme name on first build.
+  void _syncActiveTheme(WidgetRef ref) {
+    Future.microtask(() async {
+      final storage = ref.read(settingsStorageServiceProvider);
+      final themeName = await storage.getString('active_theme_name') ?? '';
+      if (themeName.isEmpty) return;
+      final theme = FondeThemePresets.all.firstWhere(
+        (t) => t.name == themeName,
+        orElse: () => FondeThemePresets.system,
       );
-    }
+      ref.read(fondeActiveThemeProvider.notifier).setTheme(theme);
+    });
   }
 }

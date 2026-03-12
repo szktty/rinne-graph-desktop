@@ -28,7 +28,7 @@ class ContentBuilder {
       case AppActivityItemType.labelList:
         return const metadata_editor.LabelListScreen();
       case AppActivityItemType.propertyList:
-        return MainContentArea(
+        return FondeMainContentArea(
           child: Center(
             child: AppText(
               'Property List Screen (unimplemented)',
@@ -40,7 +40,7 @@ class ContentBuilder {
         // stackSwitcher is dialog-based, show graph view as the main content
         return const GraphEditorScreen();
       case AppActivityItemType.settings:
-        return MainContentArea(
+        return FondeMainContentArea(
           child: Center(
             child: AppText(
               'Settings Screen (unimplemented)',

@@ -11,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
-import 'package:presentation_components/presentation_components.dart';
+import 'package:fonde_ui/fonde_ui_riverpod.dart';
 
 part 'app_state_providers.g.dart';
 
@@ -91,7 +91,7 @@ class ScreenBasedSecondarySidebarState
 
     // Get current screen state from provider managing state per screen
     final perScreenStateNotifier = ref.watch(
-      perScreenSecondarySidebarStateProvider.notifier,
+      fondePerScreenSecondarySidebarStateProvider.notifier,
     );
     final currentState = perScreenStateNotifier.getStateForScreen(
       currentScreenIndex,
@@ -104,44 +104,40 @@ class ScreenBasedSecondarySidebarState
   void show() {
     final currentScreenIndex = ref.read(activityBarStateProvider);
     ref
-        .read(perScreenSecondarySidebarStateProvider.notifier)
+        .read(fondePerScreenSecondarySidebarStateProvider.notifier)
         .setStateForScreen(currentScreenIndex, true);
 
-    // Also update current state
-    ref.read(secondarySidebarStateProvider.notifier).show();
+    ref.read(fondeSecondarySidebarStateProvider.notifier).show();
   }
 
   /// Hide secondary sidebar
   void hide() {
     final currentScreenIndex = ref.read(activityBarStateProvider);
     ref
-        .read(perScreenSecondarySidebarStateProvider.notifier)
+        .read(fondePerScreenSecondarySidebarStateProvider.notifier)
         .setStateForScreen(currentScreenIndex, false);
 
-    // Also update current state
-    ref.read(secondarySidebarStateProvider.notifier).hide();
+    ref.read(fondeSecondarySidebarStateProvider.notifier).hide();
   }
 
   /// Toggle secondary sidebar
   void toggle() {
     final currentScreenIndex = ref.read(activityBarStateProvider);
     ref
-        .read(perScreenSecondarySidebarStateProvider.notifier)
+        .read(fondePerScreenSecondarySidebarStateProvider.notifier)
         .toggleStateForScreen(currentScreenIndex);
 
-    // Also update current state
-    ref.read(secondarySidebarStateProvider.notifier).toggle();
+    ref.read(fondeSecondarySidebarStateProvider.notifier).toggle();
   }
 
   /// Set visibility state
   void setVisible(bool visible) {
     final currentScreenIndex = ref.read(activityBarStateProvider);
     ref
-        .read(perScreenSecondarySidebarStateProvider.notifier)
+        .read(fondePerScreenSecondarySidebarStateProvider.notifier)
         .setStateForScreen(currentScreenIndex, visible);
 
-    // Also update current state
-    ref.read(secondarySidebarStateProvider.notifier).setVisible(visible);
+    ref.read(fondeSecondarySidebarStateProvider.notifier).setVisible(visible);
   }
 }
 
@@ -155,13 +151,13 @@ class ActivityBarChangeListener extends _$ActivityBarChangeListener {
       if (previous != null && previous != next) {
         // If screen switched, restore new screen state
         final perScreenStateNotifier = ref.read(
-          perScreenSecondarySidebarStateProvider.notifier,
+          fondePerScreenSecondarySidebarStateProvider.notifier,
         );
         final newScreenState = perScreenStateNotifier.getStateForScreen(next);
 
         // Update secondary sidebar state to new screen state
         ref
-            .read(secondarySidebarStateProvider.notifier)
+            .read(fondeSecondarySidebarStateProvider.notifier)
             .setVisible(newScreenState);
 
         debugPrint(
