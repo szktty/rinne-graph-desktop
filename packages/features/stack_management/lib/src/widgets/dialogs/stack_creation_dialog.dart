@@ -142,7 +142,6 @@ class _StackCreationDialogState extends ConsumerState<StackCreationDialog> {
                   padding: EdgeInsets.zero,
                   iconSize: 16.0, // Adjust icon size
                   cornerRadius: 12.0, // Set large value for circular shape
-                  cornerSmoothing: 1.0, // Set to 1.0 for perfect circle
                 ),
               ),
             ),

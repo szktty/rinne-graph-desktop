@@ -12,8 +12,8 @@ import 'package:multi_split_view/multi_split_view.dart';
 import 'package:core_themes/core_themes.dart';
 
 import 'package:fonde_ui/fonde_ui.dart'
-    show FondeSecondarySidebarTitlebar, FondeCollapsedSidebarLayout,
-         FondeResizableSidebarArea;
+    show FondeSecondarySidebarToolbar, FondeCollapsedSidebarLayout,
+         FondePrimarySide;
 
 import '../providers/sidebar_width_provider.dart';
 import '../providers/sidebar_state_providers.dart';
@@ -151,12 +151,11 @@ class _MainShellLayoutState extends ConsumerState<MainShellLayout> {
         builder: (context, area) {
           switch (area.id) {
             case 'primary_sidebar':
-              return FondeResizableSidebarArea(
+              return FondePrimarySide(
                 launchBar: widget.activityBar,
-                primarySidebar: widget.primarySidebar,
+                sidebar: widget.primarySidebar,
                 showLaunchBar: widget.showActivityBar,
-                showPrimarySidebar: widget.showPrimarySidebar,
-                showToolbar: widget.showToolbar,
+                showSidebar: widget.showPrimarySidebar,
                 zoomScale: zoomScale,
                 borderScale: borderScale,
                 disableZoom: widget.disableZoom,
@@ -175,7 +174,7 @@ class _MainShellLayoutState extends ConsumerState<MainShellLayout> {
               return Column(
                 children: [
                   // Toolbar for the secondary sidebar
-                  const FondeSecondarySidebarTitlebar(),
+                  const FondeSecondarySidebarToolbar(),
 
                   // Content of the secondary sidebar
                   Expanded(

@@ -148,7 +148,7 @@ class MainAppShell extends ConsumerWidget {
     return widgets.Stack(
       children: [
         FondeScaffold(
-          toolbar: const FondeMainAreaTitlebar(),
+          toolbar: FondeMainToolbar(),
           launchBar: ActivityBarBuilder.buildBar(),
           showLaunchBar: true,
           primarySidebar: SidebarBuilder.buildPrimary(selectedActivityType),

@@ -296,7 +296,6 @@ class _GraphOperationTools extends StatelessWidget {
           onPressed: onZoomIn,
           iconSize: 18,
           padding: EdgeInsets.zero,
-          splashRadius: 16,
         ),
 
         const SizedBox(width: 4),
@@ -308,7 +307,6 @@ class _GraphOperationTools extends StatelessWidget {
           onPressed: onZoomOut,
           iconSize: 18,
           padding: EdgeInsets.zero,
-          splashRadius: 16,
         ),
       ],
     );
