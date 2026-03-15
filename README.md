@@ -12,10 +12,6 @@
 
 **⚠️ WORK IN PROGRESS - ALPHA STAGE ⚠️**
 
-**Everything is linked.**
-
-RinneGraph lets you shape and visualize your own world of connected ideas. The app builds your information as a graph-based link database. And your data is yours — RinneGraph runs locally and offline, with no server and no cloud.
-
 ## 🚧 Project Status
 
 **This project is in Alpha stage.**
@@ -25,21 +21,22 @@ RinneGraph lets you shape and visualize your own world of connected ideas. The a
 - ❌ **Breaking changes may occur frequently**
 - ✅ **Feedback and bug reports are welcome**
 
-**Current Focus**: Building MVP (Minimum Viable Product) for early feedback collection.
+## Documents and Nodes
 
-## 🔍 How is RinneGraph Different?
+Most popular apps are document-oriented: they store long-form text and build everything around files. Documents are easy to understand and work with. They pair naturally with filesystems and lend themselves to offline storage and AI processing.
 
-Tools like Obsidian and Logseq also offer graph views, but their underlying data model is still **files** — the graph is a visualization of links between documents. RinneGraph is different: the data model itself is a property graph, where any entity can be a node and any relationship can be an edge, each carrying its own properties. This finer-grained structure lets you represent knowledge that doesn't fit neatly into documents or outlines.
+The problem is that document-oriented apps force your thinking into long-form text. A document is a structured container that holds many pieces of information, but it is not well suited for capturing individual thoughts in isolation. Many apps can link documents to each other, but those links are little more than vague hyperlinks — a loose reference, not a meaningful relationship.
 
-At the same time, full-featured graph databases like Neo4j or ArangoDB require a server, are built for developers, and do not support macOS, Windows, or mobile as desktop apps. RinneGraph brings that expressive data model to a **local, offline, GUI-first desktop app** — no server, no setup, and your data stays yours alone.
+RinneGraph takes a different approach: it builds a graph from nodes at a finer granularity than documents. The graph consists of nodes with arbitrary properties and links between them. Both the content of nodes and the meaning of links are entirely up to you, which lets you represent fine-grained information and free-form structure that documents handle poorly.
+
+In RinneGraph, connections are the point. The goal is not to build an encyclopedia, but to give your thinking the structure of a neural network.
 
 ## 💡 Features
 
 - **Local-first & offline** — works entirely on your device, no graph database server required
-- **Graph-based structure** — organize data using nodes and links, each with their own properties
-- **Visualization** — see relationships between your data at a glance
-- **Search & navigation** — find and navigate through your data efficiently
-- **Stacks** — manage data in self-contained, portable database units
+- **Property graph** — data is structured as nodes and links
+- **Graph view** — visualize connections between nodes
+- **Graph search** — traverse and search through connections
 
 ## 🚀 Quick Start
 
@@ -86,37 +83,30 @@ flutter build macos
 # Windows
 cd apps/desktop
 flutter build windows
-
-# Or use the build script (macOS only)
-./scripts/build.sh
 ```
 
 
 ## 🔗 Related Projects
 
-RinneGraph is powered by companion libraries developed by the same author:
+The following libraries were developed primarily for RinneGraph and are maintained alongside it:
 
-- **[Fonde UI](https://github.com/szktty/fonde-ui)** — Desktop-first Flutter UI library, developed specifically for RinneGraph
+- **[Fonde UI](https://github.com/szktty/fonde-ui)** — Desktop-first UI components
 - **[rinne_graph](https://github.com/szktty/rinne_graph)** — Embedded graph database backed by SQLite
 - **[plough](https://github.com/szktty/plough)** — Network graph rendering library for Flutter
 - **[kiri_check](https://github.com/szktty/kiri_check)** — Property-based testing library for Dart
 
-## 📚 Documentation
-
-- [Development Strategy](docs/strategy/governance/DEVELOPMENT_STRATEGY.md) - Project development approach and release cycle
-- [Publishing Checklist](docs/strategy/governance/PUBLISHING_CHECKLIST.md) - MVP release preparation tasks
-
 ## 🐛 Reporting Issues
 
-This project is in early development. If you encounter bugs or have suggestions:
+If you encounter bugs or have suggestions, please open an issue. Note that response time may vary.
 
-1.  Check existing [Issues](https://github.com/szktty/rinne-graph-desktop/issues) to avoid duplicates (Replace with actual public URL)
-2.  Create a new issue with detailed information:
-    *   Steps to reproduce
-    *   Expected vs actual behavior
-    *   Your environment (OS, Flutter version, etc.)
-
-**Note**: Response time may vary as this is a personal project under active development.
+- Check existing [Issues](https://github.com/szktty/rinne-graph-desktop/issues) first to avoid duplicates.
+- For bug reports, include:
+    - Steps to reproduce
+    - Expected vs actual behavior
+    - System information:
+        - RinneGraph version
+        - OS version
+        - Flutter version (if built from source)
 
 ## 📄 License
 
