@@ -6,6 +6,8 @@
  * For commercial licensing inquiries, please contact: contact@szktty.jp
  */
 
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plough/plough.dart' as plough;
@@ -582,15 +584,118 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
         geometry,
         child,
       ) {
-        return plough.GraphDefaultLinkRenderer(
+        return _AppLinkRenderer(
           link: link,
           sourceView: sourceView,
           targetView: targetView,
           routing: routing,
           geometry: geometry,
-          color: Colors.grey,
         );
       },
+    );
+  }
+}
+
+/// Link renderer that draws the link line/arrow and overlays the link type label.
+class _AppLinkRenderer extends StatelessWidget {
+  const _AppLinkRenderer({
+    required this.link,
+    required this.sourceView,
+    required this.targetView,
+    required this.routing,
+    required this.geometry,
+  });
+
+  final plough.GraphLink link;
+  final Widget sourceView;
+  final Widget targetView;
+  final plough.GraphLinkRouting routing;
+  final plough.GraphConnectionGeometry geometry;
+
+  static const _thickness = 20.0;
+  static const _color = Colors.grey;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = link.properties['label'] as String?;
+    final showLabel = label != null && label.isNotEmpty;
+
+    if (!showLabel) {
+      return plough.GraphDefaultLinkRenderer(
+        link: link,
+        sourceView: sourceView,
+        targetView: targetView,
+        routing: routing,
+        geometry: geometry,
+        color: _color,
+      );
+    }
+
+    // Place the label at the midpoint of the link line.
+    // GraphDefaultLinkRenderer uses a CustomPaint whose local x-axis runs
+    // from source to target with thickness as height.  The midpoint along
+    // x is connectionPoints.distance / 2; y centre is thickness / 2.
+    final cp = geometry.connectionPoints;
+    final distance = cp.distance;
+    final midX = distance / 2;
+    const midY = _thickness / 2;
+
+    // When the link angle is between 90° and 270° (pointing left), the Canvas
+    // coordinate system is flipped and text renders upside-down.  Counter-rotate
+    // by 180° so the label is always readable.
+    final angle = cp.angle; // radians, range (-π, π]
+    final needsFlip = angle > math.pi / 2 || angle < -math.pi / 2;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        plough.GraphDefaultLinkRenderer(
+          link: link,
+          sourceView: sourceView,
+          targetView: targetView,
+          routing: routing,
+          geometry: geometry,
+          color: _color,
+        ),
+        Positioned(
+          left: midX,
+          top: midY,
+          child: Transform.translate(
+            offset: const Offset(0, -8),
+            child: Transform.rotate(
+              angle: needsFlip ? math.pi : 0,
+              child: _LinkLabel(label: label),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Small pill-shaped label shown on top of a link line.
+class _LinkLabel extends StatelessWidget {
+  const _LinkLabel({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.85),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.grey.shade400, width: 0.5),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 10,
+          color: Colors.black54,
+          height: 1.2,
+        ),
+      ),
     );
   }
 }
