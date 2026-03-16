@@ -288,7 +288,7 @@ class AppNodeRenderer extends ConsumerWidget {
       case NodeSize.small:
         return 10.0;
       case NodeSize.medium:
-        return 11.0;
+        return 14.0;
       case NodeSize.large:
         return 13.0;
       case NodeSize.extraLarge:

@@ -691,7 +691,7 @@ class _LinkLabel extends StatelessWidget {
       child: Text(
         label,
         style: const TextStyle(
-          fontSize: 10,
+          fontSize: 14,
           color: Colors.black54,
           height: 1.2,
         ),
