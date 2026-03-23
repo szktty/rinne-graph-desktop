@@ -21,15 +21,9 @@
 - ❌ **Breaking changes may occur frequently**
 - ✅ **Feedback and bug reports are welcome**
 
-## Documents and Nodes
+## What is RinneGraph?
 
-Most popular apps are document-oriented: they store long-form text and build everything around files. Documents are easy to understand and work with. They pair naturally with filesystems and lend themselves to offline storage and AI processing.
-
-The problem is that document-oriented apps force your thinking into long-form text. A document is a structured container that holds many pieces of information, but it is not well suited for capturing individual thoughts in isolation. Many apps can link documents to each other, but those links are little more than vague hyperlinks — a loose reference, not a meaningful relationship.
-
-RinneGraph takes a different approach: it builds a graph from nodes at a finer granularity than documents. The graph consists of nodes with arbitrary properties and links between them. Both the content of nodes and the meaning of links are entirely up to you, which lets you represent fine-grained information and free-form structure that documents handle poorly.
-
-In RinneGraph, connections are the point. The goal is not to build an encyclopedia, but to give your thinking the structure of a neural network.
+RinneGraph is an app for connecting ideas and shaping your world. It focuses on visualizing the connections between data, and by looking at the graph of connections from a bird's-eye view, a new map of ideas emerges.
 
 ## 💡 Features
 
