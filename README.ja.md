@@ -12,7 +12,7 @@
 
 **⚠️ 開発中 - アルファ版 ⚠️**
 
-TODO: スクリーンショット
+![スクリーンショット](docs/images/screenshot.png)
 
 ## RinneGraphとは
 
