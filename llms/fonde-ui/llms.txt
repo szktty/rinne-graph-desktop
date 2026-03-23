@@ -1,0 +1,1532 @@
+# fonde_ui
+
+**Desktop-first Flutter UI optimized for native-grade instant feedback, with accessibility built in.**
+
+Developed for [RinneGraph](https://github.com/szktty/rinne-graph). Currently prototype status; API is not stable.
+
+## Package info
+
+- name: fonde_ui
+- version: 0.5.0-dev
+- Dart SDK: ^3.7.0
+- Flutter: >=3.41.2
+
+## Key dependencies
+
+- flutter_riverpod: ^3.0.0 (state management, required for most widgets)
+- riverpod_annotation: ^4.0.0
+- freezed_annotation: ^3.0.0
+- figma_squircle: ^0.6.3 (smooth rounded corners)
+- lucide_icons_flutter: ^3.0.5 (default icon set)
+- multi_split_view: ^3.2.1 (resizable panes in FondeScaffold)
+- pluto_grid: ^8.0.0 (FondeTableView)
+- textfield_tags: ^3.0.1 (FondeTagsField)
+- dots_indicator: ^4.0.1 (FondePageIndicator)
+
+## Imports
+
+```dart
+import 'package:fonde_ui/fonde_ui.dart';                // Core + all widgets
+import 'package:fonde_ui/fonde_ui_riverpod.dart';       // Riverpod providers (optional, import in addition to fonde_ui.dart)
+```
+
+All widgets that use Riverpod internally are ConsumerWidgets. `FondeApp` provides the required `ProviderScope` automatically.
+
+---
+
+## Platform support
+
+- **macOS / Windows / Linux**: fully supported (primary targets)
+- **Web**: experimental, not officially supported. `FondeApp` does not expose Navigator/routing APIs. If you need URL-based routing on Web, compose `ProviderScope` + `MaterialApp.router` manually and use fonde_ui widgets inside.
+- **iOS / Android**: not targeted; mobile layout assumptions differ from fonde_ui's desktop-first design.
+
+---
+
+## Design principles
+
+- Desktop-first: mouse + keyboard assumed
+- Accessibility first: visibility and perceivability take priority over aesthetics in all component design decisions
+- Animations that delay response to user input (ripple, tab switching, etc.) are disabled; whether to use animation is decided by accessibility (visibility, reduced motion) rather than aesthetics
+- Accessibility: zoom scale, border scale, high contrast via FondeAccessibilityConfig
+- All dimensional values scale with `accessibilityConfig.zoomScale` and `accessibilityConfig.borderScale`
+- `disableZoom: true` parameter available on most widgets to opt out of scaling
+
+---
+
+## Setup
+
+### Minimal app
+
+```dart
+void main() {
+  runApp(
+    FondeApp(
+      title: 'My App',
+      home: FondeScaffold(
+        toolbar: MyToolbar(),
+        content: MyContent(),
+      ),
+    ),
+  );
+}
+```
+
+`FondeApp` wraps `ProviderScope` and `MaterialApp` internally. Do not add an extra `ProviderScope` or `MaterialApp` around it.
+
+Navigator-related `MaterialApp` parameters (`routes`, `navigatorKey`, `onGenerateRoute`, etc.) are intentionally not exposed. fonde_ui targets desktop apps where view switching is handled by `FondeScaffold` (sidebars, tabs) rather than Flutter's Navigator.
+
+### Theme setup
+
+```dart
+// Set initial theme
+FondeApp(
+  initialTheme: FondeThemePresets.dark,  // defaults to FondeThemePresets.system
+  home: ...,
+)
+
+// Change theme at runtime via Riverpod
+ref.read(fondeActiveThemeProvider.notifier).setTheme(FondeThemePresets.light);
+
+// Change accessibility config at runtime
+ref.read(fondeAccessibilityConfigProvider.notifier).updateConfig(
+  ref.read(fondeAccessibilityConfigProvider).copyWith(zoomScale: 1.2),
+);
+```
+
+### Provider overrides
+
+```dart
+FondeApp(
+  overrides: [
+    mySettingsProvider.overrideWith(() => MySettingsNotifier()),
+  ],
+  home: ...,
+)
+```
+
+Do **not** override fonde_ui's internal providers (those not part of the public API). Use `overrides` for your own providers only.
+
+---
+
+## Core models
+
+### FondeThemeData
+
+```dart
+FondeThemeData({
+  required String name,
+  required ThemeMode themeMode,       // ThemeMode.light / .dark / .system
+  required FondeColorScheme appColorScheme,
+  FondeTypographyConfig? typography,
+})
+```
+
+- `copyWith(...)` available
+- `toThemeData()` → Flutter ThemeData (uses Material3)
+- `getEffectiveAppColorScheme(Brightness)` → resolves system mode
+
+### FondeThemePresets
+
+```dart
+FondeThemePresets.system   // follows PlatformDispatcher.platformBrightness
+FondeThemePresets.light
+FondeThemePresets.dark
+FondeThemePresets.all      // List<FondeThemeData>
+```
+
+Default typography: Roboto 14px UI / 16px text / RobotoMono 14px code.
+
+### FondeColorScheme
+
+Semantic color system. Do not access raw Color values directly; use the named groups.
+
+```
+FondeColorScheme
+  .brightness          // Brightness
+  .isDarkMode          // bool
+  .base
+    .foreground        // Color - primary text
+    .background        // Color - main background
+    .border            // Color
+    .divider           // Color
+    .selection         // Color
+  .uiAreas
+    .launchBar
+      .background
+      .activeItem
+      .inactiveItem
+      .hoverItem
+      .activeItemBackground
+    .sideBar
+      .background
+      .activeItemText
+      .activeItemBackground
+      .inactiveItemText
+      .hoverBackground
+      .divider
+      .floatingPanelOuterBackground   // outer area behind the floating panel
+      .floatingPanelBackground        // panel surface color (darker than outer)
+    .toolbar                   // FondeToolbarColors
+      .background
+      .border
+      .foreground
+      .buttonHoverBackground
+      .buttonActiveBackground
+    .dialog
+      .background
+      .foreground
+      .border
+  .interactive
+    .button
+      .background.hover / .active
+      .primaryText
+      .destructiveBackground
+      .destructiveText
+      .destructivePressedBackground
+      .border.disabled
+    .list
+      .itemBackground.hover
+      .selectedBackground
+  .status
+    .error
+    .warning
+    .success
+    .info
+  .theme
+    .primaryColor      // accent color
+```
+
+Constructor: `FondeColorScheme.fromColorScheme(ColorScheme, {FondeThemeColorType? themeType})`
+
+### FondeAccessibilityConfig
+
+```dart
+FondeAccessibilityConfig({
+  double fontScale = 1.0,
+  double zoomScale = 1.0,       // scales all dimensions
+  double borderScale = 1.0,     // scales border widths
+  bool highContrastMode = false,
+})
+```
+
+JSON serializable: `.fromJson(Map)` / `.toJson()`.
+
+### FondeColorScope
+
+Context-local color bundle used by navigation/sidebar components.
+
+```dart
+FondeColorScope {
+  Color text, background, border, selection, hover, accent, disabled
+}
+```
+
+Use `FondeColorScopeHelper` to wrap widgets:
+- `FondeColorScopeHelper.withLaunchBarScope(child:)`
+- `FondeColorScopeHelper.withSideBarScope(child:, isActive:)`
+- `FondeColorScopeHelper.withMainContentScope(child:)`
+- `FondeColorScopeHelper.withDialogScope(child:)`
+- `FondeColorScopeHelper.withCustomScope(child:, scope:)`
+
+### FondeThemeColorType
+
+Accent color variants for the theme.
+
+```dart
+enum FondeThemeColorType {
+  red, orange, yellow, green, blue, indigo, violet, pink, graphite
+}
+```
+
+Change accent color at runtime:
+```dart
+ref.read(fondeThemeColorProvider.notifier).setThemeColor(FondeThemeColorType.indigo);
+```
+
+---
+
+## Riverpod providers (fonde_ui_riverpod.dart)
+
+### Theme providers
+
+```dart
+fondeActiveThemeProvider          // StateNotifier<FondeThemeData>
+  .notifier.setTheme(FondeThemeData)
+
+fondeEffectiveColorSchemeProvider // Provider<FondeColorScheme> (resolved for current brightness + theme color)
+fondeEffectiveFlutterColorSchemeProvider // Provider<ColorScheme>
+fondeEffectiveThemeDataProvider   // Provider<ThemeData>
+fondePlatformBrightnessProvider   // StateNotifier<Brightness>
+```
+
+### Theme color providers
+
+```dart
+fondeThemeColorProvider           // StateNotifier<FondeThemeColorType> (accent color)
+  .notifier.setThemeColor(FondeThemeColorType)
+
+fondeThemeColorSchemeProvider     // Provider<FondeThemeColorScheme>
+effectiveColorSchemeWithThemeProvider  // Provider<FondeColorScheme>
+```
+
+### Accessibility
+
+```dart
+fondeAccessibilityConfigProvider  // StateNotifier<FondeAccessibilityConfig>
+  .notifier.updateConfig(FondeAccessibilityConfig)
+```
+
+Extension on `WidgetRef` (from `fonde_ui_riverpod.dart`):
+```dart
+ref.zoomScale        // double
+ref.fontScale        // double
+ref.borderScale      // double
+ref.scaleValue(double baseValue) -> double
+ref.scaleEdgeInsets(EdgeInsets base) -> EdgeInsets
+ref.scaleBorderRadius(BorderRadius base) -> BorderRadius
+ref.scaleSize(Size base) -> Size
+ref.scaleFontSize(double baseFontSize) -> double
+ref.scaleBorderWidth(double baseWidth) -> double
+```
+
+### Color scope providers (internal, but readable)
+
+```dart
+fondeColorSchemeProvider          // Provider<FondeColorScheme>
+fondeDefaultColorScopeProvider    // Provider<FondeColorScope>
+fondeLaunchBarColorScopeProvider  // Provider<FondeColorScope>
+fondeSideBarColorScopeProvider    // Provider<FondeColorScope>
+fondeMainContentColorScopeProvider
+fondeDialogColorScopeProvider
+fondeColorScopeProvider           // current scope (overridden by ProviderScope)
+```
+
+### Navigation providers
+
+```dart
+fondeNavigationStateProvider      // StateNotifier<FondeNavigationStateData>
+  .notifier.selectItem(String id)
+  .notifier.toggleGroup(String groupId)
+  .notifier.clearSelection()
+  .isItemSelected(String id) -> bool
+  .isGroupExpanded(String id) -> bool
+
+FondeNavigationStateData {
+  List<String> expandedGroupIds
+  String? selectedItemId
+}
+```
+
+### Search providers
+
+```dart
+fondeSearchQueryProvider          // StateNotifier<String>
+  .notifier.updateQuery(String?)
+  .notifier.clearQuery()
+
+fondeSearchFieldManagerProvider   // Provider<FondeSearchFieldManager>
+  .query -> String
+  .updateQuery(String?)
+  .clearQuery()
+```
+
+### Sidebar providers
+
+```dart
+fondePrimarySidebarStateProvider  // StateNotifier<bool> (visibility)
+  .notifier.toggle()
+  .notifier.show()
+  .notifier.hide()
+  .notifier.setVisible(bool)
+
+fondeSecondarySidebarStateProvider  // StateNotifier<bool> (visibility)
+  .notifier.toggle()
+  .notifier.show()
+  .notifier.hide()
+  .notifier.setVisible(bool)
+
+fondePerScreenSecondarySidebarStateProvider  // StateNotifier<Map<int, bool>>
+  .notifier.getStateForScreen(int screenIndex) -> bool
+  .notifier.setStateForScreen(int screenIndex, bool visible)
+  .notifier.toggleStateForScreen(int screenIndex)
+
+fondeContextualSecondarySidebarStateProvider  // Provider<bool>
+
+sidebarWidthProvider              // StateNotifier<double> (240–480px, default 320px)
+  .notifier.setWidth(double)
+  .notifier.adjustWidth(double delta)
+
+secondarySidebarWidthProvider     // StateNotifier<double> (200–400px, default 288px)
+  .notifier.setWidth(double)
+  .notifier.adjustWidth(double delta)
+```
+
+### Toolbar providers
+
+```dart
+fondeToolbarStateManagerProvider  // StateNotifier<FondeToolbarState>
+  .notifier.selectTool(String toolId)
+  .notifier.enableTool(String toolId)
+  .notifier.disableTool(String toolId)
+  .notifier.updateState(FondeToolbarState)
+
+fondeToolbarActionsProvider       // Provider<FondeToolbarActions>
+  .selectTool(String toolId)
+  .enableTool(String toolId)
+  .disableTool(String toolId)
+
+FondeToolbarState {
+  String? selectedTool
+  Set<String> enabledTools
+}
+
+FondeToolbarItemData {
+  required String id
+  required Widget icon
+  String? tooltip
+}
+```
+
+### Icon theme providers
+
+```dart
+fondeActiveIconThemeProvider      // StateNotifier<FondeIconTheme?>
+  .notifier.setIconTheme(FondeIconTheme)
+fondeDefaultIconThemeProvider     // Provider<FondeIconTheme> (falls back to lucide)
+```
+
+---
+
+## Layout widgets
+
+### FondeScaffold
+
+Top-level app layout. Uses multi_split_view for resizable panes.
+
+```dart
+FondeScaffold({
+  required Widget toolbar,
+  required Widget content,
+  Widget? launchBar,
+  Widget? primarySidebar,
+  Widget? secondarySidebar,
+  bool showLaunchBar = true,
+  bool showPrimarySidebar = true,
+  bool showSecondarySidebar = true,
+  bool disableZoom = false,
+  bool useSafeArea = false,
+})
+```
+
+Layout: [launchBar | primarySidebar | content | secondarySidebar?]
+- Primary sidebar: resizable, 240–480px (before zoom), default 320px
+- Secondary sidebar: resizable, 200–400px, default 288px; toggled by `fondeSecondarySidebarStateProvider`
+- When primary sidebar is hidden (via `fondePrimarySidebarStateProvider`), uses collapsed layout with open button in toolbar
+
+### FondeSidebar
+
+```dart
+FondeSidebar({
+  required Widget child,
+  double width = 280.0,
+  Color? backgroundColor,    // defaults to colorScheme.uiAreas.sideBar.background
+  Border? border,            // defaults to right divider; ignored in floatingPanel style
+  FondeSidebarStyle style = FondeSidebarStyle.standard,
+  Widget? toolbar,           // custom toolbar; when set, FondeSidebarPane wrapping is skipped
+  bool disableZoom = false,
+})
+
+enum FondeSidebarStyle {
+  standard,       // flat background with right divider (default)
+  floatingPanel,  // macOS-style: toolbar + content in a squircle panel over a lighter outer bg
+}
+```
+
+When `style == floatingPanel`, the sidebar renders toolbar and content together inside a
+rounded-rectangle panel. The outer area uses `sideBar.floatingPanelOuterBackground` and the
+panel uses `sideBar.floatingPanelBackground`. Pass a custom `toolbar` to control the toolbar
+appearance; defaults to `FondePrimarySidebarToolbar` with panel background color.
+
+### FondePrimarySide
+
+Left section of the scaffold (launch bar + sidebar pane) when sidebar is visible.
+
+```dart
+FondePrimarySide({
+  Widget? launchBar,
+  Widget? sidebar,       // typically FondeSidebarPane
+  bool showLaunchBar = true,
+  bool showSidebar = true,
+  bool disableZoom = false,
+})
+```
+
+### FondeSidebarPane
+
+Combines a toolbar and sidebar content into a single pane.
+
+```dart
+FondeSidebarPane({
+  required Widget child,
+  Widget? toolbar,   // defaults to FondePrimarySidebarToolbar if null
+})
+```
+
+### FondeLaunchBar / FondeLaunchBarItem
+
+Vertical icon bar, two sections (top: main, bottom: meta).
+
+```dart
+FondeLaunchBarItem({
+  required IconData icon,
+  required String label,
+  required int logicalIndex,
+  String? badge,             // red badge text
+  VoidCallback? onTap,
+  bool enabled = true,
+})
+
+FondeLaunchBar({
+  required List<FondeLaunchBarItem> topItems,
+  required List<FondeLaunchBarItem> bottomItems,
+  int? selectedIndex,
+  bool disableZoom = false,
+})
+```
+
+### FondeMasterDetailLayout
+
+```dart
+FondeMasterDetailLayout({
+  required List<String> items,
+  required FondeMasterItemBuilder masterItemBuilder,
+  // typedef: Widget Function(BuildContext, String itemId, bool isSelected, VoidCallback onSelect)
+  required Widget Function(BuildContext, String? selectedId, VoidCallback showMaster) detailBuilder,
+  double initialMasterWidth = 280,
+  double minMasterWidth = 200,
+  double maxMasterWidth = 400,
+  double breakpoint = 600,      // desktop vs mobile layout
+  bool showDetailOnInit = false,
+  String? initialSelectedId,
+  Color? dividerColor,
+  Color? masterBackgroundColor,
+  Color? detailBackgroundColor,
+  double resizeBarWidth = 2.0,
+  EdgeInsetsGeometry masterPadding,
+  EdgeInsetsGeometry detailPadding,
+})
+```
+
+Desktop: side-by-side with draggable divider. Mobile (<breakpoint): stack navigation.
+
+---
+
+## Toolbar widgets
+
+### FondeToolbar
+
+Data-driven toolbar backed by fondeToolbarStateManagerProvider.
+
+```dart
+FondeToolbar({
+  required Axis axis,
+  required List<FondeToolbarItemData> items,
+  bool disableZoom = false,
+})
+
+FondeToolbarItemData({
+  required String id,
+  required Widget icon,
+  String? tooltip,
+})
+```
+
+### FondeToolbarGroup
+
+```dart
+FondeToolbarGroup({
+  required List<Widget> children,
+  double spacing = 4.0,
+  bool disableZoom = false,
+})
+```
+
+### FondeToolbarItem
+
+```dart
+FondeToolbarItem({
+  required Widget child,
+  VoidCallback? onPressed,
+  String? tooltip,
+  bool enabled = true,
+  bool disableZoom = false,
+})
+```
+
+### Toolbar widgets for sidebars
+
+- `FondeMainToolbar` — for main content area
+- `FondePrimarySidebarToolbar` — for primary sidebar (close button; used automatically by `FondeSidebarPane`)
+  - `backgroundColor`: override toolbar background (useful for floating panel style)
+  - `borderColor`: override bottom border color; pass `Colors.transparent` to hide
+- `FondeSecondarySidebarToolbar` — for secondary sidebar (used automatically by `FondeScaffold`)
+
+---
+
+## Navigation widgets
+
+### FondeSidebarList
+
+Container for sidebar list items. Wraps `FondeSidebarListItem`, `FondeSidebarListGroup`, and `FondeSidebarListHeader`.
+
+### FondeSidebarListItem
+
+```dart
+FondeSidebarListItem({
+  required String id,
+  required String title,
+  Widget? leading,
+  Widget? trailing,
+  VoidCallback? onTap,
+  bool isSelected = false,
+  EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  TextStyle? titleStyle,
+  Color? backgroundColor,
+  Color? selectedBackgroundColor,
+  double indent = 0,
+  FondeSidebarListItemStyle style = FondeSidebarListItemStyle.filled,
+  bool disableZoom = false,
+})
+
+enum FondeSidebarListItemStyle {
+  filled,  // default: selected item fills with selectedBackground color
+  subtle,  // no fill on selection, text color change only
+  inset,   // item renders as an individual squircle rounded rectangle (macOS style)
+}
+```
+
+Uses `fondeSideBarColorScopeProvider` for colors automatically.
+Inside a `FondeSidebar(style: floatingPanel)`, `FondeSidebarList` automatically uses a
+transparent background (via `FondeFloatingPanelScope`) so the panel color shows through.
+
+### FondeSidebarListGroup
+
+Group with expand/collapse header. Use with `fondeNavigationStateProvider`.
+
+```dart
+FondeSidebarListGroup({
+  required String id,
+  required String title,
+  required List<Widget> children,
+  Widget? icon,
+  bool initiallyExpanded = false,
+  bool isExpanded = false,
+  ValueChanged<bool>? onExpansionChanged,
+  TextStyle? titleStyle,
+  Color? backgroundColor,
+  Color? selectedBackgroundColor,
+  Widget? trailing,
+  Widget? expansionIcon,
+  double childrenIndent = 24.0,
+  Duration animationDuration = Duration.zero,
+  bool isSelected = false,
+  FondeSidebarListItemStyle style = FondeSidebarListItemStyle.filled,
+  VoidCallback? onTap,
+  bool disableZoom = false,
+})
+```
+
+### FondeSidebarListHeader
+
+Section header for sidebar lists.
+
+### FondeSidebarListDivider (FondeNavigationDivider)
+
+Thin divider for nav lists.
+
+### FondeSidebarListBadge (FondeNavigationBadge)
+
+Badge overlay for navigation items.
+
+---
+
+## Tab widgets
+
+### FondeTabBar
+
+```dart
+FondeTabBar({
+  required List<FondeTab> tabs,
+  required String selectedTabId,
+  required void Function(String tabId) onTabSelected,
+  void Function(String tabId)? onTabClosed,
+  double height = 48.0,
+  Color? backgroundColor,
+  bool disableZoom = false,
+  TabAlignment alignment = TabAlignment.center,
+})
+
+FondeTab({
+  required String id,
+  String? label,          // at least one of label/icon required
+  IconData? icon,
+  bool closeable = true,
+  String? tooltip,
+})
+```
+
+animationDuration is Duration.zero (instant tab switch).
+
+### FondeTabView
+
+Full tab view combining tab bar + content area.
+
+---
+
+## Button widgets
+
+### FondeButton
+
+```dart
+// Constructors:
+FondeButton({required String label, VoidCallback? onPressed, ...})  // custom
+FondeButton.normal({required String label, VoidCallback? onPressed, ...})       // auto width
+FondeButton.primary({required String label, VoidCallback? onPressed, ...})      // 120px, accent color
+FondeButton.cancel({required String label, VoidCallback? onPressed, ...})       // 100px
+FondeButton.destructive({required String label, VoidCallback? onPressed, ...})  // 120px, red
+
+// Common params on full constructor:
+Widget? leadingIcon, trailingIcon
+double? width, height
+TextStyle? textStyle
+bool enabled = true
+Color? backgroundColor, borderColor, textColor
+Color? hoverBackgroundColor, pressedBackgroundColor
+bool disableZoom = false
+bool expandHeight = false
+```
+
+Default height: 32px. Normal/cancel buttons: transparent background.
+
+### FondeIconButton
+
+```dart
+FondeIconButton({required IconData icon, VoidCallback? onPressed, ...})
+FondeIconButton.compact(...)   // minWidth/minHeight: 24
+FondeIconButton.minimal(...)   // padding: EdgeInsets.zero
+FondeIconButton.circle(...)    // circular shape
+
+// Params:
+double? iconSize
+Color? iconColor, backgroundColor, hoverColor, pressedColor, disabledColor
+String? tooltip
+bool enabled = true
+EdgeInsetsGeometry? padding
+AlignmentGeometry alignment = Alignment.center
+FocusNode? focusNode
+FondeIconButtonShape shape = rectangle  // or circle
+double? cornerRadius
+BorderSide? border
+BoxConstraints? constraints
+```
+
+### FondeSegmentedButton
+
+Segmented control (multiple options, single/multi select).
+
+### FondeSplitButton
+
+Button with dropdown arrow for secondary actions.
+
+### FondeButtonGroup
+
+Groups multiple buttons as a visual unit.
+
+### FondeIconLabelButton
+
+Button with icon + label (horizontal layout).
+
+### FondeOverflowMenu
+
+Menu button that shows overflow items.
+
+---
+
+## Input widgets
+
+### FondeTextField
+
+```dart
+FondeTextField({
+  TextEditingController? controller,
+  FocusNode? focusNode,
+  String? hintText,
+  String? errorText,
+  Widget? prefixIcon,
+  Widget? suffixIcon,
+  bool enabled = true,
+  bool obscureText = false,
+  TextInputType? keyboardType,
+  void Function(String)? onChanged,
+  void Function(String)? onSubmitted,
+  // ... standard Flutter TextField params
+  bool disableZoom = false,
+})
+```
+
+### FondeSearchField
+
+Search-optimized text field with clear button and search icon.
+
+### FondeTagsField
+
+Multi-tag input field (uses textfield_tags package).
+
+### FondeCheckbox
+
+```dart
+FondeCheckbox({
+  required bool? value,
+  required ValueChanged<bool?>? onChanged,
+  bool tristate = false,
+  double? size,                                              // default 20px
+  FondeCheckboxShape shape = FondeCheckboxShape.rectangle,  // or .circle
+  FondeCheckboxFillStyle fillStyle = FondeCheckboxFillStyle.filled,  // or .outline / .iconOnly
+  String? semanticLabel,
+  bool disableZoom = false,
+})
+
+enum FondeCheckboxShape { rectangle, circle }
+
+enum FondeCheckboxFillStyle {
+  filled,    // background filled with primaryColor when checked (default, macOS style)
+  outline,   // no fill; border + icon use primaryColor when checked (Figma style)
+  iconOnly,  // no fill, no border color change; only icon is colored with primaryColor
+}
+```
+
+Uses smooth rounded corners (cornerRadius: 4px) for rectangle shape.
+Check icon: `FondeIconTheme.check` (default: `LucideIcons.check400`).
+Indeterminate icon: `FondeIconTheme.checkIndeterminate` (default: `LucideIcons.minus400`).
+Both are overridable via `fondeActiveIconThemeProvider`.
+Tristate: false → true → null → false.
+
+### FondeRadioButton
+
+Standard radio button, theme-aware.
+
+### FondeSwitch
+
+Toggle switch with animated knob slide (300ms easeInOut, always enabled).
+
+```dart
+FondeSwitch({
+  required bool value,
+  required ValueChanged<bool>? onChanged,
+  FondeSwitchStyle style = FondeSwitchStyle.compact,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  String? semanticLabel,
+  bool disableZoom = false,
+})
+
+enum FondeSwitchStyle {
+  compact,  // 32×20px track, 16px circular knob (default)
+  wide,     // 38×18px track, 22×14px pill knob
+}
+```
+
+Track color: OFF → `base.border`, ON → `theme.primaryColor`.
+Knob color: `interactive.button.primaryText`.
+Disabled: opacity 0.4.
+Animation is intentionally always active (instant transition is visually jarring; the slide reduces eye strain).
+
+### FondeDropdownMenu
+
+Dropdown selector, uses smooth corner styling.
+
+### FondePopupMenu
+
+Popup menu with items list.
+
+### FondeExpansionTile
+
+Expandable list tile.
+
+### FondeNumberField
+
+Numeric input with − and + buttons. Supports integer and decimal values, min/max bounds, and step size.
+
+```dart
+FondeNumberField({
+  num? initialValue,
+  num? min,
+  num? max,
+  num step = 1,
+  int decimalPlaces = 0,     // 0 = integer mode
+  String? hintText,
+  String? suffix,            // label suffix e.g. "px", "%"
+  ValueChanged<num?>? onChanged,
+  bool enabled = true,
+  double? width,             // defaults to 120
+  bool disableZoom = false,
+})
+```
+
+Default height: 32px. On focus-lost or Enter, text is parsed and clamped to [min, max].
+
+### FondeDatePicker
+
+Monthly calendar widget for single-day or range selection. Backed by `table_calendar`.
+
+```dart
+FondeDatePicker({
+  required DateTime firstDate,
+  required DateTime lastDate,
+  DateTime? initialDate,              // defaults to today
+  DateTime? selectedDate,             // single-selection pre-selection
+  ValueChanged<DateTime>? onDaySelected,
+  DateTime? rangeStart,
+  DateTime? rangeEnd,
+  void Function(DateTime? start, DateTime? end)? onRangeSelected,
+  bool rangeSelectionMode = false,
+  List<Object?> Function(DateTime day)? eventLoader,
+  bool Function(DateTime day)? enabledDayPredicate,
+  dynamic locale,                     // e.g. 'ja', 'en_US'
+  StartingDayOfWeek startingDayOfWeek = StartingDayOfWeek.monday,
+  bool disableZoom = false,
+})
+```
+
+Helper to show in a dialog:
+
+```dart
+final date = await showFondeDatePickerDialog(
+  context: context,
+  firstDate: DateTime(2020),
+  lastDate: DateTime(2030),
+  selectedDate: currentDate,
+);
+```
+
+---
+
+## Color picker widgets
+
+### FondeColorPicker
+
+HSV color picker with saturation-value canvas, hue slider, optional alpha slider, optional palette swatches, optional eyedropper button, hex input, and opacity percentage input. No external dependencies.
+
+```dart
+FondeColorPicker({
+  Color initialColor = Colors.blue,
+  required ValueChanged<Color> onColorChanged,
+  bool showAlpha = true,             // alpha slider + opacity % field
+  List<Color>? palette,              // null = no palette
+  bool showEyeDropper = false,       // requires FondeEyeDropper in tree
+  double width = 240.0,
+  bool disableZoom = false,
+})
+```
+
+Bottom row layout (left to right): color preview swatch → eyedropper button (if enabled) → HEX input → opacity % input (if showAlpha).
+
+Palette is displayed as a `Wrap` of swatches below the sliders. Selected swatch is highlighted.
+
+Helper to show in a dialog:
+
+```dart
+final color = await showFondeColorPickerDialog(
+  context: context,
+  initialColor: currentColor,
+  showAlpha: true,
+  palette: [Colors.red, Colors.blue, ...],
+  showEyeDropper: true,
+);
+```
+
+### FondeEyeDropper
+
+Wraps the widget tree with a `RepaintBoundary` to enable in-window color sampling. Must be present in the tree for `FondeEyeDropperButton` and `FondeColorPicker(showEyeDropper: true)` to work. Enabled via `FondeApp(enableEyeDropper: true)`.
+
+```dart
+// Enabled automatically via FondeApp:
+FondeApp(
+  enableEyeDropper: true,
+  home: ...,
+)
+
+// Or wrap manually:
+FondeEyeDropper(child: myWidget)
+```
+
+**Limitation:** only samples pixels within the Flutter window. Cannot capture colors from outside the app (OS desktop, other apps).
+
+### FondeEyeDropperButton
+
+Button that activates eyedropper mode. Cursor changes to crosshair and a zoom loupe follows the pointer. Click to pick a color; right-click to cancel.
+
+```dart
+FondeEyeDropperButton({
+  required ValueChanged<Color> onColorPicked,
+  IconData icon = LucideIcons.pipette,
+  String tooltip = 'Pick color from screen',
+  double size = 24.0,
+  Color? color,
+})
+```
+
+Requires `FondeEyeDropper` in the widget tree (e.g. via `FondeApp(enableEyeDropper: true)`). Automatically disabled (greyed out) when not found.
+
+---
+
+## Dialog and overlay widgets
+
+### FondeDialog
+
+```dart
+FondeDialog({
+  String? title,
+  String? subtitle,
+  required Widget child,
+  Widget? footer,            // fixed outside scroll area
+  double? width, height,
+  double? heightRatio,       // 0.0–1.0, takes precedence over height
+  double? maxWidth, maxHeight, minWidth, minHeight,
+  EdgeInsetsGeometry? padding,
+  double headerBottomSpacing,
+  double dividerHorizontalPadding,
+  double elevation = 8.0,
+  double? cornerRadius, cornerSmoothing,
+  Color? backgroundColor,
+  bool disableZoom = false,
+  bool showCloseButton = false,
+  VoidCallback? onClose,
+  FondeDialogImportance importance = standard,
+  bool showDivider = true,
+})
+
+enum FondeDialogImportance { critical, standard, utility }
+// critical  -> headlineMedium title (28px)
+// standard  -> bodyMedium Bold (16px)
+// utility   -> bodyMedium Bold (16px)
+```
+
+### showFondeDialog
+
+```dart
+Future<T?> showFondeDialog<T>({
+  required BuildContext context,
+  String? title, subtitle,
+  Widget? child,
+  WidgetBuilder? builder,    // either child or builder required, not both
+  Widget? footer,
+  double? width, height, heightRatio,
+  double? maxWidth, maxHeight, minWidth, minHeight,
+  EdgeInsetsGeometry? padding = const EdgeInsets.all(20.0),
+  double elevation = 8.0,
+  bool barrierDismissible = true,
+  Color? barrierColor,
+  bool noDarkBackground = false,
+  bool showCloseButton = false,
+  VoidCallback? onClose,
+  FondeDialogImportance importance = standard,
+  bool showDivider = true,
+})
+```
+
+### FondeConfirmationDialog
+
+Pre-built confirmation dialog with confirm/cancel buttons.
+
+### FondePopover
+
+Contextual popover anchored to a widget.
+
+### FondeToast
+
+Transient notification widget.
+
+### FondeSnackBar
+
+Bottom snack bar notification.
+
+### FondeContextMenu
+
+Right-click context menu.
+
+---
+
+## Display widgets
+
+### FondePanel
+
+Container with themed background and border (formerly FondeCard).
+
+```dart
+FondePanel({
+  required Widget child,
+  Color? backgroundColor,
+  Border? border,
+  double? cornerRadius,
+  EdgeInsetsGeometry? padding,
+  bool disableZoom = false,
+})
+```
+
+### FondeDivider / FondeVerticalDivider
+
+```dart
+FondeDivider({double? indent, double? endIndent, Color? color, bool disableZoom = false})
+FondeVerticalDivider({double? thickness, Color? color})
+```
+
+### FondeContainer
+
+Themed container with standard padding options.
+
+### FondePhysicalModel
+
+Physical model with shadow. `FondePhysicalModelVariants.popover(...)` for dialog/popover shadows.
+
+### FondeSelectionDecorator
+
+Wraps a widget to show selected state styling (formerly FondeSelectable).
+
+### FondeIcon
+
+```dart
+FondeIcon(
+  IconData icon,
+  {double? customSize, Color? customColor, String? semanticLabel, bool disableZoom = false}
+)
+```
+
+Falls back to `fondeDefaultIconThemeProvider` for color.
+
+### FondeTag
+
+Small label chip widget.
+
+---
+
+## List widgets
+
+### FondeListTile
+
+```dart
+FondeListTile({
+  required Widget title,
+  Widget? leading,
+  Widget? subtitle,
+  Widget? trailing,
+  required bool isSelected,
+  VoidCallback? onTap,
+  VoidCallback? onLongPress,
+  bool dense = false,
+  EdgeInsetsGeometry? contentPadding,
+  bool enableHover = true,
+  Color? hoverColor,
+  bool disableZoom = false,
+})
+```
+
+Ripple/splash animations are disabled by design (animations that delay input response are avoided).
+
+---
+
+## Typography
+
+### FondeText
+
+```dart
+FondeText(
+  String text, {
+  required FondeTextVariant variant,
+  Color? color,           // falls back to fondeColorScopeProvider.text
+  TextAlign? textAlign,
+  int? maxLines,
+  TextOverflow? overflow,
+  FontWeight? fontWeight,
+  String? fontFamily,
+  bool disableZoom = false,
+})
+```
+
+Font size is multiplied by `accessibilityConfig.zoomScale`.
+
+### FondeTextVariant — complete list
+
+UI structure:
+- `pageTitle` → headlineLarge (32px)
+- `dialogTitleCritical` → headlineMedium (28px)
+- `dialogTitleStandard` → bodyMedium Bold (16px)
+- `dialogTitleUtility` → bodyMedium Bold (16px)
+- `sectionTitlePrimary` → headlineSmall (24px)
+- `sectionTitleSecondary` → bodyMedium Bold (16px)
+- `sectionTitleUtility` → bodyMedium (16px)
+- `itemTitle` → bodyMedium Bold (16px)
+
+Interaction:
+- `buttonLabel` → bodyMedium (16px)
+- `labelText` → bodyMedium (16px)
+- `inputText` → bodyMedium (16px)
+
+Information:
+- `bodyText` → bodyMedium (16px)
+- `captionText` → bodySmall (14px)
+- `smallText` → labelSmall (11px)
+- `uiCaption` → bodySmall (14px)
+
+Table:
+- `tableTitle` → titleLarge
+- `tableHeader` → titleMedium
+- `tableBody`, `tableCell`, `tableCellEditing` → bodyMedium
+- `tableRowHeader` → bodyMedium Bold
+- `tableCellSmall`, `tableFooter` → bodySmall
+
+Document content:
+- `textHeading1`–`textHeading4` → displayLarge/Medium/Small/headlineSmall
+- `textBody` → bodyLarge
+- `textCaption` → bodyMedium
+- `textSmall` → bodySmall
+- `codeBlock` → bodyMedium monospace
+- `codeInline` → bodySmall monospace
+
+Entities:
+- `entityLabelPrimary` → labelLarge
+- `entityLabelSecondary` → labelMedium
+- `entityLabelMeta` → labelSmall
+
+Page titles:
+- `pageTitleLarge` → headlineLarge
+- `pageTitleMedium` → headlineSmall
+- `pageTitleSmall` → bodyLarge
+
+### FondeTextStyleBuilder
+
+Utility for building `TextStyle` from a `FondeTextVariant`.
+
+```dart
+// From fonde_ui_riverpod.dart:
+FondeTextStyleBuilderRef.buildTextStyle({
+  required FondeTextVariant variant,
+  required BuildContext context,
+  required WidgetRef ref,
+  Color? color,
+  FontWeight? fontWeight,
+  String? fontFamily,
+  bool disableZoom = false,
+}) -> TextStyle
+
+FondeTextStyleBuilderRef.buildTextStyleWithColor({...}) -> TextStyle
+```
+
+---
+
+## Spacing
+
+### FondeSpacingValues (4px grid)
+
+```dart
+FondeSpacingValues.xs   = 4.0
+FondeSpacingValues.sm   = 8.0
+FondeSpacingValues.md   = 12.0
+FondeSpacingValues.lg   = 16.0
+FondeSpacingValues.xl   = 20.0
+FondeSpacingValues.xxl  = 24.0
+FondeSpacingValues.xxxl = 32.0
+```
+
+### FondeSpacing
+
+```dart
+FondeSpacing({double? width, double? height, bool disableZoom = false})
+FondeSpacing.square(double size)
+FondeSpacing.horizontal(double width)
+FondeSpacing.vertical(double height)
+FondeSpacing.xs() / .sm() / .md() / .lg() / .xl() / .xxl() / .xxxl()
+```
+
+In debug mode (strictMode=true by default), warns if value is not on the 4px grid.
+
+### FondePadding
+
+Padding widget variants using FondeSpacingValues.
+
+```dart
+FondePadding({required EdgeInsetsGeometry padding, bool disableZoom = false, required Widget child})
+FondePadding.xs(...) / .sm() / .md() / .lg() / .xl() / .xxl() / .xxxl()
+FondePadding.only({double? left, right, top, bottom, bool disableZoom, required Widget child})
+```
+
+---
+
+## Progress indicators
+
+### FondeLinearProgressIndicator
+
+```dart
+FondeLinearProgressIndicator({
+  double? value,                    // 0.0–1.0, null = indeterminate
+  Color? color,                     // defaults to theme.primaryColor
+  Color? backgroundColor,           // defaults to colorScheme.base.divider
+  double height = 4.0,
+  bool disableZoom = false,
+  bool isCancelled = false,         // freezes animation
+  Duration animationDuration = Duration(milliseconds: 400),
+})
+```
+
+Determinate: animated with TweenAnimationBuilder (easeOutCubic). Rounded ends.
+
+### FondeCircularProgressIndicator
+
+```dart
+FondeCircularProgressIndicator({
+  double? value,                    // null = indeterminate
+  Color? color,
+  Color? backgroundColor,
+  double size = 20.0,
+  double strokeWidth = 2.0,
+  bool disableZoom = false,
+})
+```
+
+---
+
+## Outline / tree widgets
+
+### FondeOutlineView
+
+Tree/outline display widget.
+
+### FondeOutlineItem
+
+Individual tree item with expand/collapse.
+
+---
+
+## Table
+
+### FondeTableView
+
+Table display using pluto_grid package.
+
+---
+
+## Scroll view
+
+### FondeScrollView
+
+Scroll view with theme-aware scrollbar.
+
+---
+
+## Other widgets
+
+### FondeSection
+
+Content section container with optional title.
+
+### FondePageIndicator
+
+Dot page indicator for carousels (uses dots_indicator).
+
+### FondePagination
+
+Page navigation controls.
+
+### FondeGestureDetector
+
+Wraps GestureDetector with hover state and cursor support.
+
+```dart
+FondeGestureDetector({
+  required Widget child,
+  VoidCallback? onTap,
+  MouseCursor cursor = SystemMouseCursors.click,
+  HitTestBehavior behavior = HitTestBehavior.translucent,
+})
+```
+
+### FondePlatformMenus
+
+macOS native menu bar integration.
+
+---
+
+## Icons
+
+### FondeIconTheme
+
+Custom icon theme. When set via `fondeActiveIconThemeProvider`, widgets use it instead of Lucide defaults.
+
+The default icon set is Lucide Icons. `lucideIconTheme` constant provides the default mapping.
+
+Common icon properties on FondeIconTheme:
+- `.check`, `.checkIndeterminate` — checkbox checked / indeterminate state
+- `.minus` — generic horizontal-bar action (decrease, collapse, etc.)
+- `.x`, `.chevronRight`, `.chevronDown`, `.search`, `.plus`, `.settings`, etc.
+
+---
+
+## Styling helpers
+
+### FondeRectangleBorder
+
+Figma-style squircle border container widget. Uses figma_squircle's `SmoothRectangleBorder` internally.
+
+```dart
+FondeRectangleBorder({
+  Widget? child,
+  double? cornerRadius,       // default 12.0
+  double? cornerSmoothing,    // default 0.6 (0.0–1.0; higher = smoother)
+  BorderSide? side,           // default: colorScheme.base.border, width 1.5
+  Color? color,               // background color, default null (transparent)
+  EdgeInsetsGeometry? padding,
+  double? width,
+  double? height,
+  AlignmentGeometry alignment = Alignment.center,
+})
+```
+
+Riverpod providers:
+
+```dart
+fondeRectangleBorderProvider          // Provider<SmoothRectangleBorder> (radius=12, smoothing=0.6, themed border)
+fondeShapeDecorationProvider(         // Provider<ShapeDecoration>
+  color: Color?,
+  cornerRadius: double?,
+  cornerSmoothing: double?,
+  side: BorderSide?,
+)
+```
+
+### FondeBorderRadius
+
+Wrapper around `SmoothBorderRadius` for unified squircle corner values.
+
+```dart
+// Constructors:
+FondeBorderRadius()                        // radius=12.0, smoothing=0.6 (default)
+FondeBorderRadius.radius(double radius)    // custom radius, smoothing=0.6
+FondeBorderRadius.small()                  // radius=8.0,  smoothing=0.6
+FondeBorderRadius.medium()                 // radius=12.0, smoothing=0.6
+FondeBorderRadius.large()                  // radius=16.0, smoothing=0.6
+FondeBorderRadius.circular(double radius)  // smoothing=1.0 (fully circular)
+FondeBorderRadius.create({double? cornerRadius, double? cornerSmoothing})  // factory
+
+// Conversion:
+.toSmoothBorderRadius()    // → SmoothBorderRadius
+.toBorderRadiusGeometry()  // → BorderRadiusGeometry
+```
+
+Provider: `fondeBorderRadiusProvider` → `FondeBorderRadius.medium()`
+
+### FondeBorderSide
+
+`BorderSide` subclass with preset widths.
+
+```dart
+FondeBorderSide.thin()      // width=1.0
+FondeBorderSide.standard()  // width=1.5 (default)
+FondeBorderSide.thick()     // width=2.0
+FondeBorderSide.none()      // width=0, style=none
+```
+
+Provider: `fondeBorderSideProvider` → `FondeBorderSide.standard(color: colorScheme.base.border)`
+
+### FondeBorderRadiusValues
+
+Standard `BorderRadius` constants (non-squircle, for Flutter-native widgets).
+
+```dart
+FondeBorderRadiusValues.small  = 4.0
+FondeBorderRadiusValues.medium = 8.0
+FondeBorderRadiusValues.large  = 12.0
+```
+
+---
+
+## Form layout
+
+```dart
+FondeFormItemRow({...})    // label + field in a row
+FondeFormItemColumn({...}) // label + field stacked
+FondeFormList({...})       // list of form items
+```
+
+---
+
+## Typical usage patterns
+
+### App scaffold with navigation
+
+```dart
+FondeApp(
+  title: 'My App',
+  home: FondeScaffold(
+    toolbar: FondeToolbarGroup(children: [...]),
+    launchBar: FondeLaunchBar(
+      topItems: [
+        FondeLaunchBarItem(icon: Icons.home, label: 'Home', logicalIndex: 0, onTap: () { ... }),
+      ],
+      bottomItems: [
+        FondeLaunchBarItem(icon: Icons.settings, label: 'Settings', logicalIndex: 99),
+      ],
+      selectedIndex: currentIndex,
+    ),
+    primarySidebar: FondeSidebar(
+      child: ListView(children: [
+        FondeSidebarListItem(id: 'item1', title: 'Item 1', isSelected: true, onTap: () { ... }),
+      ]),
+    ),
+    content: MyMainContent(),
+  ),
+)
+```
+
+### Theme switching
+
+```dart
+// Via Riverpod (from any ConsumerWidget)
+ref.read(fondeActiveThemeProvider.notifier).setTheme(FondeThemePresets.dark);
+ref.read(fondeActiveThemeProvider.notifier).setTheme(FondeThemePresets.light);
+ref.read(fondeActiveThemeProvider.notifier).setTheme(FondeThemePresets.system);
+```
+
+### Accent color switching
+
+```dart
+ref.read(fondeThemeColorProvider.notifier).setThemeColor(FondeThemeColorType.indigo);
+```
+
+### Dialog
+
+```dart
+await showFondeDialog<void>(
+  context: context,
+  title: 'Confirm',
+  child: Text('Are you sure?'),
+  footer: Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      FondeButton.cancel(label: 'Cancel', onPressed: () => Navigator.pop(context)),
+      FondeButton.primary(label: 'OK', onPressed: () { ... }),
+    ],
+  ),
+);
+```
+
+### Accessing color scheme in a ConsumerWidget
+
+```dart
+class MyWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.watch(fondeEffectiveColorSchemeProvider);
+    return Container(color: colors.base.background);
+  }
+}
+```
