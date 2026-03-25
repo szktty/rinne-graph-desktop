@@ -1,43 +1,46 @@
 # fonde_ui
 
-**Desktop-first Flutter UI optimized for native-grade instant feedback, with accessibility built in.**
+**Desktop-first Flutter UI utility components optimized for native-like interaction, with zoom scaling support.**
 
 Developed for [RinneGraph](https://github.com/szktty/rinne-graph). Currently prototype status; API is not stable.
 
 ## Package info
 
 - name: fonde_ui
-- version: 0.5.0-dev
+- version: 0.7.0-dev
 - Dart SDK: ^3.7.0
 - Flutter: >=3.41.2
 
 ## Key dependencies
 
-- flutter_riverpod: ^3.0.0 (state management, required for most widgets)
-- riverpod_annotation: ^4.0.0
 - freezed_annotation: ^3.0.0
+- json_annotation: ^4.9.0
 - figma_squircle: ^0.6.3 (smooth rounded corners)
 - lucide_icons_flutter: ^3.0.5 (default icon set)
+- intl: ^0.20.2 (localization)
+- uuid: ^4.5.1
 - multi_split_view: ^3.2.1 (resizable panes in FondeScaffold)
 - pluto_grid: ^8.0.0 (FondeTableView)
 - textfield_tags: ^3.0.1 (FondeTagsField)
 - dots_indicator: ^4.0.1 (FondePageIndicator)
+- searchfield: ^2.0.0 (FondeSearchField)
+- popover: ^0.3.1 (FondePopover)
+- table_calendar: ^3.1.3 (FondeDatePicker)
 
 ## Imports
 
 ```dart
-import 'package:fonde_ui/fonde_ui.dart';                // Core + all widgets
-import 'package:fonde_ui/fonde_ui_riverpod.dart';       // Riverpod providers (optional, import in addition to fonde_ui.dart)
+import 'package:fonde_ui/fonde_ui.dart';  // Core + all widgets
 ```
 
-All widgets that use Riverpod internally are ConsumerWidgets. `FondeApp` provides the required `ProviderScope` automatically.
+`fonde_ui_riverpod.dart` has been removed. All state management is now done via `BuildContext` extensions and controller objects.
 
 ---
 
 ## Platform support
 
 - **macOS / Windows / Linux**: fully supported (primary targets)
-- **Web**: experimental, not officially supported. `FondeApp` does not expose Navigator/routing APIs. If you need URL-based routing on Web, compose `ProviderScope` + `MaterialApp.router` manually and use fonde_ui widgets inside.
+- **Web**: experimental, not officially supported. `FondeApp` does not expose Navigator/routing APIs. If you need URL-based routing on Web, compose `MaterialApp.router` manually and use fonde_ui widgets inside.
 - **iOS / Android**: not targeted; mobile layout assumptions differ from fonde_ui's desktop-first design.
 
 ---
@@ -71,7 +74,7 @@ void main() {
 }
 ```
 
-`FondeApp` wraps `ProviderScope` and `MaterialApp` internally. Do not add an extra `ProviderScope` or `MaterialApp` around it.
+`FondeApp` wraps `MaterialApp` internally. Do not add an extra `MaterialApp` around it.
 
 Navigator-related `MaterialApp` parameters (`routes`, `navigatorKey`, `onGenerateRoute`, etc.) are intentionally not exposed. fonde_ui targets desktop apps where view switching is handled by `FondeScaffold` (sidebars, tabs) rather than Flutter's Navigator.
 
@@ -84,27 +87,29 @@ FondeApp(
   home: ...,
 )
 
-// Change theme at runtime via Riverpod
-ref.read(fondeActiveThemeProvider.notifier).setTheme(FondeThemePresets.light);
+// Change theme at runtime via BuildContext extension
+context.fondeThemeController.setTheme(FondeThemePresets.light);
 
 // Change accessibility config at runtime
-ref.read(fondeAccessibilityConfigProvider.notifier).updateConfig(
-  ref.read(fondeAccessibilityConfigProvider).copyWith(zoomScale: 1.2),
+context.fondeAccessibilityController.updateConfig(
+  context.fondeAccessibility.copyWith(zoomScale: 1.2),
 );
 ```
 
-### Provider overrides
+### External controllers
+
+If you need to control the theme from outside the widget tree (e.g. for persistence or testing), supply your own controller:
 
 ```dart
+final themeController = FondeThemeController(
+  initialTheme: FondeThemePresets.dark,
+);
+
 FondeApp(
-  overrides: [
-    mySettingsProvider.overrideWith(() => MySettingsNotifier()),
-  ],
-  home: ...,
+  themeController: themeController,
+  home: MyShell(),
 )
 ```
-
-Do **not** override fonde_ui's internal providers (those not part of the public API). Use `overrides` for your own providers only.
 
 ---
 
@@ -217,7 +222,7 @@ Context-local color bundle used by navigation/sidebar components.
 
 ```dart
 FondeColorScope {
-  Color text, background, border, selection, hover, accent, disabled
+  Color text, background, border, selection, subtleSelection, hover, accent, disabled
 }
 ```
 
@@ -227,6 +232,13 @@ Use `FondeColorScopeHelper` to wrap widgets:
 - `FondeColorScopeHelper.withMainContentScope(child:)`
 - `FondeColorScopeHelper.withDialogScope(child:)`
 - `FondeColorScopeHelper.withCustomScope(child:, scope:)`
+
+Use `FondeColorScopeBuilder` to create scope values from a `FondeColorScheme`:
+- `FondeColorScopeBuilder.defaultScope(colors)`
+- `FondeColorScopeBuilder.launchBarScope(colors)`
+- `FondeColorScopeBuilder.sideBarScope(colors, {isActive: false})`
+- `FondeColorScopeBuilder.mainContentScope(colors)`
+- `FondeColorScopeBuilder.dialogScope(colors)`
 
 ### FondeThemeColorType
 
@@ -240,76 +252,135 @@ enum FondeThemeColorType {
 
 Change accent color at runtime:
 ```dart
-ref.read(fondeThemeColorProvider.notifier).setThemeColor(FondeThemeColorType.indigo);
+context.fondeThemeColorController.setThemeColor(FondeThemeColorType.indigo);
 ```
+
+### FondeLocalizationConfig
+
+Controls whether fonde_ui components automatically adapt their built-in text labels to the device locale.
+
+```dart
+FondeLocalizationConfig.enableLocalization = true;  // global flag (default: false)
+```
+
+Can also be set via `FondeApp(enableLocalization: true)`.
 
 ---
 
-## Riverpod providers (fonde_ui_riverpod.dart)
+## State management
 
-### Theme providers
+fonde_ui uses plain Flutter state management (`ChangeNotifier` + `InheritedWidget`). There is no Riverpod dependency.
+
+### BuildContext extensions
+
+All theme and accessibility data is accessible via `BuildContext` extensions from any widget's `build` method:
 
 ```dart
-fondeActiveThemeProvider          // StateNotifier<FondeThemeData>
-  .notifier.setTheme(FondeThemeData)
+// Theme & colors
+context.fondeColorScheme       // FondeColorScheme — fully resolved for current theme + accent
+context.fondeAccessibility     // FondeAccessibilityConfig
+context.fondeIconTheme         // FondeIconTheme
+context.fondeColorScope        // FondeColorScope — nearest color scope
 
-fondeEffectiveColorSchemeProvider // Provider<FondeColorScheme> (resolved for current brightness + theme color)
-fondeEffectiveFlutterColorSchemeProvider // Provider<ColorScheme>
-fondeEffectiveThemeDataProvider   // Provider<ThemeData>
-fondePlatformBrightnessProvider   // StateNotifier<Brightness>
+// Scaling helpers
+context.fondeZoomScale         // double
+context.fondeFontScale         // double
+context.fondeBorderScale       // double
+context.fondeScaleValue(double baseValue) -> double
+context.fondeScaleFontSize(double baseFontSize) -> double
+context.fondeScaleBorderWidth(double baseWidth) -> double
+context.fondeScaleEdgeInsets(EdgeInsets base) -> EdgeInsets
+context.fondeScaleBorderRadius(BorderRadius base) -> BorderRadius
+context.fondeScaleSize(Size base) -> Size
+
+// Controllers
+context.fondeThemeController           // FondeThemeController
+context.fondeThemeColorController      // FondeThemeColorController
+context.fondeAccessibilityController   // FondeAccessibilityController
+context.fondeIconThemeController       // FondeIconThemeController
 ```
 
-### Theme color providers
+### Theme controllers
 
 ```dart
-fondeThemeColorProvider           // StateNotifier<FondeThemeColorType> (accent color)
-  .notifier.setThemeColor(FondeThemeColorType)
+// FondeThemeController
+context.fondeThemeController.setTheme(FondeThemeData)
+context.fondeThemeController.theme    // current FondeThemeData
 
-fondeThemeColorSchemeProvider     // Provider<FondeThemeColorScheme>
-effectiveColorSchemeWithThemeProvider  // Provider<FondeColorScheme>
+// FondeThemeColorController
+context.fondeThemeColorController.setThemeColor(FondeThemeColorType)
+context.fondeThemeColorController.themeColor  // current FondeThemeColorType
+
+// FondeAccessibilityController
+context.fondeAccessibilityController.updateConfig(FondeAccessibilityConfig)
+context.fondeAccessibilityController.config   // current FondeAccessibilityConfig
+
+// FondeIconThemeController
+context.fondeIconThemeController.setIconTheme(FondeIconTheme)
+context.fondeIconThemeController.iconTheme    // FondeIconTheme?
 ```
 
-### Accessibility
+External controllers can be supplied to `FondeApp`:
 
 ```dart
-fondeAccessibilityConfigProvider  // StateNotifier<FondeAccessibilityConfig>
-  .notifier.updateConfig(FondeAccessibilityConfig)
+FondeApp(
+  themeController: myThemeController,
+  themeColorController: myColorController,
+  accessibilityController: myAccessController,
+  iconThemeController: myIconController,
+  home: ...,
+)
 ```
 
-Extension on `WidgetRef` (from `fonde_ui_riverpod.dart`):
+### Sidebar controllers
+
 ```dart
-ref.zoomScale        // double
-ref.fontScale        // double
-ref.borderScale      // double
-ref.scaleValue(double baseValue) -> double
-ref.scaleEdgeInsets(EdgeInsets base) -> EdgeInsets
-ref.scaleBorderRadius(BorderRadius base) -> BorderRadius
-ref.scaleSize(Size base) -> Size
-ref.scaleFontSize(double baseFontSize) -> double
-ref.scaleBorderWidth(double baseWidth) -> double
+// FondePrimarySidebarController
+controller.show() / .hide() / .toggle() / .setVisible(bool)
+controller.isVisible    // bool
+
+// FondeSecondarySidebarController — same API as primary
+
+// FondeSidebarWidthController
+controller.setWidth(double) / .adjustWidth(double delta)
+controller.width    // double (primary: 240–480px default 320px)
+
+// FondeSecondarySidebarWidthController — same API (200–400px default 288px)
 ```
 
-### Color scope providers (internal, but readable)
+Controllers are accessed via `FondeSidebarControllerScope`:
 
 ```dart
-fondeColorSchemeProvider          // Provider<FondeColorScheme>
-fondeDefaultColorScopeProvider    // Provider<FondeColorScope>
-fondeLaunchBarColorScopeProvider  // Provider<FondeColorScope>
-fondeSideBarColorScopeProvider    // Provider<FondeColorScope>
-fondeMainContentColorScopeProvider
-fondeDialogColorScopeProvider
-fondeColorScopeProvider           // current scope (overridden by ProviderScope)
+FondeSidebarControllerScope.primaryOf(context)        // FondePrimarySidebarController?
+FondeSidebarControllerScope.secondaryOf(context)      // FondeSecondarySidebarController?
+FondeSidebarControllerScope.primaryWidthOf(context)   // FondeSidebarWidthController?
+FondeSidebarControllerScope.secondaryWidthOf(context) // FondeSecondarySidebarWidthController?
 ```
 
-### Navigation providers
+`FondeScaffold` installs `FondeSidebarControllerScope` automatically. To control sidebars manually, wrap with:
 
 ```dart
-fondeNavigationStateProvider      // StateNotifier<FondeNavigationStateData>
-  .notifier.selectItem(String id)
-  .notifier.toggleGroup(String groupId)
-  .notifier.clearSelection()
-  .isItemSelected(String id) -> bool
-  .isGroupExpanded(String id) -> bool
+FondeSidebarControllerScope(
+  primaryController: myPrimaryController,
+  secondaryController: mySecondaryController,
+  primaryWidthController: myWidthController,
+  secondaryWidthController: mySecondaryWidthController,
+  child: ...,
+)
+```
+
+### Navigation controller
+
+```dart
+class FondeNavigationController extends ChangeNotifier {
+  String? get selectedItemId
+  List<String> get expandedGroupIds
+  void selectItem(String itemId)
+  void clearSelection()
+  void toggleGroup(String groupId)
+  bool isItemSelected(String itemId) -> bool
+  bool isGroupExpanded(String groupId) -> bool
+}
 
 FondeNavigationStateData {
   List<String> expandedGroupIds
@@ -317,82 +388,60 @@ FondeNavigationStateData {
 }
 ```
 
-### Search providers
+Wrap a subtree with `FondeNavigationControllerScope`:
 
 ```dart
-fondeSearchQueryProvider          // StateNotifier<String>
-  .notifier.updateQuery(String?)
-  .notifier.clearQuery()
+FondeNavigationControllerScope(
+  controller: myNavController,
+  child: ...,
+)
 
-fondeSearchFieldManagerProvider   // Provider<FondeSearchFieldManager>
-  .query -> String
-  .updateQuery(String?)
-  .clearQuery()
+// Access controller
+FondeNavigationControllerScope.of(context)  // FondeNavigationController?
+FondeNavigationController.maybeOf(context)  // FondeNavigationController?
 ```
 
-### Sidebar providers
+### Toolbar controller
 
 ```dart
-fondePrimarySidebarStateProvider  // StateNotifier<bool> (visibility)
-  .notifier.toggle()
-  .notifier.show()
-  .notifier.hide()
-  .notifier.setVisible(bool)
-
-fondeSecondarySidebarStateProvider  // StateNotifier<bool> (visibility)
-  .notifier.toggle()
-  .notifier.show()
-  .notifier.hide()
-  .notifier.setVisible(bool)
-
-fondePerScreenSecondarySidebarStateProvider  // StateNotifier<Map<int, bool>>
-  .notifier.getStateForScreen(int screenIndex) -> bool
-  .notifier.setStateForScreen(int screenIndex, bool visible)
-  .notifier.toggleStateForScreen(int screenIndex)
-
-fondeContextualSecondarySidebarStateProvider  // Provider<bool>
-
-sidebarWidthProvider              // StateNotifier<double> (240–480px, default 320px)
-  .notifier.setWidth(double)
-  .notifier.adjustWidth(double delta)
-
-secondarySidebarWidthProvider     // StateNotifier<double> (200–400px, default 288px)
-  .notifier.setWidth(double)
-  .notifier.adjustWidth(double delta)
-```
-
-### Toolbar providers
-
-```dart
-fondeToolbarStateManagerProvider  // StateNotifier<FondeToolbarState>
-  .notifier.selectTool(String toolId)
-  .notifier.enableTool(String toolId)
-  .notifier.disableTool(String toolId)
-  .notifier.updateState(FondeToolbarState)
-
-fondeToolbarActionsProvider       // Provider<FondeToolbarActions>
-  .selectTool(String toolId)
-  .enableTool(String toolId)
-  .disableTool(String toolId)
+class FondeToolbarController extends ChangeNotifier {
+  FondeToolbarState get state
+  void selectTool(String toolId)
+  void enableTool(String toolId)
+  void disableTool(String toolId)
+  void updateState(FondeToolbarState newState)
+}
 
 FondeToolbarState {
   String? selectedTool
   Set<String> enabledTools
 }
+```
 
-FondeToolbarItemData {
-  required String id
-  required Widget icon
-  String? tooltip
+Wrap with `FondeToolbarControllerScope`:
+
+```dart
+FondeToolbarControllerScope(controller: myToolbarController, child: ...)
+FondeToolbarControllerScope.of(context)   // FondeToolbarController?
+FondeToolbarController.maybeOf(context)   // FondeToolbarController?
+```
+
+### Search controller
+
+```dart
+class FondeSearchController extends ChangeNotifier {
+  String get query
+  void updateQuery(String? newQuery)
+  void clearQuery()
 }
 ```
 
-### Icon theme providers
+Wrap with `FondeSearchControllerScope`:
 
 ```dart
-fondeActiveIconThemeProvider      // StateNotifier<FondeIconTheme?>
-  .notifier.setIconTheme(FondeIconTheme)
-fondeDefaultIconThemeProvider     // Provider<FondeIconTheme> (falls back to lucide)
+FondeSearchControllerScope(controller: mySearchController, child: ...)
+FondeSearchControllerScope.of(context)  // FondeSearchController?
+FondeSearchController.maybeOf(context)  // FondeSearchController?
 ```
 
 ---
@@ -420,8 +469,10 @@ FondeScaffold({
 
 Layout: [launchBar | primarySidebar | content | secondarySidebar?]
 - Primary sidebar: resizable, 240–480px (before zoom), default 320px
-- Secondary sidebar: resizable, 200–400px, default 288px; toggled by `fondeSecondarySidebarStateProvider`
-- When primary sidebar is hidden (via `fondePrimarySidebarStateProvider`), uses collapsed layout with open button in toolbar
+- Secondary sidebar: resizable, 200–400px, default 288px
+- When primary sidebar is hidden (via `FondePrimarySidebarController`), uses collapsed layout with open button in toolbar
+
+`FondeScaffold` automatically installs `FondeSidebarControllerScope`.
 
 ### FondeSidebar
 
@@ -525,7 +576,7 @@ Desktop: side-by-side with draggable divider. Mobile (<breakpoint): stack naviga
 
 ### FondeToolbar
 
-Data-driven toolbar backed by fondeToolbarStateManagerProvider.
+Data-driven toolbar. Read toolbar state from `FondeToolbarController`.
 
 ```dart
 FondeToolbar({
@@ -605,13 +656,13 @@ enum FondeSidebarListItemStyle {
 }
 ```
 
-Uses `fondeSideBarColorScopeProvider` for colors automatically.
+Uses color scope from context automatically.
 Inside a `FondeSidebar(style: floatingPanel)`, `FondeSidebarList` automatically uses a
 transparent background (via `FondeFloatingPanelScope`) so the panel color shows through.
 
 ### FondeSidebarListGroup
 
-Group with expand/collapse header. Use with `fondeNavigationStateProvider`.
+Group with expand/collapse header. Use with `FondeNavigationController`.
 
 ```dart
 FondeSidebarListGroup({
@@ -808,7 +859,7 @@ enum FondeCheckboxFillStyle {
 Uses smooth rounded corners (cornerRadius: 4px) for rectangle shape.
 Check icon: `FondeIconTheme.check` (default: `LucideIcons.check400`).
 Indeterminate icon: `FondeIconTheme.checkIndeterminate` (default: `LucideIcons.minus400`).
-Both are overridable via `fondeActiveIconThemeProvider`.
+Both are overridable via `FondeIconThemeController`.
 Tristate: false → true → null → false.
 
 ### FondeRadioButton
@@ -843,7 +894,7 @@ Animation is intentionally always active (instant transition is visually jarring
 
 ### FondeDropdownMenu
 
-Dropdown selector, uses smooth corner styling.
+Dropdown selector with macOS-style interaction. Opens on tap-down; drag to hover item, release to select. Uses smooth corner styling.
 
 ### FondePopupMenu
 
@@ -1102,7 +1153,7 @@ FondeIcon(
 )
 ```
 
-Falls back to `fondeDefaultIconThemeProvider` for color.
+Falls back to icon theme from `context.fondeIconTheme`.
 
 ### FondeTag
 
@@ -1143,7 +1194,7 @@ Ripple/splash animations are disabled by design (animations that delay input res
 FondeText(
   String text, {
   required FondeTextVariant variant,
-  Color? color,           // falls back to fondeColorScopeProvider.text
+  Color? color,           // falls back to context.fondeColorScope.text
   TextAlign? textAlign,
   int? maxLines,
   TextOverflow? overflow,
@@ -1153,7 +1204,7 @@ FondeText(
 })
 ```
 
-Font size is multiplied by `accessibilityConfig.zoomScale`.
+Font size is multiplied by `context.fondeZoomScale`.
 
 ### FondeTextVariant — complete list
 
@@ -1208,18 +1259,24 @@ Page titles:
 Utility for building `TextStyle` from a `FondeTextVariant`.
 
 ```dart
-// From fonde_ui_riverpod.dart:
-FondeTextStyleBuilderRef.buildTextStyle({
+// Context-based (no Riverpod required):
+FondeTextStyleBuilder.buildTextStyle({
   required FondeTextVariant variant,
   required BuildContext context,
-  required WidgetRef ref,
   Color? color,
   FontWeight? fontWeight,
   String? fontFamily,
   bool disableZoom = false,
 }) -> TextStyle
 
-FondeTextStyleBuilderRef.buildTextStyleWithColor({...}) -> TextStyle
+FondeTextStyleBuilder.buildTextStyleWithColor({
+  required FondeTextVariant variant,
+  required BuildContext context,
+  required Color color,
+  FontWeight? fontWeight,
+  String? fontFamily,
+  bool disableZoom = false,
+}) -> TextStyle
 ```
 
 ---
@@ -1354,13 +1411,41 @@ FondeGestureDetector({
 
 macOS native menu bar integration.
 
+### FondeTooltip
+
+Themed tooltip widget.
+
+### FondeShortcutScope / FondeShortcutRegistry
+
+Keyboard shortcut scope and registry for scoped shortcut handling.
+
+### FondeSlider
+
+Themed slider widget.
+
+### FondeDraggable
+
+Themed draggable widget.
+
+### FondeSplitPane
+
+Resizable split pane widget.
+
+### FondeStatusBar
+
+Application status bar widget.
+
+### FondeNotificationControllerScope
+
+Wraps a subtree with a `FondeNotificationController` for managing toast/notification overlays.
+
 ---
 
 ## Icons
 
 ### FondeIconTheme
 
-Custom icon theme. When set via `fondeActiveIconThemeProvider`, widgets use it instead of Lucide defaults.
+Custom icon theme. When set via `context.fondeIconThemeController.setIconTheme(...)`, widgets use it instead of Lucide defaults.
 
 The default icon set is Lucide Icons. `lucideIconTheme` constant provides the default mapping.
 
@@ -1391,18 +1476,6 @@ FondeRectangleBorder({
 })
 ```
 
-Riverpod providers:
-
-```dart
-fondeRectangleBorderProvider          // Provider<SmoothRectangleBorder> (radius=12, smoothing=0.6, themed border)
-fondeShapeDecorationProvider(         // Provider<ShapeDecoration>
-  color: Color?,
-  cornerRadius: double?,
-  cornerSmoothing: double?,
-  side: BorderSide?,
-)
-```
-
 ### FondeBorderRadius
 
 Wrapper around `SmoothBorderRadius` for unified squircle corner values.
@@ -1422,8 +1495,6 @@ FondeBorderRadius.create({double? cornerRadius, double? cornerSmoothing})  // fa
 .toBorderRadiusGeometry()  // → BorderRadiusGeometry
 ```
 
-Provider: `fondeBorderRadiusProvider` → `FondeBorderRadius.medium()`
-
 ### FondeBorderSide
 
 `BorderSide` subclass with preset widths.
@@ -1434,8 +1505,6 @@ FondeBorderSide.standard()  // width=1.5 (default)
 FondeBorderSide.thick()     // width=2.0
 FondeBorderSide.none()      // width=0, style=none
 ```
-
-Provider: `fondeBorderSideProvider` → `FondeBorderSide.standard(color: colorScheme.base.border)`
 
 ### FondeBorderRadiusValues
 
@@ -1490,16 +1559,16 @@ FondeApp(
 ### Theme switching
 
 ```dart
-// Via Riverpod (from any ConsumerWidget)
-ref.read(fondeActiveThemeProvider.notifier).setTheme(FondeThemePresets.dark);
-ref.read(fondeActiveThemeProvider.notifier).setTheme(FondeThemePresets.light);
-ref.read(fondeActiveThemeProvider.notifier).setTheme(FondeThemePresets.system);
+// Via BuildContext extension (from any widget's build method)
+context.fondeThemeController.setTheme(FondeThemePresets.dark);
+context.fondeThemeController.setTheme(FondeThemePresets.light);
+context.fondeThemeController.setTheme(FondeThemePresets.system);
 ```
 
 ### Accent color switching
 
 ```dart
-ref.read(fondeThemeColorProvider.notifier).setThemeColor(FondeThemeColorType.indigo);
+context.fondeThemeColorController.setThemeColor(FondeThemeColorType.indigo);
 ```
 
 ### Dialog
@@ -1519,14 +1588,34 @@ await showFondeDialog<void>(
 );
 ```
 
-### Accessing color scheme in a ConsumerWidget
+### Accessing color scheme
 
 ```dart
-class MyWidget extends ConsumerWidget {
+class MyWidget extends StatelessWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colors = ref.watch(fondeEffectiveColorSchemeProvider);
+  Widget build(BuildContext context) {
+    final colors = context.fondeColorScheme;
     return Container(color: colors.base.background);
   }
 }
+```
+
+### Navigation with controller
+
+```dart
+final navController = FondeNavigationController();
+
+FondeNavigationControllerScope(
+  controller: navController,
+  child: FondeSidebarList(
+    children: [
+      FondeSidebarListItem(
+        id: 'item1',
+        title: 'Item 1',
+        isSelected: navController.isItemSelected('item1'),
+        onTap: () => navController.selectItem('item1'),
+      ),
+    ],
+  ),
+)
 ```
