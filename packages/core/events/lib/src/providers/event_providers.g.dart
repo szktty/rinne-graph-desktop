@@ -264,7 +264,7 @@ final class GlobalEventBusProvider
   }
 }
 
-String _$globalEventBusHash() => r'1ff3d2d76b10eaeb3183d7d50ec59679457fd712';
+String _$globalEventBusHash() => r'c1f141a1d5c7bd8909a6f80b4aef4002e7f679c9';
 
 /// Provider offering event operations
 
@@ -311,4 +311,4 @@ final class EventOperationsProvider
   }
 }
 
-String _$eventOperationsHash() => r'cb9be511ef626b4ba14093674ac38a7785e12f2b';
+String _$eventOperationsHash() => r'7355efb64193e831d610b288048bdc183b5617a6';

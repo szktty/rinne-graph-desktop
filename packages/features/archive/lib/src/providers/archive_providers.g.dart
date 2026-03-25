@@ -52,7 +52,7 @@ final class ArchivedEntitiesProvider
   }
 }
 
-String _$archivedEntitiesHash() => r'7197f981e3f40aa6ab95f3d599db2b4ab1123e93';
+String _$archivedEntitiesHash() => r'636596bb38ad939f514e7ed7c1a8781bb2eeaaba';
 
 /// Provider that offers archive operations.
 

@@ -72,7 +72,7 @@ final class StartupSettingsNotifierProvider
 }
 
 String _$startupSettingsNotifierHash() =>
-    r'f058513565aae37c4d10046437af7bcc236691f7';
+    r'8267e6ea8e8dd071d96f5cb894005ea5fbdc8ff8';
 
 /// Startup settings provider.
 
@@ -141,4 +141,4 @@ final class StartupSettingsSyncProvider
 }
 
 String _$startupSettingsSyncHash() =>
-    r'8d99fb668bb6408fb987ba5d7e5cfa1e94cf68df';
+    r'fdcd96b45b6cd77942e4f30532108931e324165e';

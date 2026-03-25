@@ -52,7 +52,7 @@ final class IsMacOSPlatformProvider
   }
 }
 
-String _$isMacOSPlatformHash() => r'2757fd06ca7b9a34bb248748f616da388e1c086e';
+String _$isMacOSPlatformHash() => r'0ee2515c413e87f32493fe8625b985ad3e0c97b7';
 
 /// Class for managing platform information.
 
@@ -98,4 +98,4 @@ final class PlatformInfoProvider
   }
 }
 
-String _$platformInfoHash() => r'1b1f871034120e089c34f6b9be7bbf5510722032';
+String _$platformInfoHash() => r'7d0f569a5616715d1fc30f10d58a480afec7e794';

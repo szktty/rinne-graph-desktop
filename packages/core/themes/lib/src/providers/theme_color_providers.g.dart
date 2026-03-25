@@ -116,7 +116,7 @@ final class ThemeColorSchemeProvider
   }
 }
 
-String _$themeColorSchemeHash() => r'983cab9cc953179a36a3b97f1f8c51179b30152d';
+String _$themeColorSchemeHash() => r'5275de1b8f1c9d68a0a353b7dcd3a8f8a9c12829';
 
 /// Based on the current theme, system brightness settings, and theme color,
 /// a Provider that obtains the AppColorScheme to be actually applied.
@@ -167,4 +167,4 @@ final class EffectiveColorSchemeWithThemeProvider
 }
 
 String _$effectiveColorSchemeWithThemeHash() =>
-    r'269075b2959b44043cc7fbf786ef616c207ad811';
+    r'27bad754f9e7b9418bd56f025af7f073a642f751';

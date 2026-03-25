@@ -16,8 +16,6 @@ dependencies:
     path: ../foundation_flutter
   core_themes:
     path: ../themes
-  presentation_components:
-    path: ../../presentation/components
   features_settings:
     path: ../../features/settings
   email_validator: ^3.0.0

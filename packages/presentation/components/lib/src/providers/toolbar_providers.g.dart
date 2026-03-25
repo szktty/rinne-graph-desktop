@@ -19,7 +19,7 @@ final toolbarStateManagerProvider = ToolbarStateManagerProvider._();
 ///
 /// Manages the selected tool and the set of enabled tools.
 final class ToolbarStateManagerProvider
-    extends $NotifierProvider<ToolbarStateManager, toolbar_state.ToolbarState> {
+    extends $NotifierProvider<ToolbarStateManager, FondeToolbarState> {
   /// Provider that manages the state of the toolbar.
   ///
   /// Manages the selected tool and the set of enabled tools.
@@ -42,38 +42,32 @@ final class ToolbarStateManagerProvider
   ToolbarStateManager create() => ToolbarStateManager();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(toolbar_state.ToolbarState value) {
+  Override overrideWithValue(FondeToolbarState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<toolbar_state.ToolbarState>(value),
+      providerOverride: $SyncValueProvider<FondeToolbarState>(value),
     );
   }
 }
 
 String _$toolbarStateManagerHash() =>
-    r'a4a5d059da2c29066a7e42e99e45098a78c6f3fc';
+    r'1830aca2e41ac0170b6dd0b0bd1f58176c6858c7';
 
 /// Provider that manages the state of the toolbar.
 ///
 /// Manages the selected tool and the set of enabled tools.
 
-abstract class _$ToolbarStateManager
-    extends $Notifier<toolbar_state.ToolbarState> {
-  toolbar_state.ToolbarState build();
+abstract class _$ToolbarStateManager extends $Notifier<FondeToolbarState> {
+  FondeToolbarState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref =
-        this.ref
-            as $Ref<toolbar_state.ToolbarState, toolbar_state.ToolbarState>;
+    final ref = this.ref as $Ref<FondeToolbarState, FondeToolbarState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<
-                toolbar_state.ToolbarState,
-                toolbar_state.ToolbarState
-              >,
-              toolbar_state.ToolbarState,
+              AnyNotifier<FondeToolbarState, FondeToolbarState>,
+              FondeToolbarState,
               Object?,
               Object?
             >;
@@ -125,4 +119,4 @@ final class ToolbarActionsProvider
   }
 }
 
-String _$toolbarActionsHash() => r'a775ad62f507a890c425b16f364406cfe0219302';
+String _$toolbarActionsHash() => r'c83e4aca4e3fbdd8b0b9b6d507b962ae90caf279';

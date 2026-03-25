@@ -72,7 +72,7 @@ StackCapsuleAdapter stackCapsuleAdapter(Ref ref) {
 
 /// Adapter from GraphCapsule to Riverpod
 class GraphCapsuleAdapter {
-  final GraphCapsuleAdapterRef _ref;
+  final Ref _ref;
 
   GraphCapsuleAdapter(this._ref);
 
@@ -99,7 +99,7 @@ class GraphCapsuleAdapter {
 
 /// Adapter from StackCapsule to Riverpod
 class StackCapsuleAdapter {
-  final StackCapsuleAdapterRef _ref;
+  final Ref _ref;
 
   StackCapsuleAdapter(this._ref);
 

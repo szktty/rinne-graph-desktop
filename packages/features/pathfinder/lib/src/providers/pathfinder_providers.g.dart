@@ -293,7 +293,7 @@ final class RecentItemsManagerProvider
 }
 
 String _$recentItemsManagerHash() =>
-    r'fb91ce63c84e2d5bfd928db818b67e68ce527d22';
+    r'1ef4db6e543c380677383304cab2c9f23b16c29c';
 
 /// Provider for the entity search service.
 
@@ -346,7 +346,7 @@ final class EntitySearchServiceProvider
 }
 
 String _$entitySearchServiceHash() =>
-    r'9bee90d574e8385b50ca00fe1b6b9acdd7dd5b40';
+    r'80056b325895bbac9d20d1930d9d637ca5d336ca';
 
 /// Provider that manages the active graph for the pathfinder.
 
@@ -515,7 +515,7 @@ final class RecentItemsProvider
   }
 }
 
-String _$recentItemsHash() => r'e96077ef783c12632172676e0be3b33cae773c7d';
+String _$recentItemsHash() => r'5841947fb5a2c5ebd819a35b35b9939202eaaece';
 
 /// Provider that provides a list of filtered items.
 
@@ -567,7 +567,7 @@ final class FilteredItemsProvider
   }
 }
 
-String _$filteredItemsHash() => r'c5ca7ef7309577bf9c9fe89a014bd174bd5b8fd2';
+String _$filteredItemsHash() => r'e7f6d6603106fd515791b755d3c73f49bb442d1f';
 
 /// Provider that searches for entities from graph data.
 
@@ -637,7 +637,7 @@ final class SearchEntitiesProvider
   }
 }
 
-String _$searchEntitiesHash() => r'3d09143747fe334495c9de6746d52ab863c737b0';
+String _$searchEntitiesHash() => r'cda8396ffc8e8b468b23728408b926b9ebe1c349';
 
 /// Provider that searches for entities from graph data.
 

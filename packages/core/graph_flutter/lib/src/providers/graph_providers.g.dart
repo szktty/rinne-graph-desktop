@@ -61,7 +61,7 @@ final class GraphStorageProvider
   }
 }
 
-String _$graphStorageHash() => r'69191e9d1c5208b02bde930bf771a42421296cf5';
+String _$graphStorageHash() => r'd7fd11ad1afdc78f8aeb333055b34571cc27f68c';
 
 /// Provider that provides graph context
 ///
@@ -116,7 +116,7 @@ final class GraphContextProvider
   }
 }
 
-String _$graphContextHash() => r'54805953ad2b83e5730e1e72ac021c43bd67e0c0';
+String _$graphContextHash() => r'cbc4ddd76a6cb7eda7c69806ab316bfda2502605';
 
 /// Provider that manages active graph
 ///
@@ -384,7 +384,7 @@ final class NodeOperationsProvider
   }
 }
 
-String _$nodeOperationsHash() => r'180eb903222488a4ab8be964156c9ef386041aa5';
+String _$nodeOperationsHash() => r'029cfb82810b2f34deb4c5edfcef00a38678286d';
 
 /// Provider that provides link operations
 ///
@@ -436,7 +436,7 @@ final class LinkOperationsProvider
   }
 }
 
-String _$linkOperationsHash() => r'993c4063c33e9a81ddd19cd553be4828c7ed0a84';
+String _$linkOperationsHash() => r'764366e3ed0337ffc7e38178a03e66fad4c66253';
 
 /// Provider that provides binary data operations
 ///
@@ -495,7 +495,7 @@ final class BinaryDataOperationsProvider
 }
 
 String _$binaryDataOperationsHash() =>
-    r'ffab45b7f285288af0eed8496aee731d2949e520';
+    r'ebead6f2cd06d446c5728bbe004d61e70599e550';
 
 /// Provider that provides transaction operations
 ///
@@ -554,7 +554,7 @@ final class TransactionOperationsProvider
 }
 
 String _$transactionOperationsHash() =>
-    r'790ee6a321b6c87e472d09270d690e10275e9b96';
+    r'd0f65ea1edfa88f060c42a63b2b266a68de25a92';
 
 /// Provider that provides graph statistics
 ///
@@ -609,7 +609,7 @@ final class GraphStatisticsProvider
   }
 }
 
-String _$graphStatisticsHash() => r'7672b1185db830cf4b15e4d2a9304e42c79b58a0';
+String _$graphStatisticsHash() => r'eceb1272f5d2621217a10df27df99ca97f7bdc22';
 
 /// Provider that provides available graph metadata
 ///
@@ -659,7 +659,7 @@ final class GraphMetadataProvider
   }
 }
 
-String _$graphMetadataHash() => r'39e9b0e3e6bc90b3839a8a40500d53042910421f';
+String _$graphMetadataHash() => r'27e8bb3542828d9cfbe676c23024eb2476fb321e';
 
 /// Factory provider for node query builder
 ///
@@ -718,7 +718,7 @@ final class NodeQueryBuilderFactoryProvider
 }
 
 String _$nodeQueryBuilderFactoryHash() =>
-    r'f4a726ca46ea0bef1bfd6f7f8a0d8ff70448a838';
+    r'1f33d511693079ef2b33422457e62d21e0cc59f6';
 
 /// Factory provider for link query builder
 ///
@@ -777,7 +777,7 @@ final class LinkQueryBuilderFactoryProvider
 }
 
 String _$linkQueryBuilderFactoryHash() =>
-    r'7a25cc71acf3b0c6a7bd0df94c0267022c27ac12';
+    r'b4906b789a3aee9b72246f11f4ae3ec1f7ce9e6e';
 
 /// Node list cache provider
 ///
@@ -847,7 +847,7 @@ final class NodesListProvider
   }
 }
 
-String _$nodesListHash() => r'86f41b74a513b2b4c2951ee63f8aadebee0653a6';
+String _$nodesListHash() => r'165cfba1c60bc62d2578b390d0cc7bfa84d44358';
 
 /// Node list cache provider
 ///
@@ -945,7 +945,7 @@ final class LinksListProvider
   }
 }
 
-String _$linksListHash() => r'accebc908acfc5dabb68be9784430e5ee6a7c77f';
+String _$linksListHash() => r'7c8c8dca417a28575d7a71b6d7f9585c6bc79cca';
 
 /// Link list cache provider
 ///

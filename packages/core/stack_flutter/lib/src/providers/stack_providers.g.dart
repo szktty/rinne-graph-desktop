@@ -50,7 +50,7 @@ final class DocumentsDirectoryProvider
 }
 
 String _$documentsDirectoryHash() =>
-    r'da8c43d011f6b17480413b9c84e7de1c8576cccd';
+    r'955bede3caee73cb70d684941997ee325b92fd2f';
 
 /// Provider to provide root directory for stack search
 
@@ -94,7 +94,7 @@ final class StackSearchDirectoryProvider
 }
 
 String _$stackSearchDirectoryHash() =>
-    r'fd5957bdf33d98c5f5059299afd47722bc61b00b';
+    r'4c494ece0f0f41153b74ba2412f70a8dcd529ca6';
 
 /// Provider to asynchronously get scratch stack directory
 
@@ -138,7 +138,7 @@ final class ScratchesDirectoryProvider
 }
 
 String _$scratchesDirectoryHash() =>
-    r'e1dcceae3b66bcfa27c73c38297855d5939050eb';
+    r'db8513139e2187d5e0f8ffa7388f7524c5f15ffc';
 
 /// Provider to asynchronously get sample stacks directory
 
@@ -181,7 +181,7 @@ final class SamplesDirectoryProvider
   }
 }
 
-String _$samplesDirectoryHash() => r'c2e9e84f51e5756919534d5d94c777df366faf5f';
+String _$samplesDirectoryHash() => r'460c671d5bf38c3b9e6641195e8e3342023fa802';
 
 /// Provider to provide list of sample stacks as List<Stack>
 
@@ -225,7 +225,7 @@ final class SampleStacksListProvider
   }
 }
 
-String _$sampleStacksListHash() => r'99c8ae2e04cae7737362b28b887fc1494ada898b';
+String _$sampleStacksListHash() => r'ae7027b6653fb163a985c416972bd1b9f0c43d85';
 
 /// Provider to trigger stack list update
 
@@ -323,7 +323,7 @@ final class AvailableStacksStreamProvider
 }
 
 String _$availableStacksStreamHash() =>
-    r'1abd85812f6db34165faef1ea55a8d5b67933f46';
+    r'54dd18ea0df5b089aab8970e7a80f89158ecfca4';
 
 /// Provider to provide list of available stacks as List<Stack>
 /// Archived stacks are excluded
@@ -371,7 +371,7 @@ final class AvailableStacksListProvider
 }
 
 String _$availableStacksListHash() =>
-    r'c7820530015ad9e72141809169a20f7d449ed8dd';
+    r'aab0c1fdb7bb5f055ff5f73328278e420dbd49e8';
 
 /// Provider to provide list of all stacks (including archived) as List<Stack>
 
@@ -415,7 +415,7 @@ final class AllStacksListProvider
   }
 }
 
-String _$allStacksListHash() => r'dff17a3d264d85f80478598e6f3075fa15a558c0';
+String _$allStacksListHash() => r'faca17796eb61fdd7c6228946ddcf86aba597a67';
 
 /// Provider to provide actions for stack creation, deletion, etc.
 

@@ -52,7 +52,7 @@ final class SupportedLocalesProvider
   }
 }
 
-String _$supportedLocalesHash() => r'993f584d56ef247295f7a5ce2de8f90561d6e466';
+String _$supportedLocalesHash() => r'7e440186642bad5a839878d8909e561d0a6dca12';
 
 /// Notifier for language switching.
 /// This notifier is independent of settings and holds locale state.
@@ -168,4 +168,4 @@ final class CurrentLocaleProvider
   }
 }
 
-String _$currentLocaleHash() => r'2f4fd247c50eec1ecbebc781d046fdf2e0b9bec6';
+String _$currentLocaleHash() => r'b8996befd6c83b706fc02c613bce193cedbaa1ab';

@@ -175,7 +175,7 @@ final class ActiveTasksProvider
   }
 }
 
-String _$activeTasksHash() => r'2b2587f3bff7f3e6c2396418c256eebfbc9d6b79';
+String _$activeTasksHash() => r'1a5b3b57ba6fbfa515cb3b6a9b60ca3c029655cd';
 
 /// Task panel actions provider
 

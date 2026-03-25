@@ -64,7 +64,7 @@ final class IdFactoryProvider
   }
 }
 
-String _$idFactoryHash() => r'933f9e439f4ef65d1df599233ef3e65843403e2b';
+String _$idFactoryHash() => r'63cd7de035c06a6ba33b1fcadc7062f735991990';
 
 /// Provider for managing IDs.
 
@@ -169,7 +169,7 @@ final class IdGeneratorProvider
   }
 }
 
-String _$idGeneratorHash() => r'23c2c7cf655a89a840b304b5d141f1952848e835';
+String _$idGeneratorHash() => r'b798593ba6a8aef2e28de22a28d6fa97ac64c354';
 
 /// Provider that provides an ID generator for testing.
 
@@ -215,7 +215,7 @@ final class TestIdGeneratorProvider
   }
 }
 
-String _$testIdGeneratorHash() => r'2302033894b3a515cccf0e3fa419fbe0f980b50b';
+String _$testIdGeneratorHash() => r'd54f3f41154d5473c9825fe238f6cd923a6a63b9';
 
 /// Provider that provides an in-memory ID generator.
 
@@ -262,4 +262,4 @@ final class InMemoryIdGeneratorProvider
 }
 
 String _$inMemoryIdGeneratorHash() =>
-    r'5aab2fc9bd0926f4f5ae2be9dbd80fe595900733';
+    r'9eb810713771201efbad5dfca42b57b51f02e8fa';

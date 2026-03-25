@@ -338,7 +338,7 @@ final class ScreenBasedSecondarySidebarStateProvider
 }
 
 String _$screenBasedSecondarySidebarStateHash() =>
-    r'3615441fe78863c834b3a0574f27f1e8af8c28e5';
+    r'360f75da7a0052601c390965ad24df8ceed04eb7';
 
 /// Provider managing secondary sidebar state per screen
 /// Retains and restores state based on activity bar index
@@ -398,7 +398,7 @@ final class ActivityBarChangeListenerProvider
 }
 
 String _$activityBarChangeListenerHash() =>
-    r'a9575d580f77088cdb4fb922fae01e7ed6733530';
+    r'af17c20af49bafed8caa74ef68917ee5d392e865';
 
 /// Provider that monitors activity bar changes and restores secondary sidebar state
 

@@ -58,7 +58,7 @@ final class FileSystemServiceProvider
   }
 }
 
-String _$fileSystemServiceHash() => r'75336f30fb6228a20103ca79e17c425d96c0bf48';
+String _$fileSystemServiceHash() => r'9c81ed79e3bd7c50d578550928af8bed13e69982';
 
 /// Provider that provides the application's documents directory
 
@@ -102,7 +102,7 @@ final class DocumentsDirectoryProvider
 }
 
 String _$documentsDirectoryHash() =>
-    r'dbc3a5bd5d70d0052c45a2e65984bd9972b0063d';
+    r'23c2da1229a7ee858c7ba5590040801b85469b3c';
 
 /// Provider that provides the application's support directory
 
@@ -145,7 +145,7 @@ final class SupportDirectoryProvider
   }
 }
 
-String _$supportDirectoryHash() => r'38a882b99b6c7c51d1b3299b4186c911bd0ddc67';
+String _$supportDirectoryHash() => r'93e853c3ad19975cdbdff211a9d7d38312e1c637';
 
 /// Provider that provides the application's temporary directory
 
@@ -189,7 +189,7 @@ final class TemporaryDirectoryProvider
 }
 
 String _$temporaryDirectoryHash() =>
-    r'd27d2f9f304878bbc24c5688f315ee53a2334540';
+    r'd5a7c214e98959e5117d0cca0dad7e6bf67249ae';
 
 /// Provider that provides file system operations
 
@@ -242,4 +242,4 @@ final class FileSystemOperationsProvider
 }
 
 String _$fileSystemOperationsHash() =>
-    r'f5234ca53c4fd2dacb59649e29fea40155ababf8';
+    r'fcbe8a7379b07cda8442814854da2661a3731c17';
