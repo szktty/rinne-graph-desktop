@@ -770,7 +770,9 @@ class RinneGraphStorage implements GraphStorage {
     rg.Traversal traversal,
     Predicate predicate,
   ) {
-    if (predicate is PropertyPredicate) {
+    if (predicate is AnyKeyContainsPredicate) {
+      return traversal.hasAnyKeyContains(predicate.value);
+    } else if (predicate is PropertyPredicate) {
       switch (predicate.operator) {
         case PredicateOperator.equals:
           return traversal.hasKey(predicate.propertyKey, predicate.value);
@@ -815,7 +817,9 @@ class RinneGraphStorage implements GraphStorage {
     rg.Traversal traversal,
     Predicate predicate,
   ) {
-    if (predicate is PropertyPredicate) {
+    if (predicate is AnyKeyContainsPredicate) {
+      return traversal.hasAnyKeyContains(predicate.value);
+    } else if (predicate is PropertyPredicate) {
       switch (predicate.operator) {
         case PredicateOperator.equals:
           return traversal.hasKey(predicate.propertyKey, predicate.value);

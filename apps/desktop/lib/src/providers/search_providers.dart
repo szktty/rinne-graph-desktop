@@ -6,6 +6,7 @@
  * For commercial licensing inquiries, please contact: contact@szktty.jp
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/search_models.dart';
@@ -178,6 +179,110 @@ SearchExecutionService? searchExecutionService(Ref ref) {
 SearchPatternTranslator searchPatternTranslator(Ref ref) {
   return SearchPatternTranslator();
 }
+
+// ---------------------------------------------------------------------------
+// Keyword search providers
+// ---------------------------------------------------------------------------
+
+/// Keyword search input text
+@riverpod
+class KeywordSearchQuery extends _$KeywordSearchQuery {
+  @override
+  String build() => '';
+
+  void setQuery(String query) => state = query;
+  void clear() => state = '';
+}
+
+/// Label/type filter state for keyword search
+class KeywordSearchFilters {
+  final Set<String> nodeLabels; // empty = all
+  final Set<String> linkTypes; // empty = all
+
+  const KeywordSearchFilters({
+    this.nodeLabels = const {},
+    this.linkTypes = const {},
+  });
+
+  KeywordSearchFilters copyWith({
+    Set<String>? nodeLabels,
+    Set<String>? linkTypes,
+  }) => KeywordSearchFilters(
+    nodeLabels: nodeLabels ?? this.nodeLabels,
+    linkTypes: linkTypes ?? this.linkTypes,
+  );
+}
+
+@riverpod
+class KeywordSearchFiltersState extends _$KeywordSearchFiltersState {
+  @override
+  KeywordSearchFilters build() => const KeywordSearchFilters();
+
+  void toggleNodeLabel(String label) {
+    final updated = Set<String>.from(state.nodeLabels);
+    if (updated.contains(label)) {
+      updated.remove(label);
+    } else {
+      updated.add(label);
+    }
+    state = state.copyWith(nodeLabels: updated);
+  }
+
+  void toggleLinkType(String type) {
+    final updated = Set<String>.from(state.linkTypes);
+    if (updated.contains(type)) {
+      updated.remove(type);
+    } else {
+      updated.add(type);
+    }
+    state = state.copyWith(linkTypes: updated);
+  }
+
+  void clear() => state = const KeywordSearchFilters();
+}
+
+/// Keyword search result (separate from Path Search result)
+@riverpod
+class KeywordSearchResult extends _$KeywordSearchResult {
+  @override
+  SearchResult? build() => null;
+
+  void setResult(SearchResult? result) => state = result;
+  void clear() => state = null;
+}
+
+/// Keyword search executing flag (separate from Path Search)
+@riverpod
+class KeywordSearchExecuting extends _$KeywordSearchExecuting {
+  @override
+  bool build() => false;
+
+  void start() => state = true;
+  void stop() => state = false;
+}
+
+/// Available node labels from real graph data
+@riverpod
+Future<List<String>> availableNodeLabels(Ref ref) async {
+  final service = ref.watch(searchExecutionServiceProvider);
+  if (service == null) return [];
+  final data = await service.getAvailableLabelsAndTypes();
+  return (data['nodeLabels'] as List).cast<String>();
+}
+
+/// Available link types from real graph data
+@riverpod
+Future<List<String>> availableLinkTypes(Ref ref) async {
+  final service = ref.watch(searchExecutionServiceProvider);
+  if (service == null) return [];
+  final data = await service.getAvailableLabelsAndTypes();
+  return (data['linkTypes'] as List).cast<String>();
+}
+
+
+// ---------------------------------------------------------------------------
+// Path Search providers (kept for future restoration)
+// ---------------------------------------------------------------------------
 
 /// Search execution action provider
 @riverpod

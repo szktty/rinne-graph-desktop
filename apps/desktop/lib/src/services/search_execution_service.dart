@@ -129,7 +129,8 @@ class SearchExecutionService {
     required String keyword,
     required ExplorationOptions options,
   }) async {
-    if (keyword.trim().isEmpty) {
+    final trimmed = keyword.trim();
+    if (trimmed.isEmpty) {
       return const SearchResult(
         nodes: [],
         links: [],
@@ -139,19 +140,48 @@ class SearchExecutionService {
       );
     }
 
-    // Create a simple pattern using a keyword
-    final pattern = PatternEntity(
-      id: 'keyword_search',
-      type: PatternEntityType.node,
-      label: '',
-      keyword: "'$keyword'",
-    );
+    final stopwatch = Stopwatch()..start();
 
-    return executePatternSearch(
-      nodePatterns: [pattern],
-      linkConfigurations: {},
-      options: options,
-    );
+    try {
+      if (!await _graphStorage.isReady()) {
+        throw const SearchExecutionError('Graph storage is not ready');
+      }
+
+      final nodeQuery = GraphQuery<Node>(entityType: Node)
+          .where(anyKeyContains(trimmed))
+          .limitTo(options.maxResults);
+      final linkQuery = GraphQuery<Link>(entityType: Link)
+          .where(anyKeyContains(trimmed))
+          .limitTo(options.maxResults);
+
+      final results = await Future.wait([
+        _graphStorage.queryNodes(nodeQuery),
+        _graphStorage.queryLinks(linkQuery),
+      ]);
+      final nodeResult = results[0] as QueryResult<Node>;
+      final linkResult = results[1] as QueryResult<Link>;
+
+      final sortedNodes = _applySorting(nodeResult.items, options.sortOrder);
+      final sortedLinks = _applySorting(linkResult.items, options.sortOrder);
+
+      stopwatch.stop();
+
+      return SearchResult(
+        nodes: sortedNodes,
+        links: sortedLinks,
+        totalNodeCount: nodeResult.totalCount,
+        totalLinkCount: linkResult.totalCount,
+        hasMoreNodes: nodeResult.hasMore,
+        hasMoreLinks: linkResult.hasMore,
+        executionTime: stopwatch.elapsed,
+      );
+    } catch (e) {
+      stopwatch.stop();
+      throw SearchExecutionError(
+        'Failed to execute keyword search: ${e.toString()}',
+        e,
+      );
+    }
   }
 
   /// Searches directly by entity ID
