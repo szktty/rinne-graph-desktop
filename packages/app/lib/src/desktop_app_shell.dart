@@ -23,7 +23,7 @@ class DesktopAppShell extends ConsumerWidget {
       title: 'Settings Test',
       theme: themeData,
       darkTheme: themeData,
-      themeMode: appThemeData.themeMode,
+      themeMode: appThemeData.theme.themeMode,
       debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: false,
       home: Scaffold(body: body),

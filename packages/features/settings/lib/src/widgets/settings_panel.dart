@@ -64,7 +64,7 @@ class _SettingsPanelState extends ConsumerState<SettingsPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final query = ref.watch(fondeSearchQueryProvider);
+    final query = ref.watch(searchQueryProvider);
     final filteredItems = searchSettings(
       items: widget.items,
       getSearchKeywords: (item) => item.keywords,
@@ -107,14 +107,14 @@ class _SettingsPanelState extends ConsumerState<SettingsPanel> {
                     hint: widget.searchPlaceholder,
                     value: query,
                     onChange: (text) {
-                      ref.read(fondeSearchQueryProvider.notifier).updateQuery(text);
+                      ref.read(searchQueryProvider.notifier).updateQuery(text);
                     },
                     onClear:
                         query.isNotEmpty
                             ? () {
                               _searchController.clear();
                               ref
-                                  .read(fondeSearchQueryProvider.notifier)
+                                  .read(searchQueryProvider.notifier)
                                   .clearQuery();
                             }
                             : null,

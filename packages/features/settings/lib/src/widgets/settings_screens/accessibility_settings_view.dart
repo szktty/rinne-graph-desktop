@@ -9,7 +9,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_themes/core_themes.dart';
-import 'package:fonde_ui/fonde_ui_riverpod.dart';
 import 'package:presentation_components/presentation_components.dart';
 
 class AccessibilitySettingsView extends ConsumerWidget {
@@ -18,7 +17,8 @@ class AccessibilitySettingsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
-    final accessibilityConfig = ref.watch(fondeAccessibilityConfigProvider);
+    final accessibilityCtrl = ref.watch(fondeAccessibilityConfigProvider);
+    final accessibilityConfig = accessibilityCtrl.config;
 
     return FondePanel(
       margin: EdgeInsets.zero,

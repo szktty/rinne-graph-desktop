@@ -44,7 +44,7 @@ AppColorScheme effectiveColorSchemeWithTheme(Ref ref) {
   final themeColorType = ref.watch(themeColorTypeProvider);
 
   // Get base ColorScheme
-  final effectiveColorScheme = themeData.getEffectiveAppColorScheme(
+  final effectiveColorScheme = themeData.theme.getEffectiveAppColorScheme(
     platformBrightness,
   );
 

@@ -8,80 +8,15 @@ part of 'sidebar_state_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// A map that manages the secondary sidebar state for each screen.
-/// Key: index of the activity bar, Value: visibility state of the sidebar.
-
-@ProviderFor(PerScreenSecondarySidebarState)
-final perScreenSecondarySidebarStateProvider =
-    PerScreenSecondarySidebarStateProvider._();
-
-/// A map that manages the secondary sidebar state for each screen.
-/// Key: index of the activity bar, Value: visibility state of the sidebar.
-final class PerScreenSecondarySidebarStateProvider
-    extends $NotifierProvider<PerScreenSecondarySidebarState, Map<int, bool>> {
-  /// A map that manages the secondary sidebar state for each screen.
-  /// Key: index of the activity bar, Value: visibility state of the sidebar.
-  PerScreenSecondarySidebarStateProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'perScreenSecondarySidebarStateProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$perScreenSecondarySidebarStateHash();
-
-  @$internal
-  @override
-  PerScreenSecondarySidebarState create() => PerScreenSecondarySidebarState();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Map<int, bool> value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<Map<int, bool>>(value),
-    );
-  }
-}
-
-String _$perScreenSecondarySidebarStateHash() =>
-    r'bcc0a6654129f13732784d73b5e9696d0cd02fb2';
-
-/// A map that manages the secondary sidebar state for each screen.
-/// Key: index of the activity bar, Value: visibility state of the sidebar.
-
-abstract class _$PerScreenSecondarySidebarState
-    extends $Notifier<Map<int, bool>> {
-  Map<int, bool> build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final ref = this.ref as $Ref<Map<int, bool>, Map<int, bool>>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<Map<int, bool>, Map<int, bool>>,
-              Map<int, bool>,
-              Object?,
-              Object?
-            >;
-    element.handleCreate(ref, build);
-  }
-}
-
-/// Provider that manages the visibility state of the primary sidebar (left side).
+/// Provider that manages the visibility of the primary sidebar.
 
 @ProviderFor(PrimarySidebarState)
 final primarySidebarStateProvider = PrimarySidebarStateProvider._();
 
-/// Provider that manages the visibility state of the primary sidebar (left side).
+/// Provider that manages the visibility of the primary sidebar.
 final class PrimarySidebarStateProvider
     extends $NotifierProvider<PrimarySidebarState, bool> {
-  /// Provider that manages the visibility state of the primary sidebar (left side).
+  /// Provider that manages the visibility of the primary sidebar.
   PrimarySidebarStateProvider._()
     : super(
         from: null,
@@ -110,9 +45,9 @@ final class PrimarySidebarStateProvider
 }
 
 String _$primarySidebarStateHash() =>
-    r'949060907b3824817cda678f7b573d6c82221da9';
+    r'5244ce21dab0b0e79f232a61bd1e6a045ee867aa';
 
-/// Provider that manages the visibility state of the primary sidebar (left side).
+/// Provider that manages the visibility of the primary sidebar.
 
 abstract class _$PrimarySidebarState extends $Notifier<bool> {
   bool build();
@@ -132,18 +67,15 @@ abstract class _$PrimarySidebarState extends $Notifier<bool> {
   }
 }
 
-/// Provider that manages the visibility state of the secondary sidebar (right side).
-/// Manages the state for each screen based on the current activity bar index.
+/// Provider that manages the visibility of the secondary sidebar.
 
 @ProviderFor(SecondarySidebarState)
 final secondarySidebarStateProvider = SecondarySidebarStateProvider._();
 
-/// Provider that manages the visibility state of the secondary sidebar (right side).
-/// Manages the state for each screen based on the current activity bar index.
+/// Provider that manages the visibility of the secondary sidebar.
 final class SecondarySidebarStateProvider
     extends $NotifierProvider<SecondarySidebarState, bool> {
-  /// Provider that manages the visibility state of the secondary sidebar (right side).
-  /// Manages the state for each screen based on the current activity bar index.
+  /// Provider that manages the visibility of the secondary sidebar.
   SecondarySidebarStateProvider._()
     : super(
         from: null,
@@ -172,10 +104,9 @@ final class SecondarySidebarStateProvider
 }
 
 String _$secondarySidebarStateHash() =>
-    r'6c522f5354c8d7fa1a0ff9282b9bd0c16ea53d51';
+    r'211f6783b5b0ab3b3088aed6347a5e2a09f00dcb';
 
-/// Provider that manages the visibility state of the secondary sidebar (right side).
-/// Manages the state for each screen based on the current activity bar index.
+/// Provider that manages the visibility of the secondary sidebar.
 
 abstract class _$SecondarySidebarState extends $Notifier<bool> {
   bool build();
@@ -195,53 +126,71 @@ abstract class _$SecondarySidebarState extends $Notifier<bool> {
   }
 }
 
-/// Secondary sidebar state provider based on the current activity bar index.
-/// This provider automatically manages the state for each screen.
+/// Provider that manages the per-screen visibility of the secondary sidebar.
+///
+/// Stores a map from activity bar screen index to sidebar visibility.
 
-@ProviderFor(contextualSecondarySidebarState)
-final contextualSecondarySidebarStateProvider =
-    ContextualSecondarySidebarStateProvider._();
+@ProviderFor(PerScreenSecondarySidebarState)
+final perScreenSecondarySidebarStateProvider =
+    PerScreenSecondarySidebarStateProvider._();
 
-/// Secondary sidebar state provider based on the current activity bar index.
-/// This provider automatically manages the state for each screen.
-
-final class ContextualSecondarySidebarStateProvider
-    extends $FunctionalProvider<bool, bool, bool>
-    with $Provider<bool> {
-  /// Secondary sidebar state provider based on the current activity bar index.
-  /// This provider automatically manages the state for each screen.
-  ContextualSecondarySidebarStateProvider._()
+/// Provider that manages the per-screen visibility of the secondary sidebar.
+///
+/// Stores a map from activity bar screen index to sidebar visibility.
+final class PerScreenSecondarySidebarStateProvider
+    extends $NotifierProvider<PerScreenSecondarySidebarState, Map<int, bool>> {
+  /// Provider that manages the per-screen visibility of the secondary sidebar.
+  ///
+  /// Stores a map from activity bar screen index to sidebar visibility.
+  PerScreenSecondarySidebarStateProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'contextualSecondarySidebarStateProvider',
+        name: r'perScreenSecondarySidebarStateProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$contextualSecondarySidebarStateHash();
+  String debugGetCreateSourceHash() => _$perScreenSecondarySidebarStateHash();
 
   @$internal
   @override
-  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  bool create(Ref ref) {
-    return contextualSecondarySidebarState(ref);
-  }
+  PerScreenSecondarySidebarState create() => PerScreenSecondarySidebarState();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
+  Override overrideWithValue(Map<int, bool> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
+      providerOverride: $SyncValueProvider<Map<int, bool>>(value),
     );
   }
 }
 
-String _$contextualSecondarySidebarStateHash() =>
-    r'96e8a7487c59b14e817408e588b71ec7ecc2faef';
+String _$perScreenSecondarySidebarStateHash() =>
+    r'0ed58f27579ed15edbead6aa47bc64caaa40e52a';
+
+/// Provider that manages the per-screen visibility of the secondary sidebar.
+///
+/// Stores a map from activity bar screen index to sidebar visibility.
+
+abstract class _$PerScreenSecondarySidebarState
+    extends $Notifier<Map<int, bool>> {
+  Map<int, bool> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<Map<int, bool>, Map<int, bool>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Map<int, bool>, Map<int, bool>>,
+              Map<int, bool>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

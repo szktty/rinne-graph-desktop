@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fonde_ui/fonde_ui.dart';
-import 'package:fonde_ui/fonde_ui_riverpod.dart';
 import 'package:presentation_components/presentation_components.dart';
 import 'package:features_updates/updates.dart' as features_updates;
 import 'package:app/app.dart';
@@ -125,9 +124,9 @@ class MainAppShell extends ConsumerWidget {
     final selectedActivityType = ref.watch(selectedActivityItemProvider);
 
     // Get the sidebar visibility state
-    final isPrimarySidebarVisible = ref.watch(fondePrimarySidebarStateProvider);
+    final isPrimarySidebarVisible = ref.watch(primarySidebarStateProvider);
     final isSecondarySidebarVisible = ref.watch(
-      fondeSecondarySidebarStateProvider,
+      secondarySidebarStateProvider,
     );
 
     // Get workflow state

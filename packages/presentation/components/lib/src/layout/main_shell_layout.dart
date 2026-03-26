@@ -79,7 +79,7 @@ class _MainShellLayoutState extends ConsumerState<MainShellLayout> {
 
     // Watch the visibility state of the sidebars
     final sidebarVisible = widget.showPrimarySidebar;
-    final secondarySidebarVisible = ref.watch(fondeSecondarySidebarStateProvider);
+    final secondarySidebarVisible = ref.watch(secondarySidebarStateProvider);
 
     // If the sidebar is hidden, use FondeCollapsedSidebarLayout
     if (!sidebarVisible) {

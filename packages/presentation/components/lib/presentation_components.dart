@@ -12,19 +12,19 @@ library;
 // Fonde UI — re-exported directly
 // ============================================================
 export 'package:fonde_ui/fonde_ui.dart';
-export 'package:fonde_ui/fonde_ui_riverpod.dart';
 
 // Fonde UI internals not in public barrel
 export 'package:fonde_ui/src/widgets/styling/fonde_border.dart'
     show FondeBorderWidth, FondeBorder, FondeBorderContainer;
-export 'package:fonde_ui/src/widgets/widgets/fonde_rectangle_border.dart'
-    show fondeBorderRadiusProvider, FondeBorderRadiusProvider;
 
 // ============================================================
 // Providers (RinneGraph-specific)
 // ============================================================
 export 'src/providers/navigation_providers.dart';
 export 'src/providers/search_providers.dart';
+export 'src/providers/sidebar_state_providers.dart';
+export 'src/providers/sidebar_width_provider.dart';
+export 'src/providers/toolbar_providers.dart';
 
 // ============================================================
 // Layout (RinneGraph-specific shell)

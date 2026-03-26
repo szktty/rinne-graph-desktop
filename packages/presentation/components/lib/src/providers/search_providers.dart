@@ -1,19 +1,22 @@
-// Delegate to Fonde UI search providers.
-import 'package:fonde_ui/fonde_ui_riverpod.dart'
-    show
-        fondeSearchQueryProvider,
-        fondeSearchFieldManagerProvider,
-        FondeSearchQuery,
-        FondeSearchFieldManager;
+/*
+ * Copyright (c) 2026 SUZUKI Tetsuya
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Commercial
+ *
+ * This file is part of RinneGraph.
+ * For commercial licensing inquiries, please contact: contact@szktty.jp
+ */
 
-export 'package:fonde_ui/fonde_ui_riverpod.dart'
-    show
-        fondeSearchQueryProvider,
-        fondeSearchFieldManagerProvider,
-        FondeSearchQuery,
-        FondeSearchFieldManager;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final searchQueryProvider = fondeSearchQueryProvider;
-final searchFieldManagerProvider = fondeSearchFieldManagerProvider;
-typedef SearchQuery = FondeSearchQuery;
-typedef SearchFieldManager = FondeSearchFieldManager;
+part 'search_providers.g.dart';
+
+/// Provider that manages the current search query string.
+@riverpod
+class SearchQuery extends _$SearchQuery {
+  @override
+  String build() => '';
+
+  void updateQuery(String? query) => state = query ?? '';
+  void clearQuery() => state = '';
+}
+

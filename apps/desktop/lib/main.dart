@@ -13,11 +13,11 @@ import 'package:app/app.dart';
 import 'package:plough/plough.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fonde_ui/fonde_ui.dart';
-import 'package:fonde_ui/fonde_ui_riverpod.dart';
 import 'package:core_foundation_flutter/core_foundation_flutter.dart';
 import 'package:core_app_config/core_app_config.dart';
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 import 'package:core_settings/core_settings.dart';
+import 'package:core_themes/core_themes.dart';
 
 import 'src/widgets/menu_builder.dart';
 import 'src/widgets/main_app_shell.dart';
@@ -26,6 +26,17 @@ import 'src/providers/graph_providers.dart';
 
 // Global reference to activity bar navigation function
 Function(int)? _globalActivityBarNavigator;
+
+// ---------------------------------------------------------------------------
+// Global controllers (owned outside ProviderScope so they can be passed as
+// overrides AND used by FondeThemeManager in the same widget tree).
+// ---------------------------------------------------------------------------
+final _themeController = FondeThemeController(
+  initialTheme: FondeThemePresets.system,
+);
+final _themeColorController = FondeThemeColorController();
+final _accessibilityController = FondeAccessibilityController();
+final _iconThemeController = FondeIconThemeController();
 
 Future<void> main(List<String> args) async {
   Plough().debugLogEnabled = false;
@@ -60,8 +71,11 @@ Future<void> main(List<String> args) async {
 // Global NavigatorKey (used for settings dialogs, etc.)
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-/// Root app widget. Wraps ProviderScope with app-level overrides, then
-/// delegates theme/MaterialApp setup to FondeApp via [_AppBody].
+/// Root app widget.
+///
+/// Creates [ProviderScope] with controller overrides, wraps with
+/// [FondeThemeManager] to activate context.fondeColorScheme etc., then
+/// builds the MaterialApp inside [_AppBody].
 class DesktopAppApp extends StatelessWidget {
   const DesktopAppApp({
     super.key,
@@ -76,6 +90,14 @@ class DesktopAppApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       overrides: [
+        // Expose Fonde controllers to Riverpod consumers.
+        fondeThemeControllerProvider.overrideWithValue(_themeController),
+        fondeThemeColorControllerProvider
+            .overrideWithValue(_themeColorController),
+        fondeAccessibilityControllerProvider
+            .overrideWithValue(_accessibilityController),
+        fondeIconThemeControllerProvider
+            .overrideWithValue(_iconThemeController),
         // Set command line arguments
         commandLineArgsProvider.overrideWith(
           () => CommandLineArgs()..setArgs(commandLineArgs),
@@ -86,21 +108,22 @@ class DesktopAppApp extends StatelessWidget {
               (throw StateError('No active stack graph storage'));
         }),
       ],
-      child: _AppBody(
-        enableDevStacks: enableDevStacks,
-        commandLineArgs: commandLineArgs,
+      child: FondeThemeManager(
+        themeController: _themeController,
+        colorController: _themeColorController,
+        accessibilityController: _accessibilityController,
+        iconThemeController: _iconThemeController,
+        defaultIconTheme: fondeDefaultIconTheme,
+        child: _AppBody(
+          enableDevStacks: enableDevStacks,
+          commandLineArgs: commandLineArgs,
+        ),
       ),
     );
   }
 }
 
-/// Inner widget that reads Fonde providers and builds the MaterialApp.
-///
-/// Because [FondeApp] also creates a ProviderScope internally, we do NOT use
-/// [FondeApp] here — we already have one from [DesktopAppApp]. Instead we
-/// read Fonde's theme providers directly and build our own MaterialApp so we
-/// can attach [navigatorKey], [navigatorObservers], and the macOS
-/// [PlatformMenuBar].
+/// Inner widget that reads theme providers and builds the MaterialApp.
 class _AppBody extends ConsumerWidget {
   const _AppBody({
     this.enableDevStacks = false,
@@ -112,12 +135,12 @@ class _AppBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeData = ref.watch(fondeEffectiveThemeDataProvider);
-    final themeMode = ref.watch(fondeActiveThemeProvider).themeMode;
+    final themeData = ref.watch(effectiveThemeDataProvider);
+    final themeMode = ref.watch(activeThemeProvider).theme.themeMode;
 
     // Persist & restore accessibility config via settings storage
-    final accessibilityConfig = ref.watch(fondeAccessibilityConfigProvider);
-    _syncAccessibilityConfig(ref, accessibilityConfig);
+    final accessibilityCtrl = ref.watch(fondeAccessibilityConfigProvider);
+    _syncAccessibilityConfig(ref, accessibilityCtrl.config);
 
     // Persist & restore active theme via settings storage
     _syncActiveTheme(ref);
@@ -186,7 +209,7 @@ class _AppBody extends ConsumerWidget {
         (t) => t.name == themeName,
         orElse: () => FondeThemePresets.system,
       );
-      ref.read(fondeActiveThemeProvider.notifier).setTheme(theme);
+      ref.read(fondeThemeControllerProvider).setTheme(theme);
     });
   }
 }

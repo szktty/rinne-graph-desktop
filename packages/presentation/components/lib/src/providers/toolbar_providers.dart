@@ -6,7 +6,7 @@
  * For commercial licensing inquiries, please contact: contact@szktty.jp
  */
 
-import 'package:fonde_ui/fonde_ui_riverpod.dart'
+import 'package:fonde_ui/src/widgets/toolbar/toolbar_state.dart'
     show FondeToolbarState, FondeToolbarItemData;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

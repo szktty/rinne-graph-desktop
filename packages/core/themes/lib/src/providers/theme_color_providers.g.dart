@@ -167,4 +167,4 @@ final class EffectiveColorSchemeWithThemeProvider
 }
 
 String _$effectiveColorSchemeWithThemeHash() =>
-    r'27bad754f9e7b9418bd56f025af7f073a642f751';
+    r'4b33dde18f8dd9dfec4fed8d5e9f7fe5c27940a3';

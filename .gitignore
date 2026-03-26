@@ -56,6 +56,9 @@ apps/*/assets/version.json
 # Local settings
 .claude/settings.local.json
 
+# Local dependency overrides (use pubspec_overrides.yaml for local paths)
+pubspec_overrides.yaml
+
 # Internal strategy documents (not for public release)
 .augment/
 .claude/

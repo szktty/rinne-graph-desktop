@@ -45,14 +45,14 @@ class TaskProgressBar extends ConsumerWidget {
     const double linearProgressHeight = 8.0;
 
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
-    final borderRadius = ref.watch(fondeBorderRadiusProvider);
+    const borderRadius = FondeBorderRadiusValues.mediumRadius;
 
     // When cancelled, stop animation and maintain current value
     if (isCancelled) {
       return SizedBox(
         height: linearProgressHeight,
         child: ClipRRect(
-          borderRadius: borderRadius.toBorderRadiusGeometry(),
+          borderRadius: borderRadius,
           child: LinearProgressIndicator(
             value: progressValue,
             backgroundColor: appColorScheme.base.divider,
@@ -70,7 +70,7 @@ class TaskProgressBar extends ConsumerWidget {
         return SizedBox(
           height: linearProgressHeight,
           child: ClipRRect(
-            borderRadius: borderRadius.toBorderRadiusGeometry(),
+            borderRadius: borderRadius,
             child: LinearProgressIndicator(
               value: animatedValue,
               backgroundColor: appColorScheme.base.divider,

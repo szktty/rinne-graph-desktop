@@ -6,7 +6,9 @@ environment:
 
 dependency_overrides:
   fonde_ui:
-    path: ../fonde-ui-private
+    git:
+      url: git@github.com:szktty/fonde-ui.git
+      ref: develop
 
 workspace:
   - apps/desktop
