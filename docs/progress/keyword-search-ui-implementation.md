@@ -1,7 +1,7 @@
 # Keyword Search UI Implementation Plan
 
-**Date**: 2026-03-26
-**Status**: Session 1 Complete
+**Date**: 2026-03-26 / Updated: 2026-03-27
+**Status**: Session 2 Complete (Sessions 1 and 2 done)
 
 ---
 
@@ -45,6 +45,41 @@ After discussion on 2026-03-26:
   - Link tap → `selectionStateProvider.selectEntity()`
 
 **Key fix vs. plan**: `Node.labels` is `Set<String>` (not `.label`); `Link.type` is `String`. Filter logic updated accordingly.
+
+---
+
+### Session 2 — COMPLETED (2026-03-27, branch: feature/keyword-search-ui)
+
+**Focus**: Secondary sidebar shows TabbedRecordEditor on entity selection; title bar open button.
+
+#### Changes made
+
+**Commit `6ae4fac`**: "Show TabbedRecordEditor in secondary sidebar on entity selection"
+
+1. **`packages/presentation/components/lib/src/details_pane/details_pane.dart`**
+   - Removed `GraphEntityPropertiesDisplay` branch (and its `core_graph_flutter` import)
+   - Always shows `TabbedRecordEditor` when `selectedEntity != null`
+   - Shows placeholder text when no entity is selected
+
+2. **`apps/desktop/lib/src/widgets/main_app_shell.dart`**
+   - Converted `MainAppShell` from `ConsumerWidget` → `ConsumerStatefulWidget`
+   - Added `FondeSecondarySidebarController _secondarySidebarController` held in state
+   - Implemented **bidirectional sync**:
+     - Riverpod → controller: `ref.listen<bool>(secondarySidebarStateProvider, ...)` in `build()`
+     - Controller → Riverpod: `_onControllerChanged()` listener in `initState()`
+   - Passed `secondarySidebarController: _secondarySidebarController` to `FondeScaffold`
+   - Added `FondeMainToolbar(trailing: const _SecondarySidebarToggleButton())`
+   - Added `_SecondarySidebarToggleButton` widget class at bottom of file:
+     - Reads `secondarySidebarStateProvider` — returns `SizedBox.shrink()` when sidebar is open
+     - `ExcludeFocus` wrapper to prevent focus
+     - `SizedBox(width: 28, height: 28)` for proper icon sizing
+     - Calls both `FondeSidebarControllerScope.secondaryOf(context)?.show()` AND `screenBasedSecondarySidebarStateProvider.notifier.show()` on press
+
+#### Key architectural insight
+
+`FondeScaffold` uses `ChangeNotifier`-based `FondeSecondarySidebarController` independently of Riverpod. The close button inside `FondeSecondarySidebarToolbar` calls `controller.hide()` directly, bypassing Riverpod. Without the bidirectional sync, the Riverpod state (`secondarySidebarStateProvider`) stayed `true` after the sidebar was closed — causing the open button to remain hidden.
+
+**Solution**: hold controller in `ConsumerStatefulWidget` state, sync changes in both directions.
 
 ---
 
@@ -267,7 +302,7 @@ Build after completing Step 2.
 
 ---
 
-### Session 2 — Graph View Integration (Highlight)
+### Session 3 — Graph View Integration (Highlight) [NEXT]
 
 **Goal**: search results dim non-matching nodes/links in the graph view.
 
@@ -336,7 +371,7 @@ Build after this step.
 
 ---
 
-### Session 3 — CSV Import Background Task TODO
+### Session 4 — CSV Import Background Task TODO
 
 **Goal**: the background import path in `csv_import_service.dart` actually works.
 

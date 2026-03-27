@@ -16,6 +16,7 @@ import 'package:core_themes/core_themes.dart';
 import 'package:presentation_components/presentation_components.dart';
 import '../models/layout_config.dart';
 import '../providers/graph_providers.dart';
+import '../providers/search_providers.dart';
 import '../providers/selection_providers.dart';
 import '../providers/node_display_providers.dart';
 import '../models/node_display_settings.dart';
@@ -597,7 +598,7 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
 }
 
 /// Link renderer that draws the link line/arrow and overlays the link type label.
-class _AppLinkRenderer extends StatelessWidget {
+class _AppLinkRenderer extends ConsumerWidget {
   const _AppLinkRenderer({
     required this.link,
     required this.sourceView,
@@ -616,12 +617,18 @@ class _AppLinkRenderer extends StatelessWidget {
   static const _color = Colors.grey;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final highlightState = ref.watch(searchHighlightProvider);
+    final linkEntityId = core_graph.EntityId.fromString(link.id.value);
+    final isDimmed = highlightState.isActive &&
+        !highlightState.linkIds.contains(linkEntityId);
+
     final label = link.properties['label'] as String?;
     final showLabel = label != null && label.isNotEmpty;
 
+    Widget content;
     if (!showLabel) {
-      return plough.GraphDefaultLinkRenderer(
+      content = plough.GraphDefaultLinkRenderer(
         link: link,
         sourceView: sourceView,
         targetView: targetView,
@@ -629,47 +636,52 @@ class _AppLinkRenderer extends StatelessWidget {
         geometry: geometry,
         color: _color,
       );
-    }
+    } else {
+      // Place the label at the midpoint of the link line.
+      // GraphDefaultLinkRenderer uses a CustomPaint whose local x-axis runs
+      // from source to target with thickness as height.  The midpoint along
+      // x is connectionPoints.distance / 2; y centre is thickness / 2.
+      final cp = geometry.connectionPoints;
+      final distance = cp.distance;
+      final midX = distance / 2;
+      const midY = _thickness / 2;
 
-    // Place the label at the midpoint of the link line.
-    // GraphDefaultLinkRenderer uses a CustomPaint whose local x-axis runs
-    // from source to target with thickness as height.  The midpoint along
-    // x is connectionPoints.distance / 2; y centre is thickness / 2.
-    final cp = geometry.connectionPoints;
-    final distance = cp.distance;
-    final midX = distance / 2;
-    const midY = _thickness / 2;
+      // When the link angle is between 90° and 270° (pointing left), the Canvas
+      // coordinate system is flipped and text renders upside-down.  Counter-rotate
+      // by 180° so the label is always readable.
+      final angle = cp.angle; // radians, range (-π, π]
+      final needsFlip = angle > math.pi / 2 || angle < -math.pi / 2;
 
-    // When the link angle is between 90° and 270° (pointing left), the Canvas
-    // coordinate system is flipped and text renders upside-down.  Counter-rotate
-    // by 180° so the label is always readable.
-    final angle = cp.angle; // radians, range (-π, π]
-    final needsFlip = angle > math.pi / 2 || angle < -math.pi / 2;
-
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        plough.GraphDefaultLinkRenderer(
-          link: link,
-          sourceView: sourceView,
-          targetView: targetView,
-          routing: routing,
-          geometry: geometry,
-          color: _color,
-        ),
-        Positioned(
-          left: midX,
-          top: midY,
-          child: Transform.translate(
-            offset: const Offset(0, -8),
-            child: Transform.rotate(
-              angle: needsFlip ? math.pi : 0,
-              child: _LinkLabel(label: label),
+      content = Stack(
+        clipBehavior: Clip.none,
+        children: [
+          plough.GraphDefaultLinkRenderer(
+            link: link,
+            sourceView: sourceView,
+            targetView: targetView,
+            routing: routing,
+            geometry: geometry,
+            color: _color,
+          ),
+          Positioned(
+            left: midX,
+            top: midY,
+            child: Transform.translate(
+              offset: const Offset(0, -8),
+              child: Transform.rotate(
+                angle: needsFlip ? math.pi : 0,
+                child: _LinkLabel(label: label),
+              ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    }
+
+    if (isDimmed) {
+      return Opacity(opacity: 0.15, child: content);
+    }
+    return content;
   }
 }
 
@@ -717,13 +729,23 @@ class _NodeRendererWrapper extends ConsumerWidget {
     // Get color scheme
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
 
-    // Use custom node renderer
-    return AppNodeRenderer(
+    // Dim non-matching nodes when highlight is active
+    final highlightState = ref.watch(searchHighlightProvider);
+    final nodeEntityId = core_graph.EntityId.fromString(node.id.value);
+    final isDimmed = highlightState.isActive &&
+        !highlightState.nodeIds.contains(nodeEntityId);
+
+    final renderer = AppNodeRenderer(
       node: node,
       displayContent: displayContent,
       nodeSize: nodeSize,
       colorScheme: appColorScheme,
     );
+
+    if (isDimmed) {
+      return Opacity(opacity: 0.25, child: renderer);
+    }
+    return renderer;
   }
 }
 

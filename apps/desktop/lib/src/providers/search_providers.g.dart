@@ -728,6 +728,58 @@ final class AvailableLinkTypesProvider
 String _$availableLinkTypesHash() =>
     r'992cd555a34163fb01b728b532e214af21a3ea76';
 
+@ProviderFor(SearchHighlight)
+final searchHighlightProvider = SearchHighlightProvider._();
+
+final class SearchHighlightProvider
+    extends $NotifierProvider<SearchHighlight, SearchHighlightState> {
+  SearchHighlightProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'searchHighlightProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$searchHighlightHash();
+
+  @$internal
+  @override
+  SearchHighlight create() => SearchHighlight();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SearchHighlightState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SearchHighlightState>(value),
+    );
+  }
+}
+
+String _$searchHighlightHash() => r'3c4fdbc5bb2257f66ac290d0fac99a51028889a6';
+
+abstract class _$SearchHighlight extends $Notifier<SearchHighlightState> {
+  SearchHighlightState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<SearchHighlightState, SearchHighlightState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<SearchHighlightState, SearchHighlightState>,
+              SearchHighlightState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
 /// Search execution action provider
 
 @ProviderFor(SearchActions)

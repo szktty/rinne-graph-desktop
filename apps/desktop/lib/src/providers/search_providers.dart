@@ -8,6 +8,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 
 import '../models/search_models.dart';
 import '../services/search_execution_service.dart';
@@ -279,6 +280,54 @@ Future<List<String>> availableLinkTypes(Ref ref) async {
   return (data['linkTypes'] as List).cast<String>();
 }
 
+// ---------------------------------------------------------------------------
+// Search highlight and focus providers
+// ---------------------------------------------------------------------------
+
+/// State for dimming non-matching nodes in the graph view.
+///
+/// [nodeIds] is the set of node IDs from the latest search result.
+/// [dimEnabled] controls whether the dim effect is active.
+/// Dimming is only applied when both [nodeIds] is non-empty and [dimEnabled] is true.
+class SearchHighlightState {
+  final Set<core_graph.EntityId> nodeIds;
+  final Set<core_graph.EntityId> linkIds;
+  final bool dimEnabled;
+
+  const SearchHighlightState({
+    this.nodeIds = const {},
+    this.linkIds = const {},
+    this.dimEnabled = false,
+  });
+
+  SearchHighlightState copyWith({
+    Set<core_graph.EntityId>? nodeIds,
+    Set<core_graph.EntityId>? linkIds,
+    bool? dimEnabled,
+  }) => SearchHighlightState(
+    nodeIds: nodeIds ?? this.nodeIds,
+    linkIds: linkIds ?? this.linkIds,
+    dimEnabled: dimEnabled ?? this.dimEnabled,
+  );
+
+  bool get isActive => dimEnabled && (nodeIds.isNotEmpty || linkIds.isNotEmpty);
+}
+
+@riverpod
+class SearchHighlight extends _$SearchHighlight {
+  @override
+  SearchHighlightState build() => const SearchHighlightState();
+
+  void setIds({
+    required Set<core_graph.EntityId> nodeIds,
+    required Set<core_graph.EntityId> linkIds,
+  }) => state = state.copyWith(nodeIds: nodeIds, linkIds: linkIds);
+
+  void toggleDim() =>
+      state = state.copyWith(dimEnabled: !state.dimEnabled);
+
+  void clear() => state = const SearchHighlightState();
+}
 
 // ---------------------------------------------------------------------------
 // Path Search providers (kept for future restoration)

@@ -160,14 +160,19 @@ class _KeywordSearchFieldState extends ConsumerState<_KeywordSearchField> {
               .where((l) => filters.linkTypes.contains(l.type))
               .toList();
 
-      resultNotifier.setResult(
-        SearchResult(
-          nodes: filteredNodes,
-          links: filteredLinks,
-          totalNodeCount: filteredNodes.length,
-          totalLinkCount: filteredLinks.length,
-          executionTime: result.executionTime,
-        ),
+      final newResult = SearchResult(
+        nodes: filteredNodes,
+        links: filteredLinks,
+        totalNodeCount: filteredNodes.length,
+        totalLinkCount: filteredLinks.length,
+        executionTime: result.executionTime,
+      );
+      resultNotifier.setResult(newResult);
+
+      // Update highlight IDs from result
+      ref.read(searchHighlightProvider.notifier).setIds(
+        nodeIds: filteredNodes.map((n) => n.id).toSet(),
+        linkIds: filteredLinks.map((l) => l.id).toSet(),
       );
     } catch (e) {
       if (mounted) errorNotifier.setError(e.toString());
@@ -548,6 +553,7 @@ class _SearchResultFooter extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = ref.watch(effectiveFlutterColorSchemeProvider);
+    final highlightState = ref.watch(searchHighlightProvider);
     final ms = result.executionTime.inMilliseconds;
 
     return Padding(
@@ -561,12 +567,29 @@ class _SearchResultFooter extends ConsumerWidget {
               color: colorScheme.onSurfaceVariant,
             ),
           ),
+          IconButton(
+            icon: Icon(
+              highlightState.dimEnabled
+                  ? Icons.visibility
+                  : Icons.visibility_outlined,
+              size: 16,
+            ),
+            tooltip: highlightState.dimEnabled
+                ? 'Dim off'
+                : 'Dim non-matching nodes',
+            onPressed: () {
+              ref.read(searchHighlightProvider.notifier).toggleDim();
+            },
+            padding: const EdgeInsets.all(4),
+            constraints: const BoxConstraints(),
+          ),
           TextButton(
             onPressed: () {
               ref.read(keywordSearchQueryProvider.notifier).clear();
               ref.read(keywordSearchResultProvider.notifier).clear();
               ref.read(keywordSearchFiltersStateProvider.notifier).clear();
               ref.read(searchErrorProvider.notifier).clearError();
+              ref.read(searchHighlightProvider.notifier).clear();
             },
             child: const AppText('Clear', variant: AppTextVariant.captionText),
           ),
