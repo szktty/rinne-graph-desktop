@@ -416,6 +416,17 @@ class _SearchResultList extends ConsumerWidget {
                       source: SelectionSource.external,
                     );
               },
+              onDoubleTap: () {
+                ref
+                    .read(selectionStateProvider.notifier)
+                    .selectEntity(
+                      node.id,
+                      source: SelectionSource.external,
+                    );
+                ref
+                    .read(searchFocusTargetProvider.notifier)
+                    .focus(node.id);
+              },
             ),
         ],
         if (result.links.isNotEmpty) ...[
@@ -463,12 +474,14 @@ class _NodeResultRow extends StatelessWidget {
   final Color nodeColor;
   final ColorScheme colorScheme;
   final VoidCallback onTap;
+  final VoidCallback onDoubleTap;
 
   const _NodeResultRow({
     required this.node,
     required this.nodeColor,
     required this.colorScheme,
     required this.onTap,
+    required this.onDoubleTap,
   });
 
   @override
@@ -478,14 +491,16 @@ class _NodeResultRow extends StatelessWidget {
     final secondaryLabel =
         node.labels.length > 1 ? node.labels.skip(1).first : null;
 
-    return ListTile(
+    return FondeListTile(
       dense: true,
+      isSelected: false,
       leading: Icon(FondeIcons.circle, size: 16, color: nodeColor),
       title: AppText(label, variant: AppTextVariant.bodyText),
       trailing: secondaryLabel != null
           ? _LabelChip(label: secondaryLabel, color: nodeColor)
           : null,
       onTap: onTap,
+      onLongPress: onDoubleTap,
     );
   }
 }
@@ -503,8 +518,9 @@ class _LinkResultRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    return FondeListTile(
       dense: true,
+      isSelected: false,
       leading: Icon(
         FondeIcons.arrowRight,
         size: 16,

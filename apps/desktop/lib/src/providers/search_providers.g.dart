@@ -760,7 +760,7 @@ final class SearchHighlightProvider
   }
 }
 
-String _$searchHighlightHash() => r'3c4fdbc5bb2257f66ac290d0fac99a51028889a6';
+String _$searchHighlightHash() => r'60a3cc65d936e533ce5da23358c33c2c4a0431ad';
 
 abstract class _$SearchHighlight extends $Notifier<SearchHighlightState> {
   SearchHighlightState build();
@@ -773,6 +773,64 @@ abstract class _$SearchHighlight extends $Notifier<SearchHighlightState> {
             as $ClassProviderElement<
               AnyNotifier<SearchHighlightState, SearchHighlightState>,
               SearchHighlightState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Holds the entity ID that the graph view should animate to focus on.
+
+@ProviderFor(SearchFocusTarget)
+final searchFocusTargetProvider = SearchFocusTargetProvider._();
+
+/// Holds the entity ID that the graph view should animate to focus on.
+final class SearchFocusTargetProvider
+    extends $NotifierProvider<SearchFocusTarget, core_graph.EntityId?> {
+  /// Holds the entity ID that the graph view should animate to focus on.
+  SearchFocusTargetProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'searchFocusTargetProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$searchFocusTargetHash();
+
+  @$internal
+  @override
+  SearchFocusTarget create() => SearchFocusTarget();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(core_graph.EntityId? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<core_graph.EntityId?>(value),
+    );
+  }
+}
+
+String _$searchFocusTargetHash() => r'463df6779b9b37d10dc2fa97618444c3aa50b1b3';
+
+/// Holds the entity ID that the graph view should animate to focus on.
+
+abstract class _$SearchFocusTarget extends $Notifier<core_graph.EntityId?> {
+  core_graph.EntityId? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<core_graph.EntityId?, core_graph.EntityId?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<core_graph.EntityId?, core_graph.EntityId?>,
+              core_graph.EntityId?,
               Object?,
               Object?
             >;

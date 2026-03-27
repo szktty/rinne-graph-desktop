@@ -329,6 +329,16 @@ class SearchHighlight extends _$SearchHighlight {
   void clear() => state = const SearchHighlightState();
 }
 
+/// Holds the entity ID that the graph view should animate to focus on.
+@riverpod
+class SearchFocusTarget extends _$SearchFocusTarget {
+  @override
+  core_graph.EntityId? build() => null;
+
+  void focus(core_graph.EntityId id) => state = id;
+  void clear() => state = null;
+}
+
 // ---------------------------------------------------------------------------
 // Path Search providers (kept for future restoration)
 // ---------------------------------------------------------------------------

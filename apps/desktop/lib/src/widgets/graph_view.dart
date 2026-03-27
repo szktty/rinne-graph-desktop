@@ -48,22 +48,48 @@ class AppGraphView extends ConsumerStatefulWidget {
   ConsumerState<AppGraphView> createState() => _AppGraphViewState();
 }
 
-class _AppGraphViewState extends ConsumerState<AppGraphView> {
+class _AppGraphViewState extends ConsumerState<AppGraphView>
+    with SingleTickerProviderStateMixin {
   late TransformationController _transformationController;
+  late AnimationController _focusAnimController;
+  Animation<Matrix4>? _focusAnimation;
   Offset? _lastPanPosition;
   NodeDisplayContent? _lastDisplayContent;
   int _graphViewKey = 0;
+  Size _viewportSize = Size.zero;
 
   @override
   void initState() {
     super.initState();
     _transformationController = TransformationController();
+    _focusAnimController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 350),
+    )..addListener(() {
+        if (_focusAnimation != null) {
+          _transformationController.value = _focusAnimation!.value;
+        }
+      });
   }
 
   @override
   void dispose() {
+    _focusAnimController.dispose();
     _transformationController.dispose();
     super.dispose();
+  }
+
+  void _focusOnNode(Offset nodePosition) {
+    if (_viewportSize == Size.zero) return;
+    final cx = _viewportSize.width / 2;
+    final cy = _viewportSize.height / 2;
+    final target = Matrix4.identity()
+      ..translate(cx - nodePosition.dx, cy - nodePosition.dy);
+    final begin = _transformationController.value.clone();
+    _focusAnimation = Matrix4Tween(begin: begin, end: target).animate(
+      CurvedAnimation(parent: _focusAnimController, curve: Curves.easeInOut),
+    );
+    _focusAnimController.forward(from: 0);
   }
 
   // Handler for scrolling entire graph area by background drag
@@ -97,6 +123,22 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
   @override
   Widget build(BuildContext context) {
     debugPrint('[AppGraphView.build] Rebuilding AppGraphView');
+
+    // Listen for focus target changes and animate to the node
+    ref.listen<core_graph.EntityId?>(searchFocusTargetProvider, (_, entityId) {
+      if (entityId == null) return;
+      final cache = ref.read(graphViewCacheProvider);
+      final ploughGraph = cache.ploughGraph;
+      if (ploughGraph == null) return;
+      final ploughId = plough.GraphId(
+        type: plough.GraphIdType.node,
+        value: entityId.value,
+      );
+      final node = ploughGraph.getNode(ploughId);
+      if (node != null) {
+        _focusOnNode(node.logicalPosition);
+      }
+    });
 
     // Get selection state
     final selectionState = ref.watch(selectionStateProvider);
@@ -177,6 +219,7 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
     // Use LayoutBuilder to get the available size for centering node animation
     return LayoutBuilder(
       builder: (context, constraints) {
+        _viewportSize = constraints.biggest;
         final centerOffset = Offset(
           constraints.maxWidth / 2,
           constraints.maxHeight / 2,
