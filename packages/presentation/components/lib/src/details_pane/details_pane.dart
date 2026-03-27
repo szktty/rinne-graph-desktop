@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_themes/core_themes.dart';
 import 'package:features_record_editor/record_editor.dart';
-import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 
 import '../typography/app_text.dart';
 
@@ -59,7 +58,7 @@ class DetailsPane extends ConsumerWidget {
       ),
       child:
           selectedEntity != null
-              ? _buildDetailContent()
+              ? const TabbedRecordEditor()
               : Center(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -70,29 +69,6 @@ class DetailsPane extends ConsumerWidget {
                   ),
                 ),
               ),
-    );
-  }
-
-  /// Build the detail content.
-  ///
-  /// If the entity is selected from the graph view, display its properties,
-  /// otherwise, display the conventional editor.
-  Widget _buildDetailContent() {
-    return Consumer(
-      builder: (context, ref, child) {
-        // Check the entity ID selected from the graph
-        final selectedGraphEntityId = ref.watch(
-          core_graph.selectedEntityIdProvider,
-        );
-
-        // If selected from the graph view, prioritize property display
-        if (selectedGraphEntityId != null) {
-          return const GraphEntityPropertiesDisplay();
-        }
-
-        // Otherwise, display the conventional editor
-        return const TabbedRecordEditor();
-      },
     );
   }
 }

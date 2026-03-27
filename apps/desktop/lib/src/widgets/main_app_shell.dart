@@ -9,7 +9,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fonde_ui/fonde_ui.dart';
 import 'package:presentation_components/presentation_components.dart';
 import 'package:features_updates/updates.dart' as features_updates;
 import 'package:app/app.dart';
@@ -30,7 +29,7 @@ import 'shell/activity_bar_builder.dart';
 import 'package:features_welcome/src/widgets/welcome_screen_content.dart';
 
 /// Main shell of the application
-class MainAppShell extends ConsumerWidget {
+class MainAppShell extends ConsumerStatefulWidget {
   const MainAppShell({
     super.key,
     this.enableDevStacks = false,
@@ -45,7 +44,41 @@ class MainAppShell extends ConsumerWidget {
   final GlobalKey<NavigatorState>? navigatorKey;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MainAppShell> createState() => _MainAppShellState();
+}
+
+class _MainAppShellState extends ConsumerState<MainAppShell> {
+  late final FondeSecondarySidebarController _secondarySidebarController;
+
+  @override
+  void initState() {
+    super.initState();
+    _secondarySidebarController = FondeSecondarySidebarController(
+      initiallyVisible: false,
+    );
+    // Sync controller → Riverpod (e.g. close button inside secondary sidebar)
+    _secondarySidebarController.addListener(_onControllerChanged);
+  }
+
+  void _onControllerChanged() {
+    final visible = _secondarySidebarController.isVisible;
+    final riverpodVisible = ref.read(secondarySidebarStateProvider);
+    if (riverpodVisible != visible) {
+      ref
+          .read(screenBasedSecondarySidebarStateProvider.notifier)
+          .setVisible(visible);
+    }
+  }
+
+  @override
+  void dispose() {
+    _secondarySidebarController.removeListener(_onControllerChanged);
+    _secondarySidebarController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final selectedActivityIndex = ref.watch(activityBarStateProvider);
     final activeStack = ref.watch(core_stack.activeStackProvider);
 
@@ -54,6 +87,13 @@ class MainAppShell extends ConsumerWidget {
 
     // Initialize activity bar change monitoring
     ref.watch(activityBarChangeListenerProvider);
+
+    // Sync Riverpod secondary sidebar state to FondeSecondarySidebarController
+    ref.listen<bool>(secondarySidebarStateProvider, (previous, next) {
+      if (_secondarySidebarController.isVisible != next) {
+        _secondarySidebarController.setVisible(next);
+      }
+    });
 
     // Monitor stack loading errors
     ref.listen<ErrorDialogData?>(stackLoadingErrorProvider, (previous, next) {
@@ -76,7 +116,7 @@ class MainAppShell extends ConsumerWidget {
     StartupHandler.schedule(
       ref: ref,
       context: context,
-      commandLineArgs: commandLineArgs,
+      commandLineArgs: widget.commandLineArgs,
     );
 
     // Check for updates at startup
@@ -104,10 +144,10 @@ class MainAppShell extends ConsumerWidget {
     // Development stacks auto-import
     final startupConfig = ref.watch(startupConfigProvider);
     final actualEnableDevStacks =
-        startupConfig.enableDevStacks || enableDevStacks;
+        startupConfig.enableDevStacks || widget.enableDevStacks;
 
     debugPrint(
-      'MainAppShell: enableDevStacks=$actualEnableDevStacks (config: ${startupConfig.enableDevStacks}, arg: $enableDevStacks), devStacksImported=${shellState.devStacksImported}',
+      'MainAppShell: enableDevStacks=$actualEnableDevStacks (config: ${startupConfig.enableDevStacks}, arg: ${widget.enableDevStacks}), devStacksImported=${shellState.devStacksImported}',
     );
     if (actualEnableDevStacks && !shellState.devStacksImported) {
       Future(() {
@@ -141,13 +181,15 @@ class MainAppShell extends ConsumerWidget {
 
     // If no stack is open, display the welcome screen
     if (activeStack == null) {
-      return _buildStackManagementContent(ref);
+      return _buildStackManagementContent();
     }
 
     return widgets.Stack(
       children: [
         FondeScaffold(
-          toolbar: FondeMainToolbar(),
+          toolbar: FondeMainToolbar(
+            trailing: const _SecondarySidebarToggleButton(),
+          ),
           launchBar: ActivityBarBuilder.buildBar(),
           showLaunchBar: true,
           primarySidebar: SidebarBuilder.buildPrimary(selectedActivityType),
@@ -160,6 +202,7 @@ class MainAppShell extends ConsumerWidget {
             selectedActivityType,
             isSecondarySidebarVisible,
           ),
+          secondarySidebarController: _secondarySidebarController,
           content: ContentBuilder.buildContent(ref, selectedActivityIndex),
         ),
         // Background task panel
@@ -184,7 +227,7 @@ class MainAppShell extends ConsumerWidget {
     );
   }
 
-  Widget _buildStackManagementContent(WidgetRef ref) {
+  Widget _buildStackManagementContent() {
     return FondeMainContentArea(
       child: WelcomeScreenContent(
         onCreateNewStack: () {
@@ -197,7 +240,7 @@ class MainAppShell extends ConsumerWidget {
           debugPrint('Import data from WelcomeScreenContent');
         },
         onStackSelected: (selectedStack) async {
-          final navContext = navigatorKey?.currentContext;
+          final navContext = widget.navigatorKey?.currentContext;
           if (navContext == null) return;
 
           try {
@@ -232,6 +275,51 @@ class MainAppShell extends ConsumerWidget {
         onGoToMainScreen: () {
           debugPrint('Go to main screen from WelcomeScreenContent');
         },
+      ),
+    );
+  }
+}
+
+/// Button in the title bar to open the secondary sidebar (details panel).
+///
+/// Only shown when the secondary sidebar is closed. The close button lives
+/// inside the secondary sidebar toolbar itself.
+class _SecondarySidebarToggleButton extends ConsumerWidget {
+  const _SecondarySidebarToggleButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isVisible = ref.watch(secondarySidebarStateProvider);
+
+    // Hide button when sidebar is already open
+    if (isVisible) return const SizedBox.shrink();
+
+    final iconTheme = context.fondeIconTheme;
+    final appColorScheme = context.fondeColorScheme;
+
+    return ExcludeFocus(
+      child: Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: SizedBox(
+          width: 28,
+          height: 28,
+          child: FondeIconButton(
+            icon: iconTheme.panelRight,
+            iconSize: 20,
+            tooltip: 'Open Details Panel',
+            iconColor: appColorScheme.base.foreground,
+            onPressed: () {
+              final controller =
+                  FondeSidebarControllerScope.secondaryOf(context);
+              controller?.show();
+              ref
+                  .read(screenBasedSecondarySidebarStateProvider.notifier)
+                  .show();
+            },
+            padding: EdgeInsets.zero,
+            hoverColor: Colors.transparent,
+          ),
+        ),
       ),
     );
   }
