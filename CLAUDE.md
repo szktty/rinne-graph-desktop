@@ -168,6 +168,14 @@ Log file requirements:
 - Saved under the `docs/progress/` directory.
 - File name must include the name of the task being worked on (e.g., `docs/progress/add-dark-mode.md`).
 
+## Context Limit Behavior
+
+When the context size is approaching its limit, stop trying to complete the current task and prepare for handoff to a new session. Write the following to a file (e.g., `docs/handoff.md`):
+
+- Current issues and blockers
+- Progress so far (what has been done)
+- Next steps (what remains to be done)
+
 ## Language
 
 All source code, comments, and documentation must be in English. Communicate with the user in their preferred language.
