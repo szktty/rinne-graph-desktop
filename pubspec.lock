@@ -464,7 +464,7 @@ packages:
       path: "../fonde-ui"
       relative: true
     source: path
-    version: "0.7.0-dev"
+    version: "0.7.1"
   freezed:
     dependency: transitive
     description:
@@ -655,10 +655,10 @@ packages:
     dependency: transitive
     description:
       name: lucide_icons_flutter
-      sha256: "67bc7cc05c3c03eee3405f88a0ca127efca03561db00e2e93cc0a46019c19a7b"
+      sha256: "39472ddc8c5fc586d06a619a3871817ea02dd17defd31e67dcfc9ec77658b2a1"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.9"
+    version: "3.1.11"
   macos_window_utils:
     dependency: transitive
     description:
