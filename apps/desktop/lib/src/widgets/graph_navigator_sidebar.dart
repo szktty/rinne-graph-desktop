@@ -185,56 +185,37 @@ class _KeywordSearchFieldState extends ConsumerState<_KeywordSearchField> {
   Widget build(BuildContext context) {
     final themeData = ref.watch(effectiveThemeDataProvider);
     final colorScheme = ref.watch(effectiveFlutterColorSchemeProvider);
-    final isExecuting = ref.watch(keywordSearchExecutingProvider);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextFormField(
-              controller: widget.controller,
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  FondeIcons.search,
-                  size: 18,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-                hintText: 'Enter keyword to search',
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 10,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide:
-                      BorderSide(color: colorScheme.outline, width: 1.0),
-                ),
-                filled: true,
-                fillColor: colorScheme.surface,
-              ),
-              style: themeData.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurface,
-              ),
-              onChanged: (value) {
-                ref.read(keywordSearchQueryProvider.notifier).setQuery(value);
-              },
-              onFieldSubmitted: (_) => _executeSearch(),
-            ),
+      child: TextFormField(
+        controller: widget.controller,
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            FondeIcons.search,
+            size: 18,
+            color: colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(width: 6),
-          IconButton(
-            icon: Icon(FondeIcons.search, size: 18),
-            onPressed: isExecuting ? null : _executeSearch,
-            tooltip: 'Search',
-            style: IconButton.styleFrom(
-              backgroundColor: colorScheme.primary,
-              foregroundColor: colorScheme.onPrimary,
-              padding: const EdgeInsets.all(8),
-            ),
+          hintText: 'Enter keyword to search',
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
           ),
-        ],
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: BorderSide(color: colorScheme.outline, width: 1.0),
+          ),
+          filled: true,
+          fillColor: colorScheme.surface,
+        ),
+        style: themeData.textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onSurface,
+        ),
+        onChanged: (value) {
+          ref.read(keywordSearchQueryProvider.notifier).setQuery(value);
+        },
+        onFieldSubmitted: (_) => _executeSearch(),
       ),
     );
   }
@@ -399,15 +380,18 @@ class _SearchResultList extends ConsumerWidget {
     final colorScheme = ref.watch(effectiveFlutterColorSchemeProvider);
     final nodeColor = appColorScheme.appSpecific.graph.nodeBase;
 
+    final altColor = colorScheme.surfaceContainerLow;
+
     return ListView(
       children: [
         if (result.nodes.isNotEmpty) ...[
           _SectionHeader(label: 'Nodes (${result.nodes.length})'),
-          for (final node in result.nodes)
+          for (final (index, node) in result.nodes.indexed)
             _NodeResultRow(
               node: node,
               nodeColor: nodeColor,
               colorScheme: colorScheme,
+              backgroundColor: index.isOdd ? altColor : null,
               onTap: () {
                 ref
                     .read(selectionStateProvider.notifier)
@@ -431,10 +415,11 @@ class _SearchResultList extends ConsumerWidget {
         ],
         if (result.links.isNotEmpty) ...[
           _SectionHeader(label: 'Links (${result.links.length})'),
-          for (final link in result.links)
+          for (final (index, link) in result.links.indexed)
             _LinkResultRow(
               link: link,
               colorScheme: colorScheme,
+              backgroundColor: index.isOdd ? altColor : null,
               onTap: () {
                 ref
                     .read(selectionStateProvider.notifier)
@@ -473,6 +458,7 @@ class _NodeResultRow extends StatelessWidget {
   final core_graph.Node node;
   final Color nodeColor;
   final ColorScheme colorScheme;
+  final Color? backgroundColor;
   final VoidCallback onTap;
   final VoidCallback onDoubleTap;
 
@@ -482,25 +468,29 @@ class _NodeResultRow extends StatelessWidget {
     required this.colorScheme,
     required this.onTap,
     required this.onDoubleTap,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final label =
-        node.labels.isNotEmpty ? node.labels.first : node.id.value;
+        node.labels.isNotEmpty ? node.labels.first : '(No label)';
     final secondaryLabel =
         node.labels.length > 1 ? node.labels.skip(1).first : null;
 
-    return FondeListTile(
-      dense: true,
-      isSelected: false,
-      leading: Icon(FondeIcons.circle, size: 16, color: nodeColor),
-      title: AppText(label, variant: AppTextVariant.bodyText),
-      trailing: secondaryLabel != null
-          ? _LabelChip(label: secondaryLabel, color: nodeColor)
-          : null,
-      onTap: onTap,
-      onLongPress: onDoubleTap,
+    return ColoredBox(
+      color: backgroundColor ?? Colors.transparent,
+      child: FondeListTile(
+        dense: true,
+        isSelected: false,
+        leading: Icon(FondeIcons.circle, size: 16, color: nodeColor),
+        title: AppText(label, variant: AppTextVariant.bodyText),
+        trailing: secondaryLabel != null
+            ? _LabelChip(label: secondaryLabel, color: nodeColor)
+            : null,
+        onTap: onTap,
+        onLongPress: onDoubleTap,
+      ),
     );
   }
 }
@@ -508,30 +498,31 @@ class _NodeResultRow extends StatelessWidget {
 class _LinkResultRow extends StatelessWidget {
   final core_graph.Link link;
   final ColorScheme colorScheme;
+  final Color? backgroundColor;
   final VoidCallback onTap;
 
   const _LinkResultRow({
     required this.link,
     required this.colorScheme,
     required this.onTap,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return FondeListTile(
-      dense: true,
-      isSelected: false,
-      leading: Icon(
-        FondeIcons.arrowRight,
-        size: 16,
-        color: colorScheme.onSurfaceVariant,
+    return ColoredBox(
+      color: backgroundColor ?? Colors.transparent,
+      child: FondeListTile(
+        dense: true,
+        isSelected: false,
+        leading: Icon(
+          FondeIcons.arrowRight,
+          size: 16,
+          color: colorScheme.onSurfaceVariant,
+        ),
+        title: AppText(link.type, variant: AppTextVariant.bodyText),
+        onTap: onTap,
       ),
-      title: AppText(link.type, variant: AppTextVariant.bodyText),
-      subtitle: AppText(
-        '${link.sourceId.value} → ${link.targetId.value}',
-        variant: AppTextVariant.captionText,
-      ),
-      onTap: onTap,
     );
   }
 }
