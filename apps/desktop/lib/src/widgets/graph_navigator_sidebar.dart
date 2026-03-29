@@ -382,6 +382,12 @@ class _SearchResultList extends ConsumerWidget {
 
     final altColor = colorScheme.surfaceContainerLow;
 
+    // Build a label lookup map from the result nodes for link endpoint display.
+    final nodeLabelMap = {
+      for (final n in result.nodes)
+        n.id: n.labels.isNotEmpty ? n.labels.first : '(No label)',
+    };
+
     return ListView(
       children: [
         if (result.nodes.isNotEmpty) ...[
@@ -418,6 +424,9 @@ class _SearchResultList extends ConsumerWidget {
           for (final (index, link) in result.links.indexed)
             _LinkResultRow(
               link: link,
+              sourceLabel: nodeLabelMap[link.sourceId],
+              targetLabel: nodeLabelMap[link.targetId],
+              nodeColor: nodeColor,
               colorScheme: colorScheme,
               backgroundColor: index.isOdd ? altColor : null,
               onTap: () {
@@ -497,19 +506,29 @@ class _NodeResultRow extends StatelessWidget {
 
 class _LinkResultRow extends StatelessWidget {
   final core_graph.Link link;
+  final String? sourceLabel;
+  final String? targetLabel;
+  final Color nodeColor;
   final ColorScheme colorScheme;
   final Color? backgroundColor;
   final VoidCallback onTap;
 
   const _LinkResultRow({
     required this.link,
+    required this.nodeColor,
     required this.colorScheme,
     required this.onTap,
+    this.sourceLabel,
+    this.targetLabel,
     this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
+    final src = sourceLabel;
+    final tgt = targetLabel;
+    final hasEndpoints = src != null || tgt != null;
+
     return ColoredBox(
       color: backgroundColor ?? Colors.transparent,
       child: FondeListTile(
@@ -521,6 +540,38 @@ class _LinkResultRow extends StatelessWidget {
           color: colorScheme.onSurfaceVariant,
         ),
         title: AppText(link.type, variant: AppTextVariant.bodyText),
+        subtitle: hasEndpoints
+            ? Row(
+                children: [
+                  Icon(FondeIcons.circle, size: 10, color: nodeColor),
+                  const SizedBox(width: 3),
+                  Flexible(
+                    child: AppText(
+                      src ?? '?',
+                      variant: AppTextVariant.captionText,
+                      maxLines: 1,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Icon(
+                      FondeIcons.arrowRight,
+                      size: 10,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  Icon(FondeIcons.circle, size: 10, color: nodeColor),
+                  const SizedBox(width: 3),
+                  Flexible(
+                    child: AppText(
+                      tgt ?? '?',
+                      variant: AppTextVariant.captionText,
+                      maxLines: 1,
+                    ),
+                  ),
+                ],
+              )
+            : null,
         onTap: onTap,
       ),
     );
