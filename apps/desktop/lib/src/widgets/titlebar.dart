@@ -15,6 +15,9 @@ import 'package:presentation_components/presentation_components.dart'
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 
+import '../providers/app_state_providers.dart'
+    show screenBasedSecondarySidebarStateProvider;
+
 import '../providers/app_state_providers.dart';
 // Command registry feature planned for future implementation
 
@@ -47,8 +50,8 @@ class Titlebar extends ConsumerWidget {
     final activeStack = ref.watch(core_stack.activeStackProvider);
 
     // FondeSidebar visibility status
-    final isPrimarySidebarVisible = ref.watch(fondePrimarySidebarStateProvider);
-    final isSecondarySidebarVisible = ref.watch(fondeSecondarySidebarStateProvider);
+    final isPrimarySidebarVisible = ref.watch(primarySidebarStateProvider);
+    final isSecondarySidebarVisible = ref.watch(secondarySidebarStateProvider);
 
     // Register commands
     if (!commandsRegistered) {
@@ -88,7 +91,7 @@ class Titlebar extends ConsumerWidget {
                           ? FondeIcons.panelLeftClose
                           : FondeIcons.panelLeft,
                   onPressed: () {
-                    ref.read(fondePrimarySidebarStateProvider.notifier).toggle();
+                    ref.read(primarySidebarStateProvider.notifier).toggle();
                   },
                   tooltip:
                       isPrimarySidebarVisible

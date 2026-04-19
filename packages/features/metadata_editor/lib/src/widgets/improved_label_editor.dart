@@ -9,7 +9,7 @@
 import 'package:core_graph_flutter/core_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart' as lucide;
 import 'package:presentation_components/presentation_components.dart';
 
 /// Improved label editor
@@ -86,7 +86,7 @@ class ImprovedLabelEditor extends ConsumerWidget {
         // 削除ボタンのみ
         IconButton(
           onPressed: onDelete,
-          icon: const Icon(LucideIcons.trash2),
+          icon: const Icon(lucide.LucideIcons.trash2),
           tooltip: 'Delete',
         ),
       ],
