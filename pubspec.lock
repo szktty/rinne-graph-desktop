@@ -464,7 +464,7 @@ packages:
       path: "../fonde-ui"
       relative: true
     source: path
-    version: "0.7.0-dev"
+    version: "0.14.0-dev"
   freezed:
     dependency: transitive
     description:
@@ -655,10 +655,10 @@ packages:
     dependency: transitive
     description:
       name: lucide_icons_flutter
-      sha256: "67bc7cc05c3c03eee3405f88a0ca127efca03561db00e2e93cc0a46019c19a7b"
+      sha256: "39472ddc8c5fc586d06a619a3871817ea02dd17defd31e67dcfc9ec77658b2a1"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.9"
+    version: "3.1.11"
   macos_window_utils:
     dependency: transitive
     description:
@@ -967,7 +967,7 @@ packages:
     description:
       path: "."
       ref: develop
-      resolved-ref: "1c29df2e02f02dbb6b22c4d947e790ef37ddd86d"
+      resolved-ref: e7eaf99573c85a320eb378d3f492830893fbfcd5
       url: "https://github.com/szktty/rinne-graph.git"
     source: git
     version: "0.7.0"
@@ -1147,14 +1147,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.3.0"
-  simple_gesture_detector:
-    dependency: transitive
-    description:
-      name: simple_gesture_detector
-      sha256: ba2cd5af24ff20a0b8d609cec3f40e5b0744d2a71804a2616ae086b9c19d19a3
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1288,14 +1280,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.0"
-  table_calendar:
-    dependency: transitive
-    description:
-      name: table_calendar
-      sha256: "0c0c6219878b363a2d5f40c7afb159d845f253d061dc3c822aa0d5fe0f721982"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.0"
   term_glyph:
     dependency: transitive
     description:

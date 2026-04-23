@@ -157,16 +157,25 @@ For tasks that touch 3+ files or cross package boundaries, use plan mode:
 
 ### Progress Logging
 
-Before interrupting or ending work, always record the current state in a progress log file. This facilitates handoff between sessions. The log must include:
+Session plans and minutes are managed in the private repository at `../rinne-graph-desktop-private/`.
 
-1. **Current state**: What has been completed so far.
-2. **Remaining tasks**: What still needs to be done.
-3. **Failed approaches**: Approaches that were attempted but did not work, and why.
+**Session start**:
+1. Check that `../rinne-graph-desktop-private/` exists. If it does not, inform the user before proceeding.
+2. Read `../rinne-graph-desktop-private/PLAN.md` and the latest `../rinne-graph-desktop-private/sessions/YYYY-MM-DD.md` to restore context.
+3. Confirm the day's target with the user before starting implementation.
 
-Log file requirements:
-- Written in Markdown.
-- Saved under the `docs/progress/` directory.
-- File name must include the name of the task being worked on (e.g., `docs/progress/add-dark-mode.md`).
+**Session end**:
+1. Update feature status in `../rinne-graph-desktop-private/PLAN.md`.
+2. Write `../rinne-graph-desktop-private/sessions/YYYY-MM-DD.md` covering: what was done (with commit hashes), decisions made and why, remaining tasks and blockers.
+3. Remind the user to `git commit` in the private repository.
+
+## Context Limit Behavior
+
+When the context size is approaching its limit, stop trying to complete the current task and prepare for handoff to a new session. Write the following to a file (e.g., `docs/handoff.md`):
+
+- Current issues and blockers
+- Progress so far (what has been done)
+- Next steps (what remains to be done)
 
 ## Language
 

@@ -6,7 +6,9 @@
  * For commercial licensing inquiries, please contact: contact@szktty.jp
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 
 import '../models/search_models.dart';
 import '../services/search_execution_service.dart';
@@ -178,6 +180,168 @@ SearchExecutionService? searchExecutionService(Ref ref) {
 SearchPatternTranslator searchPatternTranslator(Ref ref) {
   return SearchPatternTranslator();
 }
+
+// ---------------------------------------------------------------------------
+// Keyword search providers
+// ---------------------------------------------------------------------------
+
+/// Keyword search input text
+@riverpod
+class KeywordSearchQuery extends _$KeywordSearchQuery {
+  @override
+  String build() => '';
+
+  void setQuery(String query) => state = query;
+  void clear() => state = '';
+}
+
+/// Label/type filter state for keyword search
+class KeywordSearchFilters {
+  final Set<String> nodeLabels; // empty = all
+  final Set<String> linkTypes; // empty = all
+
+  const KeywordSearchFilters({
+    this.nodeLabels = const {},
+    this.linkTypes = const {},
+  });
+
+  KeywordSearchFilters copyWith({
+    Set<String>? nodeLabels,
+    Set<String>? linkTypes,
+  }) => KeywordSearchFilters(
+    nodeLabels: nodeLabels ?? this.nodeLabels,
+    linkTypes: linkTypes ?? this.linkTypes,
+  );
+}
+
+@riverpod
+class KeywordSearchFiltersState extends _$KeywordSearchFiltersState {
+  @override
+  KeywordSearchFilters build() => const KeywordSearchFilters();
+
+  void toggleNodeLabel(String label) {
+    final updated = Set<String>.from(state.nodeLabels);
+    if (updated.contains(label)) {
+      updated.remove(label);
+    } else {
+      updated.add(label);
+    }
+    state = state.copyWith(nodeLabels: updated);
+  }
+
+  void toggleLinkType(String type) {
+    final updated = Set<String>.from(state.linkTypes);
+    if (updated.contains(type)) {
+      updated.remove(type);
+    } else {
+      updated.add(type);
+    }
+    state = state.copyWith(linkTypes: updated);
+  }
+
+  void clear() => state = const KeywordSearchFilters();
+}
+
+/// Keyword search result (separate from Path Search result)
+@riverpod
+class KeywordSearchResult extends _$KeywordSearchResult {
+  @override
+  SearchResult? build() => null;
+
+  void setResult(SearchResult? result) => state = result;
+  void clear() => state = null;
+}
+
+/// Keyword search executing flag (separate from Path Search)
+@riverpod
+class KeywordSearchExecuting extends _$KeywordSearchExecuting {
+  @override
+  bool build() => false;
+
+  void start() => state = true;
+  void stop() => state = false;
+}
+
+/// Available node labels from real graph data
+@riverpod
+Future<List<String>> availableNodeLabels(Ref ref) async {
+  final service = ref.watch(searchExecutionServiceProvider);
+  if (service == null) return [];
+  final data = await service.getAvailableLabelsAndTypes();
+  return (data['nodeLabels'] as List).cast<String>();
+}
+
+/// Available link types from real graph data
+@riverpod
+Future<List<String>> availableLinkTypes(Ref ref) async {
+  final service = ref.watch(searchExecutionServiceProvider);
+  if (service == null) return [];
+  final data = await service.getAvailableLabelsAndTypes();
+  return (data['linkTypes'] as List).cast<String>();
+}
+
+// ---------------------------------------------------------------------------
+// Search highlight and focus providers
+// ---------------------------------------------------------------------------
+
+/// State for dimming non-matching nodes in the graph view.
+///
+/// [nodeIds] is the set of node IDs from the latest search result.
+/// [dimEnabled] controls whether the dim effect is active.
+/// Dimming is only applied when both [nodeIds] is non-empty and [dimEnabled] is true.
+class SearchHighlightState {
+  final Set<core_graph.EntityId> nodeIds;
+  final Set<core_graph.EntityId> linkIds;
+  final bool dimEnabled;
+
+  const SearchHighlightState({
+    this.nodeIds = const {},
+    this.linkIds = const {},
+    this.dimEnabled = false,
+  });
+
+  SearchHighlightState copyWith({
+    Set<core_graph.EntityId>? nodeIds,
+    Set<core_graph.EntityId>? linkIds,
+    bool? dimEnabled,
+  }) => SearchHighlightState(
+    nodeIds: nodeIds ?? this.nodeIds,
+    linkIds: linkIds ?? this.linkIds,
+    dimEnabled: dimEnabled ?? this.dimEnabled,
+  );
+
+  bool get isActive => dimEnabled && (nodeIds.isNotEmpty || linkIds.isNotEmpty);
+}
+
+@riverpod
+class SearchHighlight extends _$SearchHighlight {
+  @override
+  SearchHighlightState build() => const SearchHighlightState();
+
+  void setIds({
+    required Set<core_graph.EntityId> nodeIds,
+    required Set<core_graph.EntityId> linkIds,
+  }) => state = state.copyWith(nodeIds: nodeIds, linkIds: linkIds);
+
+  void toggleDim() =>
+      state = state.copyWith(dimEnabled: !state.dimEnabled);
+
+  void clear() => state = const SearchHighlightState();
+}
+
+/// Holds the entity ID that the graph view should animate to focus on.
+@riverpod
+class SearchFocusTarget extends _$SearchFocusTarget {
+  @override
+  core_graph.EntityId? build() => null;
+
+  void focus(core_graph.EntityId id) => state = id;
+  void clear() => state = null;
+}
+
+// ---------------------------------------------------------------------------
+// Path Search providers (kept for future restoration)
+// ---------------------------------------------------------------------------
 
 /// Search execution action provider
 @riverpod

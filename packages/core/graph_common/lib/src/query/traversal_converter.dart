@@ -66,7 +66,9 @@ class TraversalConverter {
     rg.Traversal traversal,
     Predicate predicate,
   ) {
-    if (predicate is PropertyPredicate) {
+    if (predicate is AnyKeyContainsPredicate) {
+      return traversal.hasAnyKeyContains(predicate.value);
+    } else if (predicate is PropertyPredicate) {
       return _applyPropertyPredicate(traversal, predicate);
     } else if (predicate is LabelPredicate) {
       return _applyLabelPredicate(traversal, predicate);

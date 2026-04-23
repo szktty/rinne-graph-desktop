@@ -174,12 +174,11 @@ class CsvImportIntegration {
     String filePath,
     String stackName,
   ) async {
-    // TODO: Implement task registry with Riverpod
-    // final taskRegistry = container.read(taskRegistryProvider);
+    final taskRegistry = container.read(taskRegistryProvider.notifier);
 
     final task = Task<core_stack.Stack?>(
-      name: 'CSVインポート: $stackName',
-      description: 'CSVファイルからスタックをインポート中...',
+      name: 'CSV import: $stackName',
+      description: 'Importing stack from CSV file...',
       executor: (taskContext) async {
         return await CsvImportService.importCsvToStack(
           filePath: filePath,
@@ -187,7 +186,7 @@ class CsvImportIntegration {
           container: container,
           onProgress: (progress) {
             taskContext.updateProgress(
-              TaskProgress(value: progress, message: 'インポート中...'),
+              TaskProgress(value: progress, message: 'Importing...'),
             );
           },
         );
@@ -204,9 +203,8 @@ class CsvImportIntegration {
       },
     );
 
-    // TODO: Register and start task with Riverpod task system
-    // taskRegistry.registerTask(task);
-    // task.start();
+    taskRegistry.registerTask(task);
+    task.start();
   }
 
   static void _showSuccessDialog(BuildContext context, String stackName) {

@@ -68,6 +68,15 @@ class LabelPredicate extends Predicate {
   final bool hasLabel;
 }
 
+/// 全プロパティ値に対する含有述語
+class AnyKeyContainsPredicate extends Predicate {
+  AnyKeyContainsPredicate(this.value);
+  @override
+  final PredicateType type = PredicateType.property;
+
+  final String value;
+}
+
 /// リンク述語
 class LinkPredicate extends Predicate {
   LinkPredicate(
@@ -133,3 +142,5 @@ Predicate or(List<Predicate> predicates) =>
 
 Predicate not(Predicate predicate) =>
     CompoundPredicate(CompoundOperator.not, [predicate]);
+
+Predicate anyKeyContains(String value) => AnyKeyContainsPredicate(value);

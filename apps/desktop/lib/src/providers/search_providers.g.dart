@@ -407,6 +407,437 @@ final class SearchPatternTranslatorProvider
 String _$searchPatternTranslatorHash() =>
     r'b10ded99d677a6c0c8cfe57cb2ee228f29118cb1';
 
+/// Keyword search input text
+
+@ProviderFor(KeywordSearchQuery)
+final keywordSearchQueryProvider = KeywordSearchQueryProvider._();
+
+/// Keyword search input text
+final class KeywordSearchQueryProvider
+    extends $NotifierProvider<KeywordSearchQuery, String> {
+  /// Keyword search input text
+  KeywordSearchQueryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'keywordSearchQueryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$keywordSearchQueryHash();
+
+  @$internal
+  @override
+  KeywordSearchQuery create() => KeywordSearchQuery();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
+String _$keywordSearchQueryHash() =>
+    r'02f59f667c9b5f5c6ae94fea6b652fca99e79180';
+
+/// Keyword search input text
+
+abstract class _$KeywordSearchQuery extends $Notifier<String> {
+  String build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<String, String>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<String, String>,
+              String,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(KeywordSearchFiltersState)
+final keywordSearchFiltersStateProvider = KeywordSearchFiltersStateProvider._();
+
+final class KeywordSearchFiltersStateProvider
+    extends $NotifierProvider<KeywordSearchFiltersState, KeywordSearchFilters> {
+  KeywordSearchFiltersStateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'keywordSearchFiltersStateProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$keywordSearchFiltersStateHash();
+
+  @$internal
+  @override
+  KeywordSearchFiltersState create() => KeywordSearchFiltersState();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KeywordSearchFilters value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KeywordSearchFilters>(value),
+    );
+  }
+}
+
+String _$keywordSearchFiltersStateHash() =>
+    r'81e75bf46e017349b5f2bba238d8fcd76eed57cb';
+
+abstract class _$KeywordSearchFiltersState
+    extends $Notifier<KeywordSearchFilters> {
+  KeywordSearchFilters build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<KeywordSearchFilters, KeywordSearchFilters>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<KeywordSearchFilters, KeywordSearchFilters>,
+              KeywordSearchFilters,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Keyword search result (separate from Path Search result)
+
+@ProviderFor(KeywordSearchResult)
+final keywordSearchResultProvider = KeywordSearchResultProvider._();
+
+/// Keyword search result (separate from Path Search result)
+final class KeywordSearchResultProvider
+    extends $NotifierProvider<KeywordSearchResult, SearchResult?> {
+  /// Keyword search result (separate from Path Search result)
+  KeywordSearchResultProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'keywordSearchResultProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$keywordSearchResultHash();
+
+  @$internal
+  @override
+  KeywordSearchResult create() => KeywordSearchResult();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SearchResult? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SearchResult?>(value),
+    );
+  }
+}
+
+String _$keywordSearchResultHash() =>
+    r'3dca6e3fa92aabd5c3d768c1b406c6ccea02079c';
+
+/// Keyword search result (separate from Path Search result)
+
+abstract class _$KeywordSearchResult extends $Notifier<SearchResult?> {
+  SearchResult? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<SearchResult?, SearchResult?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<SearchResult?, SearchResult?>,
+              SearchResult?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Keyword search executing flag (separate from Path Search)
+
+@ProviderFor(KeywordSearchExecuting)
+final keywordSearchExecutingProvider = KeywordSearchExecutingProvider._();
+
+/// Keyword search executing flag (separate from Path Search)
+final class KeywordSearchExecutingProvider
+    extends $NotifierProvider<KeywordSearchExecuting, bool> {
+  /// Keyword search executing flag (separate from Path Search)
+  KeywordSearchExecutingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'keywordSearchExecutingProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$keywordSearchExecutingHash();
+
+  @$internal
+  @override
+  KeywordSearchExecuting create() => KeywordSearchExecuting();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$keywordSearchExecutingHash() =>
+    r'fd2487c2ba23320cf9452b2dfe4f314322249d30';
+
+/// Keyword search executing flag (separate from Path Search)
+
+abstract class _$KeywordSearchExecuting extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Available node labels from real graph data
+
+@ProviderFor(availableNodeLabels)
+final availableNodeLabelsProvider = AvailableNodeLabelsProvider._();
+
+/// Available node labels from real graph data
+
+final class AvailableNodeLabelsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>
+        >
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+  /// Available node labels from real graph data
+  AvailableNodeLabelsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'availableNodeLabelsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$availableNodeLabelsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<String>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<String>> create(Ref ref) {
+    return availableNodeLabels(ref);
+  }
+}
+
+String _$availableNodeLabelsHash() =>
+    r'db4e24c0ec8ca23db3f210e5578c6a7750759814';
+
+/// Available link types from real graph data
+
+@ProviderFor(availableLinkTypes)
+final availableLinkTypesProvider = AvailableLinkTypesProvider._();
+
+/// Available link types from real graph data
+
+final class AvailableLinkTypesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>
+        >
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+  /// Available link types from real graph data
+  AvailableLinkTypesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'availableLinkTypesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$availableLinkTypesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<String>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<String>> create(Ref ref) {
+    return availableLinkTypes(ref);
+  }
+}
+
+String _$availableLinkTypesHash() =>
+    r'992cd555a34163fb01b728b532e214af21a3ea76';
+
+@ProviderFor(SearchHighlight)
+final searchHighlightProvider = SearchHighlightProvider._();
+
+final class SearchHighlightProvider
+    extends $NotifierProvider<SearchHighlight, SearchHighlightState> {
+  SearchHighlightProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'searchHighlightProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$searchHighlightHash();
+
+  @$internal
+  @override
+  SearchHighlight create() => SearchHighlight();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SearchHighlightState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SearchHighlightState>(value),
+    );
+  }
+}
+
+String _$searchHighlightHash() => r'60a3cc65d936e533ce5da23358c33c2c4a0431ad';
+
+abstract class _$SearchHighlight extends $Notifier<SearchHighlightState> {
+  SearchHighlightState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<SearchHighlightState, SearchHighlightState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<SearchHighlightState, SearchHighlightState>,
+              SearchHighlightState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Holds the entity ID that the graph view should animate to focus on.
+
+@ProviderFor(SearchFocusTarget)
+final searchFocusTargetProvider = SearchFocusTargetProvider._();
+
+/// Holds the entity ID that the graph view should animate to focus on.
+final class SearchFocusTargetProvider
+    extends $NotifierProvider<SearchFocusTarget, core_graph.EntityId?> {
+  /// Holds the entity ID that the graph view should animate to focus on.
+  SearchFocusTargetProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'searchFocusTargetProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$searchFocusTargetHash();
+
+  @$internal
+  @override
+  SearchFocusTarget create() => SearchFocusTarget();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(core_graph.EntityId? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<core_graph.EntityId?>(value),
+    );
+  }
+}
+
+String _$searchFocusTargetHash() => r'463df6779b9b37d10dc2fa97618444c3aa50b1b3';
+
+/// Holds the entity ID that the graph view should animate to focus on.
+
+abstract class _$SearchFocusTarget extends $Notifier<core_graph.EntityId?> {
+  core_graph.EntityId? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<core_graph.EntityId?, core_graph.EntityId?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<core_graph.EntityId?, core_graph.EntityId?>,
+              core_graph.EntityId?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
 /// Search execution action provider
 
 @ProviderFor(SearchActions)

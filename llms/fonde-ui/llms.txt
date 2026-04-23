@@ -7,25 +7,9 @@ Developed for [RinneGraph](https://github.com/szktty/rinne-graph). Currently pro
 ## Package info
 
 - name: fonde_ui
-- version: 0.7.0-dev
+- version: 0.14.0-dev
 - Dart SDK: ^3.7.0
 - Flutter: >=3.41.2
-
-## Key dependencies
-
-- freezed_annotation: ^3.0.0
-- json_annotation: ^4.9.0
-- figma_squircle: ^0.6.3 (smooth rounded corners)
-- lucide_icons_flutter: ^3.0.5 (default icon set)
-- intl: ^0.20.2 (localization)
-- uuid: ^4.5.1
-- multi_split_view: ^3.2.1 (resizable panes in FondeScaffold)
-- pluto_grid: ^8.0.0 (FondeTableView)
-- textfield_tags: ^3.0.1 (FondeTagsField)
-- dots_indicator: ^4.0.1 (FondePageIndicator)
-- searchfield: ^2.0.0 (FondeSearchField)
-- popover: ^0.3.1 (FondePopover)
-- table_calendar: ^3.1.3 (FondeDatePicker)
 
 ## Imports
 
@@ -450,7 +434,7 @@ FondeSearchController.maybeOf(context)  // FondeSearchController?
 
 ### FondeScaffold
 
-Top-level app layout. Uses multi_split_view for resizable panes.
+Top-level app layout. Uses a custom in-house implementation for resizable panes.
 
 ```dart
 FondeScaffold({
@@ -494,7 +478,7 @@ enum FondeSidebarStyle {
 ```
 
 When `style == floatingPanel`, the sidebar renders toolbar and content together inside a
-rounded-rectangle panel. The outer area uses `sideBar.floatingPanelOuterBackground` and the
+rounded-rectangle panel with a `base.border` border. The outer area uses `sideBar.floatingPanelOuterBackground` and the
 panel uses `sideBar.floatingPanelBackground`. Pass a custom `toolbar` to control the toolbar
 appearance; defaults to `FondePrimarySidebarToolbar` with panel background color.
 
@@ -807,12 +791,14 @@ Menu button that shows overflow items.
 
 ### FondeTextField
 
+Fixed-height (32px) text input field implemented with `EditableText` directly for correct vertical centering at all zoom scales. `errorText` is rendered below the field via a `Column` (not inside `InputDecoration`).
+
 ```dart
 FondeTextField({
   TextEditingController? controller,
   FocusNode? focusNode,
   String? hintText,
-  String? errorText,
+  String? errorText,          // shown below the field
   Widget? prefixIcon,
   Widget? suffixIcon,
   bool enabled = true,
@@ -821,13 +807,37 @@ FondeTextField({
   void Function(String)? onChanged,
   void Function(String)? onSubmitted,
   // ... standard Flutter TextField params
+  Color? backgroundColor,
+  Color? borderColor,
+  Color? activeBorderColor,
+  double borderWidth = 1.5,
+  double radius = 12.0,
+  EdgeInsets contentPadding,  // vertical is ignored; centering is automatic
   bool disableZoom = false,
 })
 ```
 
 ### FondeSearchField
 
-Search-optimized text field with clear button and search icon.
+Search-optimized text field with clear button and search icon. The suggestion overlay is fully user-defined via `suggestionOverlayBuilder`.
+
+```dart
+FondeSearchField({
+  TextEditingController? controller,
+  String hint = '',
+  bool enabled = true,
+  String? value,
+  void Function(String)? onChange,
+  void Function(String)? onSubmit,
+  VoidCallback? onClear,
+  // Builder for suggestion overlay. Return null to hide the overlay.
+  Widget? Function(
+    BuildContext context,
+    TextEditingController controller,
+    VoidCallback close,
+  )? suggestionOverlayBuilder,
+})
+```
 
 ### FondeTagsField
 
@@ -928,7 +938,7 @@ Default height: 32px. On focus-lost or Enter, text is parsed and clamped to [min
 
 ### FondeDatePicker
 
-Monthly calendar widget for single-day or range selection. Backed by `table_calendar`.
+Monthly calendar widget for single-day or range selection. Self-contained implementation with no external dependencies.
 
 ```dart
 FondeDatePicker({
@@ -944,9 +954,14 @@ FondeDatePicker({
   List<Object?> Function(DateTime day)? eventLoader,
   bool Function(DateTime day)? enabledDayPredicate,
   dynamic locale,                     // e.g. 'ja', 'en_US'
-  StartingDayOfWeek startingDayOfWeek = StartingDayOfWeek.monday,
+  FondeDayOfWeek startingDayOfWeek = FondeDayOfWeek.monday,
   bool disableZoom = false,
 })
+```
+
+`FondeDayOfWeek` enum: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`. Each value exposes an `isoWeekday` getter (1 = Monday … 7 = Sunday).
+
+Top-level utility: `fondeSameDay(DateTime? a, DateTime? b)` — returns `true` when both dates fall on the same calendar day.
 ```
 
 Helper to show in a dialog:
@@ -1092,11 +1107,45 @@ Pre-built confirmation dialog with confirm/cancel buttons.
 
 ### FondePopover
 
-Contextual popover anchored to a widget.
+Contextual popover anchored to a widget. Self-contained implementation with squircle body and rounded arrow.
+
+```dart
+FondePopover.show(
+  context: context,
+  bodyBuilder: (context) => ...,
+  direction: FondePopoverDirection.bottom, // top / bottom / left / right; auto-flips at screen edge
+  width: 200,
+  height: 400,
+  arrowHeight: 12,
+  arrowWidth: 20,
+  radius: 12,           // corner radius
+  backgroundColor: ...,
+  shadowColor: ...,
+  elevation: 8,
+  barrierColor: ...,
+  barrierDismissible: true,
+  animation: FondePopoverAnimation.fade, // scaleAndFade / slideAndFade / elastic / fade / none
+  duration: ...,        // auto-dismiss after this duration
+  delay: ...,           // delay before showing
+  onPop: () {},
+)
+```
 
 ### FondeToast
 
-Transient notification widget.
+Transient notification anchored near a target widget.
+
+```dart
+FondeToast.show(
+  context: context,
+  targetKey: globalKey,
+  message: 'Saved',
+  type: FondeToastType.success, // info / success / warning / error
+  duration: Duration(seconds: 2),
+  direction: FondePopoverDirection.top,
+  animation: FondePopoverAnimation.none,
+)
+```
 
 ### FondeSnackBar
 
@@ -1173,6 +1222,9 @@ FondeListTile({
   Widget? trailing,
   required bool isSelected,
   VoidCallback? onTap,
+  VoidCallback? onDoubleTap,
+  GestureTapDownCallback? onTapDown,
+  VoidCallback? onTapCancel,
   VoidCallback? onLongPress,
   bool dense = false,
   EdgeInsetsGeometry? contentPadding,
@@ -1183,6 +1235,7 @@ FondeListTile({
 ```
 
 Ripple/splash animations are disabled by design (animations that delay input response are avoided).
+When `onDoubleTap` is set, `FondeGestureDetector` is used internally so single-tap fires immediately without delay.
 
 ---
 
@@ -1368,7 +1421,73 @@ Individual tree item with expand/collapse.
 
 ### FondeTableView
 
-Table display using pluto_grid package.
+Virtualized table view with sortable, resizable, and reorderable columns; single/multi-row selection; drag-to-reorder rows; and visual customization (header divider, column dividers, stripe rows).
+
+```dart
+FondeTableView<T>({
+  required List<T> data,
+  required List<FondeTableColumn<T>> columns,
+  required String Function(T) keyExtractor,
+  void Function(List<T>)? onRowsSelected,
+  void Function(T)? onRowDoubleTap,
+  bool allowMultiSelect = false,
+  bool allowColumnReordering = true,
+  bool allowColumnResizing = true,
+  bool allowRowReordering = false,
+  void Function(int oldIndex, int newIndex)? onColumnReorder,
+  void Function(int index, double newWidth)? onColumnResize,
+  void Function(int oldIndex, int newIndex)? onRowReorder,
+  bool Function(int draggedIndex, int targetIndex)? onRowReorderWillAccept,
+  String? initialSortColumnId,
+  FondeTableSortDirection initialSortDirection = ascending,
+  bool dimHeaders = true,
+  bool highlightSortedHeader = true,
+  Set<String>? primaryColumnIds,
+  bool highlightHeaderOnDrag = false,
+  bool highlightRowOnHover = false,
+  FondeTableRowReorderIndicator rowReorderIndicator = line,
+  FondeTableRowDragStyle rowDragStyle = fullRow,
+  Widget Function()? headerLeadingBuilder,
+  Widget Function(T item)? rowLeadingBuilder,
+  Widget Function()? headerTrailingBuilder,
+  Widget Function(T item)? rowTrailingBuilder,
+  bool showHeaderDivider = true,
+  double headerDividerThickness = 2.0,
+  FondeTableColumnStyle columnStyle = divider,
+  Color? stripeColor,                // null = use theme stripeBackground
+})
+```
+
+### FondeTableColumn
+
+```dart
+FondeTableColumn<T>({
+  required String id,
+  required String title,
+  required double width,
+  required Widget Function(T item, bool isSelected) cellBuilder,
+  bool sortable = false,
+  bool resizable = true,
+  bool fixed = false,
+  Comparable Function(T)? sortKeyBuilder,
+})
+```
+
+### FondeTableColumnStyle (enum)
+
+- `divider` — vertical dividers between columns and horizontal row borders (default)
+- `stripe` — alternating row background, no dividers
+- `none` — no dividers, no stripe
+
+### FondeTableRowReorderIndicator (enum)
+
+- `line` — simple horizontal line
+- `lineWithDot` — line with a leading dot
+
+### FondeTableRowDragStyle (enum)
+
+- `fullRow` — full row shown as drag overlay
+- `cellOnly` — only the cell area shown as drag overlay
 
 ---
 
@@ -1396,12 +1515,17 @@ Page navigation controls.
 
 ### FondeGestureDetector
 
-Wraps GestureDetector with hover state and cursor support.
+Wraps GestureDetector with hover state and cursor support. Single tap fires immediately even when `onDoubleTap` is also set.
 
 ```dart
 FondeGestureDetector({
   required Widget child,
   VoidCallback? onTap,
+  VoidCallback? onDoubleTap,
+  GestureTapDownCallback? onTapDown,
+  GestureTapUpCallback? onTapUp,
+  VoidCallback? onTapCancel,
+  ValueChanged<bool>? onHover,
   MouseCursor cursor = SystemMouseCursors.click,
   HitTestBehavior behavior = HitTestBehavior.translucent,
 })

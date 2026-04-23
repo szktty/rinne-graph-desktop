@@ -32,15 +32,6 @@ export 'package:fonde_ui/fonde_ui.dart'
         FondeAccessibilityConfig,
         FondeColorScope,
         FondeColorScopeHelper;
-export 'package:fonde_ui/fonde_ui_riverpod.dart'
-    show
-        fondeActiveThemeProvider,
-        fondeEffectiveColorSchemeProvider,
-        fondeEffectiveThemeDataProvider,
-        fondeAccessibilityConfigProvider,
-        fondePrimarySidebarStateProvider,
-        fondeSecondarySidebarStateProvider,
-        fondePerScreenSecondarySidebarStateProvider;
 export 'src/utils.dart';
 export 'src/color_extensions.dart';
 export 'src/accessibility_utils.dart';

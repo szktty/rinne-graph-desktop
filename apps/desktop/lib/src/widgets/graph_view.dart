@@ -16,6 +16,7 @@ import 'package:core_themes/core_themes.dart';
 import 'package:presentation_components/presentation_components.dart';
 import '../models/layout_config.dart';
 import '../providers/graph_providers.dart';
+import '../providers/search_providers.dart';
 import '../providers/selection_providers.dart';
 import '../providers/node_display_providers.dart';
 import '../models/node_display_settings.dart';
@@ -47,22 +48,48 @@ class AppGraphView extends ConsumerStatefulWidget {
   ConsumerState<AppGraphView> createState() => _AppGraphViewState();
 }
 
-class _AppGraphViewState extends ConsumerState<AppGraphView> {
+class _AppGraphViewState extends ConsumerState<AppGraphView>
+    with SingleTickerProviderStateMixin {
   late TransformationController _transformationController;
+  late AnimationController _focusAnimController;
+  Animation<Matrix4>? _focusAnimation;
   Offset? _lastPanPosition;
   NodeDisplayContent? _lastDisplayContent;
   int _graphViewKey = 0;
+  Size _viewportSize = Size.zero;
 
   @override
   void initState() {
     super.initState();
     _transformationController = TransformationController();
+    _focusAnimController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 350),
+    )..addListener(() {
+        if (_focusAnimation != null) {
+          _transformationController.value = _focusAnimation!.value;
+        }
+      });
   }
 
   @override
   void dispose() {
+    _focusAnimController.dispose();
     _transformationController.dispose();
     super.dispose();
+  }
+
+  void _focusOnNode(Offset nodePosition) {
+    if (_viewportSize == Size.zero) return;
+    final cx = _viewportSize.width / 2;
+    final cy = _viewportSize.height / 2;
+    final target = Matrix4.identity()
+      ..translate(cx - nodePosition.dx, cy - nodePosition.dy);
+    final begin = _transformationController.value.clone();
+    _focusAnimation = Matrix4Tween(begin: begin, end: target).animate(
+      CurvedAnimation(parent: _focusAnimController, curve: Curves.easeInOut),
+    );
+    _focusAnimController.forward(from: 0);
   }
 
   // Handler for scrolling entire graph area by background drag
@@ -96,6 +123,22 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
   @override
   Widget build(BuildContext context) {
     debugPrint('[AppGraphView.build] Rebuilding AppGraphView');
+
+    // Listen for focus target changes and animate to the node
+    ref.listen<core_graph.EntityId?>(searchFocusTargetProvider, (_, entityId) {
+      if (entityId == null) return;
+      final cache = ref.read(graphViewCacheProvider);
+      final ploughGraph = cache.ploughGraph;
+      if (ploughGraph == null) return;
+      final ploughId = plough.GraphId(
+        type: plough.GraphIdType.node,
+        value: entityId.value,
+      );
+      final node = ploughGraph.getNode(ploughId);
+      if (node != null) {
+        _focusOnNode(node.logicalPosition);
+      }
+    });
 
     // Get selection state
     final selectionState = ref.watch(selectionStateProvider);
@@ -176,6 +219,7 @@ class _AppGraphViewState extends ConsumerState<AppGraphView> {
     // Use LayoutBuilder to get the available size for centering node animation
     return LayoutBuilder(
       builder: (context, constraints) {
+        _viewportSize = constraints.biggest;
         final centerOffset = Offset(
           constraints.maxWidth / 2,
           constraints.maxHeight / 2,
@@ -597,7 +641,7 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
 }
 
 /// Link renderer that draws the link line/arrow and overlays the link type label.
-class _AppLinkRenderer extends StatelessWidget {
+class _AppLinkRenderer extends ConsumerWidget {
   const _AppLinkRenderer({
     required this.link,
     required this.sourceView,
@@ -616,12 +660,18 @@ class _AppLinkRenderer extends StatelessWidget {
   static const _color = Colors.grey;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final highlightState = ref.watch(searchHighlightProvider);
+    final linkEntityId = core_graph.EntityId.fromString(link.id.value);
+    final isDimmed = highlightState.isActive &&
+        !highlightState.linkIds.contains(linkEntityId);
+
     final label = link.properties['label'] as String?;
     final showLabel = label != null && label.isNotEmpty;
 
+    Widget content;
     if (!showLabel) {
-      return plough.GraphDefaultLinkRenderer(
+      content = plough.GraphDefaultLinkRenderer(
         link: link,
         sourceView: sourceView,
         targetView: targetView,
@@ -629,47 +679,52 @@ class _AppLinkRenderer extends StatelessWidget {
         geometry: geometry,
         color: _color,
       );
-    }
+    } else {
+      // Place the label at the midpoint of the link line.
+      // GraphDefaultLinkRenderer uses a CustomPaint whose local x-axis runs
+      // from source to target with thickness as height.  The midpoint along
+      // x is connectionPoints.distance / 2; y centre is thickness / 2.
+      final cp = geometry.connectionPoints;
+      final distance = cp.distance;
+      final midX = distance / 2;
+      const midY = _thickness / 2;
 
-    // Place the label at the midpoint of the link line.
-    // GraphDefaultLinkRenderer uses a CustomPaint whose local x-axis runs
-    // from source to target with thickness as height.  The midpoint along
-    // x is connectionPoints.distance / 2; y centre is thickness / 2.
-    final cp = geometry.connectionPoints;
-    final distance = cp.distance;
-    final midX = distance / 2;
-    const midY = _thickness / 2;
+      // When the link angle is between 90° and 270° (pointing left), the Canvas
+      // coordinate system is flipped and text renders upside-down.  Counter-rotate
+      // by 180° so the label is always readable.
+      final angle = cp.angle; // radians, range (-π, π]
+      final needsFlip = angle > math.pi / 2 || angle < -math.pi / 2;
 
-    // When the link angle is between 90° and 270° (pointing left), the Canvas
-    // coordinate system is flipped and text renders upside-down.  Counter-rotate
-    // by 180° so the label is always readable.
-    final angle = cp.angle; // radians, range (-π, π]
-    final needsFlip = angle > math.pi / 2 || angle < -math.pi / 2;
-
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        plough.GraphDefaultLinkRenderer(
-          link: link,
-          sourceView: sourceView,
-          targetView: targetView,
-          routing: routing,
-          geometry: geometry,
-          color: _color,
-        ),
-        Positioned(
-          left: midX,
-          top: midY,
-          child: Transform.translate(
-            offset: const Offset(0, -8),
-            child: Transform.rotate(
-              angle: needsFlip ? math.pi : 0,
-              child: _LinkLabel(label: label),
+      content = Stack(
+        clipBehavior: Clip.none,
+        children: [
+          plough.GraphDefaultLinkRenderer(
+            link: link,
+            sourceView: sourceView,
+            targetView: targetView,
+            routing: routing,
+            geometry: geometry,
+            color: _color,
+          ),
+          Positioned(
+            left: midX,
+            top: midY,
+            child: Transform.translate(
+              offset: const Offset(0, -8),
+              child: Transform.rotate(
+                angle: needsFlip ? math.pi : 0,
+                child: _LinkLabel(label: label),
+              ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    }
+
+    if (isDimmed) {
+      return Opacity(opacity: 0.15, child: content);
+    }
+    return content;
   }
 }
 
@@ -717,13 +772,23 @@ class _NodeRendererWrapper extends ConsumerWidget {
     // Get color scheme
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
 
-    // Use custom node renderer
-    return AppNodeRenderer(
+    // Dim non-matching nodes when highlight is active
+    final highlightState = ref.watch(searchHighlightProvider);
+    final nodeEntityId = core_graph.EntityId.fromString(node.id.value);
+    final isDimmed = highlightState.isActive &&
+        !highlightState.nodeIds.contains(nodeEntityId);
+
+    final renderer = AppNodeRenderer(
       node: node,
       displayContent: displayContent,
       nodeSize: nodeSize,
       colorScheme: appColorScheme,
     );
+
+    if (isDimmed) {
+      return Opacity(opacity: 0.25, child: renderer);
+    }
+    return renderer;
   }
 }
 
