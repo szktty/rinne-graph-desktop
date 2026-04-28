@@ -30,6 +30,22 @@ class MainFlutterWindow: NSWindow {
 
     RegisterGeneratedPlugins(registry: flutterViewController)
 
+    let channel = FlutterMethodChannel(
+      name: "jp.szktty.rinnegraph/window_info",
+      binaryMessenger: flutterViewController.engine.binaryMessenger
+    )
+    channel.setMethodCallHandler { [weak self] call, result in
+      if call.method == "getWindowNumber" {
+        if let windowNumber = self?.windowNumber {
+          result(windowNumber)
+        } else {
+          result(FlutterError(code: "NO_WINDOW", message: "No main window", details: nil))
+        }
+      } else {
+        result(FlutterMethodNotImplemented)
+      }
+    }
+
     super.awakeFromNib()
   }
 }
