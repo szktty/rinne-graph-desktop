@@ -21,7 +21,9 @@ import '../providers/app_state_providers.dart';
 import '../providers/open_stacks_providers.dart';
 import '../providers/entity_selection_bridge_providers.dart';
 import '../providers/shell_state_manager.dart';
+import '../providers/view_toolbar_providers.dart';
 import '../commands/register_core_commands.dart';
+import '../services/mcp_http_server.dart';
 import 'shell/startup_handler.dart';
 import 'shell/sidebar_builder.dart';
 import 'shell/main_content_builder.dart';
@@ -81,6 +83,20 @@ class _MainAppShellState extends ConsumerState<MainAppShell> {
   Widget build(BuildContext context) {
     final selectedActivityIndex = ref.watch(activityBarStateProvider);
     final activeStack = ref.watch(core_stack.activeStackProvider);
+
+    // Register UI state reader for the MCP HTTP server.
+    McpHttpServer.instance?.uiStateReader = () async {
+      final stack = ref.read(core_stack.activeStackProvider);
+      final activityIndex = ref.read(activityBarStateProvider);
+      final viewMode = ref.read(viewToolbarStateProvider);
+      final screen = activityIndex == 0 ? 'editor' : 'welcome';
+      return {
+        'screen': activeStack == null ? 'welcome' : screen,
+        'stack_path': stack?.directory.path,
+        'view_mode': viewMode,
+        'activity_index': activityIndex,
+      };
+    };
 
     // Initialize the link between entity selection and the editor
     ref.watch(initializeEntitySelectionBridgeProvider);

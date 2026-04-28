@@ -64,6 +64,7 @@ Future<void> main(List<String> args) async {
           'true';
 
   // Start MCP HTTP server on debug builds (or when --enable-mcp flag is set).
+  McpHttpServer.instance = _mcpHttpServer;
   if (kDebugMode || args.contains('--enable-mcp')) {
     await _mcpHttpServer.start();
   }

@@ -21,7 +21,17 @@ import 'package:shelf_router/shelf_router.dart';
 class McpHttpServer {
   static const int port = 6107;
 
+  static McpHttpServer? _instance;
+
+  /// The app-wide instance. Set by main() before the widget tree is built.
+  static McpHttpServer? get instance => _instance;
+  static set instance(McpHttpServer? value) => _instance = value;
+
   HttpServer? _server;
+
+  /// Registered by the widget tree to provide current UI state.
+  /// Returns a JSON-serializable map, or null if state is unavailable.
+  Future<Map<String, dynamic>?> Function()? uiStateReader;
 
   bool get isRunning => _server != null;
 
@@ -30,6 +40,7 @@ class McpHttpServer {
 
     final router = Router();
     router.get('/ping', _handlePing);
+    router.get('/ui/state', _handleUiState);
 
     final handler = const Pipeline()
         .addMiddleware(_corsMiddleware())
@@ -52,6 +63,27 @@ class McpHttpServer {
   Response _handlePing(Request request) {
     final body = jsonEncode({'status': 'ok', 'app': 'RinneGraph'});
     return Response.ok(body, headers: {'content-type': 'application/json'});
+  }
+
+  Future<Response> _handleUiState(Request request) async {
+    final reader = uiStateReader;
+    if (reader == null) {
+      return Response.internalServerError(
+        body: jsonEncode({'error': 'UI state not available'}),
+        headers: {'content-type': 'application/json'},
+      );
+    }
+    final state = await reader();
+    if (state == null) {
+      return Response.internalServerError(
+        body: jsonEncode({'error': 'UI state not available'}),
+        headers: {'content-type': 'application/json'},
+      );
+    }
+    return Response.ok(
+      jsonEncode(state),
+      headers: {'content-type': 'application/json'},
+    );
   }
 
   Middleware _corsMiddleware() {
