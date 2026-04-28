@@ -36,6 +36,13 @@ class McpHttpServer {
   /// Returns a JSON-serializable map, or null if state is unavailable.
   Future<Map<String, dynamic>?> Function()? uiStateReader;
 
+  /// Registered by the widget tree to execute UI commands.
+  /// Returns a JSON-serializable result map.
+  Future<Map<String, dynamic>> Function(
+    String command,
+    Map<String, dynamic> params,
+  )? commandHandler;
+
   bool get isRunning => _server != null;
 
   Future<void> start() async {
@@ -45,6 +52,7 @@ class McpHttpServer {
     router.get('/ping', _handlePing);
     router.get('/ui/state', _handleUiState);
     router.get('/ui/screenshot', _handleScreenshot);
+    router.post('/ui/command', _handleCommand);
 
     final handler = const Pipeline()
         .addMiddleware(_corsMiddleware())
@@ -95,6 +103,38 @@ class McpHttpServer {
 
     return Response.ok(
       jsonEncode(enriched),
+      headers: {'content-type': 'application/json'},
+    );
+  }
+
+  Future<Response> _handleCommand(Request request) async {
+    final handler = commandHandler;
+    if (handler == null) {
+      return Response.internalServerError(
+        body: jsonEncode({'error': 'command handler not available'}),
+        headers: {'content-type': 'application/json'},
+      );
+    }
+    final Map<String, dynamic> body;
+    try {
+      body = jsonDecode(await request.readAsString()) as Map<String, dynamic>;
+    } catch (_) {
+      return Response.badRequest(
+        body: jsonEncode({'error': 'invalid JSON body'}),
+        headers: {'content-type': 'application/json'},
+      );
+    }
+    final command = body['command'] as String?;
+    if (command == null) {
+      return Response.badRequest(
+        body: jsonEncode({'error': 'command is required'}),
+        headers: {'content-type': 'application/json'},
+      );
+    }
+    final params = (body['params'] as Map<String, dynamic>?) ?? {};
+    final result = await handler(command, params);
+    return Response.ok(
+      jsonEncode(result),
       headers: {'content-type': 'application/json'},
     );
   }

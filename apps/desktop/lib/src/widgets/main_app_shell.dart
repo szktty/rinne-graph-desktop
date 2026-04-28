@@ -14,6 +14,7 @@ import 'package:features_updates/updates.dart' as features_updates;
 import 'package:app/app.dart';
 import 'package:presentation_workflow/presentation_workflow.dart'
     as presentation_workflow;
+import 'dart:io';
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
 import 'package:core_app_config/core_app_config.dart';
 
@@ -24,6 +25,7 @@ import '../providers/shell_state_manager.dart';
 import '../providers/view_toolbar_providers.dart';
 import '../commands/register_core_commands.dart';
 import '../services/mcp_http_server.dart';
+import '../enums/activity_bar_index.dart';
 import 'shell/startup_handler.dart';
 import 'shell/sidebar_builder.dart';
 import 'shell/main_content_builder.dart';
@@ -96,6 +98,54 @@ class _MainAppShellState extends ConsumerState<MainAppShell> {
         'view_mode': viewMode,
         'activity_index': activityIndex,
       };
+    };
+
+    // Register command handler for the MCP HTTP server.
+    McpHttpServer.instance?.commandHandler = (command, params) async {
+      switch (command) {
+        case 'open_stack':
+          // SECURITY: Currently accepts arbitrary file paths from the MCP server.
+          // Before enabling on release builds, replace with a stack ID lookup so
+          // that only stacks already known to the app can be opened.
+          final path = params['path'] as String?;
+          if (path == null) {
+            return {'ok': false, 'error': 'path is required'};
+          }
+          final stackDir = Directory(path);
+          if (!await stackDir.exists()) {
+            return {'ok': false, 'error': 'stack directory not found: $path'};
+          }
+          final metadataService = core_stack.StackMetadataService();
+          final (info, settings) = await metadataService.loadMetadata(stackDir);
+          if (info == null) {
+            return {'ok': false, 'error': 'failed to load stack metadata: $path'};
+          }
+          final stack = core_stack.Stack(
+            directory: stackDir,
+            info: info,
+            settings: settings ?? const core_stack.StackSettings(),
+          );
+          ref.read(core_stack.activeStackProvider.notifier).setStack(stack);
+          ref.read(openStacksActionsProvider.notifier).addStack(stack);
+          ref
+              .read(activityBarStateProvider.notifier)
+              .setIndex(ActivityBarIndex.graphNavigation.value);
+          return {'ok': true, 'stack_path': stack.directory.path};
+
+        case 'switch_view':
+          final view = params['view'] as String?;
+          if (view == null) {
+            return {'ok': false, 'error': 'view is required'};
+          }
+          if (view != 'graph' && view != 'table') {
+            return {'ok': false, 'error': 'view must be "graph" or "table"'};
+          }
+          ref.read(viewToolbarStateProvider.notifier).setActiveView(view);
+          return {'ok': true, 'view': view};
+
+        default:
+          return {'ok': false, 'error': 'unknown command: $command'};
+      }
     };
 
     // Initialize the link between entity selection and the editor
