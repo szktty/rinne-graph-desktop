@@ -8,6 +8,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app/app.dart';
 import 'package:plough/plough.dart';
@@ -23,6 +24,7 @@ import 'src/widgets/menu_builder.dart';
 import 'src/widgets/main_app_shell.dart';
 import 'src/providers/dialog_visibility_providers.dart';
 import 'src/providers/graph_providers.dart';
+import 'src/services/mcp_http_server.dart';
 
 // Global reference to activity bar navigation function
 Function(int)? _globalActivityBarNavigator;
@@ -37,6 +39,9 @@ final _themeController = FondeThemeController(
 final _themeColorController = FondeThemeColorController();
 final _accessibilityController = FondeAccessibilityController();
 final _iconThemeController = FondeIconThemeController();
+
+// Global MCP HTTP server instance (lifecycle tied to the app process).
+final _mcpHttpServer = McpHttpServer();
 
 Future<void> main(List<String> args) async {
   Plough().debugLogEnabled = false;
@@ -57,6 +62,11 @@ Future<void> main(List<String> args) async {
             defaultValue: 'false',
           ) ==
           'true';
+
+  // Start MCP HTTP server on debug builds (or when --enable-mcp flag is set).
+  if (kDebugMode || args.contains('--enable-mcp')) {
+    await _mcpHttpServer.start();
+  }
 
   await DesktopApp.run(
     arguments: args,
