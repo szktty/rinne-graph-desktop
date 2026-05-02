@@ -18,13 +18,20 @@ import 'dart:io';
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
 import 'package:core_app_config/core_app_config.dart';
 
+import 'package:core_graph_flutter/core_graph.dart' as core_graph;
+
 import '../providers/app_state_providers.dart';
 import '../providers/open_stacks_providers.dart';
 import '../providers/entity_selection_bridge_providers.dart';
+import '../providers/search_providers.dart';
+import '../providers/selection_providers.dart';
 import '../providers/shell_state_manager.dart';
 import '../providers/view_toolbar_providers.dart';
 import '../commands/register_core_commands.dart';
+import '../events/selection_events.dart';
+import '../models/search_models.dart';
 import '../services/mcp_http_server.dart';
+import '../services/search_execution_service.dart';
 import '../enums/activity_bar_index.dart';
 import 'shell/startup_handler.dart';
 import 'shell/sidebar_builder.dart';
@@ -142,6 +149,109 @@ class _MainAppShellState extends ConsumerState<MainAppShell> {
           }
           ref.read(viewToolbarStateProvider.notifier).setActiveView(view);
           return {'ok': true, 'view': view};
+
+        case 'close_stack':
+          ref.read(core_stack.activeStackProvider.notifier).clearStack();
+          return {'ok': true};
+
+        case 'navigate_to':
+          final screen = params['screen'] as String?;
+          if (screen == null) {
+            return {'ok': false, 'error': 'screen is required'};
+          }
+          switch (screen) {
+            case 'welcome':
+              ref.read(core_stack.activeStackProvider.notifier).clearStack();
+              return {'ok': true, 'screen': 'welcome'};
+            case 'editor':
+              final activeStack = ref.read(core_stack.activeStackProvider);
+              if (activeStack == null) {
+                return {
+                  'ok': false,
+                  'error': 'no stack is open; use open_stack first',
+                };
+              }
+              ref
+                  .read(selectedActivityItemProvider.notifier)
+                  .state = AppActivityItemType.lens;
+              return {'ok': true, 'screen': 'editor'};
+            default:
+              return {
+                'ok': false,
+                'error': 'screen must be "welcome" or "editor"',
+              };
+          }
+
+        case 'run_search':
+          final keyword = params['keyword'] as String?;
+          if (keyword == null || keyword.trim().isEmpty) {
+            return {'ok': false, 'error': 'keyword is required'};
+          }
+          final searchService = ref.read(searchExecutionServiceProvider);
+          if (searchService == null) {
+            return {'ok': false, 'error': 'no stack is open'};
+          }
+          ref.read(keywordSearchQueryProvider.notifier).setQuery(keyword);
+          ref.read(keywordSearchExecutingProvider.notifier).start();
+          try {
+            final result = await searchService.executeKeywordSearch(
+              keyword: keyword,
+              options: const ExplorationOptions(maxResults: 200),
+            );
+            ref.read(keywordSearchResultProvider.notifier).setResult(result);
+            ref.read(searchHighlightProvider.notifier).setIds(
+              nodeIds: result.nodes.map((n) => n.id).toSet(),
+              linkIds: result.links.map((l) => l.id).toSet(),
+            );
+            return {
+              'ok': true,
+              'node_count': result.nodes.length,
+              'link_count': result.links.length,
+            };
+          } catch (e) {
+            return {'ok': false, 'error': 'search failed: $e'};
+          } finally {
+            ref.read(keywordSearchExecutingProvider.notifier).stop();
+          }
+
+        case 'open_node':
+          final id = params['id'] as String?;
+          if (id == null) {
+            return {'ok': false, 'error': 'id is required'};
+          }
+          final entityId = core_graph.EntityId.fromString(id);
+          ref
+              .read(selectionStateProvider.notifier)
+              .selectEntity(entityId, source: SelectionSource.program);
+          ref.read(screenBasedSecondarySidebarStateProvider.notifier).show();
+          return {'ok': true, 'id': id};
+
+        case 'focus_node':
+          final id = params['id'] as String?;
+          if (id == null) {
+            return {'ok': false, 'error': 'id is required'};
+          }
+          ref
+              .read(searchFocusTargetProvider.notifier)
+              .focus(core_graph.EntityId.fromString(id));
+          return {'ok': true, 'id': id};
+
+        case 'highlight_nodes':
+          final rawIds = params['ids'];
+          if (rawIds == null) {
+            return {'ok': false, 'error': 'ids is required'};
+          }
+          final List<dynamic> idList =
+              rawIds is List ? rawIds : [rawIds];
+          final nodeIds = idList
+              .map((e) => core_graph.EntityId.fromString(e.toString()))
+              .toSet()
+              .cast<core_graph.EntityId>();
+          ref.read(searchHighlightProvider.notifier).setIds(
+            nodeIds: nodeIds,
+            linkIds: const {},
+          );
+          return {'ok': true, 'count': nodeIds.length};
 
         default:
           return {'ok': false, 'error': 'unknown command: $command'};
