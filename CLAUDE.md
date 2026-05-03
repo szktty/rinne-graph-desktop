@@ -147,6 +147,15 @@ Read the relevant documentation BEFORE starting implementation:
 - **Dialog/panel layout**: `docs/design/13-panel-layout-guidelines.md` and `docs/design/15-warning-error-dialog-guidelines.md`
 - **Custom libraries** (rinne_graph, plough, kiri_check): Check `llms/` for context files first
 
+### Committing Changes
+
+**Never commit without user confirmation.** After implementation is complete:
+1. Report what was changed and that the build passes.
+2. Wait for the user to run the app and verify the behavior.
+3. Only create a commit after the user explicitly confirms the changes are working correctly.
+
+Build passing (`flutter build macos`) is a necessary condition but not sufficient — runtime behavior must be verified by the user before committing.
+
 ### Planning for Complex Changes
 
 For tasks that touch 3+ files or cross package boundaries, use plan mode:

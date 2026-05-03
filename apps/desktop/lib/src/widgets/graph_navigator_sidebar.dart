@@ -52,7 +52,7 @@ class GraphNavigatorSidebarContent extends ConsumerWidget {
     return FondeTabView(
       tabs: tabs,
       contents: contents,
-      initialSelectedTabId: selectedTab == 0 ? 'navigation' : 'search',
+      selectedTabId: selectedTab == 0 ? 'navigation' : 'search',
       onTabSelected: (tabId) {
         final tabIndex = tabId == 'navigation' ? 0 : 1;
         ref.read(graphNavigatorTabProvider.notifier).setTab(tabIndex);
@@ -85,8 +85,23 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
     super.dispose();
   }
 
+  void _syncQuery(String query) {
+    if (query != _queryController.text) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && query != _queryController.text) {
+          _queryController.text = query;
+          _queryController.selection =
+              TextSelection.collapsed(offset: query.length);
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final query = ref.watch(keywordSearchQueryProvider);
+    _syncQuery(query);
+
     final result = ref.watch(keywordSearchResultProvider);
     final isExecuting = ref.watch(keywordSearchExecutingProvider);
     final searchError = ref.watch(searchErrorProvider);
