@@ -963,13 +963,11 @@ packages:
     source: hosted
     version: "3.2.2"
   rinne_graph:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      path: "."
-      ref: develop
-      resolved-ref: e7eaf99573c85a320eb378d3f492830893fbfcd5
-      url: "https://github.com/szktty/rinne-graph.git"
-    source: git
+      path: "../rinne-graph"
+      relative: true
+    source: path
     version: "0.7.0"
   riverpod:
     dependency: transitive

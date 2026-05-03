@@ -38,7 +38,19 @@ class RinneGraphTransaction implements Transaction {
 
   @override
   Future<void> updateNode(Node node) async {
-    return _storage.updateNode(node);
+    final g = _transaction.traversal();
+    final vertices = await g.V().hasKey('app_id', node.id.value).toList();
+    if (vertices.isNotEmpty) {
+      final vertex = vertices.first as rg.Vertex;
+      final updatedProperties = Map<String, dynamic>.from(vertex.properties);
+      updatedProperties.addAll(node.properties.toMap());
+      updatedProperties['app_updated_at'] = DateTime.now().toIso8601String();
+      final updatedVertex = vertex.copyWith(
+        properties: updatedProperties,
+        labels: node.labels,
+      );
+      await _transaction.updateVertex(updatedVertex);
+    }
   }
 
   @override
@@ -67,7 +79,19 @@ class RinneGraphTransaction implements Transaction {
 
   @override
   Future<void> updateLink(Link link) async {
-    return _storage.updateLink(link);
+    final g = _transaction.traversal();
+    final edges = await g.E().hasKey('app_id', link.id.value).toList();
+    if (edges.isNotEmpty) {
+      final edge = edges.first as rg.Edge;
+      final updatedProperties = Map<String, dynamic>.from(edge.properties);
+      updatedProperties.addAll(link.properties.toMap());
+      updatedProperties['app_updated_at'] = DateTime.now().toIso8601String();
+      final updatedEdge = edge.copyWith(
+        properties: updatedProperties,
+        labels: {link.type},
+      );
+      await _transaction.updateEdge(updatedEdge);
+    }
   }
 
   @override

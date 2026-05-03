@@ -19,7 +19,7 @@ import '../events/selection_events.dart';
 part 'graph_providers.g.dart';
 
 /// Provider for GraphStorage for the active stack
-@riverpod
+@Riverpod(keepAlive: true)
 core_graph.GraphStorage? activeStackGraphStorage(Ref ref) {
   final activeStack = ref.watch(core_stack.activeStackProvider);
 

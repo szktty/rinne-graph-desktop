@@ -30,7 +30,7 @@ final class ActiveStackGraphStorageProvider
         argument: null,
         retry: null,
         name: r'activeStackGraphStorageProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -59,7 +59,7 @@ final class ActiveStackGraphStorageProvider
 }
 
 String _$activeStackGraphStorageHash() =>
-    r'9398620b12e2b654ee6d38c74dda45834c91d9f8';
+    r'faa58847b3a59b41c6325fc2f43cfa46681f0638';
 
 /// Provider managing the selected graph entity ID
 

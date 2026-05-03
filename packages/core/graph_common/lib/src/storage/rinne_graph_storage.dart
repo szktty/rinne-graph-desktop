@@ -240,15 +240,14 @@ class RinneGraphStorage implements GraphStorage {
     _checkInitialized();
 
     await _graph!.transaction((txn) async {
-      final g = _graph!.traversal();
+      final g = txn.traversal();
       final vertices = await g.V().hasKey('app_id', node.id.value).toList();
 
       if (vertices.isNotEmpty) {
-        final vertex = vertices.first;
-        // Update properties
-        final updatedProperties = _convertMapToRinne(node.properties.toMap());
-        updatedProperties['app_name'] = node.description.type;
-        updatedProperties['app_description'] = node.description.type;
+        final vertex = vertices.first as rg.Vertex;
+        final updatedProperties = Map<String, dynamic>.from(vertex.properties);
+        final userProperties = _convertMapToRinne(node.properties.toMap());
+        updatedProperties.addAll(userProperties);
         updatedProperties['app_updated_at'] = DateTime.now().toIso8601String();
 
         final updatedVertex = vertex.copyWith(
@@ -256,8 +255,7 @@ class RinneGraphStorage implements GraphStorage {
           labels: node.labels,
         );
 
-        // Update processing in RinneGraph (implementation dependent)
-        // Note: Depends on specific RinneGraph update API
+        await txn.updateVertex(updatedVertex);
       }
     });
   }
@@ -527,15 +525,14 @@ class RinneGraphStorage implements GraphStorage {
     _checkInitialized();
 
     await _graph!.transaction((txn) async {
-      final g = _graph!.traversal();
+      final g = txn.traversal();
       final edges = await g.E().hasKey('app_id', link.id.value).toList();
 
       if (edges.isNotEmpty) {
-        final edge = edges.first;
-        // Update properties
-        final updatedProperties = _convertMapToRinne(link.properties.toMap());
-        updatedProperties['app_name'] = link.description.type;
-        updatedProperties['app_description'] = link.description.type;
+        final edge = edges.first as rg.Edge;
+        final updatedProperties = Map<String, dynamic>.from(edge.properties);
+        final userProperties = _convertMapToRinne(link.properties.toMap());
+        updatedProperties.addAll(userProperties);
         updatedProperties['app_updated_at'] = DateTime.now().toIso8601String();
 
         final updatedEdge = edge.copyWith(
@@ -543,7 +540,7 @@ class RinneGraphStorage implements GraphStorage {
           labels: {link.type},
         );
 
-        // Update processing in RinneGraph (implementation dependent)
+        await txn.updateEdge(updatedEdge);
       }
     });
   }
@@ -857,9 +854,7 @@ class RinneGraphStorage implements GraphStorage {
   Future<T> transaction<T>(Future<T> Function(Transaction) operations) async {
     _checkInitialized();
 
-    // Use RinneGraph transaction
     return _graph!.transaction((txn) async {
-      // Wrap RinneGraphTransaction
       final appTxn = RinneGraphTransaction(txn, this);
       return operations(appTxn);
     });

@@ -20,6 +20,7 @@ import 'package:features_welcome/src/widgets/welcome_screen_dialogs.dart';
 import 'package:app/app.dart' show selectedActivityItemProvider, AppActivityItemType;
 import 'package:features_record_editor/record_editor.dart' as record_editor;
 import '../providers/app_state_providers.dart';
+import '../providers/entity_selection_bridge_providers.dart' show graphLoadingStateProvider;
 import '../providers/open_stacks_providers.dart';
 import '../providers/search_providers.dart';
 import '../providers/selection_providers.dart';
@@ -1021,7 +1022,11 @@ List<AppCommand> _graphCommands() => [
         return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id is required'};
       }
       final entityId = core_graph.EntityId.fromString(id);
+      // Update both providers synchronously so selectedEntityForEditorProvider
+      // reflects the new selection immediately without waiting for EntitySelectionBridge's
+      // ref.listen callback (which fires on the next microtask/frame).
       ref.read(selectionStateProvider.notifier).selectEntity(entityId, source: SelectionSource.program);
+      ref.read(core_graph.selectedEntityIdProvider.notifier).setEntityId(entityId);
       ref.read(screenBasedSecondarySidebarStateProvider.notifier).show();
       return {'ok': true, 'id': id};
     },
@@ -1130,10 +1135,62 @@ List<AppCommand> _recordEditorCommands() => [
     description: 'Save changes in the record editor',
     canExecute: (ref) {
       if (ref.read(core_stack.activeStackProvider) == null) return false;
+      if (ref.read(graphLoadingStateProvider)) return false;
       return ref.read(record_editor.selectedEntityForEditorProvider) != null;
     },
     run: (ref, args) async {
-      await ref.read(record_editor.saveEntityActionProvider.notifier).saveEntity();
+      final selectedEntity = ref.read(record_editor.selectedEntityForEditorProvider);
+      if (selectedEntity == null) {
+        return {'ok': false, 'error': 'no entity selected'};
+      }
+
+      final editingProperties = ref.read(record_editor.editingEntityPropertiesProvider);
+      final propertyNameChanges = ref.read(record_editor.editingPropertyNameChangesProvider);
+
+      final finalProperties = Map<String, dynamic>.from(editingProperties);
+      for (final change in propertyNameChanges.entries) {
+        final oldValue = finalProperties.remove(change.key);
+        finalProperties[change.value] = oldValue;
+      }
+
+      // WORKAROUND: Open a dedicated SQLite connection for the save operation.
+      // This is a temporary workaround until GraphContext.transaction() is fixed
+      // to pass a transaction-scoped context to its callback instead of 'this'.
+      // See record-editor-save-database-locking.md in rinne-graph-desktop-private.
+      //
+      // The dedicated connection is needed because sharing the same RinneGraphStorage
+      // instance as EntitySelectionBridge causes a database lock: sqflite_ffi
+      // serializes transactions per connection, and the read connection held by
+      // EntitySelectionBridge blocks any write transaction on the same connection.
+      final activeStack = ref.read(core_stack.activeStackProvider);
+      if (activeStack == null) {
+        return {'ok': false, 'error': 'no active stack'};
+      }
+      final graphDbPath = '${activeStack.directory.path}/data/graph.db';
+      final dedicatedStorage = core_graph.RinneGraphStorage(graphDbPath);
+      await dedicatedStorage.initialize();
+
+      final saveContext = core_graph.GraphContext(storage: dedicatedStorage);
+
+      final updatedEntity = selectedEntity.copyWith(
+        properties: core_graph.PropertySet.fromMap(finalProperties),
+      );
+
+      // WORKAROUND: Call updateNode/updateLink directly instead of using
+      // saveContext.transaction(). GraphContext.transaction() passes 'this' to
+      // its callback, so any write inside the callback calls storage.updateNode()
+      // → _graph.transaction() → re-enters the same BasicLock → deadlock.
+      // Each updateNode/updateLink call opens its own transaction safely.
+      if (updatedEntity is core_graph.Node) {
+        await saveContext.updateNode(updatedEntity);
+      } else if (updatedEntity is core_graph.Link) {
+        await saveContext.updateLink(updatedEntity);
+      }
+
+      await dedicatedStorage.close();
+
+      ref.read(record_editor.editingPropertyNameChangesProvider.notifier).reset();
+      ref.read(record_editor.editingEntityPropertiesProvider.notifier).reset();
       return {'ok': true};
     },
   ),

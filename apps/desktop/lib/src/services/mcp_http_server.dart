@@ -158,11 +158,19 @@ class McpHttpServer {
       );
     }
     final params = (body['params'] as Map<String, dynamic>?) ?? {};
-    final result = await handler(command, params);
-    return Response.ok(
-      jsonEncode(result),
-      headers: {'content-type': 'application/json'},
-    );
+    try {
+      final result = await handler(command, params);
+      return Response.ok(
+        jsonEncode(result),
+        headers: {'content-type': 'application/json'},
+      );
+    } catch (e, st) {
+      debugPrint('McpHttpServer: command "$command" threw: $e\n$st');
+      return Response.internalServerError(
+        body: jsonEncode({'ok': false, 'error': e.toString()}),
+        headers: {'content-type': 'application/json'},
+      );
+    }
   }
 
   Future<Response> _handleScreenshot(Request request) async {

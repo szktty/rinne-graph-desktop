@@ -113,6 +113,14 @@ Graph views use free-position widgets (via `plough` package). Avoid excessive wi
 
 The `llms/` directory stores `llms-full.txt` context files for custom packages (`rinne_graph`, `kiri_check`, `plough`). These are gitignored — check if they exist before working on those packages.
 
+## Custom Package Ownership
+
+`rinne_graph` and `plough` are authored by the same developer as this app. Their sources are located at:
+- `rinne_graph`: `../../rinne-graph/` (relative to this repo root)
+- `plough`: locate via `find` or `llms/` context
+
+**When a bug or design issue in `rinne_graph` or `plough` forces an awkward workaround in app code, fix the library itself rather than patching the app.** Because the author controls all three codebases, the right fix is in the right place. Do not introduce ad-hoc workarounds in the app when the root cause is a library API design problem.
+
 ## Work Rules
 
 ### Editing Discipline

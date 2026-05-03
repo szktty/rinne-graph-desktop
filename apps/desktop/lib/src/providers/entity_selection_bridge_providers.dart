@@ -126,22 +126,22 @@ class EntitySelectionBridge extends _$EntitySelectionBridge {
         '[EntitySelectionBridge] Loading graph for stack: ${stack.directory.path}',
       );
 
-      // Get GraphStorage
-      final storage = ref.read(activeStackGraphStorageProvider);
-      if (storage == null) {
-        debugPrint('[EntitySelectionBridge] No active graph storage');
-        return;
-      }
-
-      // Create GraphContext
-      final graphContext = core_graph.GraphContext(storage: storage);
-
-      // Initialization is handled by _loadActualGraphData (with retry logic)
+      // Build the path to graph.db directly — use a dedicated storage instance
+      // so we can close it after loading and avoid holding an open SQLite
+      // connection that would lock the DB for subsequent write transactions.
+      final graphDbPath = '${stack.directory.path}/data/graph.db';
+      final loadStorage = core_graph.RinneGraphStorage(graphDbPath);
+      final graphContext = core_graph.GraphContext(storage: loadStorage);
 
       core_graph.Graph? graph;
 
       debugPrint('[EntitySelectionBridge] Loading actual graph data');
-      graph = await _loadActualGraphData(graphContext, stack);
+      try {
+        graph = await _loadActualGraphData(graphContext, stack);
+      } finally {
+        // Close the dedicated connection so the SQLite file is not locked.
+        await loadStorage.close();
+      }
 
       debugPrint(
         '[EntitySelectionBridge] Setting graph: ${graph.nodes.length} nodes, ${graph.links.length} links',
