@@ -201,7 +201,7 @@ final class EditingEntityPropertiesProvider
         argument: null,
         retry: null,
         name: r'editingEntityPropertiesProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -223,7 +223,7 @@ final class EditingEntityPropertiesProvider
 }
 
 String _$editingEntityPropertiesHash() =>
-    r'265b4a48f222670f91d53983a70aba81aa83b4c7';
+    r'b97b3843cda3c2e93a0c90089faaa069f2c07af2';
 
 /// Provider that manages property values being edited
 ///

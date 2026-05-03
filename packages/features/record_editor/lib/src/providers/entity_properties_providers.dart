@@ -79,7 +79,7 @@ List<String> selectedEntityLabels(Ref ref) {
 ///
 /// Temporarily holds property values that the user is editing.
 /// Updates the entity using this value upon saving.
-@riverpod
+@Riverpod(keepAlive: true)
 class EditingEntityProperties extends _$EditingEntityProperties {
   @override
   Map<String, dynamic> build() {

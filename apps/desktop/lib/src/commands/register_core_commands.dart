@@ -18,6 +18,7 @@ import 'package:core_themes/core_themes.dart' as core_themes;
 import 'package:presentation_components/presentation_components.dart';
 import 'package:features_welcome/src/widgets/welcome_screen_dialogs.dart';
 import 'package:app/app.dart' show selectedActivityItemProvider, AppActivityItemType;
+import 'package:features_record_editor/record_editor.dart' as record_editor;
 import '../providers/app_state_providers.dart';
 import '../providers/open_stacks_providers.dart';
 import '../providers/search_providers.dart';
@@ -868,6 +869,7 @@ void registerCoreCommands(WidgetRef ref) {
   registry.registerAll(commands);
   registry.registerAll(_stackCommands());
   registry.registerAll(_graphCommands());
+  registry.registerAll(_recordEditorCommands());
 }
 
 // ---------------------------------------------------------------------------
@@ -1059,6 +1061,91 @@ List<AppCommand> _graphCommands() => [
           .cast<core_graph.EntityId>();
       ref.read(searchHighlightProvider.notifier).setIds(nodeIds: nodeIds, linkIds: const {});
       return {'ok': true, 'count': nodeIds.length};
+    },
+  ),
+];
+
+// ---------------------------------------------------------------------------
+// Record editor commands
+// ---------------------------------------------------------------------------
+
+List<AppCommand> _recordEditorCommands() => [
+  AppCommand(
+    id: 'record_editor.state',
+    title: 'Get Record Editor State',
+    category: 'record_editor',
+    description: 'Returns the currently selected entity and its properties',
+    canExecute: (ref) => ref.read(core_stack.activeStackProvider) != null,
+    run: (ref, args) async {
+      final entity = ref.read(record_editor.selectedEntityForEditorProvider);
+      if (entity == null) {
+        return {'ok': true, 'selected': false, 'entity': null, 'properties': {}};
+      }
+      // Merge saved properties with in-progress edits.
+      final savedProperties = ref.read(record_editor.selectedEntityPropertiesProvider);
+      final editingProperties = ref.read(record_editor.editingEntityPropertiesProvider);
+      final keys = ref.read(record_editor.selectedEntityPropertyKeysProvider);
+      final merged = {...savedProperties, ...editingProperties};
+      return {
+        'ok': true,
+        'selected': true,
+        'entity': {
+          'id': entity.id.toString(),
+          'kind': entity.kind.name,
+          'custom_id': entity.customId,
+        },
+        'property_keys': keys,
+        'properties': {
+          for (final key in keys)
+            key: merged[key],
+        },
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'record_editor.field.set',
+    title: 'Set Record Editor Field',
+    category: 'record_editor',
+    description: '{ field: string, value: string }',
+    canExecute: (ref) {
+      if (ref.read(core_stack.activeStackProvider) == null) return false;
+      return ref.read(record_editor.selectedEntityForEditorProvider) != null;
+    },
+    run: (ref, args) async {
+      final field = args['field'] as String?;
+      final value = args['value'];
+      if (field == null) {
+        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'field is required'};
+      }
+      ref.read(record_editor.editingEntityPropertiesProvider.notifier).updateProperty(field, value);
+      return {'ok': true, 'field': field, 'value': value};
+    },
+  ),
+
+  AppCommand(
+    id: 'record_editor.save',
+    title: 'Save Record Editor',
+    category: 'record_editor',
+    description: 'Save changes in the record editor',
+    canExecute: (ref) {
+      if (ref.read(core_stack.activeStackProvider) == null) return false;
+      return ref.read(record_editor.selectedEntityForEditorProvider) != null;
+    },
+    run: (ref, args) async {
+      await ref.read(record_editor.saveEntityActionProvider.notifier).saveEntity();
+      return {'ok': true};
+    },
+  ),
+
+  AppCommand(
+    id: 'record_editor.close',
+    title: 'Close Record Editor',
+    category: 'record_editor',
+    description: 'Close the record editor (hides secondary sidebar)',
+    run: (ref, args) async {
+      ref.read(screenBasedSecondarySidebarStateProvider.notifier).hide();
+      return {'ok': true};
     },
   ),
 ];
