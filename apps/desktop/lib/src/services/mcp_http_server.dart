@@ -36,6 +36,10 @@ class McpHttpServer {
   /// Returns a JSON-serializable map, or null if state is unavailable.
   Future<Map<String, dynamic>?> Function()? uiStateReader;
 
+  /// Registered by the widget tree to provide a full UI snapshot.
+  /// Returns screen state + available commands + visible nodes.
+  Future<Map<String, dynamic>?> Function()? uiSnapshotReader;
+
   /// Registered by the widget tree to execute UI commands.
   /// Returns a JSON-serializable result map.
   Future<Map<String, dynamic>> Function(
@@ -51,6 +55,7 @@ class McpHttpServer {
     final router = Router();
     router.get('/ping', _handlePing);
     router.get('/ui/state', _handleUiState);
+    router.get('/ui/snapshot', _handleUiSnapshot);
     router.get('/ui/screenshot', _handleScreenshot);
     router.post('/ui/command', _handleCommand);
 
@@ -103,6 +108,27 @@ class McpHttpServer {
 
     return Response.ok(
       jsonEncode(enriched),
+      headers: {'content-type': 'application/json'},
+    );
+  }
+
+  Future<Response> _handleUiSnapshot(Request request) async {
+    final reader = uiSnapshotReader;
+    if (reader == null) {
+      return Response.internalServerError(
+        body: jsonEncode({'error': 'UI snapshot not available'}),
+        headers: {'content-type': 'application/json'},
+      );
+    }
+    final snapshot = await reader();
+    if (snapshot == null) {
+      return Response.internalServerError(
+        body: jsonEncode({'error': 'UI snapshot not available'}),
+        headers: {'content-type': 'application/json'},
+      );
+    }
+    return Response.ok(
+      jsonEncode(snapshot),
       headers: {'content-type': 'application/json'},
     );
   }

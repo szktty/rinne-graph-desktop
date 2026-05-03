@@ -14,8 +14,8 @@ import 'package:features_updates/updates.dart' as features_updates;
 import 'package:app/app.dart';
 import 'package:presentation_workflow/presentation_workflow.dart'
     as presentation_workflow;
-import 'dart:io';
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
+import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 import 'package:core_app_config/core_app_config.dart';
 
 import '../providers/app_state_providers.dart';
@@ -111,6 +111,45 @@ class _MainAppShellState extends ConsumerState<MainAppShell> {
         return {'ok': false, 'error': 'command not available in current state'};
       }
       return await cmd.run(ref, params);
+    };
+
+    // Register UI snapshot reader for the MCP HTTP server.
+    McpHttpServer.instance?.uiSnapshotReader = () async {
+      final stack = ref.read(core_stack.activeStackProvider);
+      final activityIndex = ref.read(activityBarStateProvider);
+      final viewMode = ref.read(viewToolbarStateProvider);
+      final screen = stack == null ? 'welcome' : (activityIndex == 0 ? 'editor' : 'welcome');
+
+      // Build available_commands from CommandRegistry with canExecute evaluation.
+      final commands = ref.read(commandRegistryProvider);
+      final availableCommands = commands.values.map((cmd) {
+        final available = cmd.canExecute == null || cmd.canExecute!(ref);
+        return {
+          'id': cmd.id,
+          'title': cmd.title,
+          'category': cmd.category,
+          if (cmd.description != null) 'description': cmd.description,
+          'available': available,
+        };
+      }).toList();
+
+      // Build visible_nodes from active graph.
+      final activeGraph = ref.read(core_graph.activeGraphProvider);
+      final visibleNodes = activeGraph?.nodes.values.map((node) {
+        return {
+          'id': node.id.toString(),
+          'custom_id': node.customId,
+          'labels': node.labels.toList(),
+        };
+      }).toList() ?? [];
+
+      return {
+        'screen': screen,
+        'stack_path': stack?.directory.path,
+        'view_mode': viewMode,
+        'available_commands': availableCommands,
+        'visible_nodes': visibleNodes,
+      };
     };
 
     // Initialize the link between entity selection and the editor
