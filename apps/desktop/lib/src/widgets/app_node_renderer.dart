@@ -66,7 +66,7 @@ class AppNodeRenderer extends ConsumerWidget {
     return plough.GraphDefaultNodeRenderer(
       node: node,
       style: plough.GraphDefaultNodeRendererStyle(
-        shape: plough.GraphDefaultNodeRendererShape.rectangle,
+        shape: plough.GraphDefaultNodeRendererShape.circle,
         width: totalWidth,
         height: totalHeight,
         minWidth: totalWidth,
