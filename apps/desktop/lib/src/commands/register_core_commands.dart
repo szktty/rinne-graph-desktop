@@ -178,13 +178,12 @@ void registerCoreCommands(WidgetRef ref) {
       },
     ),
 
-    // 6) Screenshot (works only when screenshot_server is enabled)
+    // 6) Screenshot
     AppCommand(
       id: 'app.screenshot',
       title: 'Save Screenshot',
       category: 'utility',
-      description:
-          'Enabled at startup with ENABLE_SCREENSHOT_SERVER=true (proxied to /screenshot)',
+      description: 'Captures a screenshot of the app window',
       run: _screenshot,
     ),
 
@@ -219,7 +218,7 @@ void registerCoreCommands(WidgetRef ref) {
         return {
           'ok': true,
           'commandsRegistered': shell.commandsRegistered,
-          'screenshotServerStarted': shell.screenshotServerStarted,
+          'screenshotServerStarted': true,
           'devStacksImported': shell.devStacksImported,
           'remoteCommandServerStarted': shell.remoteCommandServerStarted,
           'importantDialogOpen': shell.importantDialogOpen,
@@ -1786,15 +1785,10 @@ Future<dynamic> _ping(WidgetRef ref, Map<String, dynamic> _) async {
 }
 
 Future<dynamic> _screenshot(WidgetRef ref, Map<String, dynamic> args) async {
-  final filename = args['filename'] as String?;
   final client = io.HttpClient();
   try {
-    final uri = Uri.parse('http://localhost:8080/screenshot');
-    final req = await client.postUrl(uri);
-    req.headers.set('Content-Type', 'application/json');
-    final body = <String, dynamic>{};
-    if (filename != null) body['filename'] = filename;
-    req.write(convert.jsonEncode(body));
+    final uri = Uri.parse('http://localhost:6107/ui/screenshot');
+    final req = await client.getUrl(uri);
     final resp = await req.close();
     final text = await resp.transform(convert.utf8.decoder).join();
     final parsed = text.isNotEmpty ? convert.jsonDecode(text) : null;
