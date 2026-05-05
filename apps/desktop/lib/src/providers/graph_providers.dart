@@ -7,6 +7,7 @@
  */
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
@@ -213,6 +214,12 @@ class GraphViewCache {
   plough.GraphView? graphView;
   // Hash code of the last used AppGraph
   int? lastAppGraphHashCode;
+  // Registered by _AppGraphViewState so MCP commands can manipulate the viewport.
+  // Null when the graph view is not mounted.
+  TransformationController? transformationController;
+  // Last known size of the graph view drawing area (from LayoutBuilder).
+  // Used by graph.viewport.fit to compute scale/translation.
+  Size viewportSize = Size.zero;
 
   // Clear the cache
   void clear() {

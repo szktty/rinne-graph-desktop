@@ -70,10 +70,13 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
           _transformationController.value = _focusAnimation!.value;
         }
       });
+    ref.read(graphViewCacheProvider).transformationController =
+        _transformationController;
   }
 
   @override
   void dispose() {
+    ref.read(graphViewCacheProvider).transformationController = null;
     _focusAnimController.dispose();
     _transformationController.dispose();
     super.dispose();
@@ -220,6 +223,7 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     return LayoutBuilder(
       builder: (context, constraints) {
         _viewportSize = constraints.biggest;
+        ref.read(graphViewCacheProvider).viewportSize = _viewportSize;
         final centerOffset = Offset(
           constraints.maxWidth / 2,
           constraints.maxHeight / 2,

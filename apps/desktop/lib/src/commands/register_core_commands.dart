@@ -8,20 +8,24 @@
 
 import 'dart:convert' as convert;
 import 'dart:io' as io;
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
+import 'package:plough/plough.dart' as plough;
 import 'package:features_welcome/features_welcome.dart';
 import 'package:core_themes/core_themes.dart' as core_themes;
 import 'package:presentation_components/presentation_components.dart';
 import 'package:features_welcome/src/widgets/welcome_screen_dialogs.dart';
 import 'package:app/app.dart' show selectedActivityItemProvider, AppActivityItemType;
 import 'package:features_record_editor/record_editor.dart' as record_editor;
+import 'package:core_samples/core_samples.dart' as core_samples;
 import '../providers/app_state_providers.dart';
 import '../providers/entity_selection_bridge_providers.dart' show graphLoadingStateProvider;
 import '../providers/open_stacks_providers.dart';
+import '../providers/graph_providers.dart';
 import '../providers/search_providers.dart';
 import '../providers/selection_providers.dart';
 import '../providers/shell_state_manager.dart';
@@ -879,6 +883,96 @@ void registerCoreCommands(WidgetRef ref) {
 
 List<AppCommand> _stackCommands() => [
   AppCommand(
+    id: 'stack.list',
+    title: 'List Available Stacks',
+    category: 'stack',
+    description: 'Returns all available (non-archived) user stacks',
+    run: (ref, args) async {
+      final stacks = await ref.read(core_stack.availableStacksListProvider.future);
+      return {
+        'ok': true,
+        'stacks': stacks.map((s) => {
+          'name': s.info.name,
+          'path': s.directory.path,
+          'description': s.info.description,
+          'tags': s.info.tags,
+        }).toList(),
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'stack.list_samples',
+    title: 'List Sample Stacks',
+    category: 'stack',
+    description: 'Returns all instantiated sample stacks',
+    run: (ref, args) async {
+      final stacks = await ref.read(core_stack.sampleStacksListProvider.future);
+      return {
+        'ok': true,
+        'stacks': stacks.map((s) => {
+          'name': s.info.name,
+          'path': s.directory.path,
+          'description': s.info.description,
+          'tags': s.info.tags,
+          'template_id': s.info.sampleTemplateId,
+        }).toList(),
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'stack.list_templates',
+    title: 'List Stack Templates',
+    category: 'stack',
+    description: 'Returns all available built-in stack templates (not yet instantiated)',
+    run: (ref, args) async {
+      final templates = ref.read(core_samples.stackTemplateManifestsProvider);
+      return {
+        'ok': true,
+        'templates': templates.map((t) => {
+          'id': t.id,
+          'name': t.displayName,
+          'description': t.description,
+          'tags': t.tags,
+          'category': t.category,
+          'language': t.language,
+        }).toList(),
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'stack.instantiate_template',
+    title: 'Instantiate Stack Template',
+    category: 'stack',
+    description: '{ template_id: string, stack_name?: string } — instantiate a template into the Samples directory',
+    run: (ref, args) async {
+      final templateId = args['template_id'] as String?;
+      if (templateId == null) {
+        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'template_id is required'};
+      }
+      final template = core_samples.StackTemplateService.getStackTemplateById(templateId);
+      if (template == null) {
+        return {'ok': false, 'code': CommandResultCode.notFound, 'error': 'template not found: $templateId'};
+      }
+      final samplesDir = await ref.read(core_stack.samplesDirectoryProvider.future);
+      final stackName = args['stack_name'] as String? ?? template.displayName;
+      final resultPath = await core_samples.StackTemplateService.generateStackFromTemplate(
+        template: template,
+        outputDirectory: samplesDir,
+        stackName: stackName,
+        isSample: true,
+      );
+      if (resultPath == null) {
+        return {'ok': false, 'code': CommandResultCode.commandError, 'error': 'failed to instantiate template: $templateId'};
+      }
+      ref.invalidate(core_stack.sampleStacksListProvider);
+      return {'ok': true, 'path': resultPath};
+    },
+  ),
+
+  AppCommand(
     id: 'stack.open',
     title: 'Open Stack',
     category: 'stack',
@@ -1066,6 +1160,486 @@ List<AppCommand> _graphCommands() => [
           .cast<core_graph.EntityId>();
       ref.read(searchHighlightProvider.notifier).setIds(nodeIds: nodeIds, linkIds: const {});
       return {'ok': true, 'count': nodeIds.length};
+    },
+  ),
+
+  // ---- Viewport commands ----
+
+  AppCommand(
+    id: 'graph.viewport.get',
+    title: 'Get Viewport State',
+    category: 'graph',
+    description: 'Returns current translation (tx, ty) and scale of the graph viewport',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).transformationController != null,
+    run: (ref, args) async {
+      final tc = ref.read(graphViewCacheProvider).transformationController;
+      if (tc == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      final m = tc.value;
+      return {'ok': true, 'tx': m.entry(0, 3), 'ty': m.entry(1, 3), 'scale': m.entry(0, 0)};
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.viewport.reset',
+    title: 'Reset Viewport',
+    category: 'graph',
+    description: 'Resets the graph viewport to origin with scale 1.0',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).transformationController != null,
+    run: (ref, args) async {
+      final tc = ref.read(graphViewCacheProvider).transformationController;
+      if (tc == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      tc.value = Matrix4.identity();
+      return {'ok': true};
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.viewport.pan',
+    title: 'Pan Viewport',
+    category: 'graph',
+    description: '{ dx: number, dy: number } — translate viewport by the given offset',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).transformationController != null,
+    run: (ref, args) async {
+      final tc = ref.read(graphViewCacheProvider).transformationController;
+      if (tc == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      final dx = (args['dx'] as num?)?.toDouble();
+      final dy = (args['dy'] as num?)?.toDouble();
+      if (dx == null || dy == null) {
+        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'dx and dy are required'};
+      }
+      final m = tc.value.clone()
+        ..setEntry(0, 3, tc.value.entry(0, 3) + dx)
+        ..setEntry(1, 3, tc.value.entry(1, 3) + dy);
+      tc.value = m;
+      return {'ok': true, 'tx': m.entry(0, 3), 'ty': m.entry(1, 3)};
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.viewport.zoom',
+    title: 'Zoom Viewport',
+    category: 'graph',
+    description: '{ factor: number } — multiply current scale (e.g. 1.2 to zoom in, 0.8 to zoom out)',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).transformationController != null,
+    run: (ref, args) async {
+      final tc = ref.read(graphViewCacheProvider).transformationController;
+      if (tc == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      final factor = (args['factor'] as num?)?.toDouble();
+      if (factor == null || factor <= 0) {
+        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'factor must be a positive number'};
+      }
+      final currentScale = tc.value.entry(0, 0);
+      final newScale = (currentScale * factor).clamp(0.5, 3.0);
+      final m = tc.value.clone()
+        ..setEntry(0, 0, newScale)
+        ..setEntry(1, 1, newScale)
+        ..setEntry(2, 2, newScale);
+      tc.value = m;
+      return {'ok': true, 'scale': newScale};
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.viewport.set_zoom',
+    title: 'Set Viewport Zoom',
+    category: 'graph',
+    description: '{ scale: number } — set viewport scale to an absolute value (clamped to 0.5–3.0)',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).transformationController != null,
+    run: (ref, args) async {
+      final tc = ref.read(graphViewCacheProvider).transformationController;
+      if (tc == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      final scale = (args['scale'] as num?)?.toDouble();
+      if (scale == null || scale <= 0) {
+        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'scale must be a positive number'};
+      }
+      final clamped = scale.clamp(0.5, 3.0);
+      final m = tc.value.clone()
+        ..setEntry(0, 0, clamped)
+        ..setEntry(1, 1, clamped)
+        ..setEntry(2, 2, clamped);
+      tc.value = m;
+      return {'ok': true, 'scale': clamped};
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.viewport.fit',
+    title: 'Fit Graph in Viewport',
+    category: 'graph',
+    description: '{ padding?: number } — fit all nodes into the viewport (default padding: 40)',
+    canExecute: (ref) {
+      final cache = ref.read(graphViewCacheProvider);
+      return cache.transformationController != null &&
+          cache.ploughGraph != null &&
+          cache.viewportSize != Size.zero;
+    },
+    run: (ref, args) async {
+      final cache = ref.read(graphViewCacheProvider);
+      final tc = cache.transformationController;
+      final ploughGraph = cache.ploughGraph;
+      final vpSize = cache.viewportSize;
+      if (tc == null || ploughGraph == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      if (vpSize == Size.zero) {
+        return {'ok': false, 'error': 'viewport size is not yet available'};
+      }
+      if (ploughGraph.nodes.isEmpty) {
+        return {'ok': false, 'error': 'graph has no nodes'};
+      }
+
+      final padding = (args['padding'] as num?)?.toDouble() ?? 40.0;
+
+      double minX = double.infinity, minY = double.infinity;
+      double maxX = double.negativeInfinity, maxY = double.negativeInfinity;
+      for (final node in ploughGraph.nodes) {
+        final pos = node.logicalPosition;
+        if (pos.dx < minX) minX = pos.dx;
+        if (pos.dy < minY) minY = pos.dy;
+        if (pos.dx > maxX) maxX = pos.dx;
+        if (pos.dy > maxY) maxY = pos.dy;
+      }
+
+      final bbW = maxX - minX;
+      final bbH = maxY - minY;
+      final availW = vpSize.width - padding * 2;
+      final availH = vpSize.height - padding * 2;
+
+      double scale;
+      if (bbW < 1 && bbH < 1) {
+        scale = 1.0;
+      } else if (bbW < 1) {
+        scale = availH / bbH;
+      } else if (bbH < 1) {
+        scale = availW / bbW;
+      } else {
+        scale = math.min(availW / bbW, availH / bbH);
+      }
+      scale = scale.clamp(0.5, 3.0);
+
+      final bbCenterX = (minX + maxX) / 2;
+      final bbCenterY = (minY + maxY) / 2;
+      final tx = vpSize.width / 2 - bbCenterX * scale;
+      final ty = vpSize.height / 2 - bbCenterY * scale;
+
+      tc.value = Matrix4.identity()
+        ..setEntry(0, 0, scale)
+        ..setEntry(1, 1, scale)
+        ..setEntry(2, 2, scale)
+        ..setEntry(0, 3, tx)
+        ..setEntry(1, 3, ty);
+      return {'ok': true, 'tx': tx, 'ty': ty, 'scale': scale};
+    },
+  ),
+
+  // ---- Node position commands ----
+
+  AppCommand(
+    id: 'graph.node.get_position',
+    title: 'Get Node Position',
+    category: 'graph',
+    description: '{ id: string } — returns logical and screen position of a node',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
+    run: (ref, args) async {
+      final id = args['id'] as String?;
+      if (id == null) {
+        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id is required'};
+      }
+      final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
+      if (ploughGraph == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      final ploughId = plough.GraphId(type: plough.GraphIdType.node, value: id);
+      final node = ploughGraph.getNode(ploughId);
+      if (node == null) {
+        return {'ok': false, 'error': 'node not found: $id'};
+      }
+      final pos = node.logicalPosition;
+      final geo = node.geometry;
+      return {
+        'ok': true,
+        'logical': {'x': pos.dx, 'y': pos.dy},
+        'screen': geo == null
+            ? null
+            : {
+                'x': geo.bounds.left,
+                'y': geo.bounds.top,
+                'width': geo.bounds.width,
+                'height': geo.bounds.height,
+              },
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.node.get_all_positions',
+    title: 'Get All Node Positions',
+    category: 'graph',
+    description: 'Returns logical and screen positions of all nodes',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
+    run: (ref, args) async {
+      final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
+      if (ploughGraph == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      final nodes = ploughGraph.nodes.map((node) {
+        final pos = node.logicalPosition;
+        final geo = node.geometry;
+        return {
+          'id': node.id.value,
+          'label': node.properties['label'] as String? ?? '',
+          'logical': {'x': pos.dx, 'y': pos.dy},
+          'screen': geo == null
+              ? null
+              : {
+                  'x': geo.bounds.left,
+                  'y': geo.bounds.top,
+                  'width': geo.bounds.width,
+                  'height': geo.bounds.height,
+                },
+        };
+      }).toList();
+      return {'ok': true, 'nodes': nodes};
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.node.move',
+    title: 'Move Node',
+    category: 'graph',
+    description: '{ id: string, x: number, y: number } — move a node to the given logical position',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
+    run: (ref, args) async {
+      final id = args['id'] as String?;
+      final x = (args['x'] as num?)?.toDouble();
+      final y = (args['y'] as num?)?.toDouble();
+      if (id == null || x == null || y == null) {
+        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id, x, and y are required'};
+      }
+      final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
+      if (ploughGraph == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      final ploughId = plough.GraphId(type: plough.GraphIdType.node, value: id);
+      final node = ploughGraph.getNode(ploughId);
+      if (node == null) {
+        return {'ok': false, 'error': 'node not found: $id'};
+      }
+      node.logicalPosition = Offset(x, y);
+      ploughGraph.markNeedsLayout(shouldAnimate: false);
+      return {'ok': true, 'id': id, 'x': x, 'y': y};
+    },
+  ),
+
+  // ---- Link geometry commands ----
+
+  AppCommand(
+    id: 'graph.link.get_geometry',
+    title: 'Get Link Geometry',
+    category: 'graph',
+    description: '{ id: string } — returns connection points, bounds, angle, and node bounds for a link',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
+    run: (ref, args) async {
+      final id = args['id'] as String?;
+      if (id == null) {
+        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id is required'};
+      }
+      final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
+      if (ploughGraph == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      final ploughId = plough.GraphId(type: plough.GraphIdType.link, value: id);
+      final link = ploughGraph.getLink(ploughId);
+      if (link == null) {
+        return {'ok': false, 'error': 'link not found: $id'};
+      }
+      final geo = link.geometry;
+      return {
+        'ok': true,
+        'id': id,
+        'source_node_id': link.source.id.value,
+        'target_node_id': link.target.id.value,
+        'direction': link.direction.name,
+        'logical_position': {
+          'x': link.logicalPosition.dx,
+          'y': link.logicalPosition.dy,
+        },
+        'geometry': geo == null
+            ? null
+            : {
+                'bounds': {
+                  'left': geo.bounds.left,
+                  'top': geo.bounds.top,
+                  'right': geo.bounds.right,
+                  'bottom': geo.bounds.bottom,
+                  'width': geo.bounds.width,
+                  'height': geo.bounds.height,
+                },
+                'angle': geo.angle,
+                'thickness': geo.thickness,
+                'connection': {
+                  'source_bounds': {
+                    'left': geo.connection.source.bounds.left,
+                    'top': geo.connection.source.bounds.top,
+                    'right': geo.connection.source.bounds.right,
+                    'bottom': geo.connection.source.bounds.bottom,
+                  },
+                  'target_bounds': {
+                    'left': geo.connection.target.bounds.left,
+                    'top': geo.connection.target.bounds.top,
+                    'right': geo.connection.target.bounds.right,
+                    'bottom': geo.connection.target.bounds.bottom,
+                  },
+                  'outgoing': {
+                    'x': geo.connection.connectionPoints.outgoing.dx,
+                    'y': geo.connection.connectionPoints.outgoing.dy,
+                  },
+                  'incoming': {
+                    'x': geo.connection.connectionPoints.incoming.dx,
+                    'y': geo.connection.connectionPoints.incoming.dy,
+                  },
+                  'distance': geo.connection.connectionPoints.distance,
+                  'angle': geo.connection.connectionPoints.angle,
+                },
+              },
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.link.get_all_geometries',
+    title: 'Get All Link Geometries',
+    category: 'graph',
+    description: 'Returns geometry info for all links',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
+    run: (ref, args) async {
+      final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
+      if (ploughGraph == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      final links = ploughGraph.links.map((link) {
+        final geo = link.geometry;
+        return {
+          'id': link.id.value,
+          'source_node_id': link.source.id.value,
+          'target_node_id': link.target.id.value,
+          'direction': link.direction.name,
+          'geometry': geo == null
+              ? null
+              : {
+                  'bounds': {
+                    'left': geo.bounds.left,
+                    'top': geo.bounds.top,
+                    'right': geo.bounds.right,
+                    'bottom': geo.bounds.bottom,
+                  },
+                  'angle': geo.angle,
+                  'thickness': geo.thickness,
+                  'connection': {
+                    'outgoing': {
+                      'x': geo.connection.connectionPoints.outgoing.dx,
+                      'y': geo.connection.connectionPoints.outgoing.dy,
+                    },
+                    'incoming': {
+                      'x': geo.connection.connectionPoints.incoming.dx,
+                      'y': geo.connection.connectionPoints.incoming.dy,
+                    },
+                    'distance': geo.connection.connectionPoints.distance,
+                    'angle': geo.connection.connectionPoints.angle,
+                  },
+                },
+        };
+      }).toList();
+      return {'ok': true, 'links': links};
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.link.check_arrow_drift',
+    title: 'Check Link Arrow Drift',
+    category: 'graph',
+    description: 'Checks all links for arrow-position drift (connection points outside node bounds)',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
+    run: (ref, args) async {
+      final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
+      if (ploughGraph == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      const margin = 20.0;
+      int total = 0;
+      final drifted = <Map<String, dynamic>>[];
+
+      for (final link in ploughGraph.links) {
+        final geo = link.geometry;
+        if (geo == null) continue;
+        total++;
+        final cp = geo.connection.connectionPoints;
+        final srcBounds = geo.connection.source.bounds;
+        final tgtBounds = geo.connection.target.bounds;
+
+        final outgoingOutside = !srcBounds.inflate(margin).contains(cp.outgoing);
+        final incomingOutside = !tgtBounds.inflate(margin).contains(cp.incoming);
+
+        if (outgoingOutside || incomingOutside) {
+          drifted.add({
+            'id': link.id.value,
+            'source_node_id': link.source.id.value,
+            'target_node_id': link.target.id.value,
+            'outgoing': {'x': cp.outgoing.dx, 'y': cp.outgoing.dy},
+            'outgoing_outside_source': outgoingOutside,
+            'source_bounds': {
+              'left': srcBounds.left,
+              'top': srcBounds.top,
+              'right': srcBounds.right,
+              'bottom': srcBounds.bottom,
+            },
+            'incoming': {'x': cp.incoming.dx, 'y': cp.incoming.dy},
+            'incoming_outside_target': incomingOutside,
+            'target_bounds': {
+              'left': tgtBounds.left,
+              'top': tgtBounds.top,
+              'right': tgtBounds.right,
+              'bottom': tgtBounds.bottom,
+            },
+          });
+        }
+      }
+
+      return {
+        'ok': true,
+        'total': total,
+        'drifted_count': drifted.length,
+        'drifted': drifted,
+      };
+    },
+  ),
+
+  // ---- Layout commands ----
+
+  AppCommand(
+    id: 'graph.layout.run',
+    title: 'Re-run Graph Layout',
+    category: 'graph',
+    description: '{ animate?: boolean } — re-run the graph layout algorithm (default animate: true)',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
+    run: (ref, args) async {
+      final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
+      if (ploughGraph == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      final animate = args['animate'] as bool? ?? true;
+      ploughGraph.markNeedsLayout(shouldAnimate: animate);
+      return {'ok': true};
     },
   ),
 ];
