@@ -6,7 +6,10 @@
  * For commercial licensing inquiries, please contact: contact@szktty.jp
  */
 
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:presentation_components/presentation_components.dart';
@@ -53,6 +56,7 @@ class MainAppShell extends ConsumerStatefulWidget {
 
 class _MainAppShellState extends ConsumerState<MainAppShell> {
   late final FondeSecondarySidebarController _secondarySidebarController;
+  final _repaintKey = GlobalKey();
 
   @override
   void initState() {
@@ -150,6 +154,19 @@ class _MainAppShellState extends ConsumerState<MainAppShell> {
         'available_commands': availableCommands,
         'visible_nodes': visibleNodes,
       };
+    };
+
+    // Register screenshot capture using RepaintBoundary.
+    McpHttpServer.instance?.screenshotCapture = () async {
+      final boundary =
+          _repaintKey.currentContext?.findRenderObject()
+              as RenderRepaintBoundary?;
+      if (boundary == null) return null;
+      final image = await boundary.toImage(
+        pixelRatio: ui.PlatformDispatcher.instance.views.first.devicePixelRatio,
+      );
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      return byteData?.buffer.asUint8List();
     };
 
     // Initialize the link between entity selection and the editor
@@ -251,10 +268,12 @@ class _MainAppShellState extends ConsumerState<MainAppShell> {
 
     // If no stack is open, display the welcome screen
     if (activeStack == null) {
-      return _buildStackManagementContent();
+      return RepaintBoundary(key: _repaintKey, child: _buildStackManagementContent());
     }
 
-    return widgets.Stack(
+    return RepaintBoundary(
+      key: _repaintKey,
+      child: widgets.Stack(
       children: [
         FondeScaffold(
           toolbar: FondeMainToolbar(
@@ -294,6 +313,7 @@ class _MainAppShellState extends ConsumerState<MainAppShell> {
                     .setVisible(false),
           ),
       ],
+      ),
     );
   }
 

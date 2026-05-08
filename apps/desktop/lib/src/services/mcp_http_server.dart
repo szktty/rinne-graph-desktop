@@ -10,12 +10,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_router/shelf_router.dart';
-
-const _windowInfoChannel = MethodChannel('jp.szktty.rinnegraph/window_info');
 
 /// Local HTTP server that accepts MCP commands from the MCP server process.
 ///
@@ -39,6 +36,10 @@ class McpHttpServer {
   /// Registered by the widget tree to provide a full UI snapshot.
   /// Returns screen state + available commands + visible nodes.
   Future<Map<String, dynamic>?> Function()? uiSnapshotReader;
+
+  /// Registered by the widget tree to capture a screenshot.
+  /// Returns raw PNG bytes, or null on failure.
+  Future<List<int>?> Function()? screenshotCapture;
 
   /// Registered by the widget tree to execute UI commands.
   /// Returns a JSON-serializable result map.
@@ -98,16 +99,8 @@ class McpHttpServer {
       );
     }
 
-    // Append window number so the MCP server can use screencapture -l.
-    int? windowNumber;
-    try {
-      windowNumber =
-          await _windowInfoChannel.invokeMethod<int>('getWindowNumber');
-    } catch (_) {}
-    final enriched = {...state, 'window_number': windowNumber};
-
     return Response.ok(
-      jsonEncode(enriched),
+      jsonEncode(state),
       headers: {'content-type': 'application/json'},
     );
   }
@@ -174,42 +167,22 @@ class McpHttpServer {
   }
 
   Future<Response> _handleScreenshot(Request request) async {
-    int? windowNumber;
-    try {
-      windowNumber =
-          await _windowInfoChannel.invokeMethod<int>('getWindowNumber');
-    } catch (e) {
-      debugPrint('McpHttpServer: failed to get window number: $e');
-    }
-
-    final tmpFile = '${Directory.systemTemp.path}/rinnegraph_screenshot.png';
-    final args =
-        windowNumber != null
-            ? ['-l', windowNumber.toString(), tmpFile]
-            : [tmpFile];
-
-    final result = await Process.run('screencapture', args);
-    if (result.exitCode != 0) {
+    final capture = screenshotCapture;
+    if (capture == null) {
       return Response.internalServerError(
-        body: jsonEncode({'error': 'screencapture failed: ${result.stderr}'}),
+        body: jsonEncode({'error': 'screenshot not available'}),
         headers: {'content-type': 'application/json'},
       );
     }
-
-    final file = File(tmpFile);
-    if (!await file.exists()) {
+    final bytes = await capture();
+    if (bytes == null) {
       return Response.internalServerError(
-        body: jsonEncode({'error': 'screenshot file not found'}),
+        body: jsonEncode({'error': 'screenshot failed'}),
         headers: {'content-type': 'application/json'},
       );
     }
-
-    final bytes = await file.readAsBytes();
-    await file.delete();
-    final base64Image = base64Encode(bytes);
-
     return Response.ok(
-      jsonEncode({'image': base64Image, 'format': 'png'}),
+      jsonEncode({'image': base64Encode(bytes), 'format': 'png'}),
       headers: {'content-type': 'application/json'},
     );
   }
