@@ -45,6 +45,7 @@ final _mcpHttpServer = McpHttpServer();
 
 Future<void> main(List<String> args) async {
   Plough().debugLogEnabled = false;
+  Plough().debugViewEnabled = false;
 
   // Initialize Flutter Binding
   WidgetsFlutterBinding.ensureInitialized();

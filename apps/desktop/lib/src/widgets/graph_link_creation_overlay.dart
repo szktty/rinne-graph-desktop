@@ -14,7 +14,7 @@ import '../providers/link_creation_providers.dart';
 
 /// Widget to draw link creation arrow overlay
 class LinkCreationArrowOverlay extends ConsumerWidget {
-  final TransformationController transformationController;
+  final ValueNotifier<Matrix4> transformationController;
 
   const LinkCreationArrowOverlay({
     super.key,

@@ -50,35 +50,38 @@ class AppGraphView extends ConsumerStatefulWidget {
 
 class _AppGraphViewState extends ConsumerState<AppGraphView>
     with SingleTickerProviderStateMixin {
-  late TransformationController _transformationController;
+  late plough.GraphViewportController _viewportController;
   late AnimationController _focusAnimController;
   Animation<Matrix4>? _focusAnimation;
-  Offset? _lastPanPosition;
   NodeDisplayContent? _lastDisplayContent;
-  int _graphViewKey = 0;
+  GlobalKey<plough.GraphViewState> _graphViewStateKey = GlobalKey();
   Size _viewportSize = Size.zero;
 
   @override
   void initState() {
     super.initState();
-    _transformationController = TransformationController();
+    _viewportController = plough.GraphViewportController(
+      minScale: 0.5,
+      maxScale: 3.0,
+    );
     _focusAnimController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 350),
     )..addListener(() {
         if (_focusAnimation != null) {
-          _transformationController.value = _focusAnimation!.value;
+          _viewportController.value = _focusAnimation!.value;
         }
       });
-    ref.read(graphViewCacheProvider).transformationController =
-        _transformationController;
+    final cache = ref.read(graphViewCacheProvider);
+    cache.transformationController = _viewportController;
+    cache.graphViewStateKey = _graphViewStateKey;
   }
 
   @override
   void dispose() {
     ref.read(graphViewCacheProvider).transformationController = null;
     _focusAnimController.dispose();
-    _transformationController.dispose();
+    _viewportController.dispose();
     super.dispose();
   }
 
@@ -87,40 +90,12 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     final cx = _viewportSize.width / 2;
     final cy = _viewportSize.height / 2;
     final target = Matrix4.identity()
-      ..translate(cx - nodePosition.dx, cy - nodePosition.dy);
-    final begin = _transformationController.value.clone();
+      ..translateByDouble(cx - nodePosition.dx, cy - nodePosition.dy, 0, 1);
+    final begin = _viewportController.value.clone();
     _focusAnimation = Matrix4Tween(begin: begin, end: target).animate(
       CurvedAnimation(parent: _focusAnimController, curve: Curves.easeInOut),
     );
     _focusAnimController.forward(from: 0);
-  }
-
-  // Handler for scrolling entire graph area by background drag
-  void _handleBackgroundPanStart(Offset position) {
-    _lastPanPosition = position;
-    debugPrint('[AppGraphView] Background pan start: $position');
-  }
-
-  void _handleBackgroundPanUpdate(Offset position, Offset delta) {
-    if (_lastPanPosition == null) return;
-
-    // Move entire graph area using TransformationController
-    final currentTransform = _transformationController.value;
-    final newTransform =
-        Matrix4.identity()
-          ..setFrom(currentTransform)
-          ..setEntry(0, 3, currentTransform.entry(0, 3) + delta.dx)
-          ..setEntry(1, 3, currentTransform.entry(1, 3) + delta.dy);
-
-    _transformationController.value = newTransform;
-    _lastPanPosition = position;
-
-    debugPrint('[AppGraphView] Background pan update: delta=$delta');
-  }
-
-  void _handleBackgroundPanEnd(Offset position) {
-    _lastPanPosition = null;
-    debugPrint('[AppGraphView] Background pan end: $position');
   }
 
   @override
@@ -153,7 +128,8 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     final displayContent = ref.watch(nodeDisplayContentProvider);
     if (_lastDisplayContent != null && _lastDisplayContent != displayContent) {
       cache.graphView = null;
-      _graphViewKey++;
+      _graphViewStateKey = GlobalKey();
+      cache.graphViewStateKey = _graphViewStateKey;
     }
     _lastDisplayContent = displayContent;
 
@@ -233,8 +209,10 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
         // graph has changed
         if (cache.graphView == null || graphChanged) {
           debugPrint('[AppGraphView.build] Creating new GraphView');
+          _graphViewStateKey = GlobalKey();
+          cache.graphViewStateKey = _graphViewStateKey;
           cache.graphView = plough.GraphView(
-            key: ValueKey(_graphViewKey),
+            key: _graphViewStateKey,
             graph: ploughGraph,
             layoutStrategy: layoutStrategy,
             behavior: behavior,
@@ -242,33 +220,52 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
             allowMultiSelection: false,
             // Start node animation from center of drawing area
             nodeAnimationStartPosition: centerOffset,
-            // Enable scrolling entire graph area by background drag
+            // GraphViewport handles all background gestures (pan/zoom).
+            // GraphView only needs to handle node/edge interactions.
             gestureMode: plough.GraphGestureMode.nodeEdgeOnly,
-            onBackgroundPanStart: _handleBackgroundPanStart,
-            onBackgroundPanUpdate: _handleBackgroundPanUpdate,
-            onBackgroundPanEnd: _handleBackgroundPanEnd,
+            // Convert a global screen position to the same coordinate space
+            // used by geometry.bounds (screen pixels relative to the layout
+            // Stack origin).  Both hit-test positions and bounds are in this
+            // space, so no scale factor is applied here.
+            globalToScene: (globalPos) {
+              final origin =
+                  _graphViewStateKey.currentState?.layoutGlobalOrigin ??
+                  Offset.zero;
+              return globalPos - origin;
+            },
           );
         } else {
           debugPrint('[AppGraphView.build] Reusing cached GraphView');
         }
 
-        return _EnhancedInteractiveViewer(
-          transformationController: _transformationController,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: DotGridBackground(
-                  transformationController: _transformationController,
-                ),
+        // DotGridBackground and LinkCreationArrowOverlay observe the viewport
+        // controller directly and must sit outside GraphViewport's Transform so
+        // they are not double-transformed.
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: DotGridBackground(
+                transformationController: _viewportController,
               ),
-              Positioned.fill(child: cache.graphView!),
-              Positioned.fill(
-                child: LinkCreationArrowOverlay(
-                  transformationController: _transformationController,
-                ),
+            ),
+            Positioned.fill(
+              child: plough.GraphViewport(
+                controller: _viewportController,
+                minScale: 0.5,
+                maxScale: 3.0,
+                onTransformChanged: () {
+                  cache.graphViewStateKey?.currentState
+                      ?.refreshAllNodeGeometry();
+                },
+                child: cache.graphView!,
               ),
-            ],
-          ),
+            ),
+            Positioned.fill(
+              child: LinkCreationArrowOverlay(
+                transformationController: _viewportController,
+              ),
+            ),
+          ],
         );
       },
     );
@@ -939,77 +936,3 @@ final class _CenteredForceDirectedLayoutStrategy
   }
 }
 
-/// Enhanced InteractiveViewer based on experimental implementation
-class _EnhancedInteractiveViewer extends StatefulWidget {
-  final Widget child;
-  final TransformationController transformationController;
-
-  const _EnhancedInteractiveViewer({
-    required this.child,
-    required this.transformationController,
-  });
-
-  @override
-  State<_EnhancedInteractiveViewer> createState() =>
-      _EnhancedInteractiveViewerState();
-}
-
-class _EnhancedInteractiveViewerState
-    extends State<_EnhancedInteractiveViewer> {
-  Offset? _dragStartOffset;
-  int _interactionCount = 0;
-  int _buildCount = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    _buildCount++;
-    print('[DEBUG] _EnhancedInteractiveViewer build count: $_buildCount');
-
-    // Avoid conflicts between InteractiveViewer and GestureDetector, keep it simple
-    return InteractiveViewer(
-      transformationController: widget.transformationController,
-      // Safe settings to isolate issues
-      constrained: true,
-      minScale: 0.5, // Changed from 0.1 to 0.5 to avoid freeze
-      maxScale: 3.0, // Changed from 5.0 to 3.0
-      panEnabled: true,
-      scaleEnabled: true,
-      // Add gesture handling
-      onInteractionStart: _handleInteractionStart,
-      onInteractionUpdate: _handleInteractionUpdate,
-      onInteractionEnd: _handleInteractionEnd,
-      // Pass child directly
-      child: widget.child,
-    );
-  }
-
-  void _handleInteractionStart(ScaleStartDetails details) {
-    _interactionCount++;
-    _dragStartOffset = details.localFocalPoint;
-    print(
-      '[DEBUG] ✅🚀 INTERACTIVE VIEWER START #$_interactionCount: ${details.localFocalPoint}',
-    );
-    print('[DEBUG] ✅👆 Pointers: ${details.pointerCount}');
-  }
-
-  void _handleInteractionUpdate(ScaleUpdateDetails details) {
-    if (_dragStartOffset != null) {
-      final move = details.localFocalPoint - _dragStartOffset!;
-      _dragStartOffset = details.localFocalPoint;
-      print('[DEBUG] ✅📍 INTERACTIVE VIEWER UPDATE: move=$move');
-      print('[DEBUG] ✅📏 Scale: ${details.scale}');
-
-      // Clearly show that drag is actually detected
-      if (move.distance > 1.0) {
-        print(
-          '[DEBUG] ✅🎯 INTERACTIVE VIEWER DRAG! Distance: ${move.distance}',
-        );
-      }
-    }
-  }
-
-  void _handleInteractionEnd(ScaleEndDetails details) {
-    print('[DEBUG] ✅🏁 INTERACTIVE VIEWER END');
-    _dragStartOffset = null;
-  }
-}

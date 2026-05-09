@@ -212,11 +212,13 @@ class GraphViewCache {
   plough.GraphViewBehavior? behavior;
   // Cached GraphView instance
   plough.GraphView? graphView;
+  // GlobalKey for accessing GraphViewState (used to refresh node geometry)
+  GlobalKey<plough.GraphViewState>? graphViewStateKey;
   // Hash code of the last used AppGraph
   int? lastAppGraphHashCode;
   // Registered by _AppGraphViewState so MCP commands can manipulate the viewport.
   // Null when the graph view is not mounted.
-  TransformationController? transformationController;
+  ValueNotifier<Matrix4>? transformationController;
   // Last known size of the graph view drawing area (from LayoutBuilder).
   // Used by graph.viewport.fit to compute scale/translation.
   Size viewportSize = Size.zero;
@@ -226,12 +228,13 @@ class GraphViewCache {
     ploughGraph = null;
     behavior = null;
     graphView = null;
+    graphViewStateKey = null;
     lastAppGraphHashCode = null;
   }
 }
 
 /// Provider for the graph view cache
-@riverpod
+@Riverpod(keepAlive: true)
 GraphViewCache graphViewCache(Ref ref) {
   return GraphViewCache();
 }

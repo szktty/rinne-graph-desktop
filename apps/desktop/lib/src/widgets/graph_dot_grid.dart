@@ -12,7 +12,7 @@ import 'package:core_themes/core_themes.dart';
 
 /// Widget to draw dot grid background
 class DotGridBackground extends ConsumerStatefulWidget {
-  final TransformationController transformationController;
+  final ValueNotifier<Matrix4> transformationController;
 
   const DotGridBackground({super.key, required this.transformationController});
 
@@ -99,51 +99,44 @@ class DotGridPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Get zoom scale and offset from transformation matrix
+    // Extract scale and translation from the transformation matrix.
+    // The matrix maps world coordinates → screen coordinates as:
+    //   screenX = worldX * scale + tx
+    //   screenY = worldY * scale + ty
     final scale = transformation.getMaxScaleOnAxis();
     final translation = transformation.getTranslation();
-    final offsetX = translation.x;
-    final offsetY = translation.y;
+    final tx = translation.x;
+    final ty = translation.y;
 
-    // Basic dot settings
-    const baseSpacing = 40.0; // Basic dot spacing
-    const baseDotSize = 1.5; // Basic dot size
+    const baseSpacing = 40.0;
+    const baseDotSize = 1.5;
 
-    // Adjust spacing and dot size based on zoom
-    final spacing = baseSpacing * scale;
     final dotSize = (baseDotSize * scale).clamp(0.5, 4.0);
 
-    // Dot color (theme-aware)
-    // Use grid line color for better visibility
     final dotColor = appColorScheme.appSpecific.graph.gridLine.withValues(
       alpha: 0.3,
     );
+    final paint = Paint()
+      ..color = dotColor
+      ..style = PaintingStyle.fill;
 
-    final paint =
-        Paint()
-          ..color = dotColor
-          ..style = PaintingStyle.fill;
+    // Convert the four screen-space corners to world space to find the
+    // visible world-coordinate range.  This works for any tx/ty/scale.
+    //   worldX = (screenX - tx) / scale
+    final worldLeft = (0 - tx) / scale;
+    final worldTop = (0 - ty) / scale;
+    final worldRight = (size.width - tx) / scale;
+    final worldBottom = (size.height - ty) / scale;
 
-    // Calculate drawing range (for performance optimization)
-    final startX = (-offsetX / spacing).floor() * spacing;
-    final startY = (-offsetY / spacing).floor() * spacing;
-    final endX = startX + (size.width / scale + spacing * 2);
-    final endY = startY + (size.height / scale + spacing * 2);
+    // Snap to the nearest grid lines just outside the visible range.
+    final firstWorldX = (worldLeft / baseSpacing).floor() * baseSpacing;
+    final firstWorldY = (worldTop / baseSpacing).floor() * baseSpacing;
 
-    // Draw dots
-    for (double x = startX; x <= endX; x += spacing) {
-      for (double y = startY; y <= endY; y += spacing) {
-        // Convert world coordinates to screen coordinates
-        final screenX = x * scale + offsetX;
-        final screenY = y * scale + offsetY;
-
-        // Draw only if within screen
-        if (screenX >= -dotSize &&
-            screenX <= size.width + dotSize &&
-            screenY >= -dotSize &&
-            screenY <= size.height + dotSize) {
-          canvas.drawCircle(Offset(screenX, screenY), dotSize, paint);
-        }
+    for (double wx = firstWorldX; wx <= worldRight + baseSpacing; wx += baseSpacing) {
+      for (double wy = firstWorldY; wy <= worldBottom + baseSpacing; wy += baseSpacing) {
+        final screenX = wx * scale + tx;
+        final screenY = wy * scale + ty;
+        canvas.drawCircle(Offset(screenX, screenY), dotSize, paint);
       }
     }
   }

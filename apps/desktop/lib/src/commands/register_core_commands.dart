@@ -1641,6 +1641,92 @@ List<AppCommand> _graphCommands() => [
       return {'ok': true};
     },
   ),
+
+  // ---- Selection commands (simulates user tap on graph entities) ----
+
+  AppCommand(
+    id: 'graph.node.select',
+    title: 'Select Node in Graph View',
+    category: 'graph',
+    description: '{ id: string } — selects a node as if the user tapped it (triggers selection side-effects)',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
+    run: (ref, args) async {
+      final id = args['id'] as String?;
+      if (id == null) {
+        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id is required'};
+      }
+      final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
+      if (ploughGraph == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      final ploughId = plough.GraphId(type: plough.GraphIdType.node, value: id);
+      final node = ploughGraph.getNode(ploughId);
+      if (node == null) {
+        return {'ok': false, 'error': 'node not found: $id'};
+      }
+      ploughGraph.selectNode(ploughId);
+      ref.read(selectedGraphEntityIdProvider.notifier).setSelectedEntityId(
+        core_graph.EntityId.fromString(id),
+        source: SelectionSource.ui,
+      );
+      return {'ok': true, 'id': id};
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.link.select',
+    title: 'Select Link in Graph View',
+    category: 'graph',
+    description: '{ id: string } — selects a link as if the user tapped it (triggers selection side-effects)',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
+    run: (ref, args) async {
+      final id = args['id'] as String?;
+      if (id == null) {
+        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id is required'};
+      }
+      final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
+      if (ploughGraph == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      final ploughId = plough.GraphId(type: plough.GraphIdType.link, value: id);
+      final link = ploughGraph.getLink(ploughId);
+      if (link == null) {
+        return {'ok': false, 'error': 'link not found: $id'};
+      }
+      ploughGraph.selectLink(ploughId);
+      ref.read(selectedGraphEntityIdProvider.notifier).setSelectedEntityId(
+        core_graph.EntityId.fromString(id),
+        source: SelectionSource.ui,
+      );
+      return {'ok': true, 'id': id};
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.entity.deselect',
+    title: 'Deselect Entity in Graph View',
+    category: 'graph',
+    description: 'Clears the current graph selection',
+    canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
+    run: (ref, args) async {
+      final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
+      if (ploughGraph == null) {
+        return {'ok': false, 'error': 'graph view is not mounted'};
+      }
+      for (final node in ploughGraph.nodes) {
+        if (ploughGraph.getNode(node.id)?.isSelected ?? false) {
+          ploughGraph.deselectNode(node.id);
+        }
+      }
+      for (final link in ploughGraph.links) {
+        if (ploughGraph.getLink(link.id)?.isSelected ?? false) {
+          ploughGraph.deselectLink(link.id);
+        }
+      }
+      ref.read(selectedGraphEntityIdProvider.notifier).setSelectedEntityId(null, source: SelectionSource.ui);
+      return {'ok': true};
+    },
+  ),
 ];
 
 // ---------------------------------------------------------------------------
