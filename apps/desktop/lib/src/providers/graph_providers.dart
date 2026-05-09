@@ -218,7 +218,7 @@ class GraphViewCache {
   int? lastAppGraphHashCode;
   // Registered by _AppGraphViewState so MCP commands can manipulate the viewport.
   // Null when the graph view is not mounted.
-  ValueNotifier<Matrix4>? transformationController;
+  plough.GraphViewportController? transformationController;
   // Last known size of the graph view drawing area (from LayoutBuilder).
   // Used by graph.viewport.fit to compute scale/translation.
   Size viewportSize = Size.zero;

@@ -1175,8 +1175,8 @@ List<AppCommand> _graphCommands() => [
       if (tc == null) {
         return {'ok': false, 'error': 'graph view is not mounted'};
       }
-      final m = tc.value;
-      return {'ok': true, 'tx': m.entry(0, 3), 'ty': m.entry(1, 3), 'scale': m.entry(0, 0)};
+      final pan = tc.panOffset;
+      return {'ok': true, 'tx': pan.dx, 'ty': pan.dy, 'scale': tc.scale};
     },
   ),
 
@@ -1191,7 +1191,7 @@ List<AppCommand> _graphCommands() => [
       if (tc == null) {
         return {'ok': false, 'error': 'graph view is not mounted'};
       }
-      tc.value = Matrix4.identity();
+      tc.reset();
       return {'ok': true};
     },
   ),
@@ -1212,37 +1212,9 @@ List<AppCommand> _graphCommands() => [
       if (dx == null || dy == null) {
         return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'dx and dy are required'};
       }
-      final m = tc.value.clone()
-        ..setEntry(0, 3, tc.value.entry(0, 3) + dx)
-        ..setEntry(1, 3, tc.value.entry(1, 3) + dy);
-      tc.value = m;
-      return {'ok': true, 'tx': m.entry(0, 3), 'ty': m.entry(1, 3)};
-    },
-  ),
-
-  AppCommand(
-    id: 'graph.viewport.zoom',
-    title: 'Zoom Viewport',
-    category: 'graph',
-    description: '{ factor: number } — multiply current scale (e.g. 1.2 to zoom in, 0.8 to zoom out)',
-    canExecute: (ref) => ref.read(graphViewCacheProvider).transformationController != null,
-    run: (ref, args) async {
-      final tc = ref.read(graphViewCacheProvider).transformationController;
-      if (tc == null) {
-        return {'ok': false, 'error': 'graph view is not mounted'};
-      }
-      final factor = (args['factor'] as num?)?.toDouble();
-      if (factor == null || factor <= 0) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'factor must be a positive number'};
-      }
-      final currentScale = tc.value.entry(0, 0);
-      final newScale = (currentScale * factor).clamp(0.5, 3.0);
-      final m = tc.value.clone()
-        ..setEntry(0, 0, newScale)
-        ..setEntry(1, 1, newScale)
-        ..setEntry(2, 2, newScale);
-      tc.value = m;
-      return {'ok': true, 'scale': newScale};
+      tc.pan(Offset(dx, dy));
+      final pan = tc.panOffset;
+      return {'ok': true, 'tx': pan.dx, 'ty': pan.dy};
     },
   ),
 
@@ -1250,7 +1222,7 @@ List<AppCommand> _graphCommands() => [
     id: 'graph.viewport.set_zoom',
     title: 'Set Viewport Zoom',
     category: 'graph',
-    description: '{ scale: number } — set viewport scale to an absolute value (clamped to 0.5–3.0)',
+    description: '{ scale: number } — set viewport scale to an absolute value (clamped to 0.5–3.0). Pan offset is preserved.',
     canExecute: (ref) => ref.read(graphViewCacheProvider).transformationController != null,
     run: (ref, args) async {
       final tc = ref.read(graphViewCacheProvider).transformationController;
@@ -1261,13 +1233,8 @@ List<AppCommand> _graphCommands() => [
       if (scale == null || scale <= 0) {
         return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'scale must be a positive number'};
       }
-      final clamped = scale.clamp(0.5, 3.0);
-      final m = tc.value.clone()
-        ..setEntry(0, 0, clamped)
-        ..setEntry(1, 1, clamped)
-        ..setEntry(2, 2, clamped);
-      tc.value = m;
-      return {'ok': true, 'scale': clamped};
+      tc.setScale(scale);
+      return {'ok': true, 'scale': tc.scale};
     },
   ),
 
@@ -1331,10 +1298,7 @@ List<AppCommand> _graphCommands() => [
       final tx = vpSize.width / 2 - bbCenterX * scale;
       final ty = vpSize.height / 2 - bbCenterY * scale;
 
-      tc.value = Matrix4.identity()
-        ..setEntry(0, 0, scale)
-        ..setEntry(1, 1, scale)
-        ..setEntry(2, 2, scale)
+      tc.value = Matrix4.diagonal3Values(scale, scale, scale)
         ..setEntry(0, 3, tx)
         ..setEntry(1, 3, ty);
       return {'ok': true, 'tx': tx, 'ty': ty, 'scale': scale};

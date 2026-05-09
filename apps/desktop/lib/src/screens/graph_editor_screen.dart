@@ -13,6 +13,7 @@ import 'package:presentation_components/presentation_components.dart';
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 
 import '../providers/graph_providers.dart' as graph_providers;
+import '../providers/graph_providers.dart';
 import '../providers/selection_providers.dart';
 import '../providers/view_toolbar_providers.dart';
 import '../providers/graph_status_providers.dart';
@@ -138,8 +139,22 @@ class _HeaderWidget extends ConsumerWidget {
         debugPrint('View mode changed to: $mode');
         ref.read(viewToolbarStateProvider.notifier).setActiveView(mode.name);
       },
-      onZoomIn: () => debugPrint('Zoom in'),
-      onZoomOut: () => debugPrint('Zoom out'),
+      onZoomIn: () {
+        final cache = ref.read(graphViewCacheProvider);
+        final tc = cache.transformationController;
+        final vpSize = cache.viewportSize;
+        if (tc != null) {
+          tc.zoomAt(1.25, focalPoint: vpSize == Size.zero ? Offset.zero : vpSize.center(Offset.zero));
+        }
+      },
+      onZoomOut: () {
+        final cache = ref.read(graphViewCacheProvider);
+        final tc = cache.transformationController;
+        final vpSize = cache.viewportSize;
+        if (tc != null) {
+          tc.zoomAt(0.8, focalPoint: vpSize == Size.zero ? Offset.zero : vpSize.center(Offset.zero));
+        }
+      },
       onLayoutChanged: (layout) {
         debugPrint('Layout changed to: $layout');
         // TODO: Implement layout change
