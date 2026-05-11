@@ -241,31 +241,33 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
         // DotGridBackground and LinkCreationArrowOverlay observe the viewport
         // controller directly and must sit outside GraphViewport's Transform so
         // they are not double-transformed.
-        return Stack(
-          children: [
-            Positioned.fill(
-              child: DotGridBackground(
-                transformationController: _viewportController,
+        return ClipRect(
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: DotGridBackground(
+                  transformationController: _viewportController,
+                ),
               ),
-            ),
-            Positioned.fill(
-              child: plough.GraphViewport(
-                controller: _viewportController,
-                minScale: 0.5,
-                maxScale: 3.0,
-                onTransformChanged: () {
-                  cache.graphViewStateKey?.currentState
-                      ?.refreshAllNodeGeometry();
-                },
-                child: cache.graphView!,
+              Positioned.fill(
+                child: plough.GraphViewport(
+                  controller: _viewportController,
+                  minScale: 0.5,
+                  maxScale: 3.0,
+                  onTransformChanged: () {
+                    cache.graphViewStateKey?.currentState
+                        ?.refreshAllNodeGeometry();
+                  },
+                  child: cache.graphView!,
+                ),
               ),
-            ),
-            Positioned.fill(
-              child: LinkCreationArrowOverlay(
-                transformationController: _viewportController,
+              Positioned.fill(
+                child: LinkCreationArrowOverlay(
+                  transformationController: _viewportController,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
