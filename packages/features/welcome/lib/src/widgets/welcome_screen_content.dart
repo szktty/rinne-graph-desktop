@@ -49,10 +49,23 @@ class WelcomeScreenContent extends ConsumerStatefulWidget {
 }
 
 class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
+  // Resolved once when allStacksListProvider first emits data; never changes
+  // after that, preventing FondeTabView from being rebuilt when the provider
+  // re-executes during the session.
+  String? _resolvedInitialTabId;
+
   @override
   Widget build(BuildContext context) {
     final stacksAsync = ref.watch(core_stack.allStacksListProvider);
     final selectedStack = ref.watch(selectedWelcomeStackProvider);
+
+    // Lock in the initial tab the first time data arrives.
+    if (_resolvedInitialTabId == null) {
+      stacksAsync.whenData((stacks) {
+        _resolvedInitialTabId = stacks.isNotEmpty ? 'my_stacks' : 'samples';
+      });
+    }
+    final initialTabId = _resolvedInitialTabId ?? 'my_stacks';
 
     return Material(
       type: MaterialType.transparency,
@@ -89,12 +102,6 @@ class _WelcomeScreenContentState extends ConsumerState<WelcomeScreenContent> {
                     Expanded(
                       flex: 5,
                       child: () {
-                        final hasUserStacks = stacksAsync.maybeWhen(
-                          data: (stacks) => stacks.isNotEmpty,
-                          orElse: () => true,
-                        );
-                        final initialTabId =
-                            hasUserStacks ? 'my_stacks' : 'samples';
                         return FondeTabView(
                           key: ValueKey('welcome_tab_$initialTabId'),
                           initialSelectedTabId: initialTabId,
