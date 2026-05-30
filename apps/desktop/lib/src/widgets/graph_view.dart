@@ -68,10 +68,10 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
       vsync: this,
       duration: const Duration(milliseconds: 350),
     )..addListener(() {
-        if (_focusAnimation != null) {
-          _viewportController.value = _focusAnimation!.value;
-        }
-      });
+      if (_focusAnimation != null) {
+        _viewportController.value = _focusAnimation!.value;
+      }
+    });
     final cache = ref.read(graphViewCacheProvider);
     cache.transformationController = _viewportController;
     cache.graphViewStateKey = _graphViewStateKey;
@@ -89,8 +89,9 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     if (_viewportSize == Size.zero) return;
     final cx = _viewportSize.width / 2;
     final cy = _viewportSize.height / 2;
-    final target = Matrix4.identity()
-      ..translateByDouble(cx - nodePosition.dx, cy - nodePosition.dy, 0, 1);
+    final target =
+        Matrix4.identity()
+          ..translateByDouble(cx - nodePosition.dx, cy - nodePosition.dy, 0, 1);
     final begin = _viewportController.value.clone();
     _focusAnimation = Matrix4Tween(begin: begin, end: target).animate(
       CurvedAnimation(parent: _focusAnimController, curve: Curves.easeInOut),
@@ -100,8 +101,6 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('[AppGraphView.build] Rebuilding AppGraphView');
-
     // Listen for focus target changes and animate to the node
     ref.listen<core_graph.EntityId?>(searchFocusTargetProvider, (_, entityId) {
       if (entityId == null) return;
@@ -140,14 +139,12 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     // Create new PloughGraph only if graph has changed
     plough.Graph ploughGraph;
     if (graphChanged || cache.ploughGraph == null) {
-      debugPrint('[AppGraphView.build] Creating new PloughGraph');
       ploughGraph = _convertAppGraphToPlough(widget.appGraph);
       // Request layout with animation so nodes animate from center
       ploughGraph.markNeedsLayout(shouldAnimate: true);
       cache.ploughGraph = ploughGraph;
       cache.lastAppGraphHashCode = currentGraphHashCode;
     } else {
-      debugPrint('[AppGraphView.build] Reusing cached PloughGraph');
       ploughGraph = cache.ploughGraph!;
     }
 
@@ -155,7 +152,6 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
 
     // Create new behavior only if not yet created
     if (cache.behavior == null) {
-      debugPrint('[AppGraphView.build] Creating new GraphViewBehavior');
       cache.behavior = _createCustomBehavior();
     }
     final behavior = cache.behavior!;
@@ -163,10 +159,6 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     // Reflect external selection changes to graph
     // Only reflect to graph if not from UI selection change
     if (selectionState.lastSource != SelectionSource.ui) {
-      debugPrint(
-        '[AppGraphView.effect] Updating graph selection from external source: ${selectionState.selectedEntityId?.value}',
-      );
-
       if (selectionState.selectedEntityId == null) {
         // Deselect - clear current selection
         // Note: Plough library doesn't have direct selection clear method,
@@ -185,10 +177,6 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
           }
         }
       }
-    } else {
-      debugPrint(
-        '[AppGraphView.effect] Skipping UI-initiated selection update',
-      );
     }
 
     if (ploughGraph.nodes.isEmpty && ploughGraph.links.isEmpty) {
@@ -208,7 +196,6 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
         // Create new GraphView only if instance not yet created or
         // graph has changed
         if (cache.graphView == null || graphChanged) {
-          debugPrint('[AppGraphView.build] Creating new GraphView');
           _graphViewStateKey = GlobalKey();
           cache.graphViewStateKey = _graphViewStateKey;
           cache.graphView = plough.GraphView(
@@ -220,28 +207,22 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
             allowMultiSelection: false,
             // Start node animation from center of drawing area
             nodeAnimationStartPosition: centerOffset,
-            // GraphViewport handles all background gestures (pan/zoom).
-            // GraphView only needs to handle node/edge interactions.
+            // nodeEdgeOnly: only consume gestures on nodes/edges;
+            // background pans fall through to GraphViewport.
             gestureMode: plough.GraphGestureMode.nodeEdgeOnly,
-            // Convert a global screen position to the same coordinate space
-            // used by geometry.bounds (screen pixels relative to the layout
-            // Stack origin).  Both hit-test positions and bounds are in this
-            // space, so no scale factor is applied here.
-            globalToScene: (globalPos) {
-              final origin =
-                  _graphViewStateKey.currentState?.layoutGlobalOrigin ??
-                  Offset.zero;
-              return globalPos - origin;
-            },
+            // Coordinate conversion (screen -> scene) and drag-delta scaling are
+            // now handled internally by plough's viewport: the GraphViewport
+            // sets the controller's screenToScene handler and drives hit-testing
+            // from outside its Transform. The previous manual globalToScene /
+            // dragDeltaTransform wiring is obsolete (it was ignored anyway, as
+            // the controller's screenToScene takes precedence).
+            canvasMode: plough.GraphViewportCanvasMode.infinite,
           );
-        } else {
-          debugPrint('[AppGraphView.build] Reusing cached GraphView');
         }
 
-        // DotGridBackground and LinkCreationArrowOverlay observe the viewport
-        // controller directly and must sit outside GraphViewport's Transform so
-        // they are not double-transformed.
-        return ClipRect(
+        final appColorScheme = ref.watch(effectiveColorSchemeProvider);
+        return ColoredBox(
+          color: appColorScheme.appSpecific.graph.background,
           child: Stack(
             children: [
               Positioned.fill(
@@ -254,10 +235,11 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
                   controller: _viewportController,
                   minScale: 0.5,
                   maxScale: 3.0,
-                  onTransformChanged: () {
-                    cache.graphViewStateKey?.currentState
-                        ?.refreshAllNodeGeometry();
-                  },
+                  canvasMode: plough.GraphViewportCanvasMode.infinite,
+                  // Node hit-test bounds are now stored in logical scene space,
+                  // so they stay valid across transform changes and scene grows.
+                  // The old onTransformChanged -> refreshAllNodeGeometry band-aid
+                  // is no longer needed.
                   child: cache.graphView!,
                 ),
               ),
@@ -407,10 +389,7 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
   final WidgetRef ref;
   String? _lastSelectedId;
 
-  _AppGraphBehavior({
-    required this.selectionChangeCallback,
-    required this.ref,
-  });
+  _AppGraphBehavior({required this.selectionChangeCallback, required this.ref});
 
   // Handle selection change events
   @override
@@ -421,19 +400,8 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
             ? null
             : event.currentSelectionIds.first.value;
 
-    // Do nothing if same ID is selected
-    if (_lastSelectedId == currentId) {
-      debugPrint(
-        '[_AppGraphBehavior] Skipping duplicate selection: $_lastSelectedId',
-      );
-      return;
-    }
+    if (_lastSelectedId == currentId) return;
 
-    debugPrint(
-      '[_AppGraphBehavior] Selection changed: $_lastSelectedId -> $currentId',
-    );
-
-    // Update last selected ID
     _lastSelectedId = currentId;
 
     // Call callback
@@ -446,17 +414,8 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
     final linkCreationState = ref.read(linkCreationModeProvider);
 
     if (linkCreationState.isActive) {
-      // In link creation mode: set the source node when dragging starts
-      debugPrint(
-        '[_AppGraphBehavior.onDragStart] Link creation mode: drag start',
-      );
-
-      // Get entity ID at the start of the drag
       if (event.entityIds.isNotEmpty) {
         final sourceEntityId = event.entityIds.first;
-        debugPrint(
-          '[_AppGraphBehavior.onDragStart] Source node: $sourceEntityId',
-        );
         ref
             .read(linkCreationModeProvider.notifier)
             .setSourceNode(
@@ -475,12 +434,6 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
     final linkCreationState = ref.read(linkCreationModeProvider);
 
     if (linkCreationState.isActive) {
-      // In link creation mode: detect the target node when dragging updates
-      debugPrint(
-        '[_AppGraphBehavior.onDragUpdate] Link creation mode: drag update',
-      );
-
-      // Update the pointer position during drag
       final pointerPosition = event.details.localPosition;
       ref
           .read(linkCreationDragPositionProvider.notifier)
@@ -499,9 +452,6 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
               .setTargetNode(
                 core_graph.EntityId.fromString(targetEntityId.value),
               );
-          debugPrint(
-            '[_AppGraphBehavior.onDragUpdate] Target node: $targetEntityId',
-          );
         }
       } else {
         // If off the node, clear the target
@@ -519,9 +469,6 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
     final linkCreationState = ref.read(linkCreationModeProvider);
 
     if (linkCreationState.isActive && linkCreationState.sourceNodeId != null) {
-      // In link creation mode: attempt to create a link when dragging ends
-      debugPrint('[_AppGraphBehavior.onDragEnd] Link creation mode: drag end');
-
       if (linkCreationState.targetNodeId != null &&
           linkCreationState.targetNodeId != linkCreationState.sourceNodeId) {
         // If a target node is set, create the link
@@ -544,31 +491,17 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
     core_graph.EntityId targetId,
   ) async {
     try {
-      debugPrint(
-        '[_AppGraphBehavior._createLink] Creating link from $sourceId to $targetId',
-      );
-
-      // Get the GraphStorage of the active stack
       final storage = ref.read(activeStackGraphStorageProvider);
-      if (storage == null) {
-        debugPrint('[_AppGraphBehavior._createLink] No active graph storage');
-        return;
-      }
+      if (storage == null) return;
 
-      // Create GraphContext
       final graphContext = core_graph.GraphContext(storage: storage);
 
-      // Wait for initialization
       try {
         await graphContext.initialize();
       } catch (e) {
-        debugPrint(
-          '[_AppGraphBehavior._createLink] Failed to initialize GraphContext: $e',
-        );
         return;
       }
 
-      // Create link
       final description = core_graph.EntityDescription(
         type: 'Link',
         propertyTypes: {
@@ -576,16 +509,13 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
         },
       );
 
-      final newLink = await graphContext.createLink(
+      await graphContext.createLink(
         sourceId: sourceId,
         targetId: targetId,
         type: 'connected',
         description: description,
       );
 
-      debugPrint('[_AppGraphBehavior._createLink] Link created: ${newLink.id}');
-
-      // Reload the graph
       final activeGraph = ref.read(core_graph.activeGraphProvider);
       if (activeGraph != null) {
         final updatedLinks = await graphContext.queryLinks(
@@ -602,9 +532,7 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
 
       // Close GraphContext
       await graphContext.close();
-    } catch (e) {
-      debugPrint('[_AppGraphBehavior._createLink] Error creating link: $e');
-    }
+    } catch (_) {}
   }
 
   @override
@@ -666,7 +594,8 @@ class _AppLinkRenderer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final highlightState = ref.watch(searchHighlightProvider);
     final linkEntityId = core_graph.EntityId.fromString(link.id.value);
-    final isDimmed = highlightState.isActive &&
+    final isDimmed =
+        highlightState.isActive &&
         !highlightState.linkIds.contains(linkEntityId);
 
     final label = link.properties['label'] as String?;
@@ -778,7 +707,8 @@ class _NodeRendererWrapper extends ConsumerWidget {
     // Dim non-matching nodes when highlight is active
     final highlightState = ref.watch(searchHighlightProvider);
     final nodeEntityId = core_graph.EntityId.fromString(node.id.value);
-    final isDimmed = highlightState.isActive &&
+    final isDimmed =
+        highlightState.isActive &&
         !highlightState.nodeIds.contains(nodeEntityId);
 
     final renderer = AppNodeRenderer(
@@ -937,4 +867,3 @@ final class _CenteredForceDirectedLayoutStrategy
     }
   }
 }
-

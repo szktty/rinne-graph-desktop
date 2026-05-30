@@ -37,10 +37,6 @@ class _DotGridBackgroundState extends ConsumerState<DotGridBackground> {
   }
 
   void _onTransformationChanged() {
-    print('[DEBUG] Background: TransformationController changed');
-    print(
-      '[DEBUG] Background: New matrix: ${widget.transformationController.value}',
-    );
     setState(() {
       _transformationMatrix = widget.transformationController.value;
     });
@@ -48,41 +44,15 @@ class _DotGridBackgroundState extends ConsumerState<DotGridBackground> {
 
   @override
   Widget build(BuildContext context) {
-    // Get theme via @packages/core/themes/
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
 
-    print('[DEBUG] Background: Building with matrix: $_transformationMatrix');
-
     // Ensure background responds to hit test
-    return Container(
-      // Set graph view background color - set color to ensure hit test passes
-      color: appColorScheme.appSpecific.graph.background,
-      width: double.infinity,
-      height: double.infinity,
-      child: GestureDetector(
-        onTap: () {
-          print('[DEBUG] 🎨🎯 BACKGROUND TAPPED SUCCESSFULLY!');
-        },
-        onPanStart: (details) {
-          print('[DEBUG] 🎨🚀 BACKGROUND PAN START: ${details.localPosition}');
-        },
-        onPanUpdate: (details) {
-          print('[DEBUG] 🎨📍 BACKGROUND PAN UPDATE: ${details.localPosition}');
-        },
-        onPanEnd: (details) {
-          print('[DEBUG] 🎨🏁 BACKGROUND PAN END');
-        },
-        behavior:
-            HitTestBehavior
-                .opaque, // Important: pass hit test even for transparent areas
-        child: CustomPaint(
-          painter: DotGridPainter(
-            transformation: _transformationMatrix,
-            appColorScheme: appColorScheme,
-          ),
-          size: Size.infinite,
-        ),
+    return CustomPaint(
+      painter: DotGridPainter(
+        transformation: _transformationMatrix,
+        appColorScheme: appColorScheme,
       ),
+      size: Size.infinite,
     );
   }
 }
@@ -99,6 +69,12 @@ class DotGridPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // CustomPaint does not clip its painter to [size], and the dot loop draws
+    // one extra row/column just beyond the visible range (including negative
+    // screen positions). Clip to the paint area so grid dots never bleed over
+    // the adjacent graph toolbar / sidebar.
+    canvas.clipRect(Offset.zero & size);
+
     // Extract scale and translation from the transformation matrix.
     // The matrix maps world coordinates → screen coordinates as:
     //   screenX = worldX * scale + tx
@@ -116,9 +92,10 @@ class DotGridPainter extends CustomPainter {
     final dotColor = appColorScheme.appSpecific.graph.gridLine.withValues(
       alpha: 0.3,
     );
-    final paint = Paint()
-      ..color = dotColor
-      ..style = PaintingStyle.fill;
+    final paint =
+        Paint()
+          ..color = dotColor
+          ..style = PaintingStyle.fill;
 
     // Convert the four screen-space corners to world space to find the
     // visible world-coordinate range.  This works for any tx/ty/scale.
@@ -132,8 +109,16 @@ class DotGridPainter extends CustomPainter {
     final firstWorldX = (worldLeft / baseSpacing).floor() * baseSpacing;
     final firstWorldY = (worldTop / baseSpacing).floor() * baseSpacing;
 
-    for (double wx = firstWorldX; wx <= worldRight + baseSpacing; wx += baseSpacing) {
-      for (double wy = firstWorldY; wy <= worldBottom + baseSpacing; wy += baseSpacing) {
+    for (
+      double wx = firstWorldX;
+      wx <= worldRight + baseSpacing;
+      wx += baseSpacing
+    ) {
+      for (
+        double wy = firstWorldY;
+        wy <= worldBottom + baseSpacing;
+        wy += baseSpacing
+      ) {
         final screenX = wx * scale + tx;
         final screenY = wy * scale + ty;
         canvas.drawCircle(Offset(screenX, screenY), dotSize, paint);

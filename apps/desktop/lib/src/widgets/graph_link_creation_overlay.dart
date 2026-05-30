@@ -30,7 +30,7 @@ class LinkCreationArrowOverlay extends ConsumerWidget {
     if (!linkCreationState.isActive ||
         linkCreationState.sourceNodeId == null ||
         dragPosition == null) {
-      return const SizedBox.expand();
+      return const SizedBox.shrink();
     }
 
     return CustomPaint(
