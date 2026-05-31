@@ -44,28 +44,38 @@ export 'package:fonde_ui/fonde_ui.dart'
 /// ```dart
 /// fondeThemeControllerProvider.overrideWithValue(myController)
 /// ```
-final fondeThemeControllerProvider =
-    Provider<FondeThemeController>((ref) => throw UnimplementedError(
-          'fondeThemeControllerProvider must be overridden in ProviderScope',
-        ));
+final fondeThemeControllerProvider = Provider<FondeThemeController>(
+  (ref) =>
+      throw UnimplementedError(
+        'fondeThemeControllerProvider must be overridden in ProviderScope',
+      ),
+);
 
 /// Provides the [FondeThemeColorController] instance.
-final fondeThemeColorControllerProvider =
-    Provider<FondeThemeColorController>((ref) => throw UnimplementedError(
-          'fondeThemeColorControllerProvider must be overridden in ProviderScope',
-        ));
+final fondeThemeColorControllerProvider = Provider<FondeThemeColorController>(
+  (ref) =>
+      throw UnimplementedError(
+        'fondeThemeColorControllerProvider must be overridden in ProviderScope',
+      ),
+);
 
 /// Provides the [FondeAccessibilityController] instance.
-final fondeAccessibilityControllerProvider =
-    Provider<FondeAccessibilityController>((ref) => throw UnimplementedError(
-          'fondeAccessibilityControllerProvider must be overridden in ProviderScope',
-        ));
+final fondeAccessibilityControllerProvider = Provider<
+  FondeAccessibilityController
+>(
+  (ref) =>
+      throw UnimplementedError(
+        'fondeAccessibilityControllerProvider must be overridden in ProviderScope',
+      ),
+);
 
 /// Provides the [FondeIconThemeController] instance.
-final fondeIconThemeControllerProvider =
-    Provider<FondeIconThemeController>((ref) => throw UnimplementedError(
-          'fondeIconThemeControllerProvider must be overridden in ProviderScope',
-        ));
+final fondeIconThemeControllerProvider = Provider<FondeIconThemeController>(
+  (ref) =>
+      throw UnimplementedError(
+        'fondeIconThemeControllerProvider must be overridden in ProviderScope',
+      ),
+);
 
 // ---------------------------------------------------------------------------
 // Platform brightness
@@ -77,9 +87,7 @@ final fondeIconThemeControllerProvider =
 class PlatformBrightnessNotifier extends StateNotifier<Brightness>
     with WidgetsBindingObserver {
   PlatformBrightnessNotifier()
-      : super(
-          SchedulerBinding.instance.platformDispatcher.platformBrightness,
-        ) {
+    : super(SchedulerBinding.instance.platformDispatcher.platformBrightness) {
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -97,8 +105,8 @@ class PlatformBrightnessNotifier extends StateNotifier<Brightness>
 
 final platformBrightnessProvider =
     StateNotifierProvider<PlatformBrightnessNotifier, Brightness>(
-  (ref) => PlatformBrightnessNotifier(),
-);
+      (ref) => PlatformBrightnessNotifier(),
+    );
 
 // ---------------------------------------------------------------------------
 // Active theme (reactive wrapper around FondeThemeController)
@@ -131,17 +139,17 @@ final effectiveColorSchemeProvider = Provider<AppColorScheme>((ref) {
   final brightness = ref.watch(platformBrightnessProvider);
   final themeColorType = ref.watch(themeColorTypeProvider);
   final fondeScheme = themeCtrl.theme.getEffectiveAppColorScheme(brightness);
-  return AppColorScheme.fromFondeColorScheme(fondeScheme,
-      themeType: themeColorType);
+  return AppColorScheme.fromFondeColorScheme(
+    fondeScheme,
+    themeType: themeColorType,
+  );
 });
 
 /// The resolved Flutter [ColorScheme] for the current theme + brightness.
 final effectiveFlutterColorSchemeProvider = Provider<ColorScheme>((ref) {
   final themeCtrl = ref.watch(activeThemeProvider);
   final brightness = ref.watch(platformBrightnessProvider);
-  return themeCtrl.theme
-      .getEffectiveAppColorScheme(brightness)
-      .toColorScheme();
+  return themeCtrl.theme.getEffectiveAppColorScheme(brightness).toColorScheme();
 });
 
 // ---------------------------------------------------------------------------
@@ -153,8 +161,8 @@ final effectiveFlutterColorSchemeProvider = Provider<ColorScheme>((ref) {
 /// Rebuilds whenever [FondeAccessibilityController.updateConfig] is called.
 final fondeAccessibilityConfigProvider =
     ChangeNotifierProvider<FondeAccessibilityController>((ref) {
-  return ref.watch(fondeAccessibilityControllerProvider);
-});
+      return ref.watch(fondeAccessibilityControllerProvider);
+    });
 
 /// Provider that returns [AppAccessibilityConfig] mapped from the
 /// [FondeAccessibilityController]. Read-only; to update use

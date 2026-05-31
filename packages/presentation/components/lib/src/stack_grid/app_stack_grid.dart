@@ -12,10 +12,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_themes/core_themes.dart';
 
 import 'package:fonde_ui/fonde_ui.dart'
-    show FondeGestureDetector, FondePageIndicator, FondeBorderRadiusValues,
-         FondeRectangleBorder, FondePopupMenu, FondePopupMenuItem,
-         FondePopupMenuDivider, FondePopupMenuEntry, FondePopupMenuItemEntry,
-         FondePopupMenuDividerEntry;
+    show
+        FondeGestureDetector,
+        FondePageIndicator,
+        FondeBorderRadiusValues,
+        FondeRectangleBorder,
+        FondePopupMenu,
+        FondePopupMenuItem,
+        FondePopupMenuDivider,
+        FondePopupMenuEntry,
+        FondePopupMenuItemEntry,
+        FondePopupMenuDividerEntry;
 import 'package:fonde_ui/src/widgets/widgets/fonde_rectangle_border.dart'
     show fondeBorderRadiusProvider;
 

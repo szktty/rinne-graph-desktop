@@ -61,14 +61,14 @@ class ParsedLinkRow {
 /// Result of [CsvImportService.parseCsv].
 class CsvParseResult {
   const CsvParseResult.nodes(List<ParsedNodeRow> nodes)
-      : type = CsvDataType.node,
-        nodes = nodes,
-        links = const [];
+    : type = CsvDataType.node,
+      nodes = nodes,
+      links = const [];
 
   const CsvParseResult.links(List<ParsedLinkRow> links)
-      : type = CsvDataType.link,
-        nodes = const [],
-        links = links;
+    : type = CsvDataType.link,
+      nodes = const [],
+      links = links;
 
   final CsvDataType type;
   final List<ParsedNodeRow> nodes;
@@ -197,7 +197,8 @@ class CsvImportService {
           sourceIdx < row.length ? row[sourceIdx].toString().trim() : '';
       final targetId =
           targetIdx < row.length ? row[targetIdx].toString().trim() : '';
-      final rawType = typeIdx < row.length ? row[typeIdx].toString().trim() : '';
+      final rawType =
+          typeIdx < row.length ? row[typeIdx].toString().trim() : '';
 
       if (sourceId.isEmpty || targetId.isEmpty || rawType.isEmpty) {
         throw const FormatException(

@@ -19,4 +19,3 @@ class SearchQuery extends _$SearchQuery {
   void updateQuery(String? query) => state = query ?? '';
   void clearQuery() => state = '';
 }
-

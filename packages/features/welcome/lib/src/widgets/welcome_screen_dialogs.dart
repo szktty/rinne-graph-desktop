@@ -297,7 +297,10 @@ Future<void> installSampleStackTemplateHelper(
     }
   } catch (e) {
     if (context.mounted) {
-      FondeSnackBar.showError(context: context, message: 'An error occurred: $e');
+      FondeSnackBar.showError(
+        context: context,
+        message: 'An error occurred: $e',
+      );
     }
   }
 }
@@ -413,7 +416,10 @@ Widget buildDialogFooterHelper({
                   label: confirmLabel,
                   onPressed: onConfirm,
                 )
-                : FondeButton.primary(label: confirmLabel, onPressed: onConfirm),
+                : FondeButton.primary(
+                  label: confirmLabel,
+                  onPressed: onConfirm,
+                ),
         ],
       ), // Row を閉じる
     ), // Padding を閉じる (ここが欠けていた)

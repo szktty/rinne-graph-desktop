@@ -157,7 +157,8 @@ void main() {
     });
 
     test('strips \$ prefix from property header keys', () {
-      const csv = 'source,target,type,\$weight\nperson_001,person_002,KNOWS,1.0';
+      const csv =
+          'source,target,type,\$weight\nperson_001,person_002,KNOWS,1.0';
       final row = CsvImportService.parseCsv(csv).links[0];
       expect(row.properties.containsKey('weight'), isTrue);
       expect(row.properties.containsKey('\$weight'), isFalse);
@@ -229,7 +230,9 @@ void main() {
         rows: rows,
       );
 
-      final result = await graphContext.queryNodes(GraphQuery(entityType: Node));
+      final result = await graphContext.queryNodes(
+        GraphQuery(entityType: Node),
+      );
       expect(result.items, hasLength(2));
     });
 
@@ -266,22 +269,24 @@ void main() {
         rows: rows,
       );
 
-      final result = await graphContext.queryNodes(GraphQuery(entityType: Node));
+      final result = await graphContext.queryNodes(
+        GraphQuery(entityType: Node),
+      );
       final node = result.items.first;
       expect(node.labels, containsAll(['Employee', 'Person']));
     });
 
     test('uses ImportedNode label when no labels provided', () async {
-      final rows = [
-        ParsedNodeRow(customId: 'n1', labels: {}, properties: {}),
-      ];
+      final rows = [ParsedNodeRow(customId: 'n1', labels: {}, properties: {})];
 
       await CsvImportService.importNodesToGraph(
         graphContext: graphContext,
         rows: rows,
       );
 
-      final result = await graphContext.queryNodes(GraphQuery(entityType: Node));
+      final result = await graphContext.queryNodes(
+        GraphQuery(entityType: Node),
+      );
       final node = result.items.first;
       expect(node.labels, contains('ImportedNode'));
     });
@@ -347,7 +352,9 @@ void main() {
         rows: [],
       );
 
-      final result = await graphContext.queryNodes(GraphQuery(entityType: Node));
+      final result = await graphContext.queryNodes(
+        GraphQuery(entityType: Node),
+      );
       expect(result.items, isEmpty);
     });
 
@@ -411,8 +418,9 @@ void main() {
         ],
       );
 
-      final result =
-          await graphContext.queryLinks(GraphQuery(entityType: Link));
+      final result = await graphContext.queryLinks(
+        GraphQuery(entityType: Link),
+      );
       expect(result.items, hasLength(1));
     });
 
@@ -432,8 +440,9 @@ void main() {
         ],
       );
 
-      final result =
-          await graphContext.queryLinks(GraphQuery(entityType: Link));
+      final result = await graphContext.queryLinks(
+        GraphQuery(entityType: Link),
+      );
       expect(result.items.first.type, 'MANAGES');
     });
 
@@ -453,8 +462,9 @@ void main() {
         ],
       );
 
-      final result =
-          await graphContext.queryLinks(GraphQuery(entityType: Link));
+      final result = await graphContext.queryLinks(
+        GraphQuery(entityType: Link),
+      );
       expect(result.items.first.properties.getValue('since'), '2023-01-01');
     });
 
@@ -473,8 +483,9 @@ void main() {
         ],
       );
 
-      final result =
-          await graphContext.queryLinks(GraphQuery(entityType: Link));
+      final result = await graphContext.queryLinks(
+        GraphQuery(entityType: Link),
+      );
       expect(result.items, isEmpty);
     });
 
@@ -493,8 +504,9 @@ void main() {
         ],
       );
 
-      final result =
-          await graphContext.queryLinks(GraphQuery(entityType: Link));
+      final result = await graphContext.queryLinks(
+        GraphQuery(entityType: Link),
+      );
       expect(result.items, isEmpty);
     });
 
@@ -521,8 +533,9 @@ void main() {
         ],
       );
 
-      final result =
-          await graphContext.queryLinks(GraphQuery(entityType: Link));
+      final result = await graphContext.queryLinks(
+        GraphQuery(entityType: Link),
+      );
       expect(result.items, hasLength(2));
     });
 
@@ -555,8 +568,9 @@ void main() {
         rows: [],
       );
 
-      final result =
-          await graphContext.queryLinks(GraphQuery(entityType: Link));
+      final result = await graphContext.queryLinks(
+        GraphQuery(entityType: Link),
+      );
       expect(result.items, isEmpty);
     });
 

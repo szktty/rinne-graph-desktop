@@ -147,12 +147,12 @@ class SearchExecutionService {
         throw const SearchExecutionError('Graph storage is not ready');
       }
 
-      final nodeQuery = GraphQuery<Node>(entityType: Node)
-          .where(anyKeyContains(trimmed))
-          .limitTo(options.maxResults);
-      final linkQuery = GraphQuery<Link>(entityType: Link)
-          .where(anyKeyContains(trimmed))
-          .limitTo(options.maxResults);
+      final nodeQuery = GraphQuery<Node>(
+        entityType: Node,
+      ).where(anyKeyContains(trimmed)).limitTo(options.maxResults);
+      final linkQuery = GraphQuery<Link>(
+        entityType: Link,
+      ).where(anyKeyContains(trimmed)).limitTo(options.maxResults);
 
       final results = await Future.wait([
         _graphStorage.queryNodes(nodeQuery),

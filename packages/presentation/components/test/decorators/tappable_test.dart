@@ -147,7 +147,9 @@ void main() {
                 onTap: () => tapped = true,
                 child: Selectable(
                   isSelected: true,
-                  child: FondePanel(child: Text('Selectable and Tappable Card')),
+                  child: FondePanel(
+                    child: Text('Selectable and Tappable Card'),
+                  ),
                 ),
               ),
             ),

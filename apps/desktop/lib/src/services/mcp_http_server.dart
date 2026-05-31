@@ -46,7 +46,8 @@ class McpHttpServer {
   Future<Map<String, dynamic>> Function(
     String command,
     Map<String, dynamic> params,
-  )? commandHandler;
+  )?
+  commandHandler;
 
   bool get isRunning => _server != null;
 
@@ -64,11 +65,7 @@ class McpHttpServer {
         .addMiddleware(_corsMiddleware())
         .addHandler(router.call);
 
-    _server = await shelf_io.serve(
-      handler,
-      InternetAddress.loopbackIPv4,
-      port,
-    );
+    _server = await shelf_io.serve(handler, InternetAddress.loopbackIPv4, port);
     debugPrint('McpHttpServer: listening on localhost:$port');
   }
 
@@ -191,10 +188,12 @@ class McpHttpServer {
     return (Handler inner) {
       return (Request request) async {
         final response = await inner(request);
-        return response.change(headers: {
-          'access-control-allow-origin': 'http://localhost',
-          ...response.headers,
-        });
+        return response.change(
+          headers: {
+            'access-control-allow-origin': 'http://localhost',
+            ...response.headers,
+          },
+        );
       };
     };
   }

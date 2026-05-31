@@ -53,7 +53,9 @@ void main() {
     expect(find.text('Content of Tab 1'), findsNothing);
   });
 
-  testWidgets('FondeTabView handles custom styling', (WidgetTester tester) async {
+  testWidgets('FondeTabView handles custom styling', (
+    WidgetTester tester,
+  ) async {
     final tabs = [
       const AppTab(id: 'tab1', label: 'Tab 1'),
       const AppTab(id: 'tab2', label: 'Tab 2'),

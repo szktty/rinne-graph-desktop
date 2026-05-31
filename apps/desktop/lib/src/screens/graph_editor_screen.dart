@@ -144,7 +144,11 @@ class _HeaderWidget extends ConsumerWidget {
         final tc = cache.transformationController;
         final vpSize = cache.viewportSize;
         if (tc != null) {
-          tc.zoomAt(1.25, focalPoint: vpSize == Size.zero ? Offset.zero : vpSize.center(Offset.zero));
+          tc.zoomAt(
+            1.25,
+            focalPoint:
+                vpSize == Size.zero ? Offset.zero : vpSize.center(Offset.zero),
+          );
         }
       },
       onZoomOut: () {
@@ -152,7 +156,11 @@ class _HeaderWidget extends ConsumerWidget {
         final tc = cache.transformationController;
         final vpSize = cache.viewportSize;
         if (tc != null) {
-          tc.zoomAt(0.8, focalPoint: vpSize == Size.zero ? Offset.zero : vpSize.center(Offset.zero));
+          tc.zoomAt(
+            0.8,
+            focalPoint:
+                vpSize == Size.zero ? Offset.zero : vpSize.center(Offset.zero),
+          );
         }
       },
       onLayoutChanged: (layout) {

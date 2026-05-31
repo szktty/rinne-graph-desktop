@@ -1,9 +1,20 @@
 import 'package:fonde_ui/fonde_ui.dart'
-    show FondePopupMenu, FondePopupMenuItem, FondePopupMenuDivider,
-         FondePopupMenuEntry, FondePopupMenuItemEntry, FondePopupMenuDividerEntry;
+    show
+        FondePopupMenu,
+        FondePopupMenuItem,
+        FondePopupMenuDivider,
+        FondePopupMenuEntry,
+        FondePopupMenuItemEntry,
+        FondePopupMenuDividerEntry;
 export 'package:fonde_ui/fonde_ui.dart'
-    show FondePopupMenu, FondePopupMenuItem, FondePopupMenuDivider,
-         FondePopupMenuEntry, FondePopupMenuItemEntry, FondePopupMenuDividerEntry;
+    show
+        FondePopupMenu,
+        FondePopupMenuItem,
+        FondePopupMenuDivider,
+        FondePopupMenuEntry,
+        FondePopupMenuItemEntry,
+        FondePopupMenuDividerEntry;
+
 typedef AppPopupMenu<T> = FondePopupMenu<T>;
 typedef AppPopupMenuItem<T> = FondePopupMenuItem<T>;
 typedef AppPopupMenuDivider = FondePopupMenuDivider;

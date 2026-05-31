@@ -67,7 +67,11 @@ class StatusMessage extends ConsumerWidget {
           padding: const EdgeInsets.all(10.0),
           child: Row(
             children: [
-              FondeIcon(icon, color: FondeIconColor.error, size: FondeIconSize.small),
+              FondeIcon(
+                icon,
+                color: FondeIconColor.error,
+                size: FondeIconSize.small,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: AppText(message, variant: AppTextVariant.bodyText),

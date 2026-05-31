@@ -122,30 +122,36 @@ class _MainAppShellState extends ConsumerState<MainAppShell> {
       final stack = ref.read(core_stack.activeStackProvider);
       final activityIndex = ref.read(activityBarStateProvider);
       final viewMode = ref.read(viewToolbarStateProvider);
-      final screen = stack == null ? 'welcome' : (activityIndex == 0 ? 'editor' : 'welcome');
+      final screen =
+          stack == null
+              ? 'welcome'
+              : (activityIndex == 0 ? 'editor' : 'welcome');
 
       // Build available_commands from CommandRegistry with canExecute evaluation.
       final commands = ref.read(commandRegistryProvider);
-      final availableCommands = commands.values.map((cmd) {
-        final available = cmd.canExecute == null || cmd.canExecute!(ref);
-        return {
-          'id': cmd.id,
-          'title': cmd.title,
-          'category': cmd.category,
-          if (cmd.description != null) 'description': cmd.description,
-          'available': available,
-        };
-      }).toList();
+      final availableCommands =
+          commands.values.map((cmd) {
+            final available = cmd.canExecute == null || cmd.canExecute!(ref);
+            return {
+              'id': cmd.id,
+              'title': cmd.title,
+              'category': cmd.category,
+              if (cmd.description != null) 'description': cmd.description,
+              'available': available,
+            };
+          }).toList();
 
       // Build visible_nodes from active graph.
       final activeGraph = ref.read(core_graph.activeGraphProvider);
-      final visibleNodes = activeGraph?.nodes.values.map((node) {
-        return {
-          'id': node.id.toString(),
-          'custom_id': node.customId,
-          'labels': node.labels.toList(),
-        };
-      }).toList() ?? [];
+      final visibleNodes =
+          activeGraph?.nodes.values.map((node) {
+            return {
+              'id': node.id.toString(),
+              'custom_id': node.customId,
+              'labels': node.labels.toList(),
+            };
+          }).toList() ??
+          [];
 
       return {
         'screen': screen,
@@ -252,9 +258,7 @@ class _MainAppShellState extends ConsumerState<MainAppShell> {
 
     // Get the sidebar visibility state
     final isPrimarySidebarVisible = ref.watch(primarySidebarStateProvider);
-    final isSecondarySidebarVisible = ref.watch(
-      secondarySidebarStateProvider,
-    );
+    final isSecondarySidebarVisible = ref.watch(secondarySidebarStateProvider);
 
     // Get workflow state
     final panelVisibility = ref.watch(
@@ -268,51 +272,56 @@ class _MainAppShellState extends ConsumerState<MainAppShell> {
 
     // If no stack is open, display the welcome screen
     if (activeStack == null) {
-      return RepaintBoundary(key: _repaintKey, child: _buildStackManagementContent());
+      return RepaintBoundary(
+        key: _repaintKey,
+        child: _buildStackManagementContent(),
+      );
     }
 
     return RepaintBoundary(
       key: _repaintKey,
       child: widgets.Stack(
-      children: [
-        FondeScaffold(
-          toolbar: FondeMainToolbar(
-            trailing: const _SecondarySidebarToggleButton(),
+        children: [
+          FondeScaffold(
+            toolbar: FondeMainToolbar(
+              trailing: const _SecondarySidebarToggleButton(),
+            ),
+            launchBar: ActivityBarBuilder.buildBar(),
+            showLaunchBar: true,
+            primarySidebar: SidebarBuilder.buildPrimary(selectedActivityType),
+            secondarySidebar: SidebarBuilder.buildSecondary(
+              selectedActivityType,
+            ),
+            showPrimarySidebar: SidebarBuilder.shouldShowPrimary(
+              selectedActivityType,
+              isPrimarySidebarVisible,
+            ),
+            showSecondarySidebar: SidebarBuilder.shouldShowSecondary(
+              selectedActivityType,
+              isSecondarySidebarVisible,
+            ),
+            secondarySidebarController: _secondarySidebarController,
+            content: ContentBuilder.buildContent(ref, selectedActivityIndex),
           ),
-          launchBar: ActivityBarBuilder.buildBar(),
-          showLaunchBar: true,
-          primarySidebar: SidebarBuilder.buildPrimary(selectedActivityType),
-          secondarySidebar: SidebarBuilder.buildSecondary(selectedActivityType),
-          showPrimarySidebar: SidebarBuilder.shouldShowPrimary(
-            selectedActivityType,
-            isPrimarySidebarVisible,
-          ),
-          showSecondarySidebar: SidebarBuilder.shouldShowSecondary(
-            selectedActivityType,
-            isSecondarySidebarVisible,
-          ),
-          secondarySidebarController: _secondarySidebarController,
-          content: ContentBuilder.buildContent(ref, selectedActivityIndex),
-        ),
-        // Background task panel
-        if (panelVisibility)
-          presentation_workflow.TaskPanel(
-            tasks: activeTasks,
-            initialPosition: panelState.geometry.position,
-            initialSize: panelState.geometry.size,
-            onPositionChanged: taskPanelActions.updatePanelPosition,
-            onSizeChanged: taskPanelActions.updatePanelSize,
-            onTaskCancel: (task) => {},
-            onClose:
-                () => ref
-                    .read(
-                      presentation_workflow
-                          .taskPanelVisibilityProvider
-                          .notifier,
-                    )
-                    .setVisible(false),
-          ),
-      ],
+          // Background task panel
+          if (panelVisibility)
+            presentation_workflow.TaskPanel(
+              tasks: activeTasks,
+              initialPosition: panelState.geometry.position,
+              initialSize: panelState.geometry.size,
+              onPositionChanged: taskPanelActions.updatePanelPosition,
+              onSizeChanged: taskPanelActions.updatePanelSize,
+              onTaskCancel: (task) => {},
+              onClose:
+                  () => ref
+                      .read(
+                        presentation_workflow
+                            .taskPanelVisibilityProvider
+                            .notifier,
+                      )
+                      .setVisible(false),
+            ),
+        ],
       ),
     );
   }
@@ -399,8 +408,9 @@ class _SecondarySidebarToggleButton extends ConsumerWidget {
             tooltip: 'Open Details Panel',
             iconColor: appColorScheme.base.foreground,
             onPressed: () {
-              final controller =
-                  FondeSidebarControllerScope.secondaryOf(context);
+              final controller = FondeSidebarControllerScope.secondaryOf(
+                context,
+              );
               controller?.show();
               ref
                   .read(screenBasedSecondarySidebarStateProvider.notifier)

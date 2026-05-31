@@ -44,7 +44,10 @@ void main() {
           child: MaterialApp(
             theme: AppThemeData.lightTheme().toThemeData(),
             home: const Scaffold(
-              body: FondeIcon(FondeIcons.settings, size: FondeIconSize.standard),
+              body: FondeIcon(
+                FondeIcons.settings,
+                size: FondeIconSize.standard,
+              ),
             ),
           ),
         ),

@@ -69,12 +69,7 @@ class DesktopApp extends StatelessWidget {
     // No additional settings for Windows/Linux (Flutter default)
 
     // Run main app
-    runApp(
-      DesktopApp(
-        body: mainWindowBuilder(),
-        isMainWindow: true,
-      ),
-    );
+    runApp(DesktopApp(body: mainWindowBuilder(), isMainWindow: true));
   }
 
   final Widget body;

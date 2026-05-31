@@ -56,11 +56,8 @@ class AccessibilitySettingsView extends ConsumerWidget {
                         width: 1.0,
                       ),
                       onPressed: () {
-                        final newZoom =
-                            (accessibilityConfig.zoomScale - 0.1).clamp(
-                              0.5,
-                              2.0,
-                            );
+                        final newZoom = (accessibilityConfig.zoomScale - 0.1)
+                            .clamp(0.5, 2.0);
                         ref
                             .read(fondeAccessibilityConfigProvider.notifier)
                             .updateConfig(
@@ -89,11 +86,8 @@ class AccessibilitySettingsView extends ConsumerWidget {
                         width: 1.0,
                       ),
                       onPressed: () {
-                        final newZoom =
-                            (accessibilityConfig.zoomScale + 0.1).clamp(
-                              0.5,
-                              2.0,
-                            );
+                        final newZoom = (accessibilityConfig.zoomScale + 0.1)
+                            .clamp(0.5, 2.0);
                         ref
                             .read(fondeAccessibilityConfigProvider.notifier)
                             .updateConfig(

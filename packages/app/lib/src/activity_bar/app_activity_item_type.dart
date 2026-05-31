@@ -21,10 +21,7 @@ enum AppActivityItemType {
   stackSwitcher(label: 'Stack Switcher', isMainItem: false),
   settings(label: 'Settings', isMainItem: false);
 
-  const AppActivityItemType({
-    required this.label,
-    required this.isMainItem,
-  });
+  const AppActivityItemType({required this.label, required this.isMainItem});
 
   final String label;
   final bool isMainItem;

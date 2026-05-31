@@ -37,7 +37,9 @@ void main() {
       expect(find.text('Item 3'), findsOneWidget);
     });
 
-    testWidgets('FondeSection without dividers test', (WidgetTester tester) async {
+    testWidgets('FondeSection without dividers test', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         createTestWidget(
           FondeSection(

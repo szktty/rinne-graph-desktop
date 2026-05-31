@@ -12,8 +12,10 @@ import 'package:multi_split_view/multi_split_view.dart';
 import 'package:core_themes/core_themes.dart';
 
 import 'package:fonde_ui/fonde_ui.dart'
-    show FondeSecondarySidebarToolbar, FondeCollapsedSidebarLayout,
-         FondePrimarySide;
+    show
+        FondeSecondarySidebarToolbar,
+        FondeCollapsedSidebarLayout,
+        FondePrimarySide;
 
 import '../providers/sidebar_width_provider.dart';
 import '../providers/sidebar_state_providers.dart';

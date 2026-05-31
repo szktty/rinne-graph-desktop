@@ -104,12 +104,15 @@ class DesktopAppApp extends StatelessWidget {
       overrides: [
         // Expose Fonde controllers to Riverpod consumers.
         fondeThemeControllerProvider.overrideWithValue(_themeController),
-        fondeThemeColorControllerProvider
-            .overrideWithValue(_themeColorController),
-        fondeAccessibilityControllerProvider
-            .overrideWithValue(_accessibilityController),
-        fondeIconThemeControllerProvider
-            .overrideWithValue(_iconThemeController),
+        fondeThemeColorControllerProvider.overrideWithValue(
+          _themeColorController,
+        ),
+        fondeAccessibilityControllerProvider.overrideWithValue(
+          _accessibilityController,
+        ),
+        fondeIconThemeControllerProvider.overrideWithValue(
+          _iconThemeController,
+        ),
         // Set command line arguments
         commandLineArgsProvider.overrideWith(
           () => CommandLineArgs()..setArgs(commandLineArgs),

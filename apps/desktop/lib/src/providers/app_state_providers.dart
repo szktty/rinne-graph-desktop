@@ -12,9 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 import 'package:presentation_components/presentation_components.dart'
-    show
-        perScreenSecondarySidebarStateProvider,
-        secondarySidebarStateProvider;
+    show perScreenSecondarySidebarStateProvider, secondarySidebarStateProvider;
 
 part 'app_state_providers.g.dart';
 
