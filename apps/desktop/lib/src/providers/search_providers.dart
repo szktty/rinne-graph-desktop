@@ -318,13 +318,23 @@ class SearchHighlight extends _$SearchHighlight {
   @override
   SearchHighlightState build() => const SearchHighlightState();
 
+  /// Sets the matched entity IDs and turns dimming on automatically.
+  ///
+  /// A search only carries meaning visually when the non-matching entities are
+  /// dimmed, so running a search enables the dim effect by default. The user
+  /// can still turn it off via [toggleDim]; clearing the search via [clear]
+  /// resets everything.
   void setIds({
     required Set<core_graph.EntityId> nodeIds,
     required Set<core_graph.EntityId> linkIds,
-  }) => state = state.copyWith(nodeIds: nodeIds, linkIds: linkIds);
+  }) =>
+      state = state.copyWith(
+        nodeIds: nodeIds,
+        linkIds: linkIds,
+        dimEnabled: true,
+      );
 
-  void toggleDim() =>
-      state = state.copyWith(dimEnabled: !state.dimEnabled);
+  void toggleDim() => state = state.copyWith(dimEnabled: !state.dimEnabled);
 
   void clear() => state = const SearchHighlightState();
 }

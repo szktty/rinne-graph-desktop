@@ -19,11 +19,13 @@ import 'package:features_welcome/features_welcome.dart';
 import 'package:core_themes/core_themes.dart' as core_themes;
 import 'package:presentation_components/presentation_components.dart';
 import 'package:features_welcome/src/widgets/welcome_screen_dialogs.dart';
-import 'package:app/app.dart' show selectedActivityItemProvider, AppActivityItemType;
+import 'package:app/app.dart'
+    show selectedActivityItemProvider, AppActivityItemType;
 import 'package:features_record_editor/record_editor.dart' as record_editor;
 import 'package:core_samples/core_samples.dart' as core_samples;
 import '../providers/app_state_providers.dart';
-import '../providers/entity_selection_bridge_providers.dart' show graphLoadingStateProvider;
+import '../providers/entity_selection_bridge_providers.dart'
+    show graphLoadingStateProvider;
 import '../providers/open_stacks_providers.dart';
 import '../providers/graph_providers.dart';
 import '../providers/search_providers.dart';
@@ -887,15 +889,22 @@ List<AppCommand> _stackCommands() => [
     category: 'stack',
     description: 'Returns all available (non-archived) user stacks',
     run: (ref, args) async {
-      final stacks = await ref.read(core_stack.availableStacksListProvider.future);
+      final stacks = await ref.read(
+        core_stack.availableStacksListProvider.future,
+      );
       return {
         'ok': true,
-        'stacks': stacks.map((s) => {
-          'name': s.info.name,
-          'path': s.directory.path,
-          'description': s.info.description,
-          'tags': s.info.tags,
-        }).toList(),
+        'stacks':
+            stacks
+                .map(
+                  (s) => {
+                    'name': s.info.name,
+                    'path': s.directory.path,
+                    'description': s.info.description,
+                    'tags': s.info.tags,
+                  },
+                )
+                .toList(),
       };
     },
   ),
@@ -909,13 +918,18 @@ List<AppCommand> _stackCommands() => [
       final stacks = await ref.read(core_stack.sampleStacksListProvider.future);
       return {
         'ok': true,
-        'stacks': stacks.map((s) => {
-          'name': s.info.name,
-          'path': s.directory.path,
-          'description': s.info.description,
-          'tags': s.info.tags,
-          'template_id': s.info.sampleTemplateId,
-        }).toList(),
+        'stacks':
+            stacks
+                .map(
+                  (s) => {
+                    'name': s.info.name,
+                    'path': s.directory.path,
+                    'description': s.info.description,
+                    'tags': s.info.tags,
+                    'template_id': s.info.sampleTemplateId,
+                  },
+                )
+                .toList(),
       };
     },
   ),
@@ -924,19 +938,25 @@ List<AppCommand> _stackCommands() => [
     id: 'stack.list_templates',
     title: 'List Stack Templates',
     category: 'stack',
-    description: 'Returns all available built-in stack templates (not yet instantiated)',
+    description:
+        'Returns all available built-in stack templates (not yet instantiated)',
     run: (ref, args) async {
       final templates = ref.read(core_samples.stackTemplateManifestsProvider);
       return {
         'ok': true,
-        'templates': templates.map((t) => {
-          'id': t.id,
-          'name': t.displayName,
-          'description': t.description,
-          'tags': t.tags,
-          'category': t.category,
-          'language': t.language,
-        }).toList(),
+        'templates':
+            templates
+                .map(
+                  (t) => {
+                    'id': t.id,
+                    'name': t.displayName,
+                    'description': t.description,
+                    'tags': t.tags,
+                    'category': t.category,
+                    'language': t.language,
+                  },
+                )
+                .toList(),
       };
     },
   ),
@@ -945,26 +965,44 @@ List<AppCommand> _stackCommands() => [
     id: 'stack.instantiate_template',
     title: 'Instantiate Stack Template',
     category: 'stack',
-    description: '{ template_id: string, stack_name?: string } — instantiate a template into the Samples directory',
+    description:
+        '{ template_id: string, stack_name?: string } — instantiate a template into the Samples directory',
     run: (ref, args) async {
       final templateId = args['template_id'] as String?;
       if (templateId == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'template_id is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'template_id is required',
+        };
       }
-      final template = core_samples.StackTemplateService.getStackTemplateById(templateId);
+      final template = core_samples.StackTemplateService.getStackTemplateById(
+        templateId,
+      );
       if (template == null) {
-        return {'ok': false, 'code': CommandResultCode.notFound, 'error': 'template not found: $templateId'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.notFound,
+          'error': 'template not found: $templateId',
+        };
       }
-      final samplesDir = await ref.read(core_stack.samplesDirectoryProvider.future);
+      final samplesDir = await ref.read(
+        core_stack.samplesDirectoryProvider.future,
+      );
       final stackName = args['stack_name'] as String? ?? template.displayName;
-      final resultPath = await core_samples.StackTemplateService.generateStackFromTemplate(
+      final resultPath = await core_samples
+          .StackTemplateService.generateStackFromTemplate(
         template: template,
         outputDirectory: samplesDir,
         stackName: stackName,
         isSample: true,
       );
       if (resultPath == null) {
-        return {'ok': false, 'code': CommandResultCode.commandError, 'error': 'failed to instantiate template: $templateId'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'failed to instantiate template: $templateId',
+        };
       }
       ref.invalidate(core_stack.sampleStacksListProvider);
       return {'ok': true, 'path': resultPath};
@@ -981,16 +1019,28 @@ List<AppCommand> _stackCommands() => [
       // builds, replace with a stack-ID lookup so only known stacks can open.
       final path = args['path'] as String?;
       if (path == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'path is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'path is required',
+        };
       }
       final stackDir = io.Directory(path);
       if (!await stackDir.exists()) {
-        return {'ok': false, 'code': CommandResultCode.notFound, 'error': 'stack directory not found: $path'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.notFound,
+          'error': 'stack directory not found: $path',
+        };
       }
       final metadataService = core_stack.StackMetadataService();
       final (info, settings) = await metadataService.loadMetadata(stackDir);
       if (info == null) {
-        return {'ok': false, 'code': CommandResultCode.commandError, 'error': 'failed to load stack metadata: $path'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'failed to load stack metadata: $path',
+        };
       }
       final stack = core_stack.Stack(
         directory: stackDir,
@@ -999,7 +1049,9 @@ List<AppCommand> _stackCommands() => [
       );
       ref.read(core_stack.activeStackProvider.notifier).setStack(stack);
       ref.read(openStacksActionsProvider.notifier).addStack(stack);
-      ref.read(activityBarStateProvider.notifier).setIndex(ActivityBarIndex.graphNavigation.value);
+      ref
+          .read(activityBarStateProvider.notifier)
+          .setIndex(ActivityBarIndex.graphNavigation.value);
       return {'ok': true, 'stack_path': stack.directory.path};
     },
   ),
@@ -1023,7 +1075,11 @@ List<AppCommand> _stackCommands() => [
     run: (ref, args) async {
       final screen = args['screen'] as String?;
       if (screen == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'screen is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'screen is required',
+        };
       }
       switch (screen) {
         case 'welcome':
@@ -1031,12 +1087,21 @@ List<AppCommand> _stackCommands() => [
           return {'ok': true, 'screen': 'welcome'};
         case 'editor':
           if (ref.read(core_stack.activeStackProvider) == null) {
-            return {'ok': false, 'code': CommandResultCode.commandError, 'error': 'no stack is open; use stack.open first'};
+            return {
+              'ok': false,
+              'code': CommandResultCode.commandError,
+              'error': 'no stack is open; use stack.open first',
+            };
           }
-          ref.read(selectedActivityItemProvider.notifier).state = AppActivityItemType.lens;
+          ref.read(selectedActivityItemProvider.notifier).state =
+              AppActivityItemType.lens;
           return {'ok': true, 'screen': 'editor'};
         default:
-          return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'screen must be "welcome" or "editor"'};
+          return {
+            'ok': false,
+            'code': CommandResultCode.badParams,
+            'error': 'screen must be "welcome" or "editor"',
+          };
       }
     },
   ),
@@ -1056,10 +1121,18 @@ List<AppCommand> _graphCommands() => [
     run: (ref, args) async {
       final view = args['view'] as String?;
       if (view == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'view is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'view is required',
+        };
       }
       if (view != 'graph' && view != 'table') {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'view must be "graph" or "table"'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'view must be "graph" or "table"',
+        };
       }
       ref.read(viewToolbarStateProvider.notifier).setActiveView(view);
       return {'ok': true, 'view': view};
@@ -1075,11 +1148,19 @@ List<AppCommand> _graphCommands() => [
     run: (ref, args) async {
       final keyword = args['keyword'] as String?;
       if (keyword == null || keyword.trim().isEmpty) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'keyword is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'keyword is required',
+        };
       }
       final searchService = ref.read(searchExecutionServiceProvider);
       if (searchService == null) {
-        return {'ok': false, 'code': CommandResultCode.commandError, 'error': 'no stack is open'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'no stack is open',
+        };
       }
       ref.read(keywordSearchQueryProvider.notifier).setQuery(keyword);
       ref.read(keywordSearchExecutingProvider.notifier).start();
@@ -1089,17 +1170,49 @@ List<AppCommand> _graphCommands() => [
           options: const ExplorationOptions(maxResults: 200),
         );
         ref.read(keywordSearchResultProvider.notifier).setResult(result);
-        ref.read(searchHighlightProvider.notifier).setIds(
-          nodeIds: result.nodes.map((n) => n.id).toSet(),
-          linkIds: result.links.map((l) => l.id).toSet(),
-        );
+        ref
+            .read(searchHighlightProvider.notifier)
+            .setIds(
+              nodeIds: result.nodes.map((n) => n.id).toSet(),
+              linkIds: result.links.map((l) => l.id).toSet(),
+            );
         ref.read(graphNavigatorTabProvider.notifier).setSearchTab();
-        return {'ok': true, 'node_count': result.nodes.length, 'link_count': result.links.length};
+        return {
+          'ok': true,
+          'node_count': result.nodes.length,
+          'link_count': result.links.length,
+        };
       } catch (e) {
-        return {'ok': false, 'code': CommandResultCode.commandError, 'error': 'search failed: $e'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'search failed: $e',
+        };
       } finally {
         ref.read(keywordSearchExecutingProvider.notifier).stop();
       }
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.search.dim',
+    title: 'Toggle Search Dim',
+    category: 'graph',
+    description:
+        '{ enabled?: boolean } — dim non-matching entities. Omit to toggle.',
+    canExecute: (ref) => ref.read(core_stack.activeStackProvider) != null,
+    run: (ref, args) async {
+      final notifier = ref.read(searchHighlightProvider.notifier);
+      final enabled = args['enabled'] as bool?;
+      if (enabled == null) {
+        notifier.toggleDim();
+      } else if (enabled != ref.read(searchHighlightProvider).dimEnabled) {
+        notifier.toggleDim();
+      }
+      return {
+        'ok': true,
+        'dim_enabled': ref.read(searchHighlightProvider).dimEnabled,
+      };
     },
   ),
 
@@ -1112,14 +1225,22 @@ List<AppCommand> _graphCommands() => [
     run: (ref, args) async {
       final id = args['id'] as String?;
       if (id == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'id is required',
+        };
       }
       final entityId = core_graph.EntityId.fromString(id);
       // Update both providers synchronously so selectedEntityForEditorProvider
       // reflects the new selection immediately without waiting for EntitySelectionBridge's
       // ref.listen callback (which fires on the next microtask/frame).
-      ref.read(selectionStateProvider.notifier).selectEntity(entityId, source: SelectionSource.program);
-      ref.read(core_graph.selectedEntityIdProvider.notifier).setEntityId(entityId);
+      ref
+          .read(selectionStateProvider.notifier)
+          .selectEntity(entityId, source: SelectionSource.program);
+      ref
+          .read(core_graph.selectedEntityIdProvider.notifier)
+          .setEntityId(entityId);
       ref.read(screenBasedSecondarySidebarStateProvider.notifier).show();
       return {'ok': true, 'id': id};
     },
@@ -1134,9 +1255,15 @@ List<AppCommand> _graphCommands() => [
     run: (ref, args) async {
       final id = args['id'] as String?;
       if (id == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'id is required',
+        };
       }
-      ref.read(searchFocusTargetProvider.notifier).focus(core_graph.EntityId.fromString(id));
+      ref
+          .read(searchFocusTargetProvider.notifier)
+          .focus(core_graph.EntityId.fromString(id));
       return {'ok': true, 'id': id};
     },
   ),
@@ -1150,26 +1277,35 @@ List<AppCommand> _graphCommands() => [
     run: (ref, args) async {
       final rawIds = args['ids'];
       if (rawIds == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'ids is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'ids is required',
+        };
       }
       final idList = rawIds is List ? rawIds : [rawIds];
-      final nodeIds = idList
-          .map((e) => core_graph.EntityId.fromString(e.toString()))
-          .toSet()
-          .cast<core_graph.EntityId>();
-      ref.read(searchHighlightProvider.notifier).setIds(nodeIds: nodeIds, linkIds: const {});
+      final nodeIds =
+          idList
+              .map((e) => core_graph.EntityId.fromString(e.toString()))
+              .toSet()
+              .cast<core_graph.EntityId>();
+      ref
+          .read(searchHighlightProvider.notifier)
+          .setIds(nodeIds: nodeIds, linkIds: const {});
       return {'ok': true, 'count': nodeIds.length};
     },
   ),
 
   // ---- Viewport commands ----
-
   AppCommand(
     id: 'graph.viewport.get',
     title: 'Get Viewport State',
     category: 'graph',
-    description: 'Returns current translation (tx, ty) and scale of the graph viewport',
-    canExecute: (ref) => ref.read(graphViewCacheProvider).transformationController != null,
+    description:
+        'Returns current translation (tx, ty) and scale of the graph viewport',
+    canExecute:
+        (ref) =>
+            ref.read(graphViewCacheProvider).transformationController != null,
     run: (ref, args) async {
       final tc = ref.read(graphViewCacheProvider).transformationController;
       if (tc == null) {
@@ -1185,7 +1321,9 @@ List<AppCommand> _graphCommands() => [
     title: 'Reset Viewport',
     category: 'graph',
     description: 'Resets the graph viewport to origin with scale 1.0',
-    canExecute: (ref) => ref.read(graphViewCacheProvider).transformationController != null,
+    canExecute:
+        (ref) =>
+            ref.read(graphViewCacheProvider).transformationController != null,
     run: (ref, args) async {
       final tc = ref.read(graphViewCacheProvider).transformationController;
       if (tc == null) {
@@ -1200,8 +1338,11 @@ List<AppCommand> _graphCommands() => [
     id: 'graph.viewport.pan',
     title: 'Pan Viewport',
     category: 'graph',
-    description: '{ dx: number, dy: number } — translate viewport by the given offset',
-    canExecute: (ref) => ref.read(graphViewCacheProvider).transformationController != null,
+    description:
+        '{ dx: number, dy: number } — translate viewport by the given offset',
+    canExecute:
+        (ref) =>
+            ref.read(graphViewCacheProvider).transformationController != null,
     run: (ref, args) async {
       final tc = ref.read(graphViewCacheProvider).transformationController;
       if (tc == null) {
@@ -1210,7 +1351,11 @@ List<AppCommand> _graphCommands() => [
       final dx = (args['dx'] as num?)?.toDouble();
       final dy = (args['dy'] as num?)?.toDouble();
       if (dx == null || dy == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'dx and dy are required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'dx and dy are required',
+        };
       }
       tc.pan(Offset(dx, dy));
       final pan = tc.panOffset;
@@ -1222,8 +1367,11 @@ List<AppCommand> _graphCommands() => [
     id: 'graph.viewport.set_zoom',
     title: 'Set Viewport Zoom',
     category: 'graph',
-    description: '{ scale: number } — set viewport scale to an absolute value (clamped to 0.5–3.0). Pan offset is preserved.',
-    canExecute: (ref) => ref.read(graphViewCacheProvider).transformationController != null,
+    description:
+        '{ scale: number } — set viewport scale to an absolute value (clamped to 0.5–3.0). Pan offset is preserved.',
+    canExecute:
+        (ref) =>
+            ref.read(graphViewCacheProvider).transformationController != null,
     run: (ref, args) async {
       final tc = ref.read(graphViewCacheProvider).transformationController;
       if (tc == null) {
@@ -1231,7 +1379,11 @@ List<AppCommand> _graphCommands() => [
       }
       final scale = (args['scale'] as num?)?.toDouble();
       if (scale == null || scale <= 0) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'scale must be a positive number'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'scale must be a positive number',
+        };
       }
       tc.setScale(scale);
       return {'ok': true, 'scale': tc.scale};
@@ -1242,7 +1394,8 @@ List<AppCommand> _graphCommands() => [
     id: 'graph.viewport.fit',
     title: 'Fit Graph in Viewport',
     category: 'graph',
-    description: '{ padding?: number } — fit all nodes into the viewport (default padding: 40)',
+    description:
+        '{ padding?: number } — fit all nodes into the viewport (default padding: 40)',
     canExecute: (ref) {
       final cache = ref.read(graphViewCacheProvider);
       return cache.transformationController != null &&
@@ -1298,25 +1451,30 @@ List<AppCommand> _graphCommands() => [
       final tx = vpSize.width / 2 - bbCenterX * scale;
       final ty = vpSize.height / 2 - bbCenterY * scale;
 
-      tc.value = Matrix4.diagonal3Values(scale, scale, scale)
-        ..setEntry(0, 3, tx)
-        ..setEntry(1, 3, ty);
+      tc.value =
+          Matrix4.diagonal3Values(scale, scale, scale)
+            ..setEntry(0, 3, tx)
+            ..setEntry(1, 3, ty);
       return {'ok': true, 'tx': tx, 'ty': ty, 'scale': scale};
     },
   ),
 
   // ---- Node position commands ----
-
   AppCommand(
     id: 'graph.node.get_position',
     title: 'Get Node Position',
     category: 'graph',
-    description: '{ id: string } — returns logical and screen position of a node',
+    description:
+        '{ id: string } — returns logical and screen position of a node',
     canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
     run: (ref, args) async {
       final id = args['id'] as String?;
       if (id == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'id is required',
+        };
       }
       final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
       if (ploughGraph == null) {
@@ -1332,14 +1490,15 @@ List<AppCommand> _graphCommands() => [
       return {
         'ok': true,
         'logical': {'x': pos.dx, 'y': pos.dy},
-        'screen': geo == null
-            ? null
-            : {
-                'x': geo.bounds.left,
-                'y': geo.bounds.top,
-                'width': geo.bounds.width,
-                'height': geo.bounds.height,
-              },
+        'screen':
+            geo == null
+                ? null
+                : {
+                  'x': geo.bounds.left,
+                  'y': geo.bounds.top,
+                  'width': geo.bounds.width,
+                  'height': geo.bounds.height,
+                },
       };
     },
   ),
@@ -1355,23 +1514,25 @@ List<AppCommand> _graphCommands() => [
       if (ploughGraph == null) {
         return {'ok': false, 'error': 'graph view is not mounted'};
       }
-      final nodes = ploughGraph.nodes.map((node) {
-        final pos = node.logicalPosition;
-        final geo = node.geometry;
-        return {
-          'id': node.id.value,
-          'label': node.properties['label'] as String? ?? '',
-          'logical': {'x': pos.dx, 'y': pos.dy},
-          'screen': geo == null
-              ? null
-              : {
-                  'x': geo.bounds.left,
-                  'y': geo.bounds.top,
-                  'width': geo.bounds.width,
-                  'height': geo.bounds.height,
-                },
-        };
-      }).toList();
+      final nodes =
+          ploughGraph.nodes.map((node) {
+            final pos = node.logicalPosition;
+            final geo = node.geometry;
+            return {
+              'id': node.id.value,
+              'label': node.properties['label'] as String? ?? '',
+              'logical': {'x': pos.dx, 'y': pos.dy},
+              'screen':
+                  geo == null
+                      ? null
+                      : {
+                        'x': geo.bounds.left,
+                        'y': geo.bounds.top,
+                        'width': geo.bounds.width,
+                        'height': geo.bounds.height,
+                      },
+            };
+          }).toList();
       return {'ok': true, 'nodes': nodes};
     },
   ),
@@ -1380,14 +1541,19 @@ List<AppCommand> _graphCommands() => [
     id: 'graph.node.move',
     title: 'Move Node',
     category: 'graph',
-    description: '{ id: string, x: number, y: number } — move a node to the given logical position',
+    description:
+        '{ id: string, x: number, y: number } — move a node to the given logical position',
     canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
     run: (ref, args) async {
       final id = args['id'] as String?;
       final x = (args['x'] as num?)?.toDouble();
       final y = (args['y'] as num?)?.toDouble();
       if (id == null || x == null || y == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id, x, and y are required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'id, x, and y are required',
+        };
       }
       final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
       if (ploughGraph == null) {
@@ -1405,17 +1571,21 @@ List<AppCommand> _graphCommands() => [
   ),
 
   // ---- Link geometry commands ----
-
   AppCommand(
     id: 'graph.link.get_geometry',
     title: 'Get Link Geometry',
     category: 'graph',
-    description: '{ id: string } — returns connection points, bounds, angle, and node bounds for a link',
+    description:
+        '{ id: string } — returns connection points, bounds, angle, and node bounds for a link',
     canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
     run: (ref, args) async {
       final id = args['id'] as String?;
       if (id == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'id is required',
+        };
       }
       final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
       if (ploughGraph == null) {
@@ -1437,44 +1607,45 @@ List<AppCommand> _graphCommands() => [
           'x': link.logicalPosition.dx,
           'y': link.logicalPosition.dy,
         },
-        'geometry': geo == null
-            ? null
-            : {
-                'bounds': {
-                  'left': geo.bounds.left,
-                  'top': geo.bounds.top,
-                  'right': geo.bounds.right,
-                  'bottom': geo.bounds.bottom,
-                  'width': geo.bounds.width,
-                  'height': geo.bounds.height,
+        'geometry':
+            geo == null
+                ? null
+                : {
+                  'bounds': {
+                    'left': geo.bounds.left,
+                    'top': geo.bounds.top,
+                    'right': geo.bounds.right,
+                    'bottom': geo.bounds.bottom,
+                    'width': geo.bounds.width,
+                    'height': geo.bounds.height,
+                  },
+                  'angle': geo.angle,
+                  'thickness': geo.thickness,
+                  'connection': {
+                    'source_bounds': {
+                      'left': geo.connection.source.bounds.left,
+                      'top': geo.connection.source.bounds.top,
+                      'right': geo.connection.source.bounds.right,
+                      'bottom': geo.connection.source.bounds.bottom,
+                    },
+                    'target_bounds': {
+                      'left': geo.connection.target.bounds.left,
+                      'top': geo.connection.target.bounds.top,
+                      'right': geo.connection.target.bounds.right,
+                      'bottom': geo.connection.target.bounds.bottom,
+                    },
+                    'outgoing': {
+                      'x': geo.connection.connectionPoints.outgoing.dx,
+                      'y': geo.connection.connectionPoints.outgoing.dy,
+                    },
+                    'incoming': {
+                      'x': geo.connection.connectionPoints.incoming.dx,
+                      'y': geo.connection.connectionPoints.incoming.dy,
+                    },
+                    'distance': geo.connection.connectionPoints.distance,
+                    'angle': geo.connection.connectionPoints.angle,
+                  },
                 },
-                'angle': geo.angle,
-                'thickness': geo.thickness,
-                'connection': {
-                  'source_bounds': {
-                    'left': geo.connection.source.bounds.left,
-                    'top': geo.connection.source.bounds.top,
-                    'right': geo.connection.source.bounds.right,
-                    'bottom': geo.connection.source.bounds.bottom,
-                  },
-                  'target_bounds': {
-                    'left': geo.connection.target.bounds.left,
-                    'top': geo.connection.target.bounds.top,
-                    'right': geo.connection.target.bounds.right,
-                    'bottom': geo.connection.target.bounds.bottom,
-                  },
-                  'outgoing': {
-                    'x': geo.connection.connectionPoints.outgoing.dx,
-                    'y': geo.connection.connectionPoints.outgoing.dy,
-                  },
-                  'incoming': {
-                    'x': geo.connection.connectionPoints.incoming.dx,
-                    'y': geo.connection.connectionPoints.incoming.dy,
-                  },
-                  'distance': geo.connection.connectionPoints.distance,
-                  'angle': geo.connection.connectionPoints.angle,
-                },
-              },
       };
     },
   ),
@@ -1490,39 +1661,41 @@ List<AppCommand> _graphCommands() => [
       if (ploughGraph == null) {
         return {'ok': false, 'error': 'graph view is not mounted'};
       }
-      final links = ploughGraph.links.map((link) {
-        final geo = link.geometry;
-        return {
-          'id': link.id.value,
-          'source_node_id': link.source.id.value,
-          'target_node_id': link.target.id.value,
-          'direction': link.direction.name,
-          'geometry': geo == null
-              ? null
-              : {
-                  'bounds': {
-                    'left': geo.bounds.left,
-                    'top': geo.bounds.top,
-                    'right': geo.bounds.right,
-                    'bottom': geo.bounds.bottom,
-                  },
-                  'angle': geo.angle,
-                  'thickness': geo.thickness,
-                  'connection': {
-                    'outgoing': {
-                      'x': geo.connection.connectionPoints.outgoing.dx,
-                      'y': geo.connection.connectionPoints.outgoing.dy,
-                    },
-                    'incoming': {
-                      'x': geo.connection.connectionPoints.incoming.dx,
-                      'y': geo.connection.connectionPoints.incoming.dy,
-                    },
-                    'distance': geo.connection.connectionPoints.distance,
-                    'angle': geo.connection.connectionPoints.angle,
-                  },
-                },
-        };
-      }).toList();
+      final links =
+          ploughGraph.links.map((link) {
+            final geo = link.geometry;
+            return {
+              'id': link.id.value,
+              'source_node_id': link.source.id.value,
+              'target_node_id': link.target.id.value,
+              'direction': link.direction.name,
+              'geometry':
+                  geo == null
+                      ? null
+                      : {
+                        'bounds': {
+                          'left': geo.bounds.left,
+                          'top': geo.bounds.top,
+                          'right': geo.bounds.right,
+                          'bottom': geo.bounds.bottom,
+                        },
+                        'angle': geo.angle,
+                        'thickness': geo.thickness,
+                        'connection': {
+                          'outgoing': {
+                            'x': geo.connection.connectionPoints.outgoing.dx,
+                            'y': geo.connection.connectionPoints.outgoing.dy,
+                          },
+                          'incoming': {
+                            'x': geo.connection.connectionPoints.incoming.dx,
+                            'y': geo.connection.connectionPoints.incoming.dy,
+                          },
+                          'distance': geo.connection.connectionPoints.distance,
+                          'angle': geo.connection.connectionPoints.angle,
+                        },
+                      },
+            };
+          }).toList();
       return {'ok': true, 'links': links};
     },
   ),
@@ -1531,7 +1704,8 @@ List<AppCommand> _graphCommands() => [
     id: 'graph.link.check_arrow_drift',
     title: 'Check Link Arrow Drift',
     category: 'graph',
-    description: 'Checks all links for arrow-position drift (connection points outside node bounds)',
+    description:
+        'Checks all links for arrow-position drift (connection points outside node bounds)',
     canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
     run: (ref, args) async {
       final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
@@ -1550,8 +1724,10 @@ List<AppCommand> _graphCommands() => [
         final srcBounds = geo.connection.source.bounds;
         final tgtBounds = geo.connection.target.bounds;
 
-        final outgoingOutside = !srcBounds.inflate(margin).contains(cp.outgoing);
-        final incomingOutside = !tgtBounds.inflate(margin).contains(cp.incoming);
+        final outgoingOutside =
+            !srcBounds.inflate(margin).contains(cp.outgoing);
+        final incomingOutside =
+            !tgtBounds.inflate(margin).contains(cp.incoming);
 
         if (outgoingOutside || incomingOutside) {
           drifted.add({
@@ -1588,12 +1764,12 @@ List<AppCommand> _graphCommands() => [
   ),
 
   // ---- Layout commands ----
-
   AppCommand(
     id: 'graph.layout.run',
     title: 'Re-run Graph Layout',
     category: 'graph',
-    description: '{ animate?: boolean } — re-run the graph layout algorithm (default animate: true)',
+    description:
+        '{ animate?: boolean } — re-run the graph layout algorithm (default animate: true)',
     canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
     run: (ref, args) async {
       final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
@@ -1607,17 +1783,21 @@ List<AppCommand> _graphCommands() => [
   ),
 
   // ---- Selection commands (simulates user tap on graph entities) ----
-
   AppCommand(
     id: 'graph.node.select',
     title: 'Select Node in Graph View',
     category: 'graph',
-    description: '{ id: string } — selects a node as if the user tapped it (triggers selection side-effects)',
+    description:
+        '{ id: string } — selects a node as if the user tapped it (triggers selection side-effects)',
     canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
     run: (ref, args) async {
       final id = args['id'] as String?;
       if (id == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'id is required',
+        };
       }
       final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
       if (ploughGraph == null) {
@@ -1629,10 +1809,12 @@ List<AppCommand> _graphCommands() => [
         return {'ok': false, 'error': 'node not found: $id'};
       }
       ploughGraph.selectNode(ploughId);
-      ref.read(selectedGraphEntityIdProvider.notifier).setSelectedEntityId(
-        core_graph.EntityId.fromString(id),
-        source: SelectionSource.ui,
-      );
+      ref
+          .read(selectedGraphEntityIdProvider.notifier)
+          .setSelectedEntityId(
+            core_graph.EntityId.fromString(id),
+            source: SelectionSource.ui,
+          );
       return {'ok': true, 'id': id};
     },
   ),
@@ -1641,12 +1823,17 @@ List<AppCommand> _graphCommands() => [
     id: 'graph.link.select',
     title: 'Select Link in Graph View',
     category: 'graph',
-    description: '{ id: string } — selects a link as if the user tapped it (triggers selection side-effects)',
+    description:
+        '{ id: string } — selects a link as if the user tapped it (triggers selection side-effects)',
     canExecute: (ref) => ref.read(graphViewCacheProvider).ploughGraph != null,
     run: (ref, args) async {
       final id = args['id'] as String?;
       if (id == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'id is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'id is required',
+        };
       }
       final ploughGraph = ref.read(graphViewCacheProvider).ploughGraph;
       if (ploughGraph == null) {
@@ -1658,10 +1845,12 @@ List<AppCommand> _graphCommands() => [
         return {'ok': false, 'error': 'link not found: $id'};
       }
       ploughGraph.selectLink(ploughId);
-      ref.read(selectedGraphEntityIdProvider.notifier).setSelectedEntityId(
-        core_graph.EntityId.fromString(id),
-        source: SelectionSource.ui,
-      );
+      ref
+          .read(selectedGraphEntityIdProvider.notifier)
+          .setSelectedEntityId(
+            core_graph.EntityId.fromString(id),
+            source: SelectionSource.ui,
+          );
       return {'ok': true, 'id': id};
     },
   ),
@@ -1687,7 +1876,9 @@ List<AppCommand> _graphCommands() => [
           ploughGraph.deselectLink(link.id);
         }
       }
-      ref.read(selectedGraphEntityIdProvider.notifier).setSelectedEntityId(null, source: SelectionSource.ui);
+      ref
+          .read(selectedGraphEntityIdProvider.notifier)
+          .setSelectedEntityId(null, source: SelectionSource.ui);
       return {'ok': true};
     },
   ),
@@ -1707,11 +1898,20 @@ List<AppCommand> _recordEditorCommands() => [
     run: (ref, args) async {
       final entity = ref.read(record_editor.selectedEntityForEditorProvider);
       if (entity == null) {
-        return {'ok': true, 'selected': false, 'entity': null, 'properties': {}};
+        return {
+          'ok': true,
+          'selected': false,
+          'entity': null,
+          'properties': {},
+        };
       }
       // Merge saved properties with in-progress edits.
-      final savedProperties = ref.read(record_editor.selectedEntityPropertiesProvider);
-      final editingProperties = ref.read(record_editor.editingEntityPropertiesProvider);
+      final savedProperties = ref.read(
+        record_editor.selectedEntityPropertiesProvider,
+      );
+      final editingProperties = ref.read(
+        record_editor.editingEntityPropertiesProvider,
+      );
       final keys = ref.read(record_editor.selectedEntityPropertyKeysProvider);
       final merged = {...savedProperties, ...editingProperties};
       return {
@@ -1723,10 +1923,7 @@ List<AppCommand> _recordEditorCommands() => [
           'custom_id': entity.customId,
         },
         'property_keys': keys,
-        'properties': {
-          for (final key in keys)
-            key: merged[key],
-        },
+        'properties': {for (final key in keys) key: merged[key]},
       };
     },
   ),
@@ -1744,9 +1941,15 @@ List<AppCommand> _recordEditorCommands() => [
       final field = args['field'] as String?;
       final value = args['value'];
       if (field == null) {
-        return {'ok': false, 'code': CommandResultCode.badParams, 'error': 'field is required'};
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'field is required',
+        };
       }
-      ref.read(record_editor.editingEntityPropertiesProvider.notifier).updateProperty(field, value);
+      ref
+          .read(record_editor.editingEntityPropertiesProvider.notifier)
+          .updateProperty(field, value);
       return {'ok': true, 'field': field, 'value': value};
     },
   ),
@@ -1762,13 +1965,19 @@ List<AppCommand> _recordEditorCommands() => [
       return ref.read(record_editor.selectedEntityForEditorProvider) != null;
     },
     run: (ref, args) async {
-      final selectedEntity = ref.read(record_editor.selectedEntityForEditorProvider);
+      final selectedEntity = ref.read(
+        record_editor.selectedEntityForEditorProvider,
+      );
       if (selectedEntity == null) {
         return {'ok': false, 'error': 'no entity selected'};
       }
 
-      final editingProperties = ref.read(record_editor.editingEntityPropertiesProvider);
-      final propertyNameChanges = ref.read(record_editor.editingPropertyNameChangesProvider);
+      final editingProperties = ref.read(
+        record_editor.editingEntityPropertiesProvider,
+      );
+      final propertyNameChanges = ref.read(
+        record_editor.editingPropertyNameChangesProvider,
+      );
 
       final finalProperties = Map<String, dynamic>.from(editingProperties);
       for (final change in propertyNameChanges.entries) {
@@ -1812,7 +2021,9 @@ List<AppCommand> _recordEditorCommands() => [
 
       await dedicatedStorage.close();
 
-      ref.read(record_editor.editingPropertyNameChangesProvider.notifier).reset();
+      ref
+          .read(record_editor.editingPropertyNameChangesProvider.notifier)
+          .reset();
       ref.read(record_editor.editingEntityPropertiesProvider.notifier).reset();
       return {'ok': true};
     },

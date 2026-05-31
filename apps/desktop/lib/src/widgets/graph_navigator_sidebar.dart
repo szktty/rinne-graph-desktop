@@ -90,8 +90,9 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && query != _queryController.text) {
           _queryController.text = query;
-          _queryController.selection =
-              TextSelection.collapsed(offset: query.length);
+          _queryController.selection = TextSelection.collapsed(
+            offset: query.length,
+          );
         }
       });
     }
@@ -115,9 +116,10 @@ class _SearchTabContentState extends ConsumerState<_SearchTabContent> {
         if (searchError != null) _SearchErrorBanner(error: searchError),
         // Body: empty hint / executing / results
         Expanded(
-          child: isExecuting
-              ? _SearchExecutingIndicator()
-              : result == null
+          child:
+              isExecuting
+                  ? _SearchExecutingIndicator()
+                  : result == null
                   ? _SearchEmptyHint()
                   : _SearchResultList(result: result),
         ),
@@ -141,6 +143,16 @@ class _KeywordSearchField extends ConsumerStatefulWidget {
 }
 
 class _KeywordSearchFieldState extends ConsumerState<_KeywordSearchField> {
+  /// Resets the query field together with the results, error, and graph
+  /// highlight so the graph returns to its normal (un-dimmed) state.
+  void _clearSearch() {
+    widget.controller.clear();
+    ref.read(keywordSearchQueryProvider.notifier).clear();
+    ref.read(keywordSearchResultProvider.notifier).clear();
+    ref.read(searchErrorProvider.notifier).clearError();
+    ref.read(searchHighlightProvider.notifier).clear();
+  }
+
   Future<void> _executeSearch() async {
     final query = widget.controller.text;
     final service = ref.read(searchExecutionServiceProvider);
@@ -164,16 +176,20 @@ class _KeywordSearchFieldState extends ConsumerState<_KeywordSearchField> {
 
       if (!mounted) return;
 
-      final filteredNodes = filters.nodeLabels.isEmpty
-          ? result.nodes
-          : result.nodes
-              .where((n) => n.labels.any((l) => filters.nodeLabels.contains(l)))
-              .toList();
-      final filteredLinks = filters.linkTypes.isEmpty
-          ? result.links
-          : result.links
-              .where((l) => filters.linkTypes.contains(l.type))
-              .toList();
+      final filteredNodes =
+          filters.nodeLabels.isEmpty
+              ? result.nodes
+              : result.nodes
+                  .where(
+                    (n) => n.labels.any((l) => filters.nodeLabels.contains(l)),
+                  )
+                  .toList();
+      final filteredLinks =
+          filters.linkTypes.isEmpty
+              ? result.links
+              : result.links
+                  .where((l) => filters.linkTypes.contains(l.type))
+                  .toList();
 
       final newResult = SearchResult(
         nodes: filteredNodes,
@@ -185,10 +201,12 @@ class _KeywordSearchFieldState extends ConsumerState<_KeywordSearchField> {
       resultNotifier.setResult(newResult);
 
       // Update highlight IDs from result
-      ref.read(searchHighlightProvider.notifier).setIds(
-        nodeIds: filteredNodes.map((n) => n.id).toSet(),
-        linkIds: filteredLinks.map((l) => l.id).toSet(),
-      );
+      ref
+          .read(searchHighlightProvider.notifier)
+          .setIds(
+            nodeIds: filteredNodes.map((n) => n.id).toSet(),
+            linkIds: filteredLinks.map((l) => l.id).toSet(),
+          );
     } catch (e) {
       if (mounted) errorNotifier.setError(e.toString());
     } finally {
@@ -200,6 +218,7 @@ class _KeywordSearchFieldState extends ConsumerState<_KeywordSearchField> {
   Widget build(BuildContext context) {
     final themeData = ref.watch(effectiveThemeDataProvider);
     final colorScheme = ref.watch(effectiveFlutterColorSchemeProvider);
+    final query = ref.watch(keywordSearchQueryProvider);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 8.0),
@@ -211,6 +230,16 @@ class _KeywordSearchFieldState extends ConsumerState<_KeywordSearchField> {
             size: 18,
             color: colorScheme.onSurfaceVariant,
           ),
+          suffixIcon:
+              query.isEmpty
+                  ? null
+                  : IconButton(
+                    icon: const Icon(Icons.close, size: 16),
+                    tooltip: 'Clear search',
+                    splashRadius: 16,
+                    color: colorScheme.onSurfaceVariant,
+                    onPressed: _clearSearch,
+                  ),
           hintText: 'Enter keyword to search',
           isDense: true,
           contentPadding: const EdgeInsets.symmetric(
@@ -229,6 +258,14 @@ class _KeywordSearchFieldState extends ConsumerState<_KeywordSearchField> {
         ),
         onChanged: (value) {
           ref.read(keywordSearchQueryProvider.notifier).setQuery(value);
+          // Emptying the field clears the previous results and highlight so the
+          // graph returns to its normal (un-dimmed) state without needing the
+          // explicit Clear button.
+          if (value.trim().isEmpty) {
+            ref.read(keywordSearchResultProvider.notifier).clear();
+            ref.read(searchErrorProvider.notifier).clearError();
+            ref.read(searchHighlightProvider.notifier).clear();
+          }
         },
         onFieldSubmitted: (_) => _executeSearch(),
       ),
@@ -269,9 +306,7 @@ class _SearchFilterChips extends ConsumerWidget {
               label: const Text('All'),
               selected: filters.nodeLabels.isEmpty && filters.linkTypes.isEmpty,
               onSelected: (_) {
-                ref
-                    .read(keywordSearchFiltersStateProvider.notifier)
-                    .clear();
+                ref.read(keywordSearchFiltersStateProvider.notifier).clear();
               },
             ),
           ),
@@ -416,21 +451,13 @@ class _SearchResultList extends ConsumerWidget {
               onTap: () {
                 ref
                     .read(selectionStateProvider.notifier)
-                    .selectEntity(
-                      node.id,
-                      source: SelectionSource.external,
-                    );
+                    .selectEntity(node.id, source: SelectionSource.external);
               },
               onDoubleTap: () {
                 ref
                     .read(selectionStateProvider.notifier)
-                    .selectEntity(
-                      node.id,
-                      source: SelectionSource.external,
-                    );
-                ref
-                    .read(searchFocusTargetProvider.notifier)
-                    .focus(node.id);
+                    .selectEntity(node.id, source: SelectionSource.external);
+                ref.read(searchFocusTargetProvider.notifier).focus(node.id);
               },
             ),
         ],
@@ -447,10 +474,7 @@ class _SearchResultList extends ConsumerWidget {
               onTap: () {
                 ref
                     .read(selectionStateProvider.notifier)
-                    .selectEntity(
-                      link.id,
-                      source: SelectionSource.external,
-                    );
+                    .selectEntity(link.id, source: SelectionSource.external);
               },
             ),
         ],
@@ -497,8 +521,7 @@ class _NodeResultRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label =
-        node.labels.isNotEmpty ? node.labels.first : '(No label)';
+    final label = node.labels.isNotEmpty ? node.labels.first : '(No label)';
     final secondaryLabel =
         node.labels.length > 1 ? node.labels.skip(1).first : null;
 
@@ -509,9 +532,10 @@ class _NodeResultRow extends StatelessWidget {
         isSelected: false,
         leading: Icon(FondeIcons.circle, size: 16, color: nodeColor),
         title: AppText(label, variant: AppTextVariant.bodyText),
-        trailing: secondaryLabel != null
-            ? _LabelChip(label: secondaryLabel, color: nodeColor)
-            : null,
+        trailing:
+            secondaryLabel != null
+                ? _LabelChip(label: secondaryLabel, color: nodeColor)
+                : null,
         onTap: onTap,
         onLongPress: onDoubleTap,
       ),
@@ -555,38 +579,39 @@ class _LinkResultRow extends StatelessWidget {
           color: colorScheme.onSurfaceVariant,
         ),
         title: AppText(link.type, variant: AppTextVariant.bodyText),
-        subtitle: hasEndpoints
-            ? Row(
-                children: [
-                  Icon(FondeIcons.circle, size: 10, color: nodeColor),
-                  const SizedBox(width: 3),
-                  Flexible(
-                    child: AppText(
-                      src ?? '?',
-                      variant: AppTextVariant.captionText,
-                      maxLines: 1,
+        subtitle:
+            hasEndpoints
+                ? Row(
+                  children: [
+                    Icon(FondeIcons.circle, size: 10, color: nodeColor),
+                    const SizedBox(width: 3),
+                    Flexible(
+                      child: AppText(
+                        src ?? '?',
+                        variant: AppTextVariant.captionText,
+                        maxLines: 1,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Icon(
-                      FondeIcons.arrowRight,
-                      size: 10,
-                      color: colorScheme.onSurfaceVariant,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Icon(
+                        FondeIcons.arrowRight,
+                        size: 10,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                     ),
-                  ),
-                  Icon(FondeIcons.circle, size: 10, color: nodeColor),
-                  const SizedBox(width: 3),
-                  Flexible(
-                    child: AppText(
-                      tgt ?? '?',
-                      variant: AppTextVariant.captionText,
-                      maxLines: 1,
+                    Icon(FondeIcons.circle, size: 10, color: nodeColor),
+                    const SizedBox(width: 3),
+                    Flexible(
+                      child: AppText(
+                        tgt ?? '?',
+                        variant: AppTextVariant.captionText,
+                        maxLines: 1,
+                      ),
                     ),
-                  ),
-                ],
-              )
-            : null,
+                  ],
+                )
+                : null,
         onTap: onTap,
       ),
     );
@@ -608,10 +633,7 @@ class _LabelChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
-      child: Text(
-        label,
-        style: TextStyle(fontSize: 11, color: color),
-      ),
+      child: Text(label, style: TextStyle(fontSize: 11, color: color)),
     );
   }
 }
@@ -647,9 +669,10 @@ class _SearchResultFooter extends ConsumerWidget {
                   : Icons.visibility_outlined,
               size: 16,
             ),
-            tooltip: highlightState.dimEnabled
-                ? 'Dim off'
-                : 'Dim non-matching nodes',
+            tooltip:
+                highlightState.dimEnabled
+                    ? 'Dim off'
+                    : 'Dim non-matching nodes',
             onPressed: () {
               ref.read(searchHighlightProvider.notifier).toggleDim();
             },

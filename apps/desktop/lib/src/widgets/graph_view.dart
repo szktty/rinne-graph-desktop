@@ -594,9 +594,18 @@ class _AppLinkRenderer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final highlightState = ref.watch(searchHighlightProvider);
     final linkEntityId = core_graph.EntityId.fromString(link.id.value);
-    final isDimmed =
-        highlightState.isActive &&
-        !highlightState.linkIds.contains(linkEntityId);
+    // A link stays highlighted (not dimmed) when the link itself matched the
+    // search, or when both of its endpoint nodes matched.  The latter keeps the
+    // connections between matched nodes visible, preserving the mental model of
+    // how the results relate, even though the link's own properties did not
+    // contain the keyword.
+    final sourceEntityId = core_graph.EntityId.fromString(link.source.id.value);
+    final targetEntityId = core_graph.EntityId.fromString(link.target.id.value);
+    final isHighlighted =
+        highlightState.linkIds.contains(linkEntityId) ||
+        (highlightState.nodeIds.contains(sourceEntityId) &&
+            highlightState.nodeIds.contains(targetEntityId));
+    final isDimmed = highlightState.isActive && !isHighlighted;
 
     final label = link.properties['label'] as String?;
     final showLabel = label != null && label.isNotEmpty;
