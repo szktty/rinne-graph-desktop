@@ -407,22 +407,34 @@ final class SearchPatternTranslatorProvider
 String _$searchPatternTranslatorHash() =>
     r'b10ded99d677a6c0c8cfe57cb2ee228f29118cb1';
 
-/// Keyword search input text
+/// Keyword search input text.
+///
+/// Kept alive so the query, results, and highlight survive when the user leaves
+/// the search tab (which unmounts the search UI) and so commands that populate
+/// these providers before the tab is shown are not discarded by auto-dispose.
 
 @ProviderFor(KeywordSearchQuery)
 final keywordSearchQueryProvider = KeywordSearchQueryProvider._();
 
-/// Keyword search input text
+/// Keyword search input text.
+///
+/// Kept alive so the query, results, and highlight survive when the user leaves
+/// the search tab (which unmounts the search UI) and so commands that populate
+/// these providers before the tab is shown are not discarded by auto-dispose.
 final class KeywordSearchQueryProvider
     extends $NotifierProvider<KeywordSearchQuery, String> {
-  /// Keyword search input text
+  /// Keyword search input text.
+  ///
+  /// Kept alive so the query, results, and highlight survive when the user leaves
+  /// the search tab (which unmounts the search UI) and so commands that populate
+  /// these providers before the tab is shown are not discarded by auto-dispose.
   KeywordSearchQueryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'keywordSearchQueryProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -444,9 +456,13 @@ final class KeywordSearchQueryProvider
 }
 
 String _$keywordSearchQueryHash() =>
-    r'02f59f667c9b5f5c6ae94fea6b652fca99e79180';
+    r'df3c68e8675c1695efa87276875c4a27031087fe';
 
-/// Keyword search input text
+/// Keyword search input text.
+///
+/// Kept alive so the query, results, and highlight survive when the user leaves
+/// the search tab (which unmounts the search UI) and so commands that populate
+/// these providers before the tab is shown are not discarded by auto-dispose.
 
 abstract class _$KeywordSearchQuery extends $Notifier<String> {
   String build();
@@ -477,7 +493,7 @@ final class KeywordSearchFiltersStateProvider
         argument: null,
         retry: null,
         name: r'keywordSearchFiltersStateProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -499,7 +515,7 @@ final class KeywordSearchFiltersStateProvider
 }
 
 String _$keywordSearchFiltersStateHash() =>
-    r'81e75bf46e017349b5f2bba238d8fcd76eed57cb';
+    r'd7018b4defd71488f5504970ca9febb82f713488';
 
 abstract class _$KeywordSearchFiltersState
     extends $Notifier<KeywordSearchFilters> {
@@ -535,7 +551,7 @@ final class KeywordSearchResultProvider
         argument: null,
         retry: null,
         name: r'keywordSearchResultProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -557,7 +573,7 @@ final class KeywordSearchResultProvider
 }
 
 String _$keywordSearchResultHash() =>
-    r'3dca6e3fa92aabd5c3d768c1b406c6ccea02079c';
+    r'03508bd18ba23b8f04131285053eaa2880cadc5c';
 
 /// Keyword search result (separate from Path Search result)
 
@@ -594,7 +610,7 @@ final class KeywordSearchExecutingProvider
         argument: null,
         retry: null,
         name: r'keywordSearchExecutingProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -616,7 +632,7 @@ final class KeywordSearchExecutingProvider
 }
 
 String _$keywordSearchExecutingHash() =>
-    r'fd2487c2ba23320cf9452b2dfe4f314322249d30';
+    r'1590316dec9f7d09b6798d944335f210ce1f022b';
 
 /// Keyword search executing flag (separate from Path Search)
 
@@ -739,7 +755,7 @@ final class SearchHighlightProvider
         argument: null,
         retry: null,
         name: r'searchHighlightProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -760,7 +776,7 @@ final class SearchHighlightProvider
   }
 }
 
-String _$searchHighlightHash() => r'60a3cc65d936e533ce5da23358c33c2c4a0431ad';
+String _$searchHighlightHash() => r'3365446fc58028f0536fe21a171636a423b5e71a';
 
 abstract class _$SearchHighlight extends $Notifier<SearchHighlightState> {
   SearchHighlightState build();

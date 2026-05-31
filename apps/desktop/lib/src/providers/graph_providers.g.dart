@@ -137,7 +137,7 @@ final class GraphViewCacheProvider
         argument: null,
         retry: null,
         name: r'graphViewCacheProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -164,7 +164,7 @@ final class GraphViewCacheProvider
   }
 }
 
-String _$graphViewCacheHash() => r'6c71bab1955c3150ac08208421edb4a50e0fb204';
+String _$graphViewCacheHash() => r'b7d7093635435c4f4a5e3eace6e645574098d2be';
 
 /// Graph operations actions provider
 

@@ -438,6 +438,38 @@ class _SearchResultList extends ConsumerWidget {
         n.id: n.labels.isNotEmpty ? n.labels.first : '(No label)',
     };
 
+    // Tapping a result node focuses the graph on that node and its 1-hop
+    // neighbourhood (dimming the rest of the result set), or, when the node is
+    // already focused, returns to highlighting the whole result set.
+    void toggleFocus(core_graph.EntityId nodeId) {
+      final highlight = ref.read(searchHighlightProvider.notifier);
+      if (ref.read(searchHighlightProvider).focusedNodeId == nodeId) {
+        highlight.clearFocus(
+          nodeIds: result.nodes.map((n) => n.id).toSet(),
+          linkIds: result.links.map((l) => l.id).toSet(),
+        );
+        return;
+      }
+      final graph = ref.read(core_graph.activeGraphProvider);
+      if (graph == null) return;
+      final neighborNodeIds = <core_graph.EntityId>{};
+      final neighborLinkIds = <core_graph.EntityId>{};
+      for (final link in graph.links.values) {
+        if (link.sourceId == nodeId) {
+          neighborLinkIds.add(link.id);
+          neighborNodeIds.add(link.targetId);
+        } else if (link.targetId == nodeId) {
+          neighborLinkIds.add(link.id);
+          neighborNodeIds.add(link.sourceId);
+        }
+      }
+      highlight.focusNeighborhood(
+        nodeId: nodeId,
+        neighborNodeIds: neighborNodeIds,
+        neighborLinkIds: neighborLinkIds,
+      );
+    }
+
     return ListView(
       children: [
         if (result.nodes.isNotEmpty) ...[
@@ -452,6 +484,7 @@ class _SearchResultList extends ConsumerWidget {
                 ref
                     .read(selectionStateProvider.notifier)
                     .selectEntity(node.id, source: SelectionSource.external);
+                toggleFocus(node.id);
               },
               onDoubleTap: () {
                 ref

@@ -185,8 +185,12 @@ SearchPatternTranslator searchPatternTranslator(Ref ref) {
 // Keyword search providers
 // ---------------------------------------------------------------------------
 
-/// Keyword search input text
-@riverpod
+/// Keyword search input text.
+///
+/// Kept alive so the query, results, and highlight survive when the user leaves
+/// the search tab (which unmounts the search UI) and so commands that populate
+/// these providers before the tab is shown are not discarded by auto-dispose.
+@Riverpod(keepAlive: true)
 class KeywordSearchQuery extends _$KeywordSearchQuery {
   @override
   String build() => '';
@@ -214,7 +218,7 @@ class KeywordSearchFilters {
   );
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class KeywordSearchFiltersState extends _$KeywordSearchFiltersState {
   @override
   KeywordSearchFilters build() => const KeywordSearchFilters();
@@ -243,7 +247,7 @@ class KeywordSearchFiltersState extends _$KeywordSearchFiltersState {
 }
 
 /// Keyword search result (separate from Path Search result)
-@riverpod
+@Riverpod(keepAlive: true)
 class KeywordSearchResult extends _$KeywordSearchResult {
   @override
   SearchResult? build() => null;
@@ -253,7 +257,7 @@ class KeywordSearchResult extends _$KeywordSearchResult {
 }
 
 /// Keyword search executing flag (separate from Path Search)
-@riverpod
+@Riverpod(keepAlive: true)
 class KeywordSearchExecuting extends _$KeywordSearchExecuting {
   @override
   bool build() => false;
@@ -284,36 +288,53 @@ Future<List<String>> availableLinkTypes(Ref ref) async {
 // Search highlight and focus providers
 // ---------------------------------------------------------------------------
 
+/// Sentinel used so [SearchHighlightState.copyWith] can distinguish "leave
+/// [focusedNodeId] unchanged" from "set it to null".
+const Object _unset = Object();
+
 /// State for dimming non-matching nodes in the graph view.
 ///
-/// [nodeIds] is the set of node IDs from the latest search result.
+/// [nodeIds] is the set of highlighted node IDs; [linkIds] the highlighted link
+/// IDs. While focused (see [focusedNodeId]) these hold the focused node and its
+/// 1-hop neighbourhood instead of the full search result set.
 /// [dimEnabled] controls whether the dim effect is active.
-/// Dimming is only applied when both [nodeIds] is non-empty and [dimEnabled] is true.
+/// Dimming is only applied when [dimEnabled] is true and at least one of
+/// [nodeIds]/[linkIds] is non-empty.
 class SearchHighlightState {
   final Set<core_graph.EntityId> nodeIds;
   final Set<core_graph.EntityId> linkIds;
   final bool dimEnabled;
 
+  /// The node whose neighbourhood the highlight is currently focused on, or
+  /// null when showing the full search result set.
+  final core_graph.EntityId? focusedNodeId;
+
   const SearchHighlightState({
     this.nodeIds = const {},
     this.linkIds = const {},
     this.dimEnabled = false,
+    this.focusedNodeId,
   });
 
   SearchHighlightState copyWith({
     Set<core_graph.EntityId>? nodeIds,
     Set<core_graph.EntityId>? linkIds,
     bool? dimEnabled,
+    Object? focusedNodeId = _unset,
   }) => SearchHighlightState(
     nodeIds: nodeIds ?? this.nodeIds,
     linkIds: linkIds ?? this.linkIds,
     dimEnabled: dimEnabled ?? this.dimEnabled,
+    focusedNodeId:
+        identical(focusedNodeId, _unset)
+            ? this.focusedNodeId
+            : focusedNodeId as core_graph.EntityId?,
   );
 
   bool get isActive => dimEnabled && (nodeIds.isNotEmpty || linkIds.isNotEmpty);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SearchHighlight extends _$SearchHighlight {
   @override
   SearchHighlightState build() => const SearchHighlightState();
@@ -332,6 +353,33 @@ class SearchHighlight extends _$SearchHighlight {
         nodeIds: nodeIds,
         linkIds: linkIds,
         dimEnabled: true,
+        focusedNodeId: null,
+      );
+
+  /// Narrows the highlight to [nodeId] and its 1-hop neighbourhood so the graph
+  /// dims everything outside that neighbourhood, letting the user concentrate on
+  /// the connections of a single result. Toggle back with [clearFocus].
+  void focusNeighborhood({
+    required core_graph.EntityId nodeId,
+    required Set<core_graph.EntityId> neighborNodeIds,
+    required Set<core_graph.EntityId> neighborLinkIds,
+  }) =>
+      state = state.copyWith(
+        nodeIds: {nodeId, ...neighborNodeIds},
+        linkIds: neighborLinkIds,
+        dimEnabled: true,
+        focusedNodeId: nodeId,
+      );
+
+  /// Restores the highlight to the full search result set, ending focus mode.
+  void clearFocus({
+    required Set<core_graph.EntityId> nodeIds,
+    required Set<core_graph.EntityId> linkIds,
+  }) =>
+      state = state.copyWith(
+        nodeIds: nodeIds,
+        linkIds: linkIds,
+        focusedNodeId: null,
       );
 
   void toggleDim() => state = state.copyWith(dimEnabled: !state.dimEnabled);
