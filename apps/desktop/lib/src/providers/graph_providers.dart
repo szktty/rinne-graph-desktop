@@ -40,10 +40,13 @@ core_graph.GraphStorage? activeStackGraphStorage(Ref ref) {
   }
 
   debugPrint(
-    '[activeStackGraphStorage] Creating RinneGraphStorage for: $graphDbPath',
+    '[activeStackGraphStorage] Creating ChiffonStorage for: $graphDbPath',
   );
 
-  final storage = core_graph.RinneGraphStorage(graphDbPath);
+  final storage = core_graph.ChiffonStorage(
+    path: graphDbPath,
+    schema: core_graph.ChiffonSchemaGenerator.minimalSchema,
+  );
 
   ref.onDispose(() async {
     debugPrint('[activeStackGraphStorage] Disposing storage for: $graphDbPath');

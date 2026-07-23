@@ -1999,7 +1999,10 @@ List<AppCommand> _recordEditorCommands() => [
         return {'ok': false, 'error': 'no active stack'};
       }
       final graphDbPath = '${activeStack.directory.path}/data/graph.db';
-      final dedicatedStorage = core_graph.RinneGraphStorage(graphDbPath);
+      final dedicatedStorage = core_graph.ChiffonStorage(
+        path: graphDbPath,
+        schema: core_graph.ChiffonSchemaGenerator.minimalSchema,
+      );
       await dedicatedStorage.initialize();
 
       final saveContext = core_graph.GraphContext(storage: dedicatedStorage);

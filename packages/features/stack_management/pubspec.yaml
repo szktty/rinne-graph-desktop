@@ -25,10 +25,6 @@ dependencies:
     path: ../../core/foundation_flutter
 
   # External packages
-  rinne_graph:
-    git:
-      url: https://github.com/szktty/rinne-graph.git
-      ref: develop
   file_picker: ^10.1.0
   path: ^1.9.0
 

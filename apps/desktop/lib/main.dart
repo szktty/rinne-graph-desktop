@@ -19,6 +19,7 @@ import 'package:core_app_config/core_app_config.dart';
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
 import 'package:core_settings/core_settings.dart';
 import 'package:core_themes/core_themes.dart';
+import 'package:chiffondb/chiffondb.dart';
 
 import 'src/widgets/menu_builder.dart';
 import 'src/widgets/main_app_shell.dart';
@@ -50,6 +51,12 @@ Future<void> main(List<String> args) async {
   // Initialize Flutter Binding
   WidgetsFlutterBinding.ensureInitialized();
   debugPrint('WidgetsFlutterBinding ensured');
+
+  // Initialize the ChiffonDB native bridge before any Connection.open/create.
+  // core_graph_common stays Pure Dart, so the frb init lives here in the app
+  // entry point rather than inside the storage layer.
+  await ChiffonDb.init();
+  debugPrint('ChiffonDb initialized');
 
   // Initialize debug logger (disabled by default)
   debugLogger.initialize(enabled: false);

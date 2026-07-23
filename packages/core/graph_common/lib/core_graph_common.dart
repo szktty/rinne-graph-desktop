@@ -36,18 +36,18 @@ export 'src/context/transaction_context.dart';
 export 'src/query/graph_query.dart';
 export 'src/query/predicate.dart';
 export 'src/query/sort_descriptor.dart';
-export 'src/query/traversal_converter.dart';
+export 'src/query/chiffon_query_converter.dart';
 
 // Export storage
 export 'src/storage/graph_storage.dart';
 export 'src/storage/in_memory_graph_storage.dart';
-export 'src/storage/rinne_graph_storage.dart';
+export 'src/storage/chiffon_storage.dart';
+export 'src/storage/chiffon_transaction.dart';
+export 'src/storage/chiffon_schema_generator.dart';
 
 // Export metadata management
 export 'src/metadata/label_metadata.dart';
-export 'src/metadata/label_service.dart';
 export 'src/metadata/label_storage.dart';
-export 'src/metadata/rinne_graph_label_storage.dart';
 
 // Export global property type system
 export 'src/property_type/index.dart';

@@ -410,12 +410,11 @@ class StackTemplateInstaller {
       final dbPath = path.join(stackDir.path, 'data', 'graph.db');
       debugPrint('[ManifestStackInstaller] Database path: $dbPath');
 
-      // Initialize RinneGraphStorage
-      final storage = RinneGraphStorage(dbPath);
-      await storage.initialize();
-      debugPrint(
-        '[ManifestStackInstaller] RinneGraphStorage initialization completed',
+      final storage = ChiffonStorage(
+        path: dbPath,
+        schema: ChiffonSchemaGenerator.minimalSchema,
       );
+      await storage.initialize();
 
       // Load schema if exists
       SchemaDefinition? schema;
@@ -537,9 +536,8 @@ class StackTemplateInstaller {
     }
   }
 
-  /// Import node to RinneGraph database
   Future<void> _importNode(
-    RinneGraphStorage storage,
+    GraphStorage storage,
     Map<String, dynamic> nodeData,
     SchemaDefinition? schema,
   ) async {
@@ -566,9 +564,8 @@ class StackTemplateInstaller {
     );
   }
 
-  /// Import link to RinneGraph database
   Future<void> _importLink(
-    RinneGraphStorage storage,
+    GraphStorage storage,
     Map<String, dynamic> linkData,
     SchemaDefinition? schema,
   ) async {

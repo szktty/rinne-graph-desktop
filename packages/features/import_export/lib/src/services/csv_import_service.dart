@@ -344,7 +344,10 @@ class CsvImportService {
       onProgress?.call(0.4);
 
       final graphDbPath = '${stack.directory.path}/data/graph.db';
-      final storage = RinneGraphStorage(graphDbPath);
+      final storage = ChiffonStorage(
+        path: graphDbPath,
+        schema: ChiffonSchemaGenerator.minimalSchema,
+      );
       await storage.initialize();
 
       final graphContext = GraphContext(storage: storage);

@@ -10,7 +10,6 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
-import 'package:rinne_graph/rinne_graph.dart' as rg;
 import 'package:path_provider/path_provider.dart';
 
 import '../models/import_result.dart';
@@ -111,26 +110,9 @@ class StackCreationService {
   ) async {
     final dbPath = '${stackDir.path}/data/graph.db';
 
-    try {
-      // Create appropriate database structure using RinneGraph
-      // Convert path to absolute path
-      final absolutePath = File(dbPath).absolute.path;
-      final graph = await rg.Graph.open(absolutePath);
-
-      // Close properly if initialization is successful
-      await graph.close();
-
-      debugPrint(
-        '[_createSimpleGraphData] Created RinneGraph database: $dbPath',
-      );
-    } catch (e) {
-      debugPrint(
-        '[_createSimpleGraphData] Failed to create RinneGraph database: $e',
-      );
-      // Fallback: Create an empty file
-      final graphFile = File(dbPath);
-      await graphFile.create();
-    }
+    await core_graph.DatabaseCreator.createEmptyDatabase(
+      File(dbPath).absolute.path,
+    );
 
     // Also create a simple JSON file for logging
     final debugFile = File('${stackDir.path}/data/debug_data.json');

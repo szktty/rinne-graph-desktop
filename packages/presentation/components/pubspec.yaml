@@ -22,7 +22,7 @@ dependencies:
   uuid: ^4.5.1
   figma_squircle: ^0.6.3
   textfield_tags: ^3.0.1
-  lucide_icons_flutter: ^3.0.5
+  lucide_icons_flutter: ^3.1.15
   popover: ^0.3.1
   material_table_view: ^5.5.0
   pluto_grid: ^8.0.0

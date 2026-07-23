@@ -32,6 +32,6 @@ Pure Dart packages use `_common` suffix; Flutter-dependent packages use `_flutte
 ```
 MyProject.stack/
 ├── meta/info.json      # Stack metadata
-├── data/graph.db       # SQLite RinneGraph database
+├── data/graph.db       # ChiffonDB database file
 └── assets/             # Attached files
 ```

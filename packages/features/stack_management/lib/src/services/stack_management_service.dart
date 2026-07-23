@@ -11,7 +11,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:core_stack_flutter/core_stack.dart' as core_stack;
 import 'package:core_foundation_flutter/core_foundation_flutter.dart';
-import 'package:rinne_graph/rinne_graph.dart' as rg;
+import 'package:core_graph_common/core_graph_common.dart';
 import 'package:path/path.dart' as path;
 import '../widgets/dialogs/stack_creation_dialog.dart';
 
@@ -207,26 +207,7 @@ class StackManagementService {
   /// Creates an empty graph database
   static Future<void> _createEmptyGraphDatabase(Directory stackDir) async {
     final dbPath = path.join(stackDir.path, 'data', 'graph.db');
-
-    try {
-      // Create appropriate database structure using RinneGraph
-      // Convert path to absolute path
-      final absolutePath = File(dbPath).absolute.path;
-      final graph = await rg.Graph.open(absolutePath);
-
-      // Close properly if initialization is successful
-      await graph.close();
-
-      debugPrint(
-        '[_createEmptyGraphDatabase] Created RinneGraph database: $absolutePath',
-      );
-    } catch (e) {
-      debugPrint(
-        '[_createEmptyGraphDatabase] Failed to create RinneGraph database: $e',
-      );
-      // Fallback: Create an empty file
-      final dbFile = File(dbPath);
-      await dbFile.create();
-    }
+    final absolutePath = File(dbPath).absolute.path;
+    await DatabaseCreator.createEmptyDatabase(absolutePath);
   }
 }

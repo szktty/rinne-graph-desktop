@@ -84,8 +84,8 @@ flutter build windows
 
 The following libraries were developed primarily for RinneGraph and are maintained alongside it:
 
+- **[ChiffonDB](https://github.com/szktty/chiffondb)** — Embedded property-graph database written in Rust ([`chiffondb`](https://pub.dev/packages/chiffondb) Dart bindings)
 - **[Fonde UI](https://github.com/szktty/fonde-ui)** — Desktop-first UI components
-- **[rinne_graph](https://github.com/szktty/rinne_graph)** — Embedded graph database backed by SQLite
 - **[plough](https://github.com/szktty/plough)** — Network graph rendering library for Flutter
 - **[kiri_check](https://github.com/szktty/kiri_check)** — Property-based testing library for Dart
 

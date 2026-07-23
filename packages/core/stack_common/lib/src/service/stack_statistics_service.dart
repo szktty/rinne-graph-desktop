@@ -52,23 +52,13 @@ class StackStatisticsService {
 
       // Get database statistics using GraphStorage
       try {
-        print(
-          '[StackStatisticsService] RinneGraphStorage initialization started',
+        final storage = ChiffonStorage(
+          path: dbPath,
+          schema: ChiffonSchemaGenerator.minimalSchema,
         );
-        final storage = RinneGraphStorage(dbPath);
         await storage.initialize();
-        print(
-          '[StackStatisticsService] RinneGraphStorage initialization completed',
-        );
-
-        print('[StackStatisticsService] Start getting database statistics');
         final statistics = await storage.getStatistics();
-        print(
-          '[StackStatisticsService] Database statistics obtained: nodes=${statistics.nodeCount}, links=${statistics.linkCount}',
-        );
-
         await storage.close();
-        print('[StackStatisticsService] RinneGraphStorage connection closed');
 
         return StackStatisticsInfo(
           nodeCount: statistics.nodeCount,

@@ -716,6 +716,46 @@ animationDuration is Duration.zero (instant tab switch).
 
 Full tab view combining tab bar + content area.
 
+```dart
+FondeTabView({
+  required List<FondeTab> tabs,
+  required List<FondeTabContent> contents,
+  String? initialSelectedTabId,   // initial selection (uncontrolled mode)
+  String? selectedTabId,          // external selection (controlled mode); null = uncontrolled
+  void Function(String tabId)? onTabSelected,
+  void Function(String tabId)? onTabClosed,
+  FondeTabBarPosition tabBarPosition = FondeTabBarPosition.top,
+  double tabBarHeight = 48.0,
+  Color? tabBarBackgroundColor,
+  Color? contentBackgroundColor,
+  bool showDivider = true,
+  Color? dividerColor,
+  double dividerThickness = 1.0,
+  EdgeInsets contentPadding = EdgeInsets.zero,
+  Widget Function(...)? tabBarBuilder,
+  bool disableZoom = false,
+  TabAlignment alignment = TabAlignment.center,
+})
+
+FondeTabContent({required String id, required Widget content})
+
+enum FondeTabBarPosition { top, bottom }
+```
+
+**Controlled vs uncontrolled mode:**
+- `selectedTabId == null` (default): uncontrolled — internal state manages selection; `initialSelectedTabId` sets the initial value.
+- `selectedTabId != null`: controlled — the tab view always reflects the externally supplied value. `didUpdateWidget` detects changes and calls `setState`. Tab clicks call `onTabSelected` only; internal state is not updated.
+
+Controlled mode usage (e.g. driven by a state provider):
+```dart
+FondeTabView(
+  tabs: tabs,
+  contents: contents,
+  selectedTabId: currentTabId,   // e.g. from Riverpod/ValueNotifier
+  onTabSelected: (tabId) => ref.read(myProvider.notifier).setTab(tabId),
+)
+```
+
 ---
 
 ## Button widgets

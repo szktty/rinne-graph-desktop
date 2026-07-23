@@ -58,6 +58,9 @@ dependencies:
   core_app_config:
     path: ../../packages/core/app_config
 
+  # Native graph DB bridge (frb init lives in main.dart)
+  chiffondb: ^0.2.0
+
   features_stack_management:
     path: ../../packages/features/stack_management
   features_settings:
@@ -82,7 +85,7 @@ dependencies:
     path: ../../packages/core/workflow
   presentation_workflow:
     path: ../../packages/presentation/workflow
-  lucide_icons_flutter: ^3.0.5
+  lucide_icons_flutter: ^3.1.15
   plough:
     git:
       url: https://github.com/szktty/plough.git
@@ -102,11 +105,6 @@ dependencies:
   fonde_ui:
     git:
       url: https://github.com/szktty/fonde-ui.git
-      ref: develop
-
-  rinne_graph:
-    git:
-      url: https://github.com/szktty/rinne-graph.git
       ref: develop
 
   core_stack_common: any

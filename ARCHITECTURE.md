@@ -10,7 +10,7 @@ RinneGraph is a "graph-based personal database for organically managing and orga
 
 ### Core Concepts
 
-- **Robustness as a Database**: Reliability based on SQLite.
+- **Robustness as a Database**: Reliability based on ChiffonDB, an embedded property-graph database.
 - **Usability as an Information Organizer**: Intuitive and user-friendly UI.
 - **Graph Structure**: Natural representation of relationships through nodes and links.
 
@@ -95,7 +95,7 @@ rinne-graph-desktop/
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    RinneGraph (SQLite Database)                  │
+│                    ChiffonDB (Graph Database)                   │
 │  ┌───────────────────────────────────────────────────────────┐  │
 │  │                   Property Graph Model                     │  │
 │  │         Nodes ◄────── Links ──────► Nodes                 │  │
@@ -110,7 +110,7 @@ rinne-graph-desktop/
 | Item | Details |
 |---|---|
 | **Description** | The main user interface of the application. |
-| **Technology** | Flutter 3.41.2, Dart 3.11+ |
+| **Technology** | Flutter 3.44.7, Dart 3.12+ |
 | **State Management** | Riverpod |
 | **Deployment** | macOS App Bundle, Windows Executable, Linux Executable |
 
@@ -137,14 +137,14 @@ rinne-graph-desktop/
 
 ## 5. Data Store
 
-### 5.1. RinneGraph (Graph Database)
+### 5.1. ChiffonDB (Graph Database)
 
 | Item | Details |
 |---|---|
-| **Type** | Embedded graph database built on SQLite. |
+| **Type** | Embedded graph database (custom binary format). |
 | **Purpose** | Persistence of nodes, links, and their properties. |
-| **Model** | Extended Property Graph Model. |
-| **Key Tables** | `nodes`, `links`, `properties`, `labels`. |
+| **Model** | Property Graph Model with schema DSL. RinneGraph's schemaless stacks are represented on a fixed meta-schema (`_Entity` node / `_Link` edge; user labels as dynamic labels, user properties under a `props: Json` field). |
+| **Bindings** | Rust core via `flutter_rust_bridge` (`chiffondb` Dart package). |
 
 ### 5.2. Stack Structure
 
@@ -155,7 +155,7 @@ MyProject.stack/
 ├── meta/
 │   └── info.json           # Stack metadata
 ├── data/
-│   └── graph.db            # RinneGraph SQLite file
+│   └── graph.db            # ChiffonDB database file
 └── assets/                 # Attached files
 ```
 
@@ -255,8 +255,8 @@ Presentation Layer ──► Features Layer ──► Core Layer ──► Found
 
 | Tool | Version | Purpose |
 |---|---|---|
-| Flutter | 3.41.2 | UI Framework |
-| Dart | 3.11.0+ | Programming Language |
+| Flutter | 3.44.7 | UI Framework |
+| Dart | 3.12.0+ | Programming Language |
 | Melos | Latest | Monorepo Management |
 
 ### Key Commands

@@ -15,7 +15,7 @@ dependencies:
   flutter_riverpod: ^3.0.0
   riverpod_annotation: ^4.0.0
   shared_preferences: ^2.2.2
-  lucide_icons_flutter: ^3.0.5
+  lucide_icons_flutter: ^3.1.15
   core_foundation_flutter:
     path: ../../core/foundation_flutter
   core_app_config:

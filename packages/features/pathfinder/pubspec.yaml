@@ -19,7 +19,7 @@ dependencies:
     path: ../../presentation/components
   flutter:
     sdk: flutter
-  lucide_icons_flutter: ^3.0.5
+  lucide_icons_flutter: ^3.1.15
   flutter_riverpod: ^3.0.0
   riverpod_annotation: ^4.0.0
 

@@ -89,7 +89,7 @@ Data classes use `@freezed` for immutability and `copyWith`. Run code generation
 ### Stack API Architecture
 
 Three packages collaborate for stack operations — see `docs/stack/stack_api_architecture.md`:
-1. **`core_graph_common`** — Graph database lifecycle (`GraphContext`, `RinneGraphStorage`)
+1. **`core_graph_common`** — Graph database lifecycle (`GraphContext`, `ChiffonStorage`)
 2. **`core_stack_common`** — Stack directory structure & metadata (`StackService`, `StackMetadataService`)
 3. **`core_stack_flutter`** — Riverpod integration (`activeStackProvider`, `StackActions`)
 
@@ -97,7 +97,7 @@ Stack on-disk format:
 ```
 MyProject.stack/
 ├── meta/info.json      # Stack metadata
-├── data/graph.db       # SQLite RinneGraph database
+├── data/graph.db       # ChiffonDB database file
 └── assets/             # Attached files
 ```
 
@@ -111,15 +111,15 @@ Graph views use free-position widgets (via `plough` package). Avoid excessive wi
 
 ## External Package Context
 
-The `llms/` directory stores `llms-full.txt` context files for custom packages (`rinne_graph`, `kiri_check`, `plough`). These are gitignored — check if they exist before working on those packages.
+The `llms/` directory stores `llms-full.txt` context files for custom packages (`kiri_check`, `plough`). These are gitignored — check if they exist before working on those packages.
 
 ## Custom Package Ownership
 
-`rinne_graph` and `plough` are authored by the same developer as this app. Their sources are located at:
-- `rinne_graph`: `../../rinne-graph/` (relative to this repo root)
+`ChiffonDB`, `plough`, and `fonde-ui` are authored by the same developer as this app. Their sources are located at:
+- `ChiffonDB`: `../chiffondb/chiffondb/` (Rust core, relative to this repo root); Dart bindings in `../chiffondb/chiffondb-dart/`. Referenced via `pubspec_overrides.yaml` for local development; the published package is `chiffondb` on pub.dev.
 - `plough`: locate via `find` or `llms/` context
 
-**When a bug or design issue in `rinne_graph` or `plough` forces an awkward workaround in app code, fix the library itself rather than patching the app.** Because the author controls all three codebases, the right fix is in the right place. Do not introduce ad-hoc workarounds in the app when the root cause is a library API design problem.
+**When a bug or design issue in `ChiffonDB` or `plough` forces an awkward workaround in app code, fix the library itself rather than patching the app.** Because the author controls all three codebases, the right fix is in the right place. Do not introduce ad-hoc workarounds in the app when the root cause is a library API design problem.
 
 ## Work Rules
 
@@ -153,7 +153,7 @@ Read the relevant documentation BEFORE starting implementation:
 - **UI component changes**: `docs/design/03-components.md` and `docs/design/04-implementation.md`
 - **Color/theme changes**: `docs/design/02-design-tokens.md` and `docs/design/09-color-design-guidelines.md`
 - **Dialog/panel layout**: `docs/design/13-panel-layout-guidelines.md` and `docs/design/15-warning-error-dialog-guidelines.md`
-- **Custom libraries** (rinne_graph, plough, kiri_check): Check `llms/` for context files first
+- **Custom libraries** (ChiffonDB, plough, kiri_check): Check `llms/` for context files first
 
 ### Committing Changes
 

@@ -98,8 +98,8 @@ flutter build windows
 
 以下のプロダクトは主にRinneGraphのために開発したライブラリです。RinneGraphと並行して開発を行っています。
 
+- **[ChiffonDB](https://github.com/szktty/chiffondb)** — Rust製の組み込みプロパティグラフデータベース（Dartバインディングは [`chiffondb`](https://pub.dev/packages/chiffondb)）
 - **[Fonde UI](https://github.com/szktty/fonde-ui)** — デスクトップファーストの UI コンポーネント
-- **[rinne_graph](https://github.com/szktty/rinne_graph)** — SQLite をバックエンドとする組み込みグラフデータベース
 - **[plough](https://github.com/szktty/plough)** — ネットワークグラフ描画ライブラリ
 - **[kiri_check](https://github.com/szktty/kiri_check)** — プロパティベーステストライブラリ
 

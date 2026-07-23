@@ -6,24 +6,22 @@
  * For commercial licensing inquiries, please contact: contact@szktty.jp
  */
 
-import 'package:rinne_graph/rinne_graph.dart' as rg;
-import '../models/database_validation_result.dart';
 import '../exceptions/database_exceptions.dart';
+import '../models/database_validation_result.dart';
+import 'package:chiffondb/chiffondb.dart';
 
-/// Utility class for validating RinneGraph database files.
+/// Utility class for validating ChiffonDB database files.
 class DatabaseValidator {
-  /// Validates if the database file is properly initialized.
+  /// Validates a database file by attempting to open it.
   ///
-  /// [filePath] 検証するデータベースファイルのパス
-  ///
-  /// Returns: 検証結果
+  /// Returns success if the file can be opened as a valid ChiffonDB database.
   static Future<DatabaseValidationResult> validateDatabase(
     String filePath,
   ) async {
     try {
-      final manager = rg.DatabaseManager();
-      final rinneResult = await manager.validateDatabaseFile(filePath);
-      return DatabaseValidationResult.fromRinneGraph(rinneResult);
+      final db = await Connection.open(path: filePath);
+      await db.close();
+      return DatabaseValidationResult.success(filePath: filePath);
     } catch (e) {
       return DatabaseValidationResult.error(
         filePath: filePath,
@@ -32,26 +30,16 @@ class DatabaseValidator {
     }
   }
 
-  /// Tests if basic operations are possible by opening the database file.
-  ///
-  /// [filePath] テストするデータベースファイルのパス
-  ///
-  /// Returns: テスト結果
+  /// Tests basic read access by opening the database.
   static Future<DatabaseValidationResult> testDatabaseAccess(
     String filePath,
   ) async {
     try {
-      final graph = await rg.Graph.open(filePath);
-
-      // 基本的な統計情報を取得してみる
-      final stats = await graph.getStatistics();
-
-      await graph.close();
-
+      final db = await Connection.open(path: filePath);
+      await db.close();
       return DatabaseValidationResult.success(
         filePath: filePath,
-        message:
-            'Database access test passed. Vertices: ${stats.totalVertices}, Edges: ${stats.totalEdges}',
+        message: 'Database access test passed',
       );
     } catch (e) {
       return DatabaseValidationResult.error(

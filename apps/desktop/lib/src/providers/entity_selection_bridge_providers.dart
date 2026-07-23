@@ -130,7 +130,10 @@ class EntitySelectionBridge extends _$EntitySelectionBridge {
       // so we can close it after loading and avoid holding an open SQLite
       // connection that would lock the DB for subsequent write transactions.
       final graphDbPath = '${stack.directory.path}/data/graph.db';
-      final loadStorage = core_graph.RinneGraphStorage(graphDbPath);
+      final loadStorage = core_graph.ChiffonStorage(
+        path: graphDbPath,
+        schema: core_graph.ChiffonSchemaGenerator.minimalSchema,
+      );
       final graphContext = core_graph.GraphContext(storage: loadStorage);
 
       core_graph.Graph? graph;
