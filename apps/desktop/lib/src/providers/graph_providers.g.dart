@@ -59,7 +59,7 @@ final class ActiveStackGraphStorageProvider
 }
 
 String _$activeStackGraphStorageHash() =>
-    r'faa58847b3a59b41c6325fc2f43cfa46681f0638';
+    r'ee26c3a52d71017f9dfe8cb587c6db1e92d3054f';
 
 /// Provider managing the selected graph entity ID
 

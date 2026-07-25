@@ -26,6 +26,8 @@ import 'package:features_import_export/features_import_export.dart'
     as import_export;
 import 'package:core_samples/core_samples.dart' as core_samples;
 import '../widgets/app_node_renderer.dart';
+import '../features/graph_editor/providers/link_creation_providers.dart'
+    as link_creation;
 import '../providers/app_state_providers.dart';
 import '../providers/entity_selection_bridge_providers.dart'
     show graphLoadingStateProvider;
@@ -1975,6 +1977,113 @@ List<AppCommand> _graphCommands() => [
         'code': CommandResultCode.commandError,
         'error': 'Timeout waiting for a node captioned "$caption"',
       };
+    },
+  ),
+
+  // ---- Link creation ----
+  //
+  // These drive the state machine directly. The three entry points in the UI
+  // (toolbar mode, Alt+drag, Alt+tap) differ only in how they enter it, so
+  // stepping through it here exercises the shared path without having to
+  // synthesise modifier-key gestures.
+  AppCommand(
+    id: 'graph.link.state',
+    title: 'Get Link Creation State',
+    category: 'graph',
+    description: 'Returns the current step, trigger, and chosen endpoints',
+    run: (ref, args) async {
+      final state = ref.read(link_creation.tapLinkCreationProvider);
+      return {
+        'ok': true,
+        'step': state.step.name,
+        'trigger': state.trigger?.name,
+        'source_id': state.sourceNodeId?.value,
+        'target_id': state.targetNodeId?.value,
+        'hover_target_id': state.hoverTargetNodeId?.value,
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.link.mode',
+    title: 'Toggle Link Creation Mode',
+    category: 'graph',
+    description:
+        '{ enabled?: boolean } — enter or leave the toolbar link mode. '
+        'Omit to toggle.',
+    canExecute: (ref) => ref.read(core_stack.activeStackProvider) != null,
+    run: (ref, args) async {
+      final notifier = ref.read(link_creation.tapLinkCreationProvider.notifier);
+      final enabled = args['enabled'] as bool?;
+      if (enabled == null) {
+        notifier.toggle();
+      } else if (enabled) {
+        notifier.start();
+      } else {
+        notifier.cancel();
+      }
+      return {
+        'ok': true,
+        'step': ref.read(link_creation.tapLinkCreationProvider).step.name,
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.link.select_source',
+    title: 'Choose the Link Source Node',
+    category: 'graph',
+    description: '{ id: string }',
+    run: (ref, args) async {
+      final id = args['id'] as String?;
+      if (id == null) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'id is required',
+        };
+      }
+      ref
+          .read(link_creation.tapLinkCreationProvider.notifier)
+          .selectSource(core_graph.EntityId.fromString(id));
+      return {
+        'ok': true,
+        'step': ref.read(link_creation.tapLinkCreationProvider).step.name,
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.link.select_target',
+    title: 'Choose the Link Target Node',
+    category: 'graph',
+    description: '{ id: string } — moves to the confirmation step',
+    run: (ref, args) async {
+      final id = args['id'] as String?;
+      if (id == null) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'id is required',
+        };
+      }
+      ref
+          .read(link_creation.tapLinkCreationProvider.notifier)
+          .selectTarget(core_graph.EntityId.fromString(id));
+      return {
+        'ok': true,
+        'step': ref.read(link_creation.tapLinkCreationProvider).step.name,
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.link.cancel',
+    title: 'Abandon Link Creation',
+    category: 'graph',
+    run: (ref, args) async {
+      ref.read(link_creation.tapLinkCreationProvider.notifier).cancel();
+      return {'ok': true};
     },
   ),
 ];

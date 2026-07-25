@@ -8,22 +8,34 @@ part of 'link_creation_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Tap-based link creation mode state provider
+/// Link creation state provider.
+///
+/// A single state machine backs all three entry points — the toolbar button,
+/// Alt+drag and Alt+tap — because they differ only in how they start and what
+/// they do after committing.
 
 @ProviderFor(TapLinkCreation)
 final tapLinkCreationProvider = TapLinkCreationProvider._();
 
-/// Tap-based link creation mode state provider
+/// Link creation state provider.
+///
+/// A single state machine backs all three entry points — the toolbar button,
+/// Alt+drag and Alt+tap — because they differ only in how they start and what
+/// they do after committing.
 final class TapLinkCreationProvider
     extends $NotifierProvider<TapLinkCreation, TapLinkCreationState> {
-  /// Tap-based link creation mode state provider
+  /// Link creation state provider.
+  ///
+  /// A single state machine backs all three entry points — the toolbar button,
+  /// Alt+drag and Alt+tap — because they differ only in how they start and what
+  /// they do after committing.
   TapLinkCreationProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'tapLinkCreationProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -44,9 +56,13 @@ final class TapLinkCreationProvider
   }
 }
 
-String _$tapLinkCreationHash() => r'1d5ff73c42bc249b766e3791f4ff7e1575196a20';
+String _$tapLinkCreationHash() => r'85ded8dc866b803afd76cd7be2f80395b1433227';
 
-/// Tap-based link creation mode state provider
+/// Link creation state provider.
+///
+/// A single state machine backs all three entry points — the toolbar button,
+/// Alt+drag and Alt+tap — because they differ only in how they start and what
+/// they do after committing.
 
 abstract class _$TapLinkCreation extends $Notifier<TapLinkCreationState> {
   TapLinkCreationState build();
