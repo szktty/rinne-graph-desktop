@@ -22,6 +22,8 @@ import 'package:features_welcome/src/widgets/welcome_screen_dialogs.dart';
 import 'package:app/app.dart'
     show selectedActivityItemProvider, AppActivityItemType;
 import 'package:features_record_editor/record_editor.dart' as record_editor;
+import 'package:features_import_export/features_import_export.dart'
+    as import_export;
 import 'package:core_samples/core_samples.dart' as core_samples;
 import '../widgets/app_node_renderer.dart';
 import '../providers/app_state_providers.dart';
@@ -877,6 +879,7 @@ void registerCoreCommands(WidgetRef ref) {
   registry.registerAll(_stackCommands());
   registry.registerAll(_graphCommands());
   registry.registerAll(_recordEditorCommands());
+  registry.registerAll(_exchangeCommands());
 }
 
 // ---------------------------------------------------------------------------
@@ -2139,6 +2142,80 @@ List<AppCommand> _recordEditorCommands() => [
 Future<dynamic> _ping(WidgetRef ref, Map<String, dynamic> _) async {
   return {'ok': true, 'timestamp': DateTime.now().toIso8601String()};
 }
+
+// ---------------------------------------------------------------------------
+// Import / export commands
+// ---------------------------------------------------------------------------
+
+List<AppCommand> _exchangeCommands() => [
+  // Parses without writing anything, so a test can assert on how a CSV is
+  // read before committing to a stack.
+  //
+  // There is deliberately no command that runs a full CSV import: it would
+  // depend on StackActions.createCustomStack, which is still a stub returning
+  // null (stack_providers.dart), so importing a CSV into a new stack cannot
+  // work yet regardless of how it is invoked. Add the import command once
+  // stack creation is implemented.
+  AppCommand(
+    id: 'import.csv.parse',
+    title: 'Parse a CSV File Without Importing',
+    category: 'import',
+    description:
+        '{ path: string } — reports the detected type (node/link), the row '
+        'count, and the first row, leaving the filesystem untouched.',
+    run: (ref, args) async {
+      final path = args['path'] as String?;
+      if (path == null || path.isEmpty) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'path is required',
+        };
+      }
+      final file = io.File(path);
+      if (!await file.exists()) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.notFound,
+          'error': 'file not found: $path',
+        };
+      }
+      try {
+        final contents = await file.readAsString();
+        final parsed = import_export.CsvImportService.parseCsv(contents);
+        final isNodes = parsed.type == import_export.CsvDataType.node;
+        return {
+          'ok': true,
+          'type': isNodes ? 'node' : 'link',
+          'row_count': isNodes ? parsed.nodes.length : parsed.links.length,
+          'first_row':
+              isNodes
+                  ? (parsed.nodes.isEmpty
+                      ? null
+                      : {
+                        'id': parsed.nodes.first.customId,
+                        'labels': parsed.nodes.first.labels.toList(),
+                        'properties': parsed.nodes.first.properties,
+                      })
+                  : (parsed.links.isEmpty
+                      ? null
+                      : {
+                        'source': parsed.links.first.sourceId,
+                        'target': parsed.links.first.targetId,
+                        'type': parsed.links.first.type,
+                        'properties': parsed.links.first.properties,
+                      }),
+        };
+      } catch (e) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'parse failed: $e',
+        };
+      }
+    },
+  ),
+];
 
 Future<dynamic> _screenshot(WidgetRef ref, Map<String, dynamic> args) async {
   final client = io.HttpClient();
