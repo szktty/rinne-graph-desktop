@@ -167,7 +167,10 @@ class _LinkCreationOverlayState extends ConsumerState<LinkCreationOverlay> {
         ref.read(core_graph.activeGraphProvider.notifier).setGraph(newGraph);
       }
 
-      await graphContext.close();
+      // The storage belongs to activeStackGraphStorageProvider, which closes
+      // it in onDispose. Closing it here would leave the shared connection
+      // shut while the stack is still open, and every later database call
+      // would throw "ChiffonStorage is not initialized".
     } catch (e) {
       debugPrint('Error creating link: $e');
     } finally {

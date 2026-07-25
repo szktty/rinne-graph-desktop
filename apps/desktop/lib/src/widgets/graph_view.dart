@@ -533,8 +533,10 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
         ref.read(core_graph.activeGraphProvider.notifier).setGraph(newGraph);
       }
 
-      // Close GraphContext
-      await graphContext.close();
+      // The storage belongs to activeStackGraphStorageProvider, which closes
+      // it in onDispose. Closing it here would leave the shared connection
+      // shut while the stack is still open, and every later database call
+      // would throw "ChiffonStorage is not initialized".
     } catch (_) {}
   }
 
