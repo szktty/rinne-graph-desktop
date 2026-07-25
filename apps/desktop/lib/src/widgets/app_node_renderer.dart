@@ -264,17 +264,27 @@ class AppNodeRenderer extends ConsumerWidget {
   }
 
   /// Gets the display label
+  ///
+  /// Prefers the node's own name over its type labels: on the ChiffonDB
+  /// meta-schema every node carries user labels (`人物`, `god`, ...), so
+  /// reading those first would render the type on every node instead of the
+  /// entity's name. `label` is resolved upstream in the graph conversion
+  /// (falling back to `name`), so it is the authoritative display value.
   String _getDisplayLabel() {
-    // Get the node's label name (use the first one if there are multiple)
-    final labels = _getNodeLabels();
-    if (labels.isNotEmpty) {
-      return labels.first;
+    final label = node['label']?.toString();
+    if (label != null && label.isNotEmpty) {
+      return label;
     }
 
-    // If there are no labels, check the name property
     final name = node['name']?.toString();
     if (name != null && name.isNotEmpty) {
       return name;
+    }
+
+    // Fall back to the node's type label when it has no name of its own.
+    final labels = _getNodeLabels();
+    if (labels.isNotEmpty) {
+      return labels.first;
     }
 
     // If there is no name either, display part of the ID

@@ -280,13 +280,11 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
       // Add node labels to properties
       properties['labels'] = coreNode.labels.toList();
 
-      // Set default label if needed
-      if (!properties.containsKey('label')) {
-        if (properties.containsKey('name')) {
-          properties['label'] = properties['name']!;
-        } else {
-          properties['label'] = coreNode.id.value;
-        }
+      // Set default label if needed. Leave it unset when the node has neither
+      // `label` nor `name` so the renderer can fall back to the type label
+      // (e.g. `人物`) instead of showing a raw UUID.
+      if (!properties.containsKey('label') && properties.containsKey('name')) {
+        properties['label'] = properties['name']!;
       }
       if (!properties.containsKey('description')) {
         properties['description'] = '';
