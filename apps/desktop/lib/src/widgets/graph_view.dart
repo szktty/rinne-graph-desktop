@@ -63,6 +63,11 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
 
   /// Escape abandons an in-progress link. Alt is not tracked here — it is
   /// sampled at pointer-down instead, see the Listener in build().
+  ///
+  /// Used as the enclosing `Focus`'s `onKeyEvent`, so it fires while the graph
+  /// view or anything inside it holds focus — including the confirmation
+  /// panel's text field. Escape therefore works whether or not the user has
+  /// clicked into the label.
   KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
     if (event.logicalKey != LogicalKeyboardKey.escape) {
@@ -259,6 +264,14 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
             behavior: behavior,
             allowSelection: true,
             allowMultiSelection: false,
+            // Tapping empty canvas abandons an in-progress link. The behavior's
+            // onTap cannot do this: plough only dispatches it once a node or
+            // link has been hit, so a tap on the background never reaches it.
+            onBackgroundTapped: (_) {
+              if (ref.read(tapLinkCreationProvider).isActive) {
+                ref.read(tapLinkCreationProvider.notifier).cancel();
+              }
+            },
             // Start node animation from center of drawing area
             nodeAnimationStartPosition: centerOffset,
             // nodeEdgeOnly: only consume gestures on nodes/edges;
@@ -286,6 +299,10 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
             // released in the meantime; a Listener runs before the gesture
             // arena resolves.
             onPointerDown: (_) {
+              // Only onTap consumes this. plough dispatches taps from behind
+              // its recognition timer, so by then the key may be up; drags run
+              // early enough to read the keyboard directly. Overwritten on
+              // every press, so it never describes an older gesture.
               ref
                   .read(altPressedProvider.notifier)
                   .set(HardwareKeyboard.instance.isAltPressed);
@@ -511,7 +528,9 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
     }
 
     if (nodeId == null) {
-      // Tapping a link or the background leaves link creation.
+      // A link was tapped — only nodes can be endpoints, so treat it as a way
+      // out. Background taps never arrive here; they come through
+      // GraphView.onBackgroundTapped instead.
       notifier.cancel();
       return;
     }
@@ -546,7 +565,11 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
       return;
     }
 
-    if (!state.isActive && ref.read(altPressedProvider)) {
+    // Alt is read live here rather than from the pointer-down sample. A drag
+    // only starts once the pointer has travelled past plough's threshold, so
+    // the key is still physically down by the time this runs — unlike onTap,
+    // which fires from behind the tap-recognition timer.
+    if (!state.isActive && HardwareKeyboard.instance.isAltPressed) {
       notifier.startWithSource(
         nodeId,
         trigger: LinkCreationTrigger.modifierDrag,
