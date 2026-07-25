@@ -280,12 +280,10 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
       // Add node labels to properties
       properties['labels'] = coreNode.labels.toList();
 
-      // Set default label if needed. Leave it unset when the node has neither
-      // `label` nor `name` so the renderer can fall back to the type label
-      // (e.g. `人物`) instead of showing a raw UUID.
-      if (!properties.containsKey('label') && properties.containsKey('name')) {
-        properties['label'] = properties['name']!;
-      }
+      // Node captions are resolved by AppNodeRenderer, which probes
+      // `_display_name` and then a list of candidate keys (`name`, `title`,
+      // `label`, ...). Synthesising a `label` here would override that order,
+      // so the node's own properties are passed through untouched.
       if (!properties.containsKey('description')) {
         properties['description'] = '';
       }

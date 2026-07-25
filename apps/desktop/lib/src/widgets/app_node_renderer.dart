@@ -255,41 +255,79 @@ class AppNodeRenderer extends ConsumerWidget {
   }
 
   /// Gets the node's labels
-  Set<String> _getNodeLabels() {
+  Set<String> _getNodeLabels() => _labelsOf(node);
+
+  /// Property keys tried, in order, when a node has no `_display_name`.
+  ///
+  /// Follows the convention Neo4j Browser uses: rather than requiring the user
+  /// to configure a caption property, probe the names data usually carries.
+  /// English keys come before Japanese ones so that a stack mixing both is
+  /// resolved predictably. `name` has no special status here — it is simply the
+  /// most common member of this list.
+  static const List<String> displayNameCandidateKeys = [
+    'name',
+    'title',
+    'label',
+    'caption',
+    '名前',
+    '名称',
+    '氏名',
+    'タイトル',
+    'ラベル',
+    'キャプション',
+  ];
+
+  /// Gets the display label
+  ///
+  /// Resolution order:
+  ///   1. `_display_name` — the reserved property that names a node explicitly
+  ///      (e.g. a short form to use when `name` is too long for the circle).
+  ///   2. the candidate keys above.
+  ///   3. the node's type label (`人物`, `god`, ...). Every node carries one on
+  ///      the ChiffonDB meta-schema, so this must come *after* the name
+  ///      lookups — probing labels first would render the type on every node.
+  ///   4. a fragment of the node's ID.
+  ///
+  /// A future `_display_name_key` schema entry will slot in between 1 and 2,
+  /// letting a label declare which property holds its name.
+  String _getDisplayLabel() =>
+      resolveDisplayLabel(node, labels: _getNodeLabels());
+
+  /// Resolves the caption for [node] using the order documented above.
+  ///
+  /// Exposed so that non-widget callers (UI-test commands, exports) report the
+  /// same caption the graph renders.
+  static String resolveDisplayLabel(
+    plough.GraphNode node, {
+    Set<String>? labels,
+  }) {
+    final explicit = node['_display_name']?.toString();
+    if (explicit != null && explicit.isNotEmpty) {
+      return explicit;
+    }
+
+    for (final key in displayNameCandidateKeys) {
+      final value = node[key]?.toString();
+      if (value != null && value.isNotEmpty) {
+        return value;
+      }
+    }
+
+    final typeLabels = labels ?? _labelsOf(node);
+    if (typeLabels.isNotEmpty) {
+      return typeLabels.first;
+    }
+
+    final id = node.id.toString();
+    return id.length > 8 ? '${id.substring(0, 8)}...' : id;
+  }
+
+  static Set<String> _labelsOf(plough.GraphNode node) {
     final labelsProperty = node['labels'];
     if (labelsProperty is List) {
       return labelsProperty.cast<String>().toSet();
     }
     return {};
-  }
-
-  /// Gets the display label
-  ///
-  /// Prefers the node's own name over its type labels: on the ChiffonDB
-  /// meta-schema every node carries user labels (`人物`, `god`, ...), so
-  /// reading those first would render the type on every node instead of the
-  /// entity's name. `label` is resolved upstream in the graph conversion
-  /// (falling back to `name`), so it is the authoritative display value.
-  String _getDisplayLabel() {
-    final label = node['label']?.toString();
-    if (label != null && label.isNotEmpty) {
-      return label;
-    }
-
-    final name = node['name']?.toString();
-    if (name != null && name.isNotEmpty) {
-      return name;
-    }
-
-    // Fall back to the node's type label when it has no name of its own.
-    final labels = _getNodeLabels();
-    if (labels.isNotEmpty) {
-      return labels.first;
-    }
-
-    // If there is no name either, display part of the ID
-    final id = node.id.toString();
-    return id.length > 8 ? '${id.substring(0, 8)}...' : id;
   }
 
   /// Returns the label font size corresponding to the node size

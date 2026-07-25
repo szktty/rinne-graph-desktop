@@ -23,6 +23,7 @@ import 'package:app/app.dart'
     show selectedActivityItemProvider, AppActivityItemType;
 import 'package:features_record_editor/record_editor.dart' as record_editor;
 import 'package:core_samples/core_samples.dart' as core_samples;
+import '../widgets/app_node_renderer.dart';
 import '../providers/app_state_providers.dart';
 import '../providers/entity_selection_bridge_providers.dart'
     show graphLoadingStateProvider;
@@ -1520,7 +1521,7 @@ List<AppCommand> _graphCommands() => [
             final geo = node.geometry;
             return {
               'id': node.id.value,
-              'label': node.properties['label'] as String? ?? '',
+              'label': AppNodeRenderer.resolveDisplayLabel(node),
               'logical': {'x': pos.dx, 'y': pos.dy},
               'screen':
                   geo == null
