@@ -1883,6 +1883,97 @@ List<AppCommand> _graphCommands() => [
       return {'ok': true};
     },
   ),
+
+  // ---- Wait commands ----
+  //
+  // The plough graph is rebuilt from activeGraphProvider during the next
+  // widget build, so it lags a stack.open by a frame or more. Reading
+  // geometry right after opening a stack therefore returns the *previous*
+  // stack's nodes. These commands wait for the view to catch up; a fixed
+  // sleep cannot do the job, because two stacks may share a node count
+  // (罪と罰 and Crime and Punishment both have 96) and a count-only check
+  // would pass against stale data.
+  AppCommand(
+    id: 'graph.wait.loaded',
+    title: 'Wait Until Graph View Is Loaded',
+    category: 'graph',
+    description:
+        '{ nodeCount?: number, linkCount?: number, timeoutMs?: number } — '
+        'waits until the mounted graph matches the given counts (default '
+        'timeout: 10000). Omit both counts to wait for any non-empty graph.',
+    run: (ref, args) async {
+      final nodeCount = (args['nodeCount'] as num?)?.toInt();
+      final linkCount = (args['linkCount'] as num?)?.toInt();
+      final timeoutMs = (args['timeoutMs'] as num?)?.toInt() ?? 10000;
+
+      bool matches() {
+        if (ref.read(graphLoadingStateProvider)) return false;
+        final graph = ref.read(graphViewCacheProvider).ploughGraph;
+        if (graph == null) return false;
+        if (nodeCount != null && graph.nodes.length != nodeCount) return false;
+        if (linkCount != null && graph.links.length != linkCount) return false;
+        if (nodeCount == null && linkCount == null) {
+          return graph.nodes.isNotEmpty;
+        }
+        return true;
+      }
+
+      final ok = await _waitFor(matches, timeoutMs);
+      final graph = ref.read(graphViewCacheProvider).ploughGraph;
+      if (ok) {
+        return {
+          'ok': true,
+          'node_count': graph?.nodes.length ?? 0,
+          'link_count': graph?.links.length ?? 0,
+        };
+      }
+      return {
+        'ok': false,
+        'code': CommandResultCode.commandError,
+        'error':
+            'Timeout waiting for graph view; currently '
+            '${graph?.nodes.length ?? 0} nodes, '
+            '${graph?.links.length ?? 0} links',
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.wait.nodeCaption',
+    title: 'Wait Until a Node Caption Appears',
+    category: 'graph',
+    description:
+        '{ caption: string, timeoutMs?: number } — waits until some node in '
+        'the mounted graph renders the given caption (default: 10000). Use to '
+        'confirm the view switched to the stack you expect, rather than '
+        'matching on node counts alone.',
+    run: (ref, args) async {
+      final caption = args['caption'] as String?;
+      if (caption == null || caption.isEmpty) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'caption is required',
+        };
+      }
+      final timeoutMs = (args['timeoutMs'] as num?)?.toInt() ?? 10000;
+
+      final ok = await _waitFor(() {
+        final graph = ref.read(graphViewCacheProvider).ploughGraph;
+        if (graph == null) return false;
+        return graph.nodes.any(
+          (node) => AppNodeRenderer.resolveDisplayLabel(node) == caption,
+        );
+      }, timeoutMs);
+
+      if (ok) return {'ok': true, 'caption': caption};
+      return {
+        'ok': false,
+        'code': CommandResultCode.commandError,
+        'error': 'Timeout waiting for a node captioned "$caption"',
+      };
+    },
+  ),
 ];
 
 // ---------------------------------------------------------------------------
