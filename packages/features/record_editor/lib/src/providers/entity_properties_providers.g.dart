@@ -396,6 +396,11 @@ abstract class _$EditingPropertyNames extends $Notifier<Map<String, String>> {
 /// Entity save action provider
 ///
 /// Saves the entity being edited to the database.
+///
+/// Kept alive because saveEntity() spans several awaits. A caller that only
+/// reads the notifier to invoke it — the record_editor.save command, for
+/// instance — holds no subscription, so an auto-disposed provider would be
+/// torn down mid-save and the next use of its `ref` would throw.
 
 @ProviderFor(SaveEntityAction)
 final saveEntityActionProvider = SaveEntityActionProvider._();
@@ -403,18 +408,28 @@ final saveEntityActionProvider = SaveEntityActionProvider._();
 /// Entity save action provider
 ///
 /// Saves the entity being edited to the database.
+///
+/// Kept alive because saveEntity() spans several awaits. A caller that only
+/// reads the notifier to invoke it — the record_editor.save command, for
+/// instance — holds no subscription, so an auto-disposed provider would be
+/// torn down mid-save and the next use of its `ref` would throw.
 final class SaveEntityActionProvider
     extends $NotifierProvider<SaveEntityAction, void> {
   /// Entity save action provider
   ///
   /// Saves the entity being edited to the database.
+  ///
+  /// Kept alive because saveEntity() spans several awaits. A caller that only
+  /// reads the notifier to invoke it — the record_editor.save command, for
+  /// instance — holds no subscription, so an auto-disposed provider would be
+  /// torn down mid-save and the next use of its `ref` would throw.
   SaveEntityActionProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'saveEntityActionProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -435,11 +450,16 @@ final class SaveEntityActionProvider
   }
 }
 
-String _$saveEntityActionHash() => r'4c274b46efa5ef15e3dc8fb61c9151af0fa414c1';
+String _$saveEntityActionHash() => r'6399f605cdf25ff6d9b12a2eb7c9f030ea098088';
 
 /// Entity save action provider
 ///
 /// Saves the entity being edited to the database.
+///
+/// Kept alive because saveEntity() spans several awaits. A caller that only
+/// reads the notifier to invoke it — the record_editor.save command, for
+/// instance — holds no subscription, so an auto-disposed provider would be
+/// torn down mid-save and the next use of its `ref` would throw.
 
 abstract class _$SaveEntityAction extends $Notifier<void> {
   void build();

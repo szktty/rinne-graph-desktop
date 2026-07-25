@@ -2067,63 +2067,24 @@ List<AppCommand> _recordEditorCommands() => [
         return {'ok': false, 'error': 'no entity selected'};
       }
 
-      final editingProperties = ref.read(
-        record_editor.editingEntityPropertiesProvider,
-      );
-      final propertyNameChanges = ref.read(
-        record_editor.editingPropertyNameChangesProvider,
-      );
-
-      final finalProperties = Map<String, dynamic>.from(editingProperties);
-      for (final change in propertyNameChanges.entries) {
-        final oldValue = finalProperties.remove(change.key);
-        finalProperties[change.value] = oldValue;
+      // Delegate to the same action the record editor UI uses, so both paths
+      // write through activeStackGraphStorageProvider's connection. This
+      // command used to open a dedicated ChiffonStorage on the same file — a
+      // holdover from SQLite, where a reader blocked writers on one
+      // connection. ChiffonDB rejects opening a file twice in one process, so
+      // that made every save fail with "already open in this process".
+      try {
+        await ref
+            .read(record_editor.saveEntityActionProvider.notifier)
+            .saveEntity();
+        return {'ok': true};
+      } catch (e) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'save failed: $e',
+        };
       }
-
-      // WORKAROUND: Open a dedicated SQLite connection for the save operation.
-      // This is a temporary workaround until GraphContext.transaction() is fixed
-      // to pass a transaction-scoped context to its callback instead of 'this'.
-      // See record-editor-save-database-locking.md in rinne-graph-desktop-private.
-      //
-      // The dedicated connection is needed because sharing the same RinneGraphStorage
-      // instance as EntitySelectionBridge causes a database lock: sqflite_ffi
-      // serializes transactions per connection, and the read connection held by
-      // EntitySelectionBridge blocks any write transaction on the same connection.
-      final activeStack = ref.read(core_stack.activeStackProvider);
-      if (activeStack == null) {
-        return {'ok': false, 'error': 'no active stack'};
-      }
-      final graphDbPath = '${activeStack.directory.path}/data/graph.db';
-      final dedicatedStorage = core_graph.ChiffonStorage(
-        path: graphDbPath,
-        schema: core_graph.ChiffonSchemaGenerator.minimalSchema,
-      );
-      await dedicatedStorage.initialize();
-
-      final saveContext = core_graph.GraphContext(storage: dedicatedStorage);
-
-      final updatedEntity = selectedEntity.copyWith(
-        properties: core_graph.PropertySet.fromMap(finalProperties),
-      );
-
-      // WORKAROUND: Call updateNode/updateLink directly instead of using
-      // saveContext.transaction(). GraphContext.transaction() passes 'this' to
-      // its callback, so any write inside the callback calls storage.updateNode()
-      // → _graph.transaction() → re-enters the same BasicLock → deadlock.
-      // Each updateNode/updateLink call opens its own transaction safely.
-      if (updatedEntity is core_graph.Node) {
-        await saveContext.updateNode(updatedEntity);
-      } else if (updatedEntity is core_graph.Link) {
-        await saveContext.updateLink(updatedEntity);
-      }
-
-      await dedicatedStorage.close();
-
-      ref
-          .read(record_editor.editingPropertyNameChangesProvider.notifier)
-          .reset();
-      ref.read(record_editor.editingEntityPropertiesProvider.notifier).reset();
-      return {'ok': true};
     },
   ),
 
