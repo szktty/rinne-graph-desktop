@@ -51,6 +51,7 @@ class AppGraphView extends ConsumerStatefulWidget {
 class _AppGraphViewState extends ConsumerState<AppGraphView>
     with SingleTickerProviderStateMixin {
   late plough.GraphViewportController _viewportController;
+  late GraphViewCache _cache;
   late AnimationController _focusAnimController;
   Animation<Matrix4>? _focusAnimation;
   NodeDisplayContent? _lastDisplayContent;
@@ -72,14 +73,20 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
         _viewportController.value = _focusAnimation!.value;
       }
     });
-    final cache = ref.read(graphViewCacheProvider);
-    cache.transformationController = _viewportController;
-    cache.graphViewStateKey = _graphViewStateKey;
+    // Held so dispose() does not have to touch `ref`, which is unsafe once the
+    // widget is being unmounted (as happens when the stack is closed).
+    _cache = ref.read(graphViewCacheProvider);
+    _cache.transformationController = _viewportController;
+    _cache.graphViewStateKey = _graphViewStateKey;
   }
 
   @override
   void dispose() {
-    ref.read(graphViewCacheProvider).transformationController = null;
+    // Only relinquish the controller if it is still ours: a replacement view
+    // may already have registered its own during this frame.
+    if (identical(_cache.transformationController, _viewportController)) {
+      _cache.transformationController = null;
+    }
     _focusAnimController.dispose();
     _viewportController.dispose();
     super.dispose();
