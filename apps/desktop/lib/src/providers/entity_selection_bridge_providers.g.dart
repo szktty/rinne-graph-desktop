@@ -60,7 +60,7 @@ final class EntitySelectionBridgeProvider
 }
 
 String _$entitySelectionBridgeHash() =>
-    r'a0a650bfac6d0acd29202e950241bb9429c85a66';
+    r'a02a64a0f742a9750fdd5dd9f93187c0eb47ecf1';
 
 /// Provider that links entity selection state with the editor
 ///

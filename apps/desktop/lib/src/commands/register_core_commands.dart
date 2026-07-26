@@ -22,7 +22,12 @@ import 'package:features_welcome/src/widgets/welcome_screen_dialogs.dart';
 import 'package:app/app.dart'
     show selectedActivityItemProvider, AppActivityItemType;
 import 'package:features_record_editor/record_editor.dart' as record_editor;
+import 'package:features_import_export/features_import_export.dart'
+    as import_export;
 import 'package:core_samples/core_samples.dart' as core_samples;
+import '../widgets/app_node_renderer.dart';
+import '../features/graph_editor/providers/link_creation_providers.dart'
+    as link_creation;
 import '../providers/app_state_providers.dart';
 import '../providers/entity_selection_bridge_providers.dart'
     show graphLoadingStateProvider;
@@ -876,6 +881,7 @@ void registerCoreCommands(WidgetRef ref) {
   registry.registerAll(_stackCommands());
   registry.registerAll(_graphCommands());
   registry.registerAll(_recordEditorCommands());
+  registry.registerAll(_exchangeCommands());
 }
 
 // ---------------------------------------------------------------------------
@@ -1520,7 +1526,7 @@ List<AppCommand> _graphCommands() => [
             final geo = node.geometry;
             return {
               'id': node.id.value,
-              'label': node.properties['label'] as String? ?? '',
+              'label': AppNodeRenderer.resolveDisplayLabel(node),
               'logical': {'x': pos.dx, 'y': pos.dy},
               'screen':
                   geo == null
@@ -1882,6 +1888,204 @@ List<AppCommand> _graphCommands() => [
       return {'ok': true};
     },
   ),
+
+  // ---- Wait commands ----
+  //
+  // The plough graph is rebuilt from activeGraphProvider during the next
+  // widget build, so it lags a stack.open by a frame or more. Reading
+  // geometry right after opening a stack therefore returns the *previous*
+  // stack's nodes. These commands wait for the view to catch up; a fixed
+  // sleep cannot do the job, because two stacks may share a node count
+  // (罪と罰 and Crime and Punishment both have 96) and a count-only check
+  // would pass against stale data.
+  AppCommand(
+    id: 'graph.wait.loaded',
+    title: 'Wait Until Graph View Is Loaded',
+    category: 'graph',
+    description:
+        '{ nodeCount?: number, linkCount?: number, timeoutMs?: number } — '
+        'waits until the mounted graph matches the given counts (default '
+        'timeout: 10000). Omit both counts to wait for any non-empty graph.',
+    run: (ref, args) async {
+      final nodeCount = (args['nodeCount'] as num?)?.toInt();
+      final linkCount = (args['linkCount'] as num?)?.toInt();
+      final timeoutMs = (args['timeoutMs'] as num?)?.toInt() ?? 10000;
+
+      bool matches() {
+        if (ref.read(graphLoadingStateProvider)) return false;
+        final graph = ref.read(graphViewCacheProvider).ploughGraph;
+        if (graph == null) return false;
+        if (nodeCount != null && graph.nodes.length != nodeCount) return false;
+        if (linkCount != null && graph.links.length != linkCount) return false;
+        if (nodeCount == null && linkCount == null) {
+          return graph.nodes.isNotEmpty;
+        }
+        return true;
+      }
+
+      final ok = await _waitFor(matches, timeoutMs);
+      final graph = ref.read(graphViewCacheProvider).ploughGraph;
+      if (ok) {
+        return {
+          'ok': true,
+          'node_count': graph?.nodes.length ?? 0,
+          'link_count': graph?.links.length ?? 0,
+        };
+      }
+      return {
+        'ok': false,
+        'code': CommandResultCode.commandError,
+        'error':
+            'Timeout waiting for graph view; currently '
+            '${graph?.nodes.length ?? 0} nodes, '
+            '${graph?.links.length ?? 0} links',
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.wait.nodeCaption',
+    title: 'Wait Until a Node Caption Appears',
+    category: 'graph',
+    description:
+        '{ caption: string, timeoutMs?: number } — waits until some node in '
+        'the mounted graph renders the given caption (default: 10000). Use to '
+        'confirm the view switched to the stack you expect, rather than '
+        'matching on node counts alone.',
+    run: (ref, args) async {
+      final caption = args['caption'] as String?;
+      if (caption == null || caption.isEmpty) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'caption is required',
+        };
+      }
+      final timeoutMs = (args['timeoutMs'] as num?)?.toInt() ?? 10000;
+
+      final ok = await _waitFor(() {
+        final graph = ref.read(graphViewCacheProvider).ploughGraph;
+        if (graph == null) return false;
+        return graph.nodes.any(
+          (node) => AppNodeRenderer.resolveDisplayLabel(node) == caption,
+        );
+      }, timeoutMs);
+
+      if (ok) return {'ok': true, 'caption': caption};
+      return {
+        'ok': false,
+        'code': CommandResultCode.commandError,
+        'error': 'Timeout waiting for a node captioned "$caption"',
+      };
+    },
+  ),
+
+  // ---- Link creation ----
+  //
+  // These drive the state machine directly. The three entry points in the UI
+  // (toolbar mode, Alt+drag, Alt+tap) differ only in how they enter it, so
+  // stepping through it here exercises the shared path without having to
+  // synthesise modifier-key gestures.
+  AppCommand(
+    id: 'graph.link.state',
+    title: 'Get Link Creation State',
+    category: 'graph',
+    description: 'Returns the current step, trigger, and chosen endpoints',
+    run: (ref, args) async {
+      final state = ref.read(link_creation.tapLinkCreationProvider);
+      return {
+        'ok': true,
+        'step': state.step.name,
+        'trigger': state.trigger?.name,
+        'source_id': state.sourceNodeId?.value,
+        'target_id': state.targetNodeId?.value,
+        'hover_target_id': state.hoverTargetNodeId?.value,
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.link.mode',
+    title: 'Toggle Link Creation Mode',
+    category: 'graph',
+    description:
+        '{ enabled?: boolean } — enter or leave the toolbar link mode. '
+        'Omit to toggle.',
+    canExecute: (ref) => ref.read(core_stack.activeStackProvider) != null,
+    run: (ref, args) async {
+      final notifier = ref.read(link_creation.tapLinkCreationProvider.notifier);
+      final enabled = args['enabled'] as bool?;
+      if (enabled == null) {
+        notifier.toggle();
+      } else if (enabled) {
+        notifier.start();
+      } else {
+        notifier.cancel();
+      }
+      return {
+        'ok': true,
+        'step': ref.read(link_creation.tapLinkCreationProvider).step.name,
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.link.select_source',
+    title: 'Choose the Link Source Node',
+    category: 'graph',
+    description: '{ id: string }',
+    run: (ref, args) async {
+      final id = args['id'] as String?;
+      if (id == null) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'id is required',
+        };
+      }
+      ref
+          .read(link_creation.tapLinkCreationProvider.notifier)
+          .selectSource(core_graph.EntityId.fromString(id));
+      return {
+        'ok': true,
+        'step': ref.read(link_creation.tapLinkCreationProvider).step.name,
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.link.select_target',
+    title: 'Choose the Link Target Node',
+    category: 'graph',
+    description: '{ id: string } — moves to the confirmation step',
+    run: (ref, args) async {
+      final id = args['id'] as String?;
+      if (id == null) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'id is required',
+        };
+      }
+      ref
+          .read(link_creation.tapLinkCreationProvider.notifier)
+          .selectTarget(core_graph.EntityId.fromString(id));
+      return {
+        'ok': true,
+        'step': ref.read(link_creation.tapLinkCreationProvider).step.name,
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.link.cancel',
+    title: 'Abandon Link Creation',
+    category: 'graph',
+    run: (ref, args) async {
+      ref.read(link_creation.tapLinkCreationProvider.notifier).cancel();
+      return {'ok': true};
+    },
+  ),
 ];
 
 // ---------------------------------------------------------------------------
@@ -1972,63 +2176,24 @@ List<AppCommand> _recordEditorCommands() => [
         return {'ok': false, 'error': 'no entity selected'};
       }
 
-      final editingProperties = ref.read(
-        record_editor.editingEntityPropertiesProvider,
-      );
-      final propertyNameChanges = ref.read(
-        record_editor.editingPropertyNameChangesProvider,
-      );
-
-      final finalProperties = Map<String, dynamic>.from(editingProperties);
-      for (final change in propertyNameChanges.entries) {
-        final oldValue = finalProperties.remove(change.key);
-        finalProperties[change.value] = oldValue;
+      // Delegate to the same action the record editor UI uses, so both paths
+      // write through activeStackGraphStorageProvider's connection. This
+      // command used to open a dedicated ChiffonStorage on the same file — a
+      // holdover from SQLite, where a reader blocked writers on one
+      // connection. ChiffonDB rejects opening a file twice in one process, so
+      // that made every save fail with "already open in this process".
+      try {
+        await ref
+            .read(record_editor.saveEntityActionProvider.notifier)
+            .saveEntity();
+        return {'ok': true};
+      } catch (e) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'save failed: $e',
+        };
       }
-
-      // WORKAROUND: Open a dedicated SQLite connection for the save operation.
-      // This is a temporary workaround until GraphContext.transaction() is fixed
-      // to pass a transaction-scoped context to its callback instead of 'this'.
-      // See record-editor-save-database-locking.md in rinne-graph-desktop-private.
-      //
-      // The dedicated connection is needed because sharing the same RinneGraphStorage
-      // instance as EntitySelectionBridge causes a database lock: sqflite_ffi
-      // serializes transactions per connection, and the read connection held by
-      // EntitySelectionBridge blocks any write transaction on the same connection.
-      final activeStack = ref.read(core_stack.activeStackProvider);
-      if (activeStack == null) {
-        return {'ok': false, 'error': 'no active stack'};
-      }
-      final graphDbPath = '${activeStack.directory.path}/data/graph.db';
-      final dedicatedStorage = core_graph.ChiffonStorage(
-        path: graphDbPath,
-        schema: core_graph.ChiffonSchemaGenerator.minimalSchema,
-      );
-      await dedicatedStorage.initialize();
-
-      final saveContext = core_graph.GraphContext(storage: dedicatedStorage);
-
-      final updatedEntity = selectedEntity.copyWith(
-        properties: core_graph.PropertySet.fromMap(finalProperties),
-      );
-
-      // WORKAROUND: Call updateNode/updateLink directly instead of using
-      // saveContext.transaction(). GraphContext.transaction() passes 'this' to
-      // its callback, so any write inside the callback calls storage.updateNode()
-      // → _graph.transaction() → re-enters the same BasicLock → deadlock.
-      // Each updateNode/updateLink call opens its own transaction safely.
-      if (updatedEntity is core_graph.Node) {
-        await saveContext.updateNode(updatedEntity);
-      } else if (updatedEntity is core_graph.Link) {
-        await saveContext.updateLink(updatedEntity);
-      }
-
-      await dedicatedStorage.close();
-
-      ref
-          .read(record_editor.editingPropertyNameChangesProvider.notifier)
-          .reset();
-      ref.read(record_editor.editingEntityPropertiesProvider.notifier).reset();
-      return {'ok': true};
     },
   ),
 
@@ -2047,6 +2212,80 @@ List<AppCommand> _recordEditorCommands() => [
 Future<dynamic> _ping(WidgetRef ref, Map<String, dynamic> _) async {
   return {'ok': true, 'timestamp': DateTime.now().toIso8601String()};
 }
+
+// ---------------------------------------------------------------------------
+// Import / export commands
+// ---------------------------------------------------------------------------
+
+List<AppCommand> _exchangeCommands() => [
+  // Parses without writing anything, so a test can assert on how a CSV is
+  // read before committing to a stack.
+  //
+  // There is deliberately no command that runs a full CSV import: it would
+  // depend on StackActions.createCustomStack, which is still a stub returning
+  // null (stack_providers.dart), so importing a CSV into a new stack cannot
+  // work yet regardless of how it is invoked. Add the import command once
+  // stack creation is implemented.
+  AppCommand(
+    id: 'import.csv.parse',
+    title: 'Parse a CSV File Without Importing',
+    category: 'import',
+    description:
+        '{ path: string } — reports the detected type (node/link), the row '
+        'count, and the first row, leaving the filesystem untouched.',
+    run: (ref, args) async {
+      final path = args['path'] as String?;
+      if (path == null || path.isEmpty) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'path is required',
+        };
+      }
+      final file = io.File(path);
+      if (!await file.exists()) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.notFound,
+          'error': 'file not found: $path',
+        };
+      }
+      try {
+        final contents = await file.readAsString();
+        final parsed = import_export.CsvImportService.parseCsv(contents);
+        final isNodes = parsed.type == import_export.CsvDataType.node;
+        return {
+          'ok': true,
+          'type': isNodes ? 'node' : 'link',
+          'row_count': isNodes ? parsed.nodes.length : parsed.links.length,
+          'first_row':
+              isNodes
+                  ? (parsed.nodes.isEmpty
+                      ? null
+                      : {
+                        'id': parsed.nodes.first.customId,
+                        'labels': parsed.nodes.first.labels.toList(),
+                        'properties': parsed.nodes.first.properties,
+                      })
+                  : (parsed.links.isEmpty
+                      ? null
+                      : {
+                        'source': parsed.links.first.sourceId,
+                        'target': parsed.links.first.targetId,
+                        'type': parsed.links.first.type,
+                        'properties': parsed.links.first.properties,
+                      }),
+        };
+      } catch (e) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'parse failed: $e',
+        };
+      }
+    },
+  ),
+];
 
 Future<dynamic> _screenshot(WidgetRef ref, Map<String, dynamic> args) async {
   final client = io.HttpClient();

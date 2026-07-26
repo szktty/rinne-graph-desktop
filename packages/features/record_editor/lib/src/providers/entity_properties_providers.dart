@@ -164,7 +164,12 @@ class EditingPropertyNames extends _$EditingPropertyNames {
 /// Entity save action provider
 ///
 /// Saves the entity being edited to the database.
-@riverpod
+///
+/// Kept alive because saveEntity() spans several awaits. A caller that only
+/// reads the notifier to invoke it — the record_editor.save command, for
+/// instance — holds no subscription, so an auto-disposed provider would be
+/// torn down mid-save and the next use of its `ref` would throw.
+@Riverpod(keepAlive: true)
 class SaveEntityAction extends _$SaveEntityAction {
   @override
   void build() {

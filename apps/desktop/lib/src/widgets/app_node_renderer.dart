@@ -30,12 +30,17 @@ class AppNodeRenderer extends ConsumerWidget {
   /// Color scheme
   final AppColorScheme colorScheme;
 
+  /// Whether this node is an endpoint of the link currently being drawn —
+  /// either the source, or the node under the pointer.
+  final bool isLinkEndpoint;
+
   const AppNodeRenderer({
     super.key,
     required this.node,
     required this.displayContent,
     required this.nodeSize,
     required this.colorScheme,
+    this.isLinkEndpoint = false,
   });
 
   @override
@@ -105,11 +110,41 @@ class AppNodeRenderer extends ConsumerWidget {
 
   /// Returns the node circle decoration with border
   BoxDecoration _circleDecoration() {
+    final base = colorScheme.appSpecific.graph.nodeBase;
+    // A link endpoint is brightened rather than recoloured. selectionHighlight
+    // resolves to the theme's secondary, which sits close enough to nodeBase
+    // (its primary) that swapping the rim's colour was invisible; a lightness
+    // shift reads regardless of how the two hues relate.
+    //
+    // The rim keeps its 4px because the layout above reserves exactly that for
+    // the outer selection border — a wider ring would shift the node.
+    final fill = isLinkEndpoint ? _lighten(base, 0.18) : base;
     return BoxDecoration(
       shape: BoxShape.circle,
-      color: colorScheme.appSpecific.graph.nodeBase,
-      border: Border.all(color: _nodeBorderColor(), width: 4.0),
+      color: fill,
+      border: Border.all(
+        color: isLinkEndpoint ? _lighten(base, 0.36) : _nodeBorderColor(),
+        width: 4.0,
+      ),
     );
+  }
+
+  /// Icon colour, tracking the circle's fill.
+  ///
+  /// `nodeIcon` and `nodeBase` are both the theme's primary, so the icon is
+  /// normally invisible against the node it sits on — evidently on purpose. It
+  /// has to be brightened alongside the fill, or highlighting a node would make
+  /// a stray ring appear inside it.
+  Color _iconColor() {
+    final icon = colorScheme.appSpecific.graph.nodeIcon;
+    return isLinkEndpoint ? _lighten(icon, 0.18) : icon;
+  }
+
+  Color _lighten(Color color, double amount) {
+    final hsl = HSLColor.fromColor(color);
+    return hsl
+        .withLightness((hsl.lightness + amount).clamp(0.0, 1.0))
+        .toColor();
   }
 
   /// Returns the shortened ID string "(xxxxxxxx)"
@@ -224,11 +259,7 @@ class AppNodeRenderer extends ConsumerWidget {
           // Icon positioned above the label area
           Positioned(
             top: nodeSize.diameter * 0.12,
-            child: Icon(
-              icon,
-              size: iconSize,
-              color: colorScheme.appSpecific.graph.nodeIcon,
-            ),
+            child: Icon(icon, size: iconSize, color: _iconColor()),
           ),
         ],
       ),
@@ -245,41 +276,85 @@ class AppNodeRenderer extends ConsumerWidget {
       height: nodeSize.diameter,
       decoration: _circleDecoration(),
       child: Center(
-        child: Icon(
-          icon,
-          size: nodeSize.diameter * 0.4,
-          color: colorScheme.appSpecific.graph.nodeIcon,
-        ),
+        child: Icon(icon, size: nodeSize.diameter * 0.4, color: _iconColor()),
       ),
     );
   }
 
   /// Gets the node's labels
-  Set<String> _getNodeLabels() {
+  Set<String> _getNodeLabels() => _labelsOf(node);
+
+  /// Property keys tried, in order, when a node has no `_display_name`.
+  ///
+  /// Follows the convention Neo4j Browser uses: rather than requiring the user
+  /// to configure a caption property, probe the names data usually carries.
+  /// English keys come before Japanese ones so that a stack mixing both is
+  /// resolved predictably. `name` has no special status here — it is simply the
+  /// most common member of this list.
+  static const List<String> displayNameCandidateKeys = [
+    'name',
+    'title',
+    'label',
+    'caption',
+    '名前',
+    '名称',
+    '氏名',
+    'タイトル',
+    'ラベル',
+    'キャプション',
+  ];
+
+  /// Gets the display label
+  ///
+  /// Resolution order:
+  ///   1. `_display_name` — the reserved property that names a node explicitly
+  ///      (e.g. a short form to use when `name` is too long for the circle).
+  ///   2. the candidate keys above.
+  ///   3. the node's type label (`人物`, `god`, ...). Every node carries one on
+  ///      the ChiffonDB meta-schema, so this must come *after* the name
+  ///      lookups — probing labels first would render the type on every node.
+  ///   4. a fragment of the node's ID.
+  ///
+  /// A future `_display_name_key` schema entry will slot in between 1 and 2,
+  /// letting a label declare which property holds its name.
+  String _getDisplayLabel() =>
+      resolveDisplayLabel(node, labels: _getNodeLabels());
+
+  /// Resolves the caption for [node] using the order documented above.
+  ///
+  /// Exposed so that non-widget callers (UI-test commands, exports) report the
+  /// same caption the graph renders.
+  static String resolveDisplayLabel(
+    plough.GraphNode node, {
+    Set<String>? labels,
+  }) {
+    final explicit = node['_display_name']?.toString();
+    if (explicit != null && explicit.isNotEmpty) {
+      return explicit;
+    }
+
+    for (final key in displayNameCandidateKeys) {
+      final value = node[key]?.toString();
+      if (value != null && value.isNotEmpty) {
+        return value;
+      }
+    }
+
+    final typeLabels = labels ?? _labelsOf(node);
+    if (typeLabels.isNotEmpty) {
+      return typeLabels.first;
+    }
+
+    final id = node.id.toString();
+    return id.length > 8 ? '${id.substring(0, 8)}...' : id;
+  }
+
+  static Set<String> _labelsOf(plough.GraphNode node) {
     final labelsProperty = node['labels'];
     if (labelsProperty is List) {
       return labelsProperty.cast<String>().toSet();
     }
     return {};
-  }
-
-  /// Gets the display label
-  String _getDisplayLabel() {
-    // Get the node's label name (use the first one if there are multiple)
-    final labels = _getNodeLabels();
-    if (labels.isNotEmpty) {
-      return labels.first;
-    }
-
-    // If there are no labels, check the name property
-    final name = node['name']?.toString();
-    if (name != null && name.isNotEmpty) {
-      return name;
-    }
-
-    // If there is no name either, display part of the ID
-    final id = node.id.toString();
-    return id.length > 8 ? '${id.substring(0, 8)}...' : id;
   }
 
   /// Returns the label font size corresponding to the node size

@@ -9,6 +9,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plough/plough.dart' as plough;
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
@@ -20,10 +21,11 @@ import '../providers/search_providers.dart';
 import '../providers/selection_providers.dart';
 import '../providers/node_display_providers.dart';
 import '../models/node_display_settings.dart';
-import '../providers/link_creation_providers.dart';
+import '../features/graph_editor/providers/link_creation_providers.dart';
+import '../features/graph_editor/providers/modifier_key_providers.dart';
+import '../features/graph_editor/widgets/link_creation_overlay.dart';
 import 'app_node_renderer.dart';
 import 'graph_dot_grid.dart';
-import 'graph_link_creation_overlay.dart';
 import 'node_display_settings_panel.dart';
 import '../events/selection_events.dart';
 
@@ -51,11 +53,52 @@ class AppGraphView extends ConsumerStatefulWidget {
 class _AppGraphViewState extends ConsumerState<AppGraphView>
     with SingleTickerProviderStateMixin {
   late plough.GraphViewportController _viewportController;
+  late GraphViewCache _cache;
   late AnimationController _focusAnimController;
   Animation<Matrix4>? _focusAnimation;
   NodeDisplayContent? _lastDisplayContent;
   GlobalKey<plough.GraphViewState> _graphViewStateKey = GlobalKey();
   Size _viewportSize = Size.zero;
+  bool _escapeHandlerRegistered = false;
+
+  /// Escape abandons an in-progress link. Alt is not tracked here — it is
+  /// sampled at pointer-down instead, see the Listener in build().
+  ///
+  /// Registered on [HardwareKeyboard] rather than hung off a `Focus`, because
+  /// focus is not ours to count on: `autofocus` fires once, so touching the
+  /// sidebar or the filter field moved focus away for good and Escape stopped
+  /// working. Registration is scoped to link creation being active, so the
+  /// handler is absent the rest of the time.
+  bool _handleEscape(KeyEvent event) {
+    if (event is! KeyDownEvent) return false;
+    if (event.logicalKey != LogicalKeyboardKey.escape) return false;
+    if (!ref.read(tapLinkCreationProvider).isActive) return false;
+    ref.read(tapLinkCreationProvider.notifier).cancel();
+    return true;
+  }
+
+  void _setEscapeHandlerRegistered(bool registered) {
+    if (registered == _escapeHandlerRegistered) return;
+    _escapeHandlerRegistered = registered;
+    if (registered) {
+      HardwareKeyboard.instance.addHandler(_handleEscape);
+    } else {
+      HardwareKeyboard.instance.removeHandler(_handleEscape);
+    }
+  }
+
+  /// Feeds the preview line while the source is chosen but no button is held.
+  /// plough's own hover events only fire over entities, so the stretch of
+  /// empty canvas between two nodes would otherwise be invisible to us.
+  void _handlePointerHover(PointerHoverEvent event) {
+    if (ref.read(tapLinkCreationProvider).step !=
+        LinkCreationStep.awaitingTarget) {
+      return;
+    }
+    ref
+        .read(tapLinkCreationProvider.notifier)
+        .updatePointer(_viewportController.screenToScene(event.localPosition));
+  }
 
   @override
   void initState() {
@@ -72,14 +115,21 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
         _viewportController.value = _focusAnimation!.value;
       }
     });
-    final cache = ref.read(graphViewCacheProvider);
-    cache.transformationController = _viewportController;
-    cache.graphViewStateKey = _graphViewStateKey;
+    // Held so dispose() does not have to touch `ref`, which is unsafe once the
+    // widget is being unmounted (as happens when the stack is closed).
+    _cache = ref.read(graphViewCacheProvider);
+    _cache.transformationController = _viewportController;
+    _cache.graphViewStateKey = _graphViewStateKey;
   }
 
   @override
   void dispose() {
-    ref.read(graphViewCacheProvider).transformationController = null;
+    // Only relinquish the controller if it is still ours: a replacement view
+    // may already have registered its own during this frame.
+    if (identical(_cache.transformationController, _viewportController)) {
+      _cache.transformationController = null;
+    }
+    _setEscapeHandlerRegistered(false);
     _focusAnimController.dispose();
     _viewportController.dispose();
     super.dispose();
@@ -132,23 +182,64 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     }
     _lastDisplayContent = displayContent;
 
+    // While a link is being drawn, a drag must follow the pointer without
+    // dragging the node along with it.
+    //
+    // Pushed straight at the live gesture manager through the viewport
+    // controller. Alt+drag turns link creation on from inside onDragStart, so
+    // rebuilding the GraphView to carry the flag would land mid-gesture: the
+    // replacement discards plough's gesture state, the drag dies before any
+    // update arrives, and the layout restarts — which is what made unrelated
+    // nodes drift toward the centre.
+    ref.listen<bool>(tapLinkCreationProvider.select((s) => s.isActive), (
+      previous,
+      isActive,
+    ) {
+      _viewportController.suppressDragMovement = isActive;
+      _setEscapeHandlerRegistered(isActive);
+    });
+
     // Check if graph has changed
     final currentGraphHashCode = widget.appGraph.hashCode;
     final graphChanged = cache.lastAppGraphHashCode != currentGraphHashCode;
 
-    // Create new PloughGraph only if graph has changed
     plough.Graph ploughGraph;
-    if (graphChanged || cache.ploughGraph == null) {
+    if (cache.ploughGraph == null) {
       ploughGraph = _convertAppGraphToPlough(widget.appGraph);
-      // Request layout with animation so nodes animate from center
       ploughGraph.markNeedsLayout(shouldAnimate: true);
       cache.ploughGraph = ploughGraph;
       cache.lastAppGraphHashCode = currentGraphHashCode;
     } else {
       ploughGraph = cache.ploughGraph!;
+      if (graphChanged) {
+        // Mutate the existing graph rather than building a replacement.
+        // GraphView treats a different Graph instance as a different graph and
+        // reinitialises: geometry is dropped, links stop being drawn, and the
+        // layout runs from scratch — which showed up as the canvas blanking for
+        // a moment and nodes shifting every time a link was added.
+        _syncPloughGraph(ploughGraph, widget.appGraph);
+        cache.lastAppGraphHashCode = currentGraphHashCode;
+      }
     }
 
-    final layoutStrategy = _convertLayoutConfigToStrategy(widget.layoutConfig);
+    // Pin everything the layout has already placed. Adding a node re-runs the
+    // layout over the whole graph, and without this the nodes the user is
+    // looking at would all move to make room for the newcomer.
+    //
+    // `isArranged` is set by plough when a layout finishes, so it marks exactly
+    // the nodes with a position worth keeping.
+    final layoutStrategy = _convertLayoutConfigToStrategy(
+      widget.layoutConfig,
+      fixedPositions: [
+        for (final node in ploughGraph.nodes)
+          if (node.isArranged)
+            plough.GraphNodeLayoutPosition(
+              id: node.id,
+              position: node.logicalPosition,
+              fixed: true,
+            ),
+      ],
+    );
 
     // Create new behavior only if not yet created
     if (cache.behavior == null) {
@@ -194,9 +285,13 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
         );
 
         // Create new GraphView only if instance not yet created or
-        // graph has changed
+        // graph has changed.
+        //
+        // The key is deliberately reused. Minting a fresh GlobalKey would tear
+        // down GraphViewState and take the laid-out positions with it, so
+        // gaining a single link would rearrange the whole canvas. plough picks
+        // up the new graph through didUpdateWidget.
         if (cache.graphView == null || graphChanged) {
-          _graphViewStateKey = GlobalKey();
           cache.graphViewStateKey = _graphViewStateKey;
           cache.graphView = plough.GraphView(
             key: _graphViewStateKey,
@@ -205,11 +300,22 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
             behavior: behavior,
             allowSelection: true,
             allowMultiSelection: false,
+            // Tapping empty canvas abandons an in-progress link. The behavior's
+            // onTap cannot do this: plough only dispatches it once a node or
+            // link has been hit, so a tap on the background never reaches it.
+            onBackgroundTapped: (_) {
+              if (ref.read(tapLinkCreationProvider).isActive) {
+                ref.read(tapLinkCreationProvider.notifier).cancel();
+              }
+            },
             // Start node animation from center of drawing area
             nodeAnimationStartPosition: centerOffset,
             // nodeEdgeOnly: only consume gestures on nodes/edges;
             // background pans fall through to GraphViewport.
             gestureMode: plough.GraphGestureMode.nodeEdgeOnly,
+            // Drag-movement suppression is driven through the viewport
+            // controller instead of this parameter, so it can change without
+            // rebuilding the view. See the ref.listen above.
             // Coordinate conversion (screen -> scene) and drag-delta scaling are
             // now handled internally by plough's viewport: the GraphViewport
             // sets the controller's screenToScene handler and drives hit-testing
@@ -221,135 +327,209 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
         }
 
         final appColorScheme = ref.watch(effectiveColorSchemeProvider);
-        return ColoredBox(
-          color: appColorScheme.appSpecific.graph.background,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: DotGridBackground(
-                  transformationController: _viewportController,
-                ),
+        return Listener(
+          // Only onTap consumes this. plough dispatches taps from behind its
+          // recognition timer, so by then the key may be up; drags run early
+          // enough to read the keyboard directly. Overwritten on every press,
+          // so it never describes an older gesture.
+          onPointerDown: (_) {
+            ref
+                .read(altPressedProvider.notifier)
+                .set(HardwareKeyboard.instance.isAltPressed);
+          },
+          child: MouseRegion(
+            opaque: false,
+            onHover: _handlePointerHover,
+            child: ColoredBox(
+              color: appColorScheme.appSpecific.graph.background,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: DotGridBackground(
+                      transformationController: _viewportController,
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: plough.GraphViewport(
+                      controller: _viewportController,
+                      minScale: 0.5,
+                      maxScale: 3.0,
+                      canvasMode: plough.GraphViewportCanvasMode.infinite,
+                      // Node hit-test bounds are now stored in logical scene
+                      // space, so they stay valid across transform changes and
+                      // scene grows. The old onTransformChanged ->
+                      // refreshAllNodeGeometry band-aid is no longer needed.
+                      child: cache.graphView!,
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: LinkCreationOverlay(
+                      viewportController: _viewportController,
+                    ),
+                  ),
+                ],
               ),
-              Positioned.fill(
-                child: plough.GraphViewport(
-                  controller: _viewportController,
-                  minScale: 0.5,
-                  maxScale: 3.0,
-                  canvasMode: plough.GraphViewportCanvasMode.infinite,
-                  // Node hit-test bounds are now stored in logical scene space,
-                  // so they stay valid across transform changes and scene grows.
-                  // The old onTransformChanged -> refreshAllNodeGeometry band-aid
-                  // is no longer needed.
-                  child: cache.graphView!,
-                ),
-              ),
-              Positioned.fill(
-                child: LinkCreationArrowOverlay(
-                  transformationController: _viewportController,
-                ),
-              ),
-            ],
+            ),
           ),
         );
       },
     );
   }
 
+  /// Properties for a plough node built from [coreNode].
+  Map<String, Object> _nodeProperties(core_graph.Node coreNode) {
+    final properties = _extractProperties(coreNode.properties);
+    properties['labels'] = coreNode.labels.toList();
+    // Node captions are resolved by AppNodeRenderer, which probes
+    // `_display_name` and then a list of candidate keys (`name`, `title`,
+    // `label`, ...). Synthesising a `label` here would override that order, so
+    // the node's own properties are passed through untouched.
+    properties.putIfAbsent('description', () => '');
+    return properties;
+  }
+
+  /// Properties for a plough link built from [coreLink].
+  Map<String, Object> _linkProperties(core_graph.Link coreLink) {
+    final properties = _extractProperties(coreLink.properties);
+    properties.putIfAbsent('label', () => coreLink.type);
+    return properties;
+  }
+
+  Map<String, Object> _extractProperties(core_graph.PropertySet propertySet) {
+    return Map<String, Object>.fromEntries(
+      propertySet.toMap().entries.map(
+        (entry) => MapEntry(entry.key, entry.value ?? ''),
+      ),
+    );
+  }
+
+  plough.GraphId _nodeId(String value) =>
+      plough.GraphId(type: plough.GraphIdType.node, value: value);
+
   /// Converts App's graph data model to Plough's graph data model.
   plough.Graph _convertAppGraphToPlough(core_graph.Graph coreGraph) {
     final ploughGraph = plough.Graph();
-    final Map<String, plough.GraphNode> ploughNodes = {};
+    final ploughNodes = <String, plough.GraphNode>{};
 
-    // Helper function to extract properties from PropertySet using toMap()
-    Map<String, Object> extractProperties(core_graph.PropertySet propertySet) {
-      return Map<String, Object>.fromEntries(
-        // Use the toMap method confirmed by the API rule
-        propertySet.toMap().entries.map(
-          (entry) => MapEntry(
-            entry.key,
-            entry.value ?? '', // Use empty string for null values
-          ),
-        ),
-      );
-    }
-
-    // Convert nodes
     for (final coreNode in coreGraph.nodes.values) {
-      final properties = extractProperties(coreNode.properties);
-
-      // Add node labels to properties
-      properties['labels'] = coreNode.labels.toList();
-
-      // Set default label if needed
-      if (!properties.containsKey('label')) {
-        if (properties.containsKey('name')) {
-          properties['label'] = properties['name']!;
-        } else {
-          properties['label'] = coreNode.id.value;
-        }
-      }
-      if (!properties.containsKey('description')) {
-        properties['description'] = '';
-      }
-
       final ploughNode = plough.GraphNode(
-        id: plough.GraphId(
-          type: plough.GraphIdType.node,
-          value: coreNode.id.value,
-        ),
-        properties: properties,
+        id: _nodeId(coreNode.id.value),
+        properties: _nodeProperties(coreNode),
       );
       ploughGraph.addNode(ploughNode);
       ploughNodes[ploughNode.id.value] = ploughNode;
     }
 
-    // Convert links
     for (final coreLink in coreGraph.links.values) {
-      final sourceNode = ploughNodes[coreLink.sourceId.value];
-      final targetNode = ploughNodes[coreLink.targetId.value];
-
-      if (sourceNode != null && targetNode != null) {
-        final properties = extractProperties(coreLink.properties);
-
-        // Set default label if needed
-        if (!properties.containsKey('label')) {
-          properties['label'] = coreLink.type;
-        }
-
-        final ploughLink = plough.GraphLink(
+      final source = ploughNodes[coreLink.sourceId.value];
+      final target = ploughNodes[coreLink.targetId.value];
+      if (source == null || target == null) {
+        debugPrint(
+          'Warning: Could not create plough link for ${coreLink.id.value}. '
+          'Source or target node not found.',
+        );
+        continue;
+      }
+      ploughGraph.addLink(
+        plough.GraphLink(
           id: plough.GraphId(
             type: plough.GraphIdType.link,
             value: coreLink.id.value,
           ),
-          source: sourceNode,
-          target: targetNode,
+          source: source,
+          target: target,
           direction: plough.GraphLinkDirection.bidirectional,
-          properties: properties,
-        );
-        ploughGraph.addLink(ploughLink);
-      } else {
-        debugPrint(
-          'Warning: Could not create plough link for ${coreLink.id.value}. Source or target node not found.',
-        );
-      }
+          properties: _linkProperties(coreLink),
+        ),
+      );
     }
 
     return ploughGraph;
   }
 
+  /// Brings [ploughGraph] in line with [coreGraph] by adding and removing only
+  /// what differs.
+  ///
+  /// Replacing the graph wholesale would be simpler, but GraphView treats a new
+  /// Graph instance as a different graph: it drops the geometry, stops drawing
+  /// links until the next layout completes, and lays everything out again. For
+  /// a change as small as one new link that reads as the canvas blanking and
+  /// then rearranging itself.
+  void _syncPloughGraph(plough.Graph ploughGraph, core_graph.Graph coreGraph) {
+    final wantedNodeIds = coreGraph.nodes.values.map((n) => n.id.value).toSet();
+    final wantedLinkIds = coreGraph.links.values.map((l) => l.id.value).toSet();
+    final presentNodeIds = ploughGraph.nodes.map((n) => n.id.value).toSet();
+    final presentLinkIds = ploughGraph.links.map((l) => l.id.value).toSet();
+
+    for (final id in presentLinkIds.difference(wantedLinkIds)) {
+      ploughGraph.removeLink(
+        plough.GraphId(type: plough.GraphIdType.link, value: id),
+      );
+    }
+    for (final id in presentNodeIds.difference(wantedNodeIds)) {
+      ploughGraph.removeNode(_nodeId(id));
+    }
+
+    final addedNodes = <plough.GraphNode>[];
+    for (final coreNode in coreGraph.nodes.values) {
+      if (presentNodeIds.contains(coreNode.id.value)) continue;
+      final node = plough.GraphNode(
+        id: _nodeId(coreNode.id.value),
+        properties: _nodeProperties(coreNode),
+      );
+      ploughGraph.addNode(node);
+      addedNodes.add(node);
+    }
+
+    for (final coreLink in coreGraph.links.values) {
+      if (presentLinkIds.contains(coreLink.id.value)) continue;
+      final source = ploughGraph.getNode(_nodeId(coreLink.sourceId.value));
+      final target = ploughGraph.getNode(_nodeId(coreLink.targetId.value));
+      if (source == null || target == null) continue;
+      ploughGraph.addLink(
+        plough.GraphLink(
+          id: plough.GraphId(
+            type: plough.GraphIdType.link,
+            value: coreLink.id.value,
+          ),
+          source: source,
+          target: target,
+          direction: plough.GraphLinkDirection.bidirectional,
+          properties: _linkProperties(coreLink),
+        ),
+      );
+    }
+
+    // Only new nodes need placing; the rest are pinned by the layout strategy.
+    if (addedNodes.isNotEmpty) {
+      ploughGraph.markNeedsLayout();
+    }
+  }
+
   /// Converts App's layout configuration to Plough's layout strategy.
+  /// Builds the layout strategy, pinning [fixedPositions] so the layout leaves
+  /// those nodes alone.
+  ///
+  /// Adding a link re-queries the whole graph, which rebuilds every node and
+  /// sets `needsLayout`, so the strategy runs over nodes that already have
+  /// positions the user has seen. Pinning them keeps the canvas still while new
+  /// nodes are still placed normally.
   plough.GraphLayoutStrategy _convertLayoutConfigToStrategy(
-    AppLayoutConfig config,
-  ) {
+    AppLayoutConfig config, {
+    List<plough.GraphNodeLayoutPosition> fixedPositions = const [],
+  }) {
     return switch (config) {
       ForceDirectedLayoutConfig() => _CenteredForceDirectedLayoutStrategy(
         padding: const EdgeInsets.all(30),
+        nodePositions: fixedPositions,
       ),
       TreeLayoutConfig(:final direction) => plough.GraphTreeLayoutStrategy(
         direction: direction,
+        nodePositions: fixedPositions,
       ),
       RandomLayoutConfig(:final seed) => plough.GraphRandomLayoutStrategy(
         seed: seed,
+        nodePositions: fixedPositions,
       ),
     };
   }
@@ -408,131 +588,139 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
     selectionChangeCallback(currentId);
   }
 
+  /// Node id of the entity a gesture landed on, or null for links/background.
+  core_graph.EntityId? _nodeIdOf(plough.GraphEntityEvent event) {
+    if (event.entityIds.isEmpty) return null;
+    final id = event.entityIds.first;
+    if (id.type != plough.GraphIdType.node) return null;
+    return core_graph.EntityId.fromString(id.value);
+  }
+
+  // Handle tap events
+  @override
+  void onTap(plough.GraphTapEvent event) {
+    final state = ref.read(tapLinkCreationProvider);
+    final notifier = ref.read(tapLinkCreationProvider.notifier);
+    final nodeId = _nodeIdOf(event);
+
+    if (!state.isActive) {
+      // Alt+tap starts link creation without entering the toolbar mode.
+      if (nodeId != null && ref.read(altPressedProvider)) {
+        notifier.startWithSource(
+          nodeId,
+          trigger: LinkCreationTrigger.modifierTap,
+        );
+        return;
+      }
+      super.onTap(event);
+      return;
+    }
+
+    if (nodeId == null) {
+      // A link was tapped — only nodes can be endpoints, so treat it as a way
+      // out. Background taps never arrive here; they come through
+      // GraphView.onBackgroundTapped instead.
+      notifier.cancel();
+      return;
+    }
+
+    switch (state.step) {
+      case LinkCreationStep.awaitingSource:
+        notifier.selectSource(nodeId);
+      case LinkCreationStep.awaitingTarget:
+        notifier.selectTarget(nodeId);
+      case LinkCreationStep.confirming:
+      case LinkCreationStep.idle:
+        break;
+    }
+  }
+
   // Handle drag start events
   @override
   void onDragStart(plough.GraphDragStartEvent event) {
-    final linkCreationState = ref.read(linkCreationModeProvider);
+    final state = ref.read(tapLinkCreationProvider);
+    final notifier = ref.read(tapLinkCreationProvider.notifier);
+    final nodeId = _nodeIdOf(event);
 
-    if (linkCreationState.isActive) {
-      if (event.entityIds.isNotEmpty) {
-        final sourceEntityId = event.entityIds.first;
-        ref
-            .read(linkCreationModeProvider.notifier)
-            .setSourceNode(
-              core_graph.EntityId.fromString(sourceEntityId.value),
-            );
-      }
-    } else {
-      // Normal mode: default behavior
+    if (nodeId == null) {
       super.onDragStart(event);
+      return;
     }
+
+    if (state.step == LinkCreationStep.awaitingSource ||
+        state.step == LinkCreationStep.awaitingTarget) {
+      // Already in the toolbar mode: dragging re-aims from this node.
+      notifier.selectSource(nodeId);
+      return;
+    }
+
+    // Alt is read live here rather than from the pointer-down sample. A drag
+    // only starts once the pointer has travelled past plough's threshold, so
+    // the key is still physically down by the time this runs — unlike onTap,
+    // which fires from behind the tap-recognition timer.
+    if (!state.isActive && HardwareKeyboard.instance.isAltPressed) {
+      notifier.startWithSource(
+        nodeId,
+        trigger: LinkCreationTrigger.modifierDrag,
+      );
+      return;
+    }
+
+    // Normal mode: default behavior (node move)
+    super.onDragStart(event);
   }
 
   // Handle drag update events
   @override
   void onDragUpdate(plough.GraphDragUpdateEvent event) {
-    final linkCreationState = ref.read(linkCreationModeProvider);
+    final state = ref.read(tapLinkCreationProvider);
 
-    if (linkCreationState.isActive) {
-      final pointerPosition = event.details.localPosition;
-      ref
-          .read(linkCreationDragPositionProvider.notifier)
-          .updatePosition(pointerPosition);
-
-      // Get the entity ID during drag (target node candidate)
-      if (event.entityIds.isNotEmpty) {
-        final targetEntityId = event.entityIds.first;
-        final sourceNodeId = linkCreationState.sourceNodeId;
-
-        // If different from the source node, set as the target node
-        if (sourceNodeId != null &&
-            targetEntityId.value != sourceNodeId.value) {
-          ref
-              .read(linkCreationModeProvider.notifier)
-              .setTargetNode(
-                core_graph.EntityId.fromString(targetEntityId.value),
-              );
-        }
-      } else {
-        // If off the node, clear the target
-        ref.read(linkCreationModeProvider.notifier).setTargetNode(null);
-      }
-    } else {
-      // Normal mode: default behavior
+    if (state.step != LinkCreationStep.awaitingTarget) {
       super.onDragUpdate(event);
+      return;
     }
+
+    final notifier = ref.read(tapLinkCreationProvider.notifier);
+    final controller =
+        ref.read(graphViewCacheProvider).transformationController;
+    if (controller == null) return;
+
+    final scenePosition = controller.screenToScene(event.details.localPosition);
+    notifier.updatePointer(scenePosition);
+
+    // event.entityIds names the node being dragged, not whatever is under the
+    // pointer, so the drop target has to be hit-tested. Going through the
+    // controller reuses plough's own test, which respects node shape and
+    // stacking order.
+    final hit = controller.nodeIdAt(scenePosition);
+    final hovered =
+        hit == null ? null : core_graph.EntityId.fromString(hit.value);
+    notifier.setHoverTarget(
+      hovered != null && hovered != state.sourceNodeId ? hovered : null,
+    );
   }
 
   // Handle drag end events
   @override
-  void onDragEnd(plough.GraphDragEndEvent event) async {
-    final linkCreationState = ref.read(linkCreationModeProvider);
+  void onDragEnd(plough.GraphDragEndEvent event) {
+    final state = ref.read(tapLinkCreationProvider);
 
-    if (linkCreationState.isActive && linkCreationState.sourceNodeId != null) {
-      if (linkCreationState.targetNodeId != null &&
-          linkCreationState.targetNodeId != linkCreationState.sourceNodeId) {
-        // If a target node is set, create the link
-        await _createLink(
-          linkCreationState.sourceNodeId!,
-          linkCreationState.targetNodeId!,
-        );
-      }
-
-      ref.read(linkCreationModeProvider.notifier).cancel();
-    } else {
-      // Normal mode: default behavior
+    if (state.step != LinkCreationStep.awaitingTarget) {
       super.onDragEnd(event);
+      return;
     }
-  }
 
-  /// Create a link between two nodes
-  Future<void> _createLink(
-    core_graph.EntityId sourceId,
-    core_graph.EntityId targetId,
-  ) async {
-    try {
-      final storage = ref.read(activeStackGraphStorageProvider);
-      if (storage == null) return;
+    final notifier = ref.read(tapLinkCreationProvider.notifier);
+    final target = state.hoverTargetNodeId;
 
-      final graphContext = core_graph.GraphContext(storage: storage);
-
-      try {
-        await graphContext.initialize();
-      } catch (e) {
-        return;
-      }
-
-      final description = core_graph.EntityDescription(
-        type: 'Link',
-        propertyTypes: {
-          'type': const core_graph.TextPropertyType(isRequired: true),
-        },
-      );
-
-      await graphContext.createLink(
-        sourceId: sourceId,
-        targetId: targetId,
-        type: 'connected',
-        description: description,
-      );
-
-      final activeGraph = ref.read(core_graph.activeGraphProvider);
-      if (activeGraph != null) {
-        final updatedLinks = await graphContext.queryLinks(
-          core_graph.GraphQuery<core_graph.Link>(entityType: core_graph.Link),
-        );
-
-        // Update the active graph
-        var newGraph = activeGraph;
-        for (final link in updatedLinks.items) {
-          newGraph = newGraph.addLink(link);
-        }
-        ref.read(core_graph.activeGraphProvider.notifier).setGraph(newGraph);
-      }
-
-      // Close GraphContext
-      await graphContext.close();
-    } catch (_) {}
+    if (target != null && target != state.sourceNodeId) {
+      // Dropping on a node moves to the confirmation panel, where the link is
+      // actually created once the user names it.
+      notifier.selectTarget(target);
+    } else if (state.trigger == LinkCreationTrigger.modifierDrag) {
+      // A modifier-key drag that ended on empty space is simply abandoned.
+      notifier.cancel();
+    }
   }
 
   @override
@@ -720,11 +908,21 @@ class _NodeRendererWrapper extends ConsumerWidget {
         highlightState.isActive &&
         !highlightState.nodeIds.contains(nodeEntityId);
 
+    // Mark both ends of an in-progress link: the node it starts from, and
+    // whichever node the pointer is currently over.
+    final linkCreation = ref.watch(tapLinkCreationProvider);
+    final isLinkEndpoint =
+        linkCreation.isActive &&
+        (nodeEntityId == linkCreation.sourceNodeId ||
+            nodeEntityId == linkCreation.targetNodeId ||
+            nodeEntityId == linkCreation.hoverTargetNodeId);
+
     final renderer = AppNodeRenderer(
       node: node,
       displayContent: displayContent,
       nodeSize: nodeSize,
       colorScheme: appColorScheme,
+      isLinkEndpoint: isLinkEndpoint,
     );
 
     if (isDimmed) {
@@ -810,12 +1008,17 @@ class _NodeDisplaySettingsButtonState
 /// the entire visible area regardless of cluster size.
 final class _CenteredForceDirectedLayoutStrategy
     extends plough.GraphForceDirectedLayoutStrategy {
-  _CenteredForceDirectedLayoutStrategy({super.padding});
+  _CenteredForceDirectedLayoutStrategy({super.padding, super.nodePositions});
 
   @override
   void performLayout(plough.Graph graph, Size size) {
     super.performLayout(graph, size);
-    _fitToViewport(graph, size);
+    // Fitting translates every node, pinned ones included, so it would undo the
+    // pinning. Any pinned node means the graph already sits where the user put
+    // it and does not want re-centring.
+    if (nodePositions.isEmpty) {
+      _fitToViewport(graph, size);
+    }
   }
 
   void _fitToViewport(plough.Graph graph, Size size) {

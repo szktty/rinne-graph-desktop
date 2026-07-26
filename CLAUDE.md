@@ -1,199 +1,56 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+RinneGraph — a graph-based personal knowledge management desktop app (Flutter/Dart,
+Melos monorepo, macOS primary). See `docs/architecture/monorepo_overview.md` for
+package layout, dependency rules, Riverpod/freezed patterns, and custom library
+ownership (`ChiffonDB`, `plough`, `fonde-ui` — fix the library, not the app).
 
-## Project Overview
+## Non-negotiables
 
-RinneGraph is a graph-based personal knowledge management desktop app (alpha stage). Built with Flutter/Dart, it uses a property graph database to let users organize knowledge as interconnected nodes and links within portable "stacks."
+- **Build after every change**: `cd apps/desktop && flutter build macos`. One file at a
+  time — never batch edits before building. `flutter analyze` is not build validation.
+- **Read the whole file before editing it.** No guessed re-edits after a failed edit.
+- **Never commit without user confirmation.** A passing build is necessary but not
+  sufficient; the user must verify runtime behavior first. If verification is blocked,
+  leave the work uncommitted and say so.
+- **Regenerate after freezed/Riverpod changes**: `melos run gen:all`. Never hand-edit
+  `.g.dart` / `.freezed.dart`.
+- **Root cause over symptom.** Trace upstream (often another package) before patching.
+  Stop and explain after 2 failed fix attempts.
+- **Check dependents before touching `packages/core/`** — and trace both directions of a
+  provider chain.
+- Plan mode for anything touching 3+ files or crossing package boundaries.
 
-- **Platforms**: macOS (primary), Windows (experimental)
-- **License**: AGPLv3
+Full text: `docs/development/working_agreements.md` (also covers commands, session
+logging in `../rinne-graph-desktop-private/`, and context-limit handoff).
 
-## Build & Development Commands
+## Read before implementing
 
-```bash
-# Setup
-flutter pub get
-melos bootstrap
+- Multi-package change → `docs/architecture/data_flows.md`, then
+  `docs/architecture/data_flow_concerns.md`
+- Stack operations → `docs/stack/stack_api_architecture.md`;
+  import/export → `docs/stack/stack_exchange_format_specification.md`
+- UI / components → `docs/design/03-components.md`, `docs/design/04-implementation.md`
+- Color / theme → `docs/design/02-design-tokens.md`,
+  `docs/design/09-color-design-guidelines.md`
+- Dialogs / panels → `docs/design/13-panel-layout-guidelines.md`,
+  `docs/design/15-warning-error-dialog-guidelines.md`
+- `ChiffonDB` / `plough` / `kiri_check` → check `llms/` for context files first
 
-# Run the app
-cd apps/desktop && flutter run -d macos    # or -d windows
+## Licensing
 
-# Build (mandatory after code changes to verify no build errors)
-cd apps/desktop && flutter build macos
+Dual-licensed: **AGPL-3.0-only OR a commercial license**. The AGPLv3 is defensive — it
+exists to keep the commercial option viable, not as a preference for copyleft.
 
-# Run all tests
-melos run test
-
-# Run tests in a single package
-cd packages/core/foundation_common && flutter test
-# Run a single test file
-cd packages/core/foundation_common && flutter test test/some_test.dart
-
-# Code generation (Riverpod providers, freezed models, JSON serialization)
-melos run gen:all
-
-# Static analysis
-melos run analyze
-
-# Format code
-melos run format
-
-# Apply automatic fixes
-melos run fix
-```
-
-**Important**: After any code modification, always run `flutter build macos` (from `apps/desktop/`) to verify no build errors. `flutter analyze` is for static analysis only, not build validation.
-
-## Monorepo Architecture (Melos)
-
-The project is a Dart workspace managed by Melos. Flutter SDK: 3.41.2+, Dart SDK: 3.11.0+. FVM is configured (`.fvmrc`).
-
-### Package Layout
-
-- **`apps/desktop/`** — Main Flutter desktop application entry point
-- **`packages/core/`** — Foundation and infrastructure packages (non-feature)
-  - `foundation_common` / `foundation_flutter` — ID management, validation, platform utilities
-  - `graph_common` / `graph_flutter` — Graph database CRUD and Riverpod providers
-  - `stack_common` / `stack_flutter` — Stack lifecycle, metadata, and Riverpod providers
-  - `themes`, `settings`, `app_config`, `events`, `exchange`, `localization`, `samples`, `undo`, `workflow`
-- **`packages/features/`** — Self-contained feature modules (welcome, pathfinder, record_editor, stack_management, settings, archive, import_export, metadata_editor, updates)
-- **`packages/presentation/`** — Shared UI components and workflow widgets
-- **`packages/app/`** — App-specific core logic
-
-### Naming Convention
-
-Packages use a `category_name` pattern (e.g., `core_graph_common`, `features_pathfinder`, `presentation_components`). Pure Dart packages use `_common` suffix; Flutter-dependent packages use `_flutter` suffix.
-
-### Dependency Rules
-
-- Strict downward-only dependencies: `features` → `core` → `foundation`. No upward or circular dependencies.
-- Core packages must not depend on feature packages.
-
-## Key Architectural Patterns
-
-### State Management (Riverpod)
-
-All state is managed via Riverpod providers. Generated providers use `@riverpod` annotation (run `melos run gen:all` after adding/modifying). Key provider chain:
-
-```
-UI (ConsumerWidget) → Feature Providers → Core Providers → Foundation Providers
-```
-
-Critical providers: `activeStackProvider`, `graphContextProvider`, `availableStacksListProvider`, `activityBarStateProvider`, `shellStateManagerProvider`.
-
-### Immutable Models (freezed)
-
-Data classes use `@freezed` for immutability and `copyWith`. Run code generation after modifying any freezed class.
-
-### Stack API Architecture
-
-Three packages collaborate for stack operations — see `docs/stack/stack_api_architecture.md`:
-1. **`core_graph_common`** — Graph database lifecycle (`GraphContext`, `ChiffonStorage`)
-2. **`core_stack_common`** — Stack directory structure & metadata (`StackService`, `StackMetadataService`)
-3. **`core_stack_flutter`** — Riverpod integration (`activeStackProvider`, `StackActions`)
-
-Stack on-disk format:
-```
-MyProject.stack/
-├── meta/info.json      # Stack metadata
-├── data/graph.db       # ChiffonDB database file
-└── assets/             # Attached files
-```
-
-### UI Layout (VS Code-like)
-
-The app shell (`apps/desktop/lib/src/widgets/main_app_shell.dart`) uses a VS Code-inspired layout: ActivityBar (left) → PrimarySidebar → MainContent → SecondarySidebar, plus Toolbar (top).
-
-### Performance
-
-Graph views use free-position widgets (via `plough` package). Avoid excessive widget rebuilds, especially as node count increases.
-
-## External Package Context
-
-The `llms/` directory stores `llms-full.txt` context files for custom packages (`kiri_check`, `plough`). These are gitignored — check if they exist before working on those packages.
-
-## Custom Package Ownership
-
-`ChiffonDB`, `plough`, and `fonde-ui` are authored by the same developer as this app. Their sources are located at:
-- `ChiffonDB`: `../chiffondb/chiffondb/` (Rust core, relative to this repo root); Dart bindings in `../chiffondb/chiffondb-dart/`. Referenced via `pubspec_overrides.yaml` for local development; the published package is `chiffondb` on pub.dev.
-- `plough`: locate via `find` or `llms/` context
-
-**When a bug or design issue in `ChiffonDB` or `plough` forces an awkward workaround in app code, fix the library itself rather than patching the app.** Because the author controls all three codebases, the right fix is in the right place. Do not introduce ad-hoc workarounds in the app when the root cause is a library API design problem.
-
-## Work Rules
-
-### Editing Discipline
-
-- **One file at a time**: Edit a single file, then run `flutter build macos` (from `apps/desktop/`) to verify. Do NOT batch-edit multiple files before building. This prevents cascading failures that are hard to trace back.
-- **Read the full file before editing**: Always use the Read tool to view the complete file before making changes. For files over 500 lines, read the entire file — do not rely on partial context or memory of the file's structure.
-- **When an Edit fails**: Do not retry with a guess. Re-read the file to get the current state, then construct the correct edit.
-
-### Error Handling
-
-- **Root cause first**: When a build error or runtime issue occurs, do NOT immediately patch the symptom. Instead:
-  1. Read the full error message and identify which file/line is the actual source.
-  2. Trace the data flow upstream to find the root cause (often in a different package).
-  3. Fix the root cause, then verify downstream effects.
-- **Stop after 2 failed attempts**: If the same error persists after two fix attempts, pause and explain the situation to the user rather than continuing to iterate. The fix approach is likely wrong.
-
-### Impact Analysis Before Changes
-
-- **Check dependents**: Before modifying any file in `packages/core/`, check what depends on the changed API by searching for imports and usages across the monorepo. A change in a core package can break multiple feature packages.
-- **Provider chain awareness**: When modifying a Riverpod provider, trace both directions — what it watches (upstream) and what watches it (downstream). Changes to a provider's return type or behavior ripple through all consumers.
-
-### Required Reading Before Tasks
-
-Read the relevant documentation BEFORE starting implementation:
-
-- **Cross-package data flows**: `docs/architecture/data_flows.md` (read first for any multi-package change)
-- **Known complexity hotspots**: `docs/architecture/data_flow_concerns.md`
-- **Stack operations** (create, load, save, delete): `docs/stack/stack_api_architecture.md`
-- **Import/export**: `docs/stack/stack_exchange_format_specification.md`
-- **UI component changes**: `docs/design/03-components.md` and `docs/design/04-implementation.md`
-- **Color/theme changes**: `docs/design/02-design-tokens.md` and `docs/design/09-color-design-guidelines.md`
-- **Dialog/panel layout**: `docs/design/13-panel-layout-guidelines.md` and `docs/design/15-warning-error-dialog-guidelines.md`
-- **Custom libraries** (ChiffonDB, plough, kiri_check): Check `llms/` for context files first
-
-### Committing Changes
-
-**Never commit without user confirmation.** After implementation is complete:
-1. Report what was changed and that the build passes.
-2. Wait for the user to run the app and verify the behavior.
-3. Only create a commit after the user explicitly confirms the changes are working correctly.
-
-Build passing (`flutter build macos`) is a necessary condition but not sufficient — runtime behavior must be verified by the user before committing.
-
-### Planning for Complex Changes
-
-For tasks that touch 3+ files or cross package boundaries, use plan mode:
-1. List all files that will be modified and why.
-2. Identify the data flow path (which providers/services are involved).
-3. Define the order of changes (start from the lowest-level package, work upward).
-4. Get user approval before starting implementation.
-
-### Progress Logging
-
-Session plans and minutes are managed in the private repository at `../rinne-graph-desktop-private/`.
-
-**Session start**:
-1. Check that `../rinne-graph-desktop-private/` exists. If it does not, inform the user before proceeding.
-2. Read `../rinne-graph-desktop-private/PLAN.md` and the latest `../rinne-graph-desktop-private/sessions/YYYY-MM-DD.md` to restore context.
-3. Confirm the day's target with the user before starting implementation.
-
-**Session end**:
-1. Update feature status in `../rinne-graph-desktop-private/PLAN.md`.
-2. Write `../rinne-graph-desktop-private/sessions/YYYY-MM-DD.md` covering: what was done (with commit hashes), decisions made and why, remaining tasks and blockers.
-3. Remind the user to `git commit` in the private repository.
-
-## Context Limit Behavior
-
-When the context size is approaching its limit, stop trying to complete the current task and prepare for handoff to a new session. Write the following to a file (e.g., `docs/handoff.md`):
-
-- Current issues and blockers
-- Progress so far (what has been done)
-- Next steps (what remains to be done)
+- **Every new source file needs the SPDX header** used by existing files: copyright line,
+  `SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Commercial`, and the commercial
+  contact. Copy it from a neighboring file.
+- **New dependencies must be permissively licensed** (MIT/BSD/Apache-2.0). A GPL/AGPL
+  dependency breaks the commercial license even though this project is AGPLv3 — flag it
+  rather than adding it.
+- Don't propose relicensing or dropping the CLA.
 
 ## Language
 
-All source code, comments, and documentation must be in English. Communicate with the user in their preferred language.
+All source code, comments, and documentation in English. Communicate with the user in
+their preferred language.

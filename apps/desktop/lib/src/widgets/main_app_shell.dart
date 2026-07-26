@@ -91,13 +91,20 @@ class _MainAppShellState extends ConsumerState<MainAppShell> {
     final activeStack = ref.watch(core_stack.activeStackProvider);
 
     // Register UI state reader for the MCP HTTP server.
+    //
+    // Everything here must be read through `ref` when the reader runs. The
+    // closure outlives the build that installed it — it is only replaced on the
+    // next build — so capturing a local would report whatever was true back
+    // then. `screen` used to close over `activeStack` this way and kept saying
+    // "welcome" after a stack was opened, while `stack_path` (read live) showed
+    // the new stack.
     McpHttpServer.instance?.uiStateReader = () async {
       final stack = ref.read(core_stack.activeStackProvider);
       final activityIndex = ref.read(activityBarStateProvider);
       final viewMode = ref.read(viewToolbarStateProvider);
       final screen = activityIndex == 0 ? 'editor' : 'welcome';
       return {
-        'screen': activeStack == null ? 'welcome' : screen,
+        'screen': stack == null ? 'welcome' : screen,
         'stack_path': stack?.directory.path,
         'view_mode': viewMode,
         'activity_index': activityIndex,

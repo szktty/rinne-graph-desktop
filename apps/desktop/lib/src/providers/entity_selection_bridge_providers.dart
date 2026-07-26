@@ -126,25 +126,22 @@ class EntitySelectionBridge extends _$EntitySelectionBridge {
         '[EntitySelectionBridge] Loading graph for stack: ${stack.directory.path}',
       );
 
-      // Build the path to graph.db directly — use a dedicated storage instance
-      // so we can close it after loading and avoid holding an open SQLite
-      // connection that would lock the DB for subsequent write transactions.
-      final graphDbPath = '${stack.directory.path}/data/graph.db';
-      final loadStorage = core_graph.ChiffonStorage(
-        path: graphDbPath,
-        schema: core_graph.ChiffonSchemaGenerator.minimalSchema,
-      );
-      final graphContext = core_graph.GraphContext(storage: loadStorage);
-
-      core_graph.Graph? graph;
+      // Reuse the storage owned by activeStackGraphStorageProvider. ChiffonDB
+      // rejects opening the same database file twice within one process, so a
+      // dedicated load-only connection would collide with the provider's own
+      // instance whenever a stack is opened while another one is still active.
+      // The provider closes the storage in its onDispose, so we must not close
+      // it here.
+      final storage = ref.read(activeStackGraphStorageProvider);
+      if (storage == null) {
+        throw Exception(
+          'Graph storage is not available for stack: ${stack.directory.path}',
+        );
+      }
+      final graphContext = core_graph.GraphContext(storage: storage);
 
       debugPrint('[EntitySelectionBridge] Loading actual graph data');
-      try {
-        graph = await _loadActualGraphData(graphContext, stack);
-      } finally {
-        // Close the dedicated connection so the SQLite file is not locked.
-        await loadStorage.close();
-      }
+      final graph = await _loadActualGraphData(graphContext, stack);
 
       debugPrint(
         '[EntitySelectionBridge] Setting graph: ${graph.nodes.length} nodes, ${graph.links.length} links',
