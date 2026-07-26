@@ -203,19 +203,43 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     final currentGraphHashCode = widget.appGraph.hashCode;
     final graphChanged = cache.lastAppGraphHashCode != currentGraphHashCode;
 
-    // Create new PloughGraph only if graph has changed
     plough.Graph ploughGraph;
-    if (graphChanged || cache.ploughGraph == null) {
+    if (cache.ploughGraph == null) {
       ploughGraph = _convertAppGraphToPlough(widget.appGraph);
-      // Request layout with animation so nodes animate from center
       ploughGraph.markNeedsLayout(shouldAnimate: true);
       cache.ploughGraph = ploughGraph;
       cache.lastAppGraphHashCode = currentGraphHashCode;
     } else {
       ploughGraph = cache.ploughGraph!;
+      if (graphChanged) {
+        // Mutate the existing graph rather than building a replacement.
+        // GraphView treats a different Graph instance as a different graph and
+        // reinitialises: geometry is dropped, links stop being drawn, and the
+        // layout runs from scratch — which showed up as the canvas blanking for
+        // a moment and nodes shifting every time a link was added.
+        _syncPloughGraph(ploughGraph, widget.appGraph);
+        cache.lastAppGraphHashCode = currentGraphHashCode;
+      }
     }
 
-    final layoutStrategy = _convertLayoutConfigToStrategy(widget.layoutConfig);
+    // Pin everything the layout has already placed. Adding a node re-runs the
+    // layout over the whole graph, and without this the nodes the user is
+    // looking at would all move to make room for the newcomer.
+    //
+    // `isArranged` is set by plough when a layout finishes, so it marks exactly
+    // the nodes with a position worth keeping.
+    final layoutStrategy = _convertLayoutConfigToStrategy(
+      widget.layoutConfig,
+      fixedPositions: [
+        for (final node in ploughGraph.nodes)
+          if (node.isArranged)
+            plough.GraphNodeLayoutPosition(
+              id: node.id,
+              position: node.logicalPosition,
+              fixed: true,
+            ),
+      ],
+    );
 
     // Create new behavior only if not yet created
     if (cache.behavior == null) {
@@ -261,9 +285,13 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
         );
 
         // Create new GraphView only if instance not yet created or
-        // graph has changed
+        // graph has changed.
+        //
+        // The key is deliberately reused. Minting a fresh GlobalKey would tear
+        // down GraphViewState and take the laid-out positions with it, so
+        // gaining a single link would rearrange the whole canvas. plough picks
+        // up the new graph through didUpdateWidget.
         if (cache.graphView == null || graphChanged) {
-          _graphViewStateKey = GlobalKey();
           cache.graphViewStateKey = _graphViewStateKey;
           cache.graphView = plough.GraphView(
             key: _graphViewStateKey,
@@ -348,97 +376,160 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     );
   }
 
+  /// Properties for a plough node built from [coreNode].
+  Map<String, Object> _nodeProperties(core_graph.Node coreNode) {
+    final properties = _extractProperties(coreNode.properties);
+    properties['labels'] = coreNode.labels.toList();
+    // Node captions are resolved by AppNodeRenderer, which probes
+    // `_display_name` and then a list of candidate keys (`name`, `title`,
+    // `label`, ...). Synthesising a `label` here would override that order, so
+    // the node's own properties are passed through untouched.
+    properties.putIfAbsent('description', () => '');
+    return properties;
+  }
+
+  /// Properties for a plough link built from [coreLink].
+  Map<String, Object> _linkProperties(core_graph.Link coreLink) {
+    final properties = _extractProperties(coreLink.properties);
+    properties.putIfAbsent('label', () => coreLink.type);
+    return properties;
+  }
+
+  Map<String, Object> _extractProperties(core_graph.PropertySet propertySet) {
+    return Map<String, Object>.fromEntries(
+      propertySet.toMap().entries.map(
+        (entry) => MapEntry(entry.key, entry.value ?? ''),
+      ),
+    );
+  }
+
+  plough.GraphId _nodeId(String value) =>
+      plough.GraphId(type: plough.GraphIdType.node, value: value);
+
   /// Converts App's graph data model to Plough's graph data model.
   plough.Graph _convertAppGraphToPlough(core_graph.Graph coreGraph) {
     final ploughGraph = plough.Graph();
-    final Map<String, plough.GraphNode> ploughNodes = {};
+    final ploughNodes = <String, plough.GraphNode>{};
 
-    // Helper function to extract properties from PropertySet using toMap()
-    Map<String, Object> extractProperties(core_graph.PropertySet propertySet) {
-      return Map<String, Object>.fromEntries(
-        // Use the toMap method confirmed by the API rule
-        propertySet.toMap().entries.map(
-          (entry) => MapEntry(
-            entry.key,
-            entry.value ?? '', // Use empty string for null values
-          ),
-        ),
-      );
-    }
-
-    // Convert nodes
     for (final coreNode in coreGraph.nodes.values) {
-      final properties = extractProperties(coreNode.properties);
-
-      // Add node labels to properties
-      properties['labels'] = coreNode.labels.toList();
-
-      // Node captions are resolved by AppNodeRenderer, which probes
-      // `_display_name` and then a list of candidate keys (`name`, `title`,
-      // `label`, ...). Synthesising a `label` here would override that order,
-      // so the node's own properties are passed through untouched.
-      if (!properties.containsKey('description')) {
-        properties['description'] = '';
-      }
-
       final ploughNode = plough.GraphNode(
-        id: plough.GraphId(
-          type: plough.GraphIdType.node,
-          value: coreNode.id.value,
-        ),
-        properties: properties,
+        id: _nodeId(coreNode.id.value),
+        properties: _nodeProperties(coreNode),
       );
       ploughGraph.addNode(ploughNode);
       ploughNodes[ploughNode.id.value] = ploughNode;
     }
 
-    // Convert links
     for (final coreLink in coreGraph.links.values) {
-      final sourceNode = ploughNodes[coreLink.sourceId.value];
-      final targetNode = ploughNodes[coreLink.targetId.value];
-
-      if (sourceNode != null && targetNode != null) {
-        final properties = extractProperties(coreLink.properties);
-
-        // Set default label if needed
-        if (!properties.containsKey('label')) {
-          properties['label'] = coreLink.type;
-        }
-
-        final ploughLink = plough.GraphLink(
+      final source = ploughNodes[coreLink.sourceId.value];
+      final target = ploughNodes[coreLink.targetId.value];
+      if (source == null || target == null) {
+        debugPrint(
+          'Warning: Could not create plough link for ${coreLink.id.value}. '
+          'Source or target node not found.',
+        );
+        continue;
+      }
+      ploughGraph.addLink(
+        plough.GraphLink(
           id: plough.GraphId(
             type: plough.GraphIdType.link,
             value: coreLink.id.value,
           ),
-          source: sourceNode,
-          target: targetNode,
+          source: source,
+          target: target,
           direction: plough.GraphLinkDirection.bidirectional,
-          properties: properties,
-        );
-        ploughGraph.addLink(ploughLink);
-      } else {
-        debugPrint(
-          'Warning: Could not create plough link for ${coreLink.id.value}. Source or target node not found.',
-        );
-      }
+          properties: _linkProperties(coreLink),
+        ),
+      );
     }
 
     return ploughGraph;
   }
 
+  /// Brings [ploughGraph] in line with [coreGraph] by adding and removing only
+  /// what differs.
+  ///
+  /// Replacing the graph wholesale would be simpler, but GraphView treats a new
+  /// Graph instance as a different graph: it drops the geometry, stops drawing
+  /// links until the next layout completes, and lays everything out again. For
+  /// a change as small as one new link that reads as the canvas blanking and
+  /// then rearranging itself.
+  void _syncPloughGraph(plough.Graph ploughGraph, core_graph.Graph coreGraph) {
+    final wantedNodeIds = coreGraph.nodes.values.map((n) => n.id.value).toSet();
+    final wantedLinkIds = coreGraph.links.values.map((l) => l.id.value).toSet();
+    final presentNodeIds = ploughGraph.nodes.map((n) => n.id.value).toSet();
+    final presentLinkIds = ploughGraph.links.map((l) => l.id.value).toSet();
+
+    for (final id in presentLinkIds.difference(wantedLinkIds)) {
+      ploughGraph.removeLink(
+        plough.GraphId(type: plough.GraphIdType.link, value: id),
+      );
+    }
+    for (final id in presentNodeIds.difference(wantedNodeIds)) {
+      ploughGraph.removeNode(_nodeId(id));
+    }
+
+    final addedNodes = <plough.GraphNode>[];
+    for (final coreNode in coreGraph.nodes.values) {
+      if (presentNodeIds.contains(coreNode.id.value)) continue;
+      final node = plough.GraphNode(
+        id: _nodeId(coreNode.id.value),
+        properties: _nodeProperties(coreNode),
+      );
+      ploughGraph.addNode(node);
+      addedNodes.add(node);
+    }
+
+    for (final coreLink in coreGraph.links.values) {
+      if (presentLinkIds.contains(coreLink.id.value)) continue;
+      final source = ploughGraph.getNode(_nodeId(coreLink.sourceId.value));
+      final target = ploughGraph.getNode(_nodeId(coreLink.targetId.value));
+      if (source == null || target == null) continue;
+      ploughGraph.addLink(
+        plough.GraphLink(
+          id: plough.GraphId(
+            type: plough.GraphIdType.link,
+            value: coreLink.id.value,
+          ),
+          source: source,
+          target: target,
+          direction: plough.GraphLinkDirection.bidirectional,
+          properties: _linkProperties(coreLink),
+        ),
+      );
+    }
+
+    // Only new nodes need placing; the rest are pinned by the layout strategy.
+    if (addedNodes.isNotEmpty) {
+      ploughGraph.markNeedsLayout();
+    }
+  }
+
   /// Converts App's layout configuration to Plough's layout strategy.
+  /// Builds the layout strategy, pinning [fixedPositions] so the layout leaves
+  /// those nodes alone.
+  ///
+  /// Adding a link re-queries the whole graph, which rebuilds every node and
+  /// sets `needsLayout`, so the strategy runs over nodes that already have
+  /// positions the user has seen. Pinning them keeps the canvas still while new
+  /// nodes are still placed normally.
   plough.GraphLayoutStrategy _convertLayoutConfigToStrategy(
-    AppLayoutConfig config,
-  ) {
+    AppLayoutConfig config, {
+    List<plough.GraphNodeLayoutPosition> fixedPositions = const [],
+  }) {
     return switch (config) {
       ForceDirectedLayoutConfig() => _CenteredForceDirectedLayoutStrategy(
         padding: const EdgeInsets.all(30),
+        nodePositions: fixedPositions,
       ),
       TreeLayoutConfig(:final direction) => plough.GraphTreeLayoutStrategy(
         direction: direction,
+        nodePositions: fixedPositions,
       ),
       RandomLayoutConfig(:final seed) => plough.GraphRandomLayoutStrategy(
         seed: seed,
+        nodePositions: fixedPositions,
       ),
     };
   }
@@ -917,12 +1008,17 @@ class _NodeDisplaySettingsButtonState
 /// the entire visible area regardless of cluster size.
 final class _CenteredForceDirectedLayoutStrategy
     extends plough.GraphForceDirectedLayoutStrategy {
-  _CenteredForceDirectedLayoutStrategy({super.padding});
+  _CenteredForceDirectedLayoutStrategy({super.padding, super.nodePositions});
 
   @override
   void performLayout(plough.Graph graph, Size size) {
     super.performLayout(graph, size);
-    _fitToViewport(graph, size);
+    // Fitting translates every node, pinned ones included, so it would undo the
+    // pinning. Any pinned node means the graph already sits where the user put
+    // it and does not want re-centring.
+    if (nodePositions.isEmpty) {
+      _fitToViewport(graph, size);
+    }
   }
 
   void _fitToViewport(plough.Graph graph, Size size) {
