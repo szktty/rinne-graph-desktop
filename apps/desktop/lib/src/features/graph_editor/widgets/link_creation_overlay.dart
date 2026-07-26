@@ -59,6 +59,7 @@ class LinkCreationOverlay extends ConsumerWidget {
                       start: viewportController.sceneToScreen(source),
                       end: viewportController.sceneToScreen(target),
                       color: colorScheme.appSpecific.graph.selectionHighlight,
+                      haloColor: colorScheme.appSpecific.graph.background,
                       // Solid once both ends are settled, dashed while the free
                       // end still follows the pointer.
                       dashed: state.step != LinkCreationStep.confirming,
@@ -254,33 +255,59 @@ class _LinkPreviewPainter extends CustomPainter {
     required this.start,
     required this.end,
     required this.color,
+    required this.haloColor,
     required this.dashed,
   });
+
+  static const double _strokeWidth = 3;
+
+  /// Width of the contrasting outline drawn under the line.
+  static const double _haloWidth = _strokeWidth + 4;
 
   final Offset start;
   final Offset end;
   final Color color;
+
+  /// Drawn beneath the line so it stays legible over a node, whose fill can be
+  /// close to the highlight colour depending on the theme.
+  final Color haloColor;
   final bool dashed;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint =
-        Paint()
-          ..color = color
-          ..strokeWidth = 2
-          ..style = PaintingStyle.stroke;
+    // Halo first, line on top.
+    _drawStroke(
+      canvas,
+      Paint()
+        ..color = haloColor
+        ..strokeWidth = _haloWidth
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.stroke,
+    );
+    _drawStroke(
+      canvas,
+      Paint()
+        ..color = color
+        ..strokeWidth = _strokeWidth
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.stroke,
+    );
 
+    _drawArrowhead(canvas, haloColor, _haloWidth);
+    _drawArrowhead(canvas, color, 0);
+  }
+
+  void _drawStroke(Canvas canvas, Paint paint) {
     if (dashed) {
       _drawDashedLine(canvas, paint);
     } else {
       canvas.drawLine(start, end, paint);
     }
-    _drawArrowhead(canvas, paint);
   }
 
   void _drawDashedLine(Canvas canvas, Paint paint) {
-    const dash = 6.0;
-    const gap = 4.0;
+    const dash = 8.0;
+    const gap = 5.0;
     final delta = end - start;
     final distance = delta.distance;
     if (distance < 1) return;
@@ -298,8 +325,10 @@ class _LinkPreviewPainter extends CustomPainter {
     }
   }
 
-  void _drawArrowhead(Canvas canvas, Paint paint) {
-    const length = 12.0;
+  /// Draws the arrowhead in [fillColor], grown by [outset] on every side so the
+  /// halo pass sits proud of the coloured one.
+  void _drawArrowhead(Canvas canvas, Color fillColor, double outset) {
+    const length = 15.0;
     const spread = 0.45; // radians either side of the shaft
     final delta = end - start;
     if (delta.distance < 1) return;
@@ -318,7 +347,20 @@ class _LinkPreviewPainter extends CustomPainter {
           )
           ..close();
 
-    canvas.drawPath(path, Paint()..color = color);
+    if (outset > 0) {
+      // Stroking the same path outwards is enough of an outline here; no need
+      // to offset the geometry itself.
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = fillColor
+          ..strokeWidth = outset
+          ..strokeJoin = StrokeJoin.round
+          ..style = PaintingStyle.stroke,
+      );
+      return;
+    }
+    canvas.drawPath(path, Paint()..color = fillColor);
   }
 
   @override
@@ -326,6 +368,7 @@ class _LinkPreviewPainter extends CustomPainter {
     return oldDelegate.start != start ||
         oldDelegate.end != end ||
         oldDelegate.color != color ||
+        oldDelegate.haloColor != haloColor ||
         oldDelegate.dashed != dashed;
   }
 }
