@@ -129,6 +129,17 @@ class AppNodeRenderer extends ConsumerWidget {
     );
   }
 
+  /// Icon colour, tracking the circle's fill.
+  ///
+  /// `nodeIcon` and `nodeBase` are both the theme's primary, so the icon is
+  /// normally invisible against the node it sits on — evidently on purpose. It
+  /// has to be brightened alongside the fill, or highlighting a node would make
+  /// a stray ring appear inside it.
+  Color _iconColor() {
+    final icon = colorScheme.appSpecific.graph.nodeIcon;
+    return isLinkEndpoint ? _lighten(icon, 0.18) : icon;
+  }
+
   Color _lighten(Color color, double amount) {
     final hsl = HSLColor.fromColor(color);
     return hsl
@@ -248,11 +259,7 @@ class AppNodeRenderer extends ConsumerWidget {
           // Icon positioned above the label area
           Positioned(
             top: nodeSize.diameter * 0.12,
-            child: Icon(
-              icon,
-              size: iconSize,
-              color: colorScheme.appSpecific.graph.nodeIcon,
-            ),
+            child: Icon(icon, size: iconSize, color: _iconColor()),
           ),
         ],
       ),
@@ -269,11 +276,7 @@ class AppNodeRenderer extends ConsumerWidget {
       height: nodeSize.diameter,
       decoration: _circleDecoration(),
       child: Center(
-        child: Icon(
-          icon,
-          size: nodeSize.diameter * 0.4,
-          color: colorScheme.appSpecific.graph.nodeIcon,
-        ),
+        child: Icon(icon, size: nodeSize.diameter * 0.4, color: _iconColor()),
       ),
     );
   }
