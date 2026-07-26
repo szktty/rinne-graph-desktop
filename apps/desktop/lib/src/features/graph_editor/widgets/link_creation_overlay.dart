@@ -60,9 +60,6 @@ class LinkCreationOverlay extends ConsumerWidget {
                       end: viewportController.sceneToScreen(target),
                       color: colorScheme.appSpecific.graph.selectionHighlight,
                       haloColor: colorScheme.appSpecific.graph.background,
-                      // Solid once both ends are settled, dashed while the free
-                      // end still follows the pointer.
-                      dashed: state.step != LinkCreationStep.confirming,
                     ),
                   ),
                 ),
@@ -256,7 +253,6 @@ class _LinkPreviewPainter extends CustomPainter {
     required this.end,
     required this.color,
     required this.haloColor,
-    required this.dashed,
   });
 
   static const double _strokeWidth = 3;
@@ -271,21 +267,22 @@ class _LinkPreviewPainter extends CustomPainter {
   /// Drawn beneath the line so it stays legible over a node, whose fill can be
   /// close to the highlight colour depending on the theme.
   final Color haloColor;
-  final bool dashed;
 
   @override
   void paint(Canvas canvas, Size size) {
     // Halo first, line on top.
-    _drawStroke(
-      canvas,
+    canvas.drawLine(
+      start,
+      end,
       Paint()
         ..color = haloColor
         ..strokeWidth = _haloWidth
         ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke,
     );
-    _drawStroke(
-      canvas,
+    canvas.drawLine(
+      start,
+      end,
       Paint()
         ..color = color
         ..strokeWidth = _strokeWidth
@@ -295,34 +292,6 @@ class _LinkPreviewPainter extends CustomPainter {
 
     _drawArrowhead(canvas, haloColor, _haloWidth);
     _drawArrowhead(canvas, color, 0);
-  }
-
-  void _drawStroke(Canvas canvas, Paint paint) {
-    if (dashed) {
-      _drawDashedLine(canvas, paint);
-    } else {
-      canvas.drawLine(start, end, paint);
-    }
-  }
-
-  void _drawDashedLine(Canvas canvas, Paint paint) {
-    const dash = 8.0;
-    const gap = 5.0;
-    final delta = end - start;
-    final distance = delta.distance;
-    if (distance < 1) return;
-    final step = delta / distance;
-
-    var travelled = 0.0;
-    while (travelled < distance) {
-      final segment = math.min(dash, distance - travelled);
-      canvas.drawLine(
-        start + step * travelled,
-        start + step * (travelled + segment),
-        paint,
-      );
-      travelled += dash + gap;
-    }
   }
 
   /// Draws the arrowhead in [fillColor], grown by [outset] on every side so the
@@ -368,7 +337,6 @@ class _LinkPreviewPainter extends CustomPainter {
     return oldDelegate.start != start ||
         oldDelegate.end != end ||
         oldDelegate.color != color ||
-        oldDelegate.haloColor != haloColor ||
-        oldDelegate.dashed != dashed;
+        oldDelegate.haloColor != haloColor;
   }
 }

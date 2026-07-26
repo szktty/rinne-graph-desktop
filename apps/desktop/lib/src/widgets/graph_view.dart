@@ -817,11 +817,21 @@ class _NodeRendererWrapper extends ConsumerWidget {
         highlightState.isActive &&
         !highlightState.nodeIds.contains(nodeEntityId);
 
+    // Mark both ends of an in-progress link: the node it starts from, and
+    // whichever node the pointer is currently over.
+    final linkCreation = ref.watch(tapLinkCreationProvider);
+    final isLinkEndpoint =
+        linkCreation.isActive &&
+        (nodeEntityId == linkCreation.sourceNodeId ||
+            nodeEntityId == linkCreation.targetNodeId ||
+            nodeEntityId == linkCreation.hoverTargetNodeId);
+
     final renderer = AppNodeRenderer(
       node: node,
       displayContent: displayContent,
       nodeSize: nodeSize,
       colorScheme: appColorScheme,
+      isLinkEndpoint: isLinkEndpoint,
     );
 
     if (isDimmed) {

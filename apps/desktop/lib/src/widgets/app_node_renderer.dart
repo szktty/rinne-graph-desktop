@@ -30,12 +30,17 @@ class AppNodeRenderer extends ConsumerWidget {
   /// Color scheme
   final AppColorScheme colorScheme;
 
+  /// Whether this node is an endpoint of the link currently being drawn —
+  /// either the source, or the node under the pointer.
+  final bool isLinkEndpoint;
+
   const AppNodeRenderer({
     super.key,
     required this.node,
     required this.displayContent,
     required this.nodeSize,
     required this.colorScheme,
+    this.isLinkEndpoint = false,
   });
 
   @override
@@ -105,11 +110,30 @@ class AppNodeRenderer extends ConsumerWidget {
 
   /// Returns the node circle decoration with border
   BoxDecoration _circleDecoration() {
+    final base = colorScheme.appSpecific.graph.nodeBase;
+    // A link endpoint is brightened rather than recoloured. selectionHighlight
+    // resolves to the theme's secondary, which sits close enough to nodeBase
+    // (its primary) that swapping the rim's colour was invisible; a lightness
+    // shift reads regardless of how the two hues relate.
+    //
+    // The rim keeps its 4px because the layout above reserves exactly that for
+    // the outer selection border — a wider ring would shift the node.
+    final fill = isLinkEndpoint ? _lighten(base, 0.18) : base;
     return BoxDecoration(
       shape: BoxShape.circle,
-      color: colorScheme.appSpecific.graph.nodeBase,
-      border: Border.all(color: _nodeBorderColor(), width: 4.0),
+      color: fill,
+      border: Border.all(
+        color: isLinkEndpoint ? _lighten(base, 0.36) : _nodeBorderColor(),
+        width: 4.0,
+      ),
     );
+  }
+
+  Color _lighten(Color color, double amount) {
+    final hsl = HSLColor.fromColor(color);
+    return hsl
+        .withLightness((hsl.lightness + amount).clamp(0.0, 1.0))
+        .toColor();
   }
 
   /// Returns the shortened ID string "(xxxxxxxx)"
