@@ -57,7 +57,6 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
   late AnimationController _focusAnimController;
   Animation<Matrix4>? _focusAnimation;
   NodeDisplayContent? _lastDisplayContent;
-  bool _lastDrawingLink = false;
   GlobalKey<plough.GraphViewState> _graphViewStateKey = GlobalKey();
   Size _viewportSize = Size.zero;
   bool _escapeHandlerRegistered = false;
@@ -184,17 +183,21 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     _lastDisplayContent = displayContent;
 
     // While a link is being drawn, a drag must follow the pointer without
-    // dragging the node along with it. The cached GraphView has to be rebuilt
-    // for the flag to reach plough — but not re-keyed, or the graph would
-    // animate in from scratch every time the mode is entered.
-    final drawingLink = ref.watch(
-      tapLinkCreationProvider.select((s) => s.isActive),
-    );
-    if (_lastDrawingLink != drawingLink) {
-      cache.graphView = null;
-      _lastDrawingLink = drawingLink;
-    }
-    _setEscapeHandlerRegistered(drawingLink);
+    // dragging the node along with it.
+    //
+    // Pushed straight at the live gesture manager through the viewport
+    // controller. Alt+drag turns link creation on from inside onDragStart, so
+    // rebuilding the GraphView to carry the flag would land mid-gesture: the
+    // replacement discards plough's gesture state, the drag dies before any
+    // update arrives, and the layout restarts — which is what made unrelated
+    // nodes drift toward the centre.
+    ref.listen<bool>(tapLinkCreationProvider.select((s) => s.isActive), (
+      previous,
+      isActive,
+    ) {
+      _viewportController.suppressDragMovement = isActive;
+      _setEscapeHandlerRegistered(isActive);
+    });
 
     // Check if graph has changed
     final currentGraphHashCode = widget.appGraph.hashCode;
@@ -282,11 +285,9 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
             // nodeEdgeOnly: only consume gestures on nodes/edges;
             // background pans fall through to GraphViewport.
             gestureMode: plough.GraphGestureMode.nodeEdgeOnly,
-            // Drags report their progress but leave nodes where they are, so
-            // the preview line can follow the pointer. Clearing canDrag would
-            // instead make the node refuse the gesture, and no drag events
-            // would arrive at all.
-            suppressDragMovement: drawingLink,
+            // Drag-movement suppression is driven through the viewport
+            // controller instead of this parameter, so it can change without
+            // rebuilding the view. See the ref.listen above.
             // Coordinate conversion (screen -> scene) and drag-delta scaling are
             // now handled internally by plough's viewport: the GraphViewport
             // sets the controller's screenToScene handler and drives hit-testing
