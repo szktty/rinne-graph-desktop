@@ -57,27 +57,35 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
   late AnimationController _focusAnimController;
   Animation<Matrix4>? _focusAnimation;
   NodeDisplayContent? _lastDisplayContent;
+  bool _lastDrawingLink = false;
   GlobalKey<plough.GraphViewState> _graphViewStateKey = GlobalKey();
   Size _viewportSize = Size.zero;
-  final FocusNode _focusNode = FocusNode(debugLabel: 'AppGraphView');
+  bool _escapeHandlerRegistered = false;
 
   /// Escape abandons an in-progress link. Alt is not tracked here — it is
   /// sampled at pointer-down instead, see the Listener in build().
   ///
-  /// Used as the enclosing `Focus`'s `onKeyEvent`, so it fires while the graph
-  /// view or anything inside it holds focus — including the confirmation
-  /// panel's text field. Escape therefore works whether or not the user has
-  /// clicked into the label.
-  KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
-    if (event is! KeyDownEvent) return KeyEventResult.ignored;
-    if (event.logicalKey != LogicalKeyboardKey.escape) {
-      return KeyEventResult.ignored;
-    }
-    if (!ref.read(tapLinkCreationProvider).isActive) {
-      return KeyEventResult.ignored;
-    }
+  /// Registered on [HardwareKeyboard] rather than hung off a `Focus`, because
+  /// focus is not ours to count on: `autofocus` fires once, so touching the
+  /// sidebar or the filter field moved focus away for good and Escape stopped
+  /// working. Registration is scoped to link creation being active, so the
+  /// handler is absent the rest of the time.
+  bool _handleEscape(KeyEvent event) {
+    if (event is! KeyDownEvent) return false;
+    if (event.logicalKey != LogicalKeyboardKey.escape) return false;
+    if (!ref.read(tapLinkCreationProvider).isActive) return false;
     ref.read(tapLinkCreationProvider.notifier).cancel();
-    return KeyEventResult.handled;
+    return true;
+  }
+
+  void _setEscapeHandlerRegistered(bool registered) {
+    if (registered == _escapeHandlerRegistered) return;
+    _escapeHandlerRegistered = registered;
+    if (registered) {
+      HardwareKeyboard.instance.addHandler(_handleEscape);
+    } else {
+      HardwareKeyboard.instance.removeHandler(_handleEscape);
+    }
   }
 
   /// Feeds the preview line while the source is chosen but no button is held.
@@ -122,7 +130,7 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     if (identical(_cache.transformationController, _viewportController)) {
       _cache.transformationController = null;
     }
-    _focusNode.dispose();
+    _setEscapeHandlerRegistered(false);
     _focusAnimController.dispose();
     _viewportController.dispose();
     super.dispose();
@@ -160,22 +168,6 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
       }
     });
 
-    // Nodes must not move while a link is being drawn from one. plough moves a
-    // node inside its drag manager before the behavior is notified, so the
-    // behavior cannot suppress it — canDrag is the supported lever. This is the
-    // single place that flips it, so no exit path (Escape, commit, cancel, a
-    // stack switch) can leave nodes stuck.
-    ref.listen<bool>(tapLinkCreationProvider.select((s) => s.isActive), (
-      previous,
-      isActive,
-    ) {
-      final graph = ref.read(graphViewCacheProvider).ploughGraph;
-      if (graph == null) return;
-      for (final node in graph.nodes) {
-        node.canDrag = !isActive;
-      }
-    });
-
     // Get selection state
     final selectionState = ref.watch(selectionStateProvider);
 
@@ -190,6 +182,19 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
       cache.graphViewStateKey = _graphViewStateKey;
     }
     _lastDisplayContent = displayContent;
+
+    // While a link is being drawn, a drag must follow the pointer without
+    // dragging the node along with it. The cached GraphView has to be rebuilt
+    // for the flag to reach plough — but not re-keyed, or the graph would
+    // animate in from scratch every time the mode is entered.
+    final drawingLink = ref.watch(
+      tapLinkCreationProvider.select((s) => s.isActive),
+    );
+    if (_lastDrawingLink != drawingLink) {
+      cache.graphView = null;
+      _lastDrawingLink = drawingLink;
+    }
+    _setEscapeHandlerRegistered(drawingLink);
 
     // Check if graph has changed
     final currentGraphHashCode = widget.appGraph.hashCode;
@@ -277,6 +282,11 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
             // nodeEdgeOnly: only consume gestures on nodes/edges;
             // background pans fall through to GraphViewport.
             gestureMode: plough.GraphGestureMode.nodeEdgeOnly,
+            // Drags report their progress but leave nodes where they are, so
+            // the preview line can follow the pointer. Clearing canDrag would
+            // instead make the node refuse the gesture, and no drag events
+            // would arrive at all.
+            suppressDragMovement: drawingLink,
             // Coordinate conversion (screen -> scene) and drag-delta scaling are
             // now handled internally by plough's viewport: the GraphViewport
             // sets the controller's screenToScene handler and drives hit-testing
@@ -288,57 +298,47 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
         }
 
         final appColorScheme = ref.watch(effectiveColorSchemeProvider);
-        return Focus(
-          focusNode: _focusNode,
-          autofocus: true,
-          onKeyEvent: _handleKeyEvent,
-          child: Listener(
-            // Records whether Alt was down when the gesture began. plough
-            // dispatches onTap behind its tap-recognition timer, so reading the
-            // keyboard from inside the behavior can miss a key that was
-            // released in the meantime; a Listener runs before the gesture
-            // arena resolves.
-            onPointerDown: (_) {
-              // Only onTap consumes this. plough dispatches taps from behind
-              // its recognition timer, so by then the key may be up; drags run
-              // early enough to read the keyboard directly. Overwritten on
-              // every press, so it never describes an older gesture.
-              ref
-                  .read(altPressedProvider.notifier)
-                  .set(HardwareKeyboard.instance.isAltPressed);
-            },
-            child: MouseRegion(
-              opaque: false,
-              onHover: _handlePointerHover,
-              child: ColoredBox(
-                color: appColorScheme.appSpecific.graph.background,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: DotGridBackground(
-                        transformationController: _viewportController,
-                      ),
+        return Listener(
+          // Only onTap consumes this. plough dispatches taps from behind its
+          // recognition timer, so by then the key may be up; drags run early
+          // enough to read the keyboard directly. Overwritten on every press,
+          // so it never describes an older gesture.
+          onPointerDown: (_) {
+            ref
+                .read(altPressedProvider.notifier)
+                .set(HardwareKeyboard.instance.isAltPressed);
+          },
+          child: MouseRegion(
+            opaque: false,
+            onHover: _handlePointerHover,
+            child: ColoredBox(
+              color: appColorScheme.appSpecific.graph.background,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: DotGridBackground(
+                      transformationController: _viewportController,
                     ),
-                    Positioned.fill(
-                      child: plough.GraphViewport(
-                        controller: _viewportController,
-                        minScale: 0.5,
-                        maxScale: 3.0,
-                        canvasMode: plough.GraphViewportCanvasMode.infinite,
-                        // Node hit-test bounds are now stored in logical scene
-                        // space, so they stay valid across transform changes and
-                        // scene grows. The old onTransformChanged ->
-                        // refreshAllNodeGeometry band-aid is no longer needed.
-                        child: cache.graphView!,
-                      ),
+                  ),
+                  Positioned.fill(
+                    child: plough.GraphViewport(
+                      controller: _viewportController,
+                      minScale: 0.5,
+                      maxScale: 3.0,
+                      canvasMode: plough.GraphViewportCanvasMode.infinite,
+                      // Node hit-test bounds are now stored in logical scene
+                      // space, so they stay valid across transform changes and
+                      // scene grows. The old onTransformChanged ->
+                      // refreshAllNodeGeometry band-aid is no longer needed.
+                      child: cache.graphView!,
                     ),
-                    Positioned.fill(
-                      child: LinkCreationOverlay(
-                        viewportController: _viewportController,
-                      ),
+                  ),
+                  Positioned.fill(
+                    child: LinkCreationOverlay(
+                      viewportController: _viewportController,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -387,9 +387,6 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
         ),
         properties: properties,
       );
-      // A rebuild during link creation (committing a link re-queries the graph)
-      // would otherwise hand back freshly draggable nodes mid-gesture.
-      ploughNode.canDrag = !ref.read(tapLinkCreationProvider).isActive;
       ploughGraph.addNode(ploughNode);
       ploughNodes[ploughNode.id.value] = ploughNode;
     }
@@ -594,13 +591,18 @@ class _AppGraphBehavior extends plough.GraphViewDefaultBehavior {
     final notifier = ref.read(tapLinkCreationProvider.notifier);
     final controller =
         ref.read(graphViewCacheProvider).transformationController;
-    if (controller != null) {
-      notifier.updatePointer(
-        controller.screenToScene(event.details.localPosition),
-      );
-    }
+    if (controller == null) return;
 
-    final hovered = _nodeIdOf(event);
+    final scenePosition = controller.screenToScene(event.details.localPosition);
+    notifier.updatePointer(scenePosition);
+
+    // event.entityIds names the node being dragged, not whatever is under the
+    // pointer, so the drop target has to be hit-tested. Going through the
+    // controller reuses plough's own test, which respects node shape and
+    // stacking order.
+    final hit = controller.nodeIdAt(scenePosition);
+    final hovered =
+        hit == null ? null : core_graph.EntityId.fromString(hit.value);
     notifier.setHoverTarget(
       hovered != null && hovered != state.sourceNodeId ? hovered : null,
     );
