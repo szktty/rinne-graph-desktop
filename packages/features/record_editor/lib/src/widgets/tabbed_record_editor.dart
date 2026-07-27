@@ -108,18 +108,15 @@ class EntityInfoTab extends ConsumerStatefulWidget {
 }
 
 class _EntityInfoTabState extends ConsumerState<EntityInfoTab> {
-  late TextEditingController _memoController;
-
-  @override
-  void initState() {
-    super.initState();
-    _memoController = TextEditingController(text: 'Sample memo text');
-  }
-
-  @override
-  void dispose() {
-    _memoController.dispose();
-    super.dispose();
+  /// Formats a timestamp as local `YYYY-MM-DD HH:MM:SS`.
+  ///
+  /// Written out rather than pulled from intl: the package is not a dependency
+  /// here, and this is the only place that needs a formatted date.
+  static String _formatDateTime(DateTime value) {
+    final local = value.toLocal();
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${local.year}-${two(local.month)}-${two(local.day)} '
+        '${two(local.hour)}:${two(local.minute)}:${two(local.second)}';
   }
 
   @override
@@ -153,23 +150,12 @@ class _EntityInfoTabState extends ConsumerState<EntityInfoTab> {
               children: [
                 FondeFormItemColumn(
                   label: 'Label List',
-                  child: FondeTagsField(
-                    initialTags: (widget.entity as Node).labels.toList(),
-                    hintText: 'Enter label...',
-                    validator: (tag) {
-                      if (tag.isEmpty) {
-                        return 'Cannot add empty label';
-                      }
-                      if (tag.length > 30) {
-                        return 'Label must be 30 characters or less';
-                      }
-                      return null;
-                    },
-                    onTagsChanged: (tags) {
-                      // In actual implementation, update entity labels here
-                      // Example: updateEntityLabels(tags);
-                    },
-                  ),
+                  // Read-only for now. This was a FondeTagsField whose
+                  // onTagsChanged did nothing, so labels could be added and
+                  // removed on screen and none of it reached the entity.
+                  // Editing labels needs a save path of its own; until then,
+                  // show them rather than pretend they are editable.
+                  child: _LabelList(labels: (widget.entity as Node).labels),
                 ),
               ],
             ),
@@ -204,25 +190,10 @@ class _EntityInfoTabState extends ConsumerState<EntityInfoTab> {
             const SizedBox(height: 16),
           ],
 
-          // Memo section
-          FondeFormList(
-            title: 'Memo',
-            children: [
-              FondeFormItemColumn(
-                label: 'Memo Content',
-                child: FondeTextField(
-                  controller: _memoController,
-                  maxLines: 5,
-                  hintText: 'Enter memo...',
-                  onChanged: (value) {
-                    // Memo update processing
-                  },
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
+          // A Memo section used to sit here, backed by nothing but the string
+          // 'Sample memo text'. Entities have no memo field, so it is left out
+          // until the concept is specified rather than shown as an input that
+          // silently discards what is typed into it.
 
           // Date information section
           FondeFormList(
@@ -230,35 +201,61 @@ class _EntityInfoTabState extends ConsumerState<EntityInfoTab> {
             children: [
               FondeFormItemColumn(
                 label: 'Created Date',
-                child: const SelectableText('2023-06-15 10:30:00'),
+                child: SelectableText(_formatDateTime(widget.entity.createdAt)),
               ),
               FondeFormItemColumn(
                 label: 'Updated Date',
-                child: const SelectableText('2023-06-20 15:45:22'),
+                child: SelectableText(_formatDateTime(widget.entity.updatedAt)),
               ),
             ],
           ),
 
-          const SizedBox(height: 24),
-
-          // Delete button
-          FondeFormList(
-            title: 'Actions',
-            children: [
-              FondeFormItemColumn(
-                label: 'Delete Entity',
-                child: FondeButton(
-                  label: 'Delete',
-                  leadingIcon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () {
-                    // Delete processing (show dialog, etc.)
-                  },
-                ),
-              ),
-            ],
-          ),
+          // An Actions section with a Delete button used to sit here, wired to
+          // an empty callback — it looked destructive and did nothing. Deleting
+          // an entity needs a confirmation dialog, link cleanup and a graph
+          // refresh, so the button stays out until that exists.
         ],
       ),
+    );
+  }
+}
+
+/// Read-only list of an entity's labels, rendered as chips.
+class _LabelList extends ConsumerWidget {
+  const _LabelList({required this.labels});
+
+  final Set<String> labels;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colorScheme = ref.watch(effectiveColorSchemeProvider);
+
+    if (labels.isEmpty) {
+      return AppText(
+        'No labels',
+        variant: AppTextVariant.bodyText,
+        color: colorScheme.base.foreground.withAlpha(128),
+      );
+    }
+
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 8.0,
+      children: [
+        for (final label in labels)
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12.0,
+              vertical: 6.0,
+            ),
+            decoration: BoxDecoration(
+              color: colorScheme.base.background.withAlpha(200),
+              border: Border.all(color: colorScheme.base.divider, width: 1.0),
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+            child: AppText(label, variant: AppTextVariant.bodyText),
+          ),
+      ],
     );
   }
 }
