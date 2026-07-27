@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plough/plough.dart' as plough;
 import 'package:core_graph_flutter/core_graph.dart' as core_graph;
+import 'package:core_stack_flutter/core_stack.dart' as core_stack;
 import 'package:core_themes/core_themes.dart';
 import 'package:presentation_components/presentation_components.dart';
 import '../models/layout_config.dart';
@@ -57,6 +58,7 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
   late AnimationController _focusAnimController;
   Animation<Matrix4>? _focusAnimation;
   NodeDisplayContent? _lastDisplayContent;
+  String? _lastStackPath;
   GlobalKey<plough.GraphViewState> _graphViewStateKey = GlobalKey();
   Size _viewportSize = Size.zero;
   bool _escapeHandlerRegistered = false;
@@ -202,6 +204,19 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     // Check if graph has changed
     final currentGraphHashCode = widget.appGraph.hashCode;
     final graphChanged = cache.lastAppGraphHashCode != currentGraphHashCode;
+
+    // A different stack is a different graph: nothing carries over, and the
+    // incremental sync below would otherwise try to turn one stack's graph into
+    // another's, node by node.
+    final activeStackPath = ref.watch(
+      core_stack.activeStackProvider.select((s) => s?.directory.path),
+    );
+    if (_lastStackPath != activeStackPath) {
+      _lastStackPath = activeStackPath;
+      cache.clear();
+      _graphViewStateKey = GlobalKey();
+      cache.graphViewStateKey = _graphViewStateKey;
+    }
 
     plough.Graph ploughGraph;
     if (cache.ploughGraph == null) {
