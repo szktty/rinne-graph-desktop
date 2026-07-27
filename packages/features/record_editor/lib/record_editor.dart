@@ -10,8 +10,13 @@
 library;
 
 // Exports
-export 'src/screens/record_editor_screen.dart';
-export 'src/widgets/record_editor.dart';
+//
+// Not exported, and unreachable as a result: RecordEditorScreen,
+// RecordEditor and the PropertyEditor / CustomReorderableList pair it
+// builds on. They are the pre-tab editor, superseded by TabbedRecordEditor.
+// The reordering machinery in CustomReorderableList is worth keeping until
+// property reordering is either implemented on the new editor or ruled out —
+// exporting it only made the rest look reachable.
 export 'src/widgets/tabbed_record_editor.dart';
 export 'src/widgets/graph_entity_properties_display.dart';
 

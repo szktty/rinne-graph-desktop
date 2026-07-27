@@ -58,10 +58,9 @@ class TabbedRecordEditor extends ConsumerWidget {
     // Define content for use in FondeTabView
     final contents = [
       FondeTabContent(id: 'info', content: EntityInfoTab(entity: entity)),
-      // The properties tab shows the real thing: GraphEntityPropertiesDisplay
-      // reads the entity's properties, edits them through
-      // editingEntityPropertiesProvider, and saves via saveEntityActionProvider.
-      // EntityPropertiesTab below is the read-only mock it replaced.
+      // GraphEntityPropertiesDisplay reads the entity's properties, edits them
+      // through editingEntityPropertiesProvider, and saves via
+      // saveEntityActionProvider.
       const FondeTabContent(
         id: 'properties',
         content: GraphEntityPropertiesDisplay(),
@@ -260,131 +259,6 @@ class _LabelList extends ConsumerWidget {
             child: AppText(label, variant: AppTextVariant.bodyText),
           ),
       ],
-    );
-  }
-}
-
-/// Entity properties tab
-class EntityPropertiesTab extends ConsumerWidget {
-  /// Constructor
-  const EntityPropertiesTab({required this.entity, super.key});
-
-  /// Entity to display
-  final Entity entity;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final properties = entity.properties.toMap();
-
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Property management section
-          FondeFormList(
-            title: 'Property Management',
-            children: [
-              FondeFormItemColumn(
-                label: 'New Property',
-                child: FondeButton(
-                  label: 'Add Property',
-                  leadingIcon: const Icon(Icons.add),
-                  onPressed: () {
-                    // Show property add dialog
-                  },
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // Property list
-          if (properties.isEmpty)
-            FondeFormList(
-              title: 'Property List',
-              child: const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: AppText(
-                    'No properties',
-                    variant: AppTextVariant.bodyText,
-                  ),
-                ),
-              ),
-            )
-          else
-            FondeFormList(
-              title: 'Property List',
-              collapsible: true,
-              initiallyExpanded: true,
-              children:
-                  properties.entries.map((entry) {
-                    final key = entry.key;
-                    final value = entry.value;
-                    final propertyType = entity.description.propertyTypes[key];
-
-                    return _buildPropertyFormItem(
-                      context,
-                      key,
-                      value,
-                      propertyType,
-                    );
-                  }).toList(),
-            ),
-        ],
-      ),
-    );
-  }
-
-  // Helper to build property item as FondeFormItemColumn
-  Widget _buildPropertyFormItem(
-    BuildContext context,
-    String name,
-    dynamic value,
-    PropertyType? type,
-  ) {
-    final displayValue = value?.toString() ?? '(none)';
-
-    return FondeFormItemColumn(
-      label: name,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FondeTextField(
-            readOnly: true,
-            controller: TextEditingController(text: displayValue),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: FondeButton(
-                  label: 'Edit',
-                  leadingIcon: const Icon(Icons.edit, size: 16),
-                  onPressed: () {
-                    // Edit processing
-                  },
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: FondeButton(
-                  label: 'Delete',
-                  leadingIcon: const Icon(
-                    Icons.delete,
-                    size: 16,
-                    color: Colors.red,
-                  ),
-                  onPressed: () {
-                    // Delete processing
-                  },
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }
