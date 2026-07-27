@@ -424,6 +424,52 @@ A schema file is a JSON object with three top-level keys: `labels`, `link_types`
 -   **Scope of Initial Implementation**: In the current version, only the `name` key within each schema definition object is interpreted. Other keys (e.g., `type`, `required`) are reserved for future extensions and are ignored in the current version.
 -   **If Schema File Does Not Exist**: Identifiers with a `$` prefix will be treated as the string with `$` removed (e.g., `"$Person"` -> `"Person"`).
 
+### Reserved Properties
+
+Property names beginning with `_` are reserved for the application. They are
+directives to RinneGraph rather than data belonging to the entity, and the
+application is free to give any of them meaning in a future version. Data files
+should not use the prefix for their own properties.
+
+The un-prefixed namespace belongs to the user. This separation is what keeps a
+spreadsheet column that happens to be called `display_name` from being mistaken
+for an instruction. Note that it is a different mechanism from the `$` prefix:
+`$` marks a *reference to a schema definition* and is resolved at import, while
+`_` marks a *reserved name* and is left as written.
+
+| Property | Applies to | Meaning |
+|---|---|---|
+| `_display_name` | Node | Text drawn inside the node's circle. Use it when the node's own name is too long to read at that size, or when a different label reads better on the canvas. |
+
+#### How a node's caption is chosen
+
+When `_display_name` is absent, the application looks for a property that
+conventionally holds a name, in this order:
+
+```
+name, title, label, caption, 名前, 名称, 氏名, タイトル, ラベル, キャプション
+```
+
+English keys are tried before Japanese ones so that a stack mixing both
+resolves predictably. `name` has no special status — it is simply the most
+common member of the list.
+
+If none of those is present, the node's first type label is used (`Person`,
+`人物`, …), and failing that a fragment of its id. A node therefore always has
+something legible in it, without the data file having to say anything.
+
+This follows the convention Neo4j Browser uses: probe the names data usually
+carries rather than require the user to configure a caption property.
+
+#### Reserved for future use
+
+- `_display_name_key`: a schema entry naming which property holds a label's
+  caption, so that a `Person` could be captioned by `氏名` while a `Book` uses
+  `題名`. Intended to be declared per label and to take effect between
+  `_display_name` and the candidate list above. Not implemented — it needs a
+  defined *primary* label first, since a node's labels round-trip through
+  storage as an unordered set.
+
 ### Dataset Files
 
 There are two types of datasets. Each dataset is represented as one JSON file.
