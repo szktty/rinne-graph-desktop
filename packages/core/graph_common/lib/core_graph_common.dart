@@ -13,6 +13,7 @@
 library;
 
 // Export core models
+export 'src/model/display_name.dart';
 export 'src/model/entity.dart';
 export 'src/model/entity_description.dart';
 export 'src/model/entity_id.dart';

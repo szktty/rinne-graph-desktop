@@ -9,6 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plough/plough.dart' as plough;
+import 'package:core_graph_common/core_graph_common.dart';
 import 'package:core_themes/core_themes.dart';
 import '../models/node_display_settings.dart';
 import '../providers/node_display_providers.dart';
@@ -284,43 +285,15 @@ class AppNodeRenderer extends ConsumerWidget {
   /// Gets the node's labels
   Set<String> _getNodeLabels() => _labelsOf(node);
 
-  /// Property keys tried, in order, when a node has no `_display_name`.
-  ///
-  /// Follows the convention Neo4j Browser uses: rather than requiring the user
-  /// to configure a caption property, probe the names data usually carries.
-  /// English keys come before Japanese ones so that a stack mixing both is
-  /// resolved predictably. `name` has no special status here — it is simply the
-  /// most common member of this list.
-  static const List<String> displayNameCandidateKeys = [
-    'name',
-    'title',
-    'label',
-    'caption',
-    '名前',
-    '名称',
-    '氏名',
-    'タイトル',
-    'ラベル',
-    'キャプション',
-  ];
-
   /// Gets the display label
-  ///
-  /// Resolution order:
-  ///   1. `_display_name` — the reserved property that names a node explicitly
-  ///      (e.g. a short form to use when `name` is too long for the circle).
-  ///   2. the candidate keys above.
-  ///   3. the node's type label (`人物`, `god`, ...). Every node carries one on
-  ///      the ChiffonDB meta-schema, so this must come *after* the name
-  ///      lookups — probing labels first would render the type on every node.
-  ///   4. a fragment of the node's ID.
-  ///
-  /// A future `_display_name_key` schema entry will slot in between 1 and 2,
-  /// letting a label declare which property holds its name.
   String _getDisplayLabel() =>
       resolveDisplayLabel(node, labels: _getNodeLabels());
 
-  /// Resolves the caption for [node] using the order documented above.
+  /// Resolves the caption for [node].
+  ///
+  /// Delegates to [DisplayName], which owns the resolution order and is shared
+  /// with callers that hold a core [Node] rather than a plough one — the record
+  /// editor's link lists, for instance.
   ///
   /// Exposed so that non-widget callers (UI-test commands, exports) report the
   /// same caption the graph renders.
@@ -328,25 +301,11 @@ class AppNodeRenderer extends ConsumerWidget {
     plough.GraphNode node, {
     Set<String>? labels,
   }) {
-    final explicit = node['_display_name']?.toString();
-    if (explicit != null && explicit.isNotEmpty) {
-      return explicit;
-    }
-
-    for (final key in displayNameCandidateKeys) {
-      final value = node[key]?.toString();
-      if (value != null && value.isNotEmpty) {
-        return value;
-      }
-    }
-
-    final typeLabels = labels ?? _labelsOf(node);
-    if (typeLabels.isNotEmpty) {
-      return typeLabels.first;
-    }
-
-    final id = node.id.toString();
-    return id.length > 8 ? '${id.substring(0, 8)}...' : id;
+    return DisplayName.resolve(
+      property: (key) => node[key],
+      labels: labels ?? _labelsOf(node),
+      id: node.id.toString(),
+    );
   }
 
   static Set<String> _labelsOf(plough.GraphNode node) {

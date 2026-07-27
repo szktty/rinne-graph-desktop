@@ -18,3 +18,4 @@ export 'src/widgets/graph_entity_properties_display.dart';
 export 'src/providers/record_editor_providers.dart';
 export 'src/providers/selected_entity_providers.dart';
 export 'src/providers/entity_properties_providers.dart';
+export 'src/providers/tab_view_providers.dart';

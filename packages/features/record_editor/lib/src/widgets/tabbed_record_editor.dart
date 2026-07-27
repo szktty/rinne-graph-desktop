@@ -80,7 +80,11 @@ class TabbedRecordEditor extends ConsumerWidget {
       child: FondeTabView(
         tabs: tabs,
         contents: contents,
-        initialSelectedTabId: tabState ?? 'info',
+        // Controlled mode: tabViewStateProvider is the single source of truth.
+        // With initialSelectedTabId the tab view kept its own selection, so
+        // changing the provider from outside the widget — the
+        // record_editor.tab.select command — had no effect on screen.
+        selectedTabId: tabState ?? 'info',
         onTabSelected: (tabId) {
           ref.read(tabViewStateProvider.notifier).selectTab(tabId);
         },
@@ -395,132 +399,107 @@ class EntityLinksTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isNode = entity.kind == EntityKind.node;
+    // An Add Link button used to head this tab, wired to an empty callback.
+    // Links are created from the graph view (toolbar button, or Alt+drag
+    // between nodes), so the dead button is gone rather than duplicated here.
+
+    if (entity.kind != EntityKind.node) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: AppText(
+            'Link entities have no link information',
+            variant: AppTextVariant.bodyText,
+          ),
+        ),
+      );
+    }
+
+    final graph = ref.watch(activeGraphProvider);
+    if (graph == null) {
+      return const SizedBox.shrink();
+    }
+
+    final incoming = <Link>[];
+    final outgoing = <Link>[];
+    for (final link in graph.links.values) {
+      if (link.targetId == entity.id) {
+        incoming.add(link);
+      }
+      if (link.sourceId == entity.id) {
+        outgoing.add(link);
+      }
+    }
 
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Link management section
           FondeFormList(
-            title: 'Link Management',
-            children: [
-              FondeFormItemColumn(
-                label: 'New Link',
-                child: FondeButton(
-                  label: 'Add Link',
-                  leadingIcon: const Icon(Icons.add),
-                  onPressed: () {
-                    // Show link add dialog
-                  },
-                ),
-              ),
-            ],
+            title: 'Incoming Links',
+            collapsible: true,
+            initiallyExpanded: true,
+            children: _buildLinkItems(graph, incoming, isIncoming: true),
           ),
 
           const SizedBox(height: 16),
 
-          if (isNode) ...[
-            // Incoming links section
-            FondeFormList(
-              title: 'Incoming Links',
-              collapsible: true,
-              initiallyExpanded: true,
-              children: [
-                _buildLinkFormItem(
-                  context,
-                  'Dependency',
-                  'Task B',
-                  isIncoming: true,
-                ),
-                _buildLinkFormItem(
-                  context,
-                  'Reference',
-                  'Document C',
-                  isIncoming: true,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-
-            // Outgoing links section
-            FondeFormList(
-              title: 'Outgoing Links',
-              collapsible: true,
-              initiallyExpanded: true,
-              children: [
-                _buildLinkFormItem(
-                  context,
-                  'Owns',
-                  'User D',
-                  isIncoming: false,
-                ),
-              ],
-            ),
-          ] else
-            FondeFormList(
-              title: 'Link Information',
-              child: const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: AppText(
-                    'Link entities have no link information',
-                    variant: AppTextVariant.bodyText,
-                  ),
-                ),
-              ),
-            ),
+          FondeFormList(
+            title: 'Outgoing Links',
+            collapsible: true,
+            initiallyExpanded: true,
+            children: _buildLinkItems(graph, outgoing, isIncoming: false),
+          ),
         ],
       ),
     );
   }
 
-  // Helper to build link item as FondeFormItemColumn
-  Widget _buildLinkFormItem(
-    BuildContext context,
-    String linkType,
-    String nodeLabel, {
+  List<Widget> _buildLinkItems(
+    Graph graph,
+    List<Link> links, {
     required bool isIncoming,
   }) {
-    final direction = isIncoming ? '←' : '→';
-    final linkDescription = '$linkType $direction $nodeLabel';
+    if (links.isEmpty) {
+      return [
+        const FondeFormItemColumn(
+          label: '',
+          child: AppText('None', variant: AppTextVariant.bodyText),
+        ),
+      ];
+    }
 
+    return [
+      for (final link in links)
+        _buildLinkFormItem(graph, link, isIncoming: isIncoming),
+    ];
+  }
+
+  /// Renders one link as `<type> → <other node>`.
+  ///
+  /// Edit and Delete buttons used to sit under each entry with empty
+  /// callbacks. Editing a link's type and deleting a link both need a save
+  /// path and a graph refresh, so the list is read-only until those exist.
+  Widget _buildLinkFormItem(
+    Graph graph,
+    Link link, {
+    required bool isIncoming,
+  }) {
+    final otherId = isIncoming ? link.sourceId : link.targetId;
+    final otherNode = graph.getNode(otherId);
+    // A link always has both endpoints in the graph; fall back to the raw id
+    // rather than hiding the row if that ever fails to hold.
+    final otherLabel =
+        otherNode != null ? DisplayName.ofNode(otherNode) : otherId.value;
+    final direction = isIncoming ? '←' : '→';
+
+    // The form item's own label is left empty: putting the link type there as
+    // well would print it twice, once as the label and once in the line below.
     return FondeFormItemColumn(
-      label: linkType,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppText(linkDescription, variant: AppTextVariant.bodyText),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: FondeButton(
-                  label: 'Edit',
-                  leadingIcon: const Icon(Icons.edit, size: 16),
-                  onPressed: () {
-                    // Link edit processing
-                  },
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: FondeButton(
-                  label: 'Delete',
-                  leadingIcon: const Icon(
-                    Icons.delete,
-                    size: 16,
-                    color: Colors.red,
-                  ),
-                  onPressed: () {
-                    // Link delete processing
-                  },
-                ),
-              ),
-            ],
-          ),
-        ],
+      label: '',
+      child: AppText(
+        '${link.type} $direction $otherLabel',
+        variant: AppTextVariant.bodyText,
       ),
     );
   }

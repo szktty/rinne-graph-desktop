@@ -2133,6 +2133,30 @@ List<AppCommand> _recordEditorCommands() => [
   ),
 
   AppCommand(
+    id: 'record_editor.tab.select',
+    title: 'Select Record Editor Tab',
+    category: 'record_editor',
+    description: '{ id: "info" | "properties" | "links" | "display" }',
+    canExecute: (ref) {
+      if (ref.read(core_stack.activeStackProvider) == null) return false;
+      return ref.read(record_editor.selectedEntityForEditorProvider) != null;
+    },
+    run: (ref, args) async {
+      const tabIds = {'info', 'properties', 'links', 'display'};
+      final id = args['id'] as String?;
+      if (id == null || !tabIds.contains(id)) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'id must be one of ${tabIds.join(', ')}',
+        };
+      }
+      ref.read(record_editor.tabViewStateProvider.notifier).selectTab(id);
+      return {'ok': true, 'id': id};
+    },
+  ),
+
+  AppCommand(
     id: 'record_editor.field.set',
     title: 'Set Record Editor Field',
     category: 'record_editor',
