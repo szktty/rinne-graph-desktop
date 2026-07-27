@@ -13,6 +13,10 @@ import 'package:core_foundation_flutter/core_foundation_flutter.dart';
 import 'package:core_graph_common/core_graph_common.dart';
 import 'package:core_samples/core_samples.dart';
 import 'package:core_stack_common/core_stack_common.dart' hide StackService;
+// Two classes share the name. The one below (unprefixed, from this package)
+// only lists stacks; creating one lives in core_stack_common's namesake.
+import 'package:core_stack_common/src/service/stack_service.dart'
+    as stack_common;
 import 'package:core_stack_flutter/src/service/stack_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
@@ -428,7 +432,14 @@ Future<List<Stack>> allStacksList(Ref ref) async {
 }
 
 /// Provider to provide actions for stack creation, deletion, etc.
-@riverpod
+///
+/// Kept alive because the actions span several awaits — creating a stack
+/// touches the filesystem and the database — and callers that only read the
+/// notifier to invoke one hold no subscription. Auto-disposed, the provider was
+/// torn down mid-call and `triggerRefresh` then threw "Cannot use the Ref of
+/// stackActionsProvider after it has been disposed", after the stack had
+/// already been written.
+@Riverpod(keepAlive: true)
 class StackActions extends _$StackActions {
   @override
   void build() {
@@ -500,6 +511,10 @@ class StackActions extends _$StackActions {
   }
 
   /// Create custom stack
+  ///
+  /// Scratch stacks go to the scratches directory, everything else to the
+  /// user's stack directory. Returns null if creation fails; callers treat that
+  /// as "no stack was made".
   Future<Stack?> createCustomStack({
     required String name,
     required String description,
@@ -510,17 +525,22 @@ class StackActions extends _$StackActions {
       '[stack_providers] StackActions.createCustomStack executing: name=$name',
     );
     try {
-      final searchDir = await ref.read(stackSearchDirectoryProvider.future);
-      final scratchesDir = await ref.read(scratchesDirectoryProvider.future);
+      final baseDir =
+          isScratch
+              ? await ref.read(scratchesDirectoryProvider.future)
+              : await ref.read(stackSearchDirectoryProvider.future);
+      await baseDir.create(recursive: true);
 
-      // TODO: Implement custom stack creation logic
-      debugPrint(
-        '[stack_providers] StackActions.createCustomStack: TODO - implement logic',
+      final stack = await stack_common.StackService().createStack(
+        baseDir,
+        await _availableStackName(baseDir, name),
+        description: description.isEmpty ? null : description,
+        tags: tags,
       );
 
-      // Trigger refresh
+      debugPrint('[stack_providers] Created stack at: ${stack.directory.path}');
       triggerRefresh();
-      return null; // TODO: Return created stack
+      return stack;
     } catch (e) {
       debugPrint('[stack_providers] StackActions.createCustomStack error: $e');
       return null;
@@ -530,21 +550,39 @@ class StackActions extends _$StackActions {
   /// Create scratch stack
   Future<Stack?> createScratchStack() async {
     debugPrint('[stack_providers] StackActions.createScratchStack executing');
-    try {
-      final scratchesDir = await ref.read(scratchesDirectoryProvider.future);
+    final now = DateTime.now();
+    final stamp =
+        '${now.year}'
+        '${now.month.toString().padLeft(2, '0')}'
+        '${now.day.toString().padLeft(2, '0')}'
+        '-'
+        '${now.hour.toString().padLeft(2, '0')}'
+        '${now.minute.toString().padLeft(2, '0')}';
+    return createCustomStack(
+      name: 'Scratch $stamp',
+      description: '',
+      isScratch: true,
+      tags: const ['scratch'],
+    );
+  }
 
-      // TODO: Implement scratch stack creation logic
-      debugPrint(
-        '[stack_providers] StackActions.createScratchStack: TODO - implement logic',
-      );
-
-      // Trigger refresh
-      triggerRefresh();
-      return null; // TODO: Return created stack
-    } catch (e) {
-      debugPrint('[stack_providers] StackActions.createScratchStack error: $e');
-      return null;
+  /// A name that does not collide with an existing stack in [baseDir].
+  ///
+  /// `createStack` throws rather than overwrite, so a caller importing two CSVs
+  /// with the same file name would otherwise fail on the second. Falls back to
+  /// appending a counter, which is what a user would expect to see.
+  Future<String> _availableStackName(Directory baseDir, String name) async {
+    if (!await Directory(p.join(baseDir.path, '$name.stack')).exists()) {
+      return name;
     }
+    for (var i = 2; i < 1000; i++) {
+      final candidate = '$name $i';
+      if (!await Directory(p.join(baseDir.path, '$candidate.stack')).exists()) {
+        return candidate;
+      }
+    }
+    // Absurd number of duplicates; let createStack report the collision.
+    return name;
   }
 }
 

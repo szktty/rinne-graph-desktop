@@ -2218,14 +2218,83 @@ Future<dynamic> _ping(WidgetRef ref, Map<String, dynamic> _) async {
 // ---------------------------------------------------------------------------
 
 List<AppCommand> _exchangeCommands() => [
+  // Imports without going through the file picker, which a UI test cannot
+  // drive: the native dialog is out of reach of the command channel.
+  AppCommand(
+    id: 'import.csv',
+    title: 'Import a CSV File Into a New Stack',
+    category: 'import',
+    description:
+        '{ path: string, stack_name?: string } — parses the CSV at `path` and '
+        'creates a stack from it. Node and link CSVs are told apart by their '
+        'header. The new stack is not opened; follow with stack.open.',
+    run: (ref, args) async {
+      // SECURITY: accepts an arbitrary file path, same as stack.open. Debug
+      // builds only until the command channel is gated on release.
+      final path = args['path'] as String?;
+      if (path == null || path.isEmpty) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'path is required',
+        };
+      }
+
+      // Resolved before any await: the context must not be carried across one.
+      final context = navigatorKey.currentContext;
+      if (context == null) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'no context available',
+        };
+      }
+      final container = ProviderScope.containerOf(context, listen: false);
+
+      final file = io.File(path);
+      if (!await file.exists()) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.notFound,
+          'error': 'file not found: $path',
+        };
+      }
+
+      final stackName =
+          args['stack_name'] as String? ??
+          path.split('/').last.replaceAll(RegExp(r'\.csv$'), '');
+
+      try {
+        final stack = await import_export.CsvImportService.importCsvToStack(
+          filePath: path,
+          stackName: stackName,
+          container: container,
+        );
+        if (stack == null) {
+          return {
+            'ok': false,
+            'code': CommandResultCode.commandError,
+            'error': 'import produced no stack',
+          };
+        }
+        ref.invalidate(core_stack.availableStacksListProvider);
+        return {
+          'ok': true,
+          'stack_name': stack.info.name,
+          'stack_path': stack.directory.path,
+        };
+      } catch (e) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'import failed: $e',
+        };
+      }
+    },
+  ),
+
   // Parses without writing anything, so a test can assert on how a CSV is
   // read before committing to a stack.
-  //
-  // There is deliberately no command that runs a full CSV import: it would
-  // depend on StackActions.createCustomStack, which is still a stub returning
-  // null (stack_providers.dart), so importing a CSV into a new stack cannot
-  // work yet regardless of how it is invoked. Add the import command once
-  // stack creation is implemented.
   AppCommand(
     id: 'import.csv.parse',
     title: 'Parse a CSV File Without Importing',

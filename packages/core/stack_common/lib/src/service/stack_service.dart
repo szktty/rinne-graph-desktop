@@ -78,7 +78,13 @@ class StackService {
   ///
   /// [baseDir] The directory where the new stack directory will be created.
   /// [name] The name of the new stack. A `.stack` extension will be appended.
-  Future<Stack> createStack(Directory baseDir, String name) async {
+  /// [description] and [tags] are written straight into the stack's metadata.
+  Future<Stack> createStack(
+    Directory baseDir,
+    String name, {
+    String? description,
+    List<String> tags = const [],
+  }) async {
     final stackDir = Directory(p.join(baseDir.path, '$name.stack'));
     if (await stackDir.exists()) {
       throw FileSystemException(
@@ -105,6 +111,8 @@ class StackService {
       createdAt: now,
       lastModifiedAt: now,
       version: '1.0',
+      description: description,
+      tags: tags,
     );
     const settings = StackSettings();
 

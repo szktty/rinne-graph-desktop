@@ -418,20 +418,41 @@ final class AllStacksListProvider
 String _$allStacksListHash() => r'faca17796eb61fdd7c6228946ddcf86aba597a67';
 
 /// Provider to provide actions for stack creation, deletion, etc.
+///
+/// Kept alive because the actions span several awaits — creating a stack
+/// touches the filesystem and the database — and callers that only read the
+/// notifier to invoke one hold no subscription. Auto-disposed, the provider was
+/// torn down mid-call and `triggerRefresh` then threw "Cannot use the Ref of
+/// stackActionsProvider after it has been disposed", after the stack had
+/// already been written.
 
 @ProviderFor(StackActions)
 final stackActionsProvider = StackActionsProvider._();
 
 /// Provider to provide actions for stack creation, deletion, etc.
+///
+/// Kept alive because the actions span several awaits — creating a stack
+/// touches the filesystem and the database — and callers that only read the
+/// notifier to invoke one hold no subscription. Auto-disposed, the provider was
+/// torn down mid-call and `triggerRefresh` then threw "Cannot use the Ref of
+/// stackActionsProvider after it has been disposed", after the stack had
+/// already been written.
 final class StackActionsProvider extends $NotifierProvider<StackActions, void> {
   /// Provider to provide actions for stack creation, deletion, etc.
+  ///
+  /// Kept alive because the actions span several awaits — creating a stack
+  /// touches the filesystem and the database — and callers that only read the
+  /// notifier to invoke one hold no subscription. Auto-disposed, the provider was
+  /// torn down mid-call and `triggerRefresh` then threw "Cannot use the Ref of
+  /// stackActionsProvider after it has been disposed", after the stack had
+  /// already been written.
   StackActionsProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'stackActionsProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -452,9 +473,16 @@ final class StackActionsProvider extends $NotifierProvider<StackActions, void> {
   }
 }
 
-String _$stackActionsHash() => r'304f55bbb6f80459308a1da74278ee7bd9dccf10';
+String _$stackActionsHash() => r'bc3dc633e0d22c8ed86f1a07b05bf105d41a2ea6';
 
 /// Provider to provide actions for stack creation, deletion, etc.
+///
+/// Kept alive because the actions span several awaits — creating a stack
+/// touches the filesystem and the database — and callers that only read the
+/// notifier to invoke one hold no subscription. Auto-disposed, the provider was
+/// torn down mid-call and `triggerRefresh` then threw "Cannot use the Ref of
+/// stackActionsProvider after it has been disposed", after the stack had
+/// already been written.
 
 abstract class _$StackActions extends $Notifier<void> {
   void build();
