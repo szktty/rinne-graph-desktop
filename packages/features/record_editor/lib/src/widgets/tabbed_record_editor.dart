@@ -506,7 +506,7 @@ class EntityLinksTab extends ConsumerWidget {
 }
 
 /// Entity display tab
-class EntityDisplayTab extends ConsumerStatefulWidget {
+class EntityDisplayTab extends ConsumerWidget {
   /// Constructor
   const EntityDisplayTab({required this.entity, super.key});
 
@@ -514,94 +514,42 @@ class EntityDisplayTab extends ConsumerStatefulWidget {
   final Entity entity;
 
   @override
-  ConsumerState<EntityDisplayTab> createState() => _EntityDisplayTabState();
-}
-
-class _EntityDisplayTabState extends ConsumerState<EntityDisplayTab> {
-  ThemeColorType? _selectedColor;
-
-  /// Determine check icon color (select white or black based on color)
-  Color _getCheckIconColor(ThemeColorType colorType, Color backgroundColor) {
-    // Light colors (yellow, orange, pink) get black check
-    // Dark colors (blue, indigo, violet, red, green, graphite) get white check
-    switch (colorType) {
-      case ThemeColorType.yellow:
-      case ThemeColorType.orange:
-        return Colors.black;
-      case ThemeColorType.blue:
-      case ThemeColorType.indigo:
-      case ThemeColorType.violet:
-      case ThemeColorType.pink:
-      case ThemeColorType.red:
-      case ThemeColorType.green:
-      case ThemeColorType.graphite:
-        return Colors.white;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
     final themeColorScheme = ref.watch(themeColorSchemeProvider);
-    final currentThemeColor = ref.watch(themeColorTypeProvider);
-
-    // Set initial value to current theme color
-    _selectedColor ??= currentThemeColor;
 
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Color settings section
           FondeFormItemColumn(
             label: 'Color',
+            // The swatches are a preview of the palette, not a control.
+            //
+            // Tapping one used to call themeColorTypeProvider.setThemeColor,
+            // which repainted the whole application — picking a colour for one
+            // entity silently rewrote a global setting. Per-entity colour does
+            // not exist in the data model, so there is nothing for a tap to
+            // save; the swatches are shown without selection or tap handling
+            // rather than looking choosable and discarding the choice.
             child: Wrap(
               spacing: 8.0,
               runSpacing: 8.0,
-              children:
-                  ThemeColorType.values.map((colorType) {
-                    final colorDefinition = themeColorScheme.colors[colorType]!;
-                    final color =
-                        appColorScheme.brightness == Brightness.dark
-                            ? colorDefinition.darkColor
-                            : colorDefinition.lightColor;
-
-                    return InkWell(
-                      onTap: () {
-                        setState(() {
-                          _selectedColor = colorType;
-                        });
-                        // Theme color change processing
-                        ref
-                            .read(themeColorTypeProvider.notifier)
-                            .setThemeColor(colorType);
-                      },
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: color,
-                          border: Border.all(
-                            color:
-                                _selectedColor == colorType
-                                    ? appColorScheme.base.foreground
-                                    : appColorScheme.base.border,
-                            width: _selectedColor == colorType ? 3 : 1,
-                          ),
-                        ),
-                        child:
-                            _selectedColor == colorType
-                                ? Icon(
-                                  Icons.check,
-                                  color: _getCheckIconColor(colorType, color),
-                                  size: 20,
-                                )
-                                : null,
-                      ),
-                    );
-                  }).toList(),
+              children: [
+                for (final colorType in ThemeColorType.values)
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color:
+                          appColorScheme.brightness == Brightness.dark
+                              ? themeColorScheme.colors[colorType]!.darkColor
+                              : themeColorScheme.colors[colorType]!.lightColor,
+                      border: Border.all(color: appColorScheme.base.border),
+                    ),
+                  ),
+              ],
             ),
           ),
         ],
