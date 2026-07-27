@@ -7,7 +7,6 @@
  */
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_graph_flutter/core_graph.dart';
 
 part 'entity_properties_providers.g.dart';
@@ -96,6 +95,23 @@ class EditingEntityProperties extends _$EditingEntityProperties {
   /// Replaces all properties
   void setProperties(Map<String, dynamic> properties) {
     state = Map<String, dynamic>.from(properties);
+  }
+
+  /// Adds a property, leaving its value empty.
+  ///
+  /// Does nothing if [key] is already present, so adding a duplicate name
+  /// cannot silently overwrite an existing value.
+  void addProperty(String key) {
+    if (state.containsKey(key)) {
+      return;
+    }
+    state = {...state, key: ''};
+  }
+
+  /// Removes a property.
+  void removeProperty(String key) {
+    final next = Map<String, dynamic>.from(state)..remove(key);
+    state = next;
   }
 
   /// Resets properties being edited

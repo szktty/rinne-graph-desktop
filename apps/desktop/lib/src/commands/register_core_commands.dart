@@ -2183,6 +2183,31 @@ List<AppCommand> _recordEditorCommands() => [
   ),
 
   AppCommand(
+    id: 'record_editor.field.remove',
+    title: 'Remove Record Editor Field',
+    category: 'record_editor',
+    description: '{ field: string } — drops a property from the pending edit',
+    canExecute: (ref) {
+      if (ref.read(core_stack.activeStackProvider) == null) return false;
+      return ref.read(record_editor.selectedEntityForEditorProvider) != null;
+    },
+    run: (ref, args) async {
+      final field = args['field'] as String?;
+      if (field == null) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'field is required',
+        };
+      }
+      ref
+          .read(record_editor.editingEntityPropertiesProvider.notifier)
+          .removeProperty(field);
+      return {'ok': true, 'field': field};
+    },
+  ),
+
+  AppCommand(
     id: 'record_editor.save',
     title: 'Save Record Editor',
     category: 'record_editor',

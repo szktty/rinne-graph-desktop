@@ -136,9 +136,19 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
                                 _coerceToOriginalType(value, newValue),
                               );
                         },
+                        onRemove: () {
+                          ref
+                              .read(editingEntityPropertiesProvider.notifier)
+                              .removeProperty(key);
+                        },
                       );
                     }).toList(),
               ),
+            const SizedBox(height: 8),
+            _AddPropertyButton(
+              existingKeys: currentPropertyKeys.toSet(),
+              colorScheme: colorScheme,
+            ),
           ],
         );
       },
@@ -175,6 +185,7 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
     required dynamic value,
     required AppColorScheme colorScheme,
     required ValueChanged<String> onChanged,
+    required VoidCallback onRemove,
   }) {
     return Consumer(
       builder: (context, ref, _) {
@@ -190,13 +201,30 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Property name (editable)
-              _buildEditablePropertyName(
-                key: key,
-                isEditing: isEditingName,
-                editingName: editingName,
-                colorScheme: colorScheme,
-                ref: ref,
+              Row(
+                children: [
+                  // Property name (editable)
+                  Expanded(
+                    child: _buildEditablePropertyName(
+                      key: key,
+                      isEditing: isEditingName,
+                      editingName: editingName,
+                      colorScheme: colorScheme,
+                      ref: ref,
+                    ),
+                  ),
+                  // Removal takes effect on Save, like every other edit here,
+                  // so it needs no confirmation of its own — Cancel restores
+                  // the property.
+                  IconButton(
+                    icon: Icon(FondeIcons.deleteOutline),
+                    iconSize: 14.0,
+                    visualDensity: VisualDensity.compact,
+                    tooltip: 'Remove property',
+                    onPressed: onRemove,
+                    color: colorScheme.base.foreground.withAlpha(150),
+                  ),
+                ],
               ),
               const SizedBox(height: 4),
               // Property value
@@ -364,6 +392,128 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
       return '{...}';
     }
     return value.toString();
+  }
+}
+
+/// "Add property" control: a button that turns into a name field when tapped.
+///
+/// The new property is added with an empty value and takes effect on Save,
+/// like every other edit in this panel.
+class _AddPropertyButton extends ConsumerStatefulWidget {
+  const _AddPropertyButton({
+    required this.existingKeys,
+    required this.colorScheme,
+  });
+
+  final Set<String> existingKeys;
+  final AppColorScheme colorScheme;
+
+  @override
+  ConsumerState<_AddPropertyButton> createState() => _AddPropertyButtonState();
+}
+
+class _AddPropertyButtonState extends ConsumerState<_AddPropertyButton> {
+  final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+  bool _isAdding = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _start() {
+    setState(() {
+      _isAdding = true;
+      _error = null;
+      _controller.clear();
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+  }
+
+  void _cancel() {
+    setState(() {
+      _isAdding = false;
+      _error = null;
+    });
+  }
+
+  void _commit() {
+    final name = _controller.text.trim();
+    if (name.isEmpty) {
+      _cancel();
+      return;
+    }
+    if (widget.existingKeys.contains(name)) {
+      setState(() => _error = 'Property "$name" already exists');
+      return;
+    }
+    ref.read(editingEntityPropertiesProvider.notifier).addProperty(name);
+    setState(() {
+      _isAdding = false;
+      _error = null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_isAdding) {
+      return TextButton.icon(
+        onPressed: _start,
+        icon: Icon(FondeIcons.plus, size: 16.0),
+        label: AppText('Add Property', variant: AppTextVariant.bodyText),
+        style: TextButton.styleFrom(
+          foregroundColor: widget.colorScheme.base.foreground,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: FondeTextField(
+                controller: _controller,
+                focusNode: _focusNode,
+                hintText: 'Property name',
+                onSubmitted: (_) => _commit(),
+              ),
+            ),
+            IconButton(
+              icon: Icon(FondeIcons.check),
+              iconSize: 16.0,
+              tooltip: 'Add',
+              onPressed: _commit,
+              color: widget.colorScheme.base.foreground,
+            ),
+            IconButton(
+              icon: Icon(FondeIcons.x),
+              iconSize: 16.0,
+              tooltip: 'Cancel',
+              onPressed: _cancel,
+              color: widget.colorScheme.base.foreground,
+            ),
+          ],
+        ),
+        if (_error != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: AppText(
+              _error!,
+              variant: AppTextVariant.captionText,
+              color: widget.colorScheme.status.error,
+            ),
+          ),
+      ],
+    );
   }
 }
 
