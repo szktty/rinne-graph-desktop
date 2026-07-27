@@ -24,7 +24,6 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
-    final labels = ref.watch(selectedEntityLabelsProvider);
     // Monitor properties being edited
     final editingProperties = ref.watch(editingEntityPropertiesProvider);
     final editingPropertyKeys = editingProperties.keys.toList();
@@ -34,29 +33,20 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
       children: [
         // Header with Save/Cancel buttons
         _buildHeader(appColorScheme),
-        // Scrollable content
+        // Scrollable content.
+        //
+        // Labels are deliberately not shown here: the Info tab already lists
+        // them, and repeating them in two tabs of the same panel reads as two
+        // separate fields.
+        //
+        // No padding is applied around the content either — the tab host
+        // (FondeTabView.contentPadding) already insets it.
         Expanded(
           child: FondeScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Labels section
-                  _buildLabelsSection(
-                    labels: labels,
-                    colorScheme: appColorScheme,
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Properties section
-                  _buildPropertiesSection(
-                    properties: editingProperties,
-                    propertyKeys: editingPropertyKeys,
-                    colorScheme: appColorScheme,
-                  ),
-                ],
-              ),
+            child: _buildPropertiesSection(
+              properties: editingProperties,
+              propertyKeys: editingPropertyKeys,
+              colorScheme: appColorScheme,
             ),
           ),
         ),
@@ -97,52 +87,6 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
           ),
         );
       },
-    );
-  }
-
-  /// Builds the labels section
-  Widget _buildLabelsSection({
-    required List<String> labels,
-    required AppColorScheme colorScheme,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppText('Labels', variant: AppTextVariant.sectionTitlePrimary),
-        const SizedBox(height: 12),
-        if (labels.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: AppText(
-              'No labels',
-              variant: AppTextVariant.bodyText,
-              color: colorScheme.base.foreground.withAlpha(128),
-            ),
-          )
-        else
-          Wrap(
-            spacing: 8.0,
-            runSpacing: 8.0,
-            children:
-                labels.map((label) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0,
-                      vertical: 6.0,
-                    ),
-                    decoration: BoxDecoration(
-                      color: colorScheme.base.background.withAlpha(200),
-                      border: Border.all(
-                        color: colorScheme.base.divider,
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(6.0),
-                    ),
-                    child: AppText(label, variant: AppTextVariant.bodyText),
-                  );
-                }).toList(),
-          ),
-      ],
     );
   }
 
@@ -187,7 +131,10 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
                         onChanged: (newValue) {
                           ref
                               .read(editingEntityPropertiesProvider.notifier)
-                              .updateProperty(key, newValue);
+                              .updateProperty(
+                                key,
+                                _coerceToOriginalType(value, newValue),
+                              );
                         },
                       );
                     }).toList(),
@@ -196,6 +143,30 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
         );
       },
     );
+  }
+
+  /// Keeps an edited value at the type it started as.
+  ///
+  /// The text field hands back a String for every property, so editing a
+  /// numeric or boolean property would otherwise rewrite it as text and the
+  /// type would be lost on save. If the new text no longer parses as the
+  /// original type — the user cleared the field, or typed a word into a
+  /// number — it is kept as a String rather than rejected, since the property
+  /// values are untyped by design.
+  static dynamic _coerceToOriginalType(dynamic original, String text) {
+    if (original is int) {
+      return int.tryParse(text) ?? text;
+    }
+    if (original is double) {
+      return double.tryParse(text) ?? text;
+    }
+    if (original is bool) {
+      final lower = text.toLowerCase();
+      if (lower == 'true') return true;
+      if (lower == 'false') return false;
+      return text;
+    }
+    return text;
   }
 
   /// Builds an editable property item

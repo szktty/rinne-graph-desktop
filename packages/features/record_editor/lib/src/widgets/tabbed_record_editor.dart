@@ -14,6 +14,7 @@ import 'package:presentation_components/presentation_components.dart';
 
 import '../providers/record_editor_providers.dart';
 import '../providers/tab_view_providers.dart';
+import 'graph_entity_properties_display.dart';
 
 /// Tab-based record editor
 class TabbedRecordEditor extends ConsumerWidget {
@@ -57,9 +58,13 @@ class TabbedRecordEditor extends ConsumerWidget {
     // Define content for use in FondeTabView
     final contents = [
       FondeTabContent(id: 'info', content: EntityInfoTab(entity: entity)),
-      FondeTabContent(
+      // The properties tab shows the real thing: GraphEntityPropertiesDisplay
+      // reads the entity's properties, edits them through
+      // editingEntityPropertiesProvider, and saves via saveEntityActionProvider.
+      // EntityPropertiesTab below is the read-only mock it replaced.
+      const FondeTabContent(
         id: 'properties',
-        content: EntityPropertiesTab(entity: entity),
+        content: GraphEntityPropertiesDisplay(),
       ),
       FondeTabContent(id: 'links', content: EntityLinksTab(entity: entity)),
       FondeTabContent(id: 'display', content: EntityDisplayTab(entity: entity)),

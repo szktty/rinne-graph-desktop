@@ -242,6 +242,26 @@ class SaveEntityAction extends _$SaveEntityAction {
         });
       }
 
+      // Reflect the saved entity in the active graph before resetting.
+      //
+      // reset() re-reads selectedEntityPropertiesProvider, which resolves the
+      // entity through activeGraphProvider. Without this the graph still holds
+      // the pre-save entity, so resetting would restore the old values and the
+      // editor would appear to discard what was just written to the database.
+      final activeGraph = ref.read(activeGraphProvider);
+      if (activeGraph != null) {
+        final entity = updatedEntity;
+        if (entity is Node) {
+          ref
+              .read(activeGraphProvider.notifier)
+              .setGraph(activeGraph.addNode(entity));
+        } else if (entity is Link) {
+          ref
+              .read(activeGraphProvider.notifier)
+              .setGraph(activeGraph.addLink(entity));
+        }
+      }
+
       // After saving, reset editing state
       print('[SaveEntityAction] Resetting editing state');
       ref.read(editingPropertyNameChangesProvider.notifier).reset();
