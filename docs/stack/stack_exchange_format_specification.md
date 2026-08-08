@@ -424,6 +424,64 @@ A schema file is a JSON object with three top-level keys: `labels`, `link_types`
 -   **Scope of Initial Implementation**: In the current version, only the `name` key within each schema definition object is interpreted. Other keys (e.g., `type`, `required`) are reserved for future extensions and are ignored in the current version.
 -   **If Schema File Does Not Exist**: Identifiers with a `$` prefix will be treated as the string with `$` removed (e.g., `"$Person"` -> `"Person"`).
 
+### Property Type Definitions
+
+`meta/property_types.json` records which type a property name carries. It is
+internal to a stack rather than part of the exchange format — an import or
+export neither reads nor writes it — but it decides how the application edits
+and validates the values it finds in the data files.
+
+#### Structure
+
+```json
+{
+  "version": "1.1.0",
+  "property_types": {
+    "description": { "type": "text", "constraints": { "max_length": 500 } }
+  },
+  "label_property_types": {
+    "titan": {
+      "notes": { "type": "memo" }
+    }
+  }
+}
+```
+
+- **`property_types`** — definitions that apply across the whole stack, keyed by
+  property name.
+- **`label_property_types`** — definitions scoped to a label, keyed by label and
+  then by property name. The same property name means different things on
+  different kinds of record: `notes` may be a memo on one label and a plain
+  string on another, and this is what keeps them apart.
+
+#### Resolution Order
+
+A property's type is resolved as:
+
+1. **Label-scoped** — the entity's labels are checked in order, and the first
+   label that defines the property wins. A node whose labels disagree about a
+   property is ambiguous by construction, so the choice is made
+   deterministically rather than merged. Links use their type as their label.
+2. **Stack-wide** — `property_types`, if no label defined it.
+3. **Untyped** — the property is edited as plain text. This is also what an
+   unrecognised type name falls back to, so a stack written by a newer version
+   of the application degrades instead of failing to open.
+
+Because `text` is what an undefined property already resolves to, the
+application does not write a definition when a user picks Text; only
+non-default types appear in the file.
+
+#### Compatibility
+
+- `label_property_types` is a sibling key rather than a change to
+  `property_types`, so a reader that predates it ignores it and still
+  understands the rest of the file.
+- The `version` field became `1.1.0` when `label_property_types` was
+  introduced. A file without the key is valid and is read as having no
+  label-scoped definitions; the key is omitted entirely when empty.
+- Individual definitions that fail to parse or fail validation are skipped with
+  a warning, leaving the rest of the file usable.
+
 ### Reserved Properties
 
 Property names beginning with `_` are reserved for the application. They are
@@ -899,6 +957,7 @@ The exchange format uses simplified types, which are mapped to the internal deta
 | Exchange Format Type | Description | CSV Example (with type) | JSON Example | Mapping to Internal Type |
 |---|---|---|---|---|
 | `string` | String (default) | `"Taro Yamada"` | `"Taro Yamada"` | TextPropertyType |
+| `memo` | Free-form text, max 500 characters | `"Notes from the meeting"` | `"Notes from the meeting"` | MemoPropertyType |
 | `integer` | Integer | `35` | `35` | IntegerPropertyType |
 | `decimal` | Decimal | `123.45` | `123.45` | DecimalPropertyType |
 | `boolean` | Boolean | `true` | `true` | BooleanPropertyType |
@@ -915,6 +974,23 @@ The exchange format uses simplified types, which are mapped to the internal deta
 - Only simplified types are supported in the exchange format.
 - Special types such as phone numbers, location information, colors, and binaries are treated as strings and converted on the application side.
 - The `number` type has been abolished and separated into `integer` and `decimal`.
+
+**The `memo` type**
+
+A memo is stored as an ordinary string; the type carries no representational
+difference from `string`, only a limit and an editing affordance.
+
+- **Limit: 500 characters, counted in grapheme clusters** — what a reader would
+  call a character. An emoji built from several code points (`👨‍👩‍👧`) counts as
+  one, so the limit does not depend on the encoding. The limit is fixed and
+  cannot be raised per stack: it exists to say that a record which needs more
+  than a short paragraph should be split into several records.
+- **Never inferred on import.** A string value imports as `string`, whatever
+  its length; `memo` is only ever created when a user picks it explicitly. An
+  imported memo therefore round-trips as a plain string unless the type is
+  declared in `property_types.json` (below).
+- An over-length value is refused when the record is saved, not silently
+  truncated.
 
 #### Type Conversion Rules
 
