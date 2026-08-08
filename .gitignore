@@ -61,6 +61,15 @@ apps/*/assets/version.json
 # Local dependency overrides (use pubspec_overrides.yaml for local paths)
 pubspec_overrides.yaml
 
+# Resolved dependency versions.
+#
+# Not tracked, because pubspec_overrides.yaml rewrites it with paths to
+# sibling checkouts (../fonde-ui, ../plough) on every pub get, and committing
+# that leaks paths that exist on no other machine. Nothing reads it either:
+# CI runs `melos bootstrap`, which re-resolves and overwrites it rather than
+# installing from it. Pin versions in pubspec.yaml instead.
+pubspec.lock
+
 # Internal strategy documents (not for public release)
 .augment/
 .cursor/
