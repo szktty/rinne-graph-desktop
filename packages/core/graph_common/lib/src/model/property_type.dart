@@ -6,6 +6,7 @@
  * For commercial licensing inquiries, please contact: contact@szktty.jp
  */
 
+import 'package:characters/characters.dart';
 import 'package:core_foundation_common/core_foundation_common.dart';
 import 'package:meta/meta.dart';
 
@@ -386,4 +387,78 @@ class AnyPropertyType extends PropertyType {
 
   @override
   dynamic convertValue(dynamic value) => value;
+}
+
+/// A short block of prose attached to an entity — a note, not a document.
+///
+/// Deliberately a separate type rather than [TextPropertyType] with a
+/// "multiline" hint, for two reasons:
+///
+///  * The type picker has to offer "Memo" as its own choice. A user adding a
+///    property should not have to know to pick "text" and then find a flag.
+///  * The length limit below is part of the type, not a per-property setting.
+///
+/// The limit is a design position, not a storage constraint: nothing in
+/// ChiffonDB cares how long the string is (user properties all live in one
+/// `props: Json` field). It exists to say "if it no longer fits, split the
+/// node" — the graph is the structure, not the prose. Keeping it modest also
+/// matters in the other direction: a limit tight enough to be annoying would
+/// just push people to the unlimited [TextPropertyType], which would defeat
+/// the point entirely.
+class MemoPropertyType extends PropertyType {
+  /// Constructor
+  const MemoPropertyType({super.isRequired = false}) : super(name: 'memo');
+
+  /// The largest memo we accept, in user-visible characters.
+  ///
+  /// Fixed rather than configurable: a limit anyone can raise to 10000 is not
+  /// a limit. Matches the existing `description` definition in
+  /// GlobalPropertyTypeManager, which also caps at 500.
+  static const int maxLength = 500;
+
+  /// Where the counter stops being invisible and starts nudging.
+  ///
+  /// Below this the field says nothing; above it, the remaining count is shown
+  /// so the limit arrives as a gradient rather than a wall.
+  static const int counterThreshold = 200;
+
+  /// Counts [value] the way a reader would.
+  ///
+  /// Grapheme clusters, not UTF-16 code units: an emoji or a combining
+  /// sequence is one character to the person typing it, so it is one here too.
+  /// This is why the field cannot use Flutter's `maxLength`, which counts code
+  /// units — 500 there would cut a text of emoji off at 250.
+  static int lengthOf(String value) => value.characters.length;
+
+  @override
+  bool isValid(dynamic value) {
+    if (value is! String) return false;
+    return lengthOf(value) <= maxLength;
+  }
+
+  @override
+  ValidationResult validate(dynamic value) {
+    if (value is! String) {
+      return const ValidationResult.error('Value must be a string');
+    }
+    final length = lengthOf(value);
+    if (length > maxLength) {
+      return ValidationResult.error(
+        'Memo must be at most $maxLength characters (currently $length). '
+        'Consider splitting this into separate nodes.',
+      );
+    }
+    return ValidationResult.success;
+  }
+
+  @override
+  bool validateValue(dynamic value) {
+    return isValid(value);
+  }
+
+  @override
+  String? convertValue(dynamic value) {
+    if (value == null) return null;
+    return value.toString();
+  }
 }
