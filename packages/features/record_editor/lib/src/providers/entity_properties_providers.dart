@@ -14,6 +14,37 @@ part 'entity_properties_providers.g.dart';
 /// Set of property keys to hide as internal information
 const _hiddenPropertyKeys = {'app_custom_id', 'app_type'};
 
+/// Thrown when a property fails validation and the save is abandoned.
+///
+/// A distinct type rather than a plain [Exception] so the UI can tell an
+/// invalid memo from a genuine storage failure without matching on message
+/// text, and present it as a validation error instead of a crash.
+class PropertyValidationException implements Exception {
+  const PropertyValidationException({
+    required this.propertyName,
+    required this.length,
+    required this.maxLength,
+  });
+
+  /// Name of the offending property.
+  final String propertyName;
+
+  /// Length of the value in grapheme clusters — what the user counts as
+  /// characters, not UTF-16 code units.
+  final int length;
+
+  /// Limit the value exceeded.
+  final int maxLength;
+
+  /// Message suitable for showing to the user as-is.
+  String get message =>
+      'The memo "$propertyName" is $length characters, over the '
+      '$maxLength character limit.';
+
+  @override
+  String toString() => 'PropertyValidationException: $message';
+}
+
 /// Provider that provides entity properties in map format
 ///
 /// Dynamically extracts all properties from the selected entity and
@@ -192,6 +223,40 @@ class SaveEntityAction extends _$SaveEntityAction {
     // No initial state needed
   }
 
+  /// Checks [properties] against the types declared for the entity's labels.
+  ///
+  /// Only memos are length-checked: the limit is deliberate design rather than
+  /// a storage constraint, and it is enforced here because the editor cannot
+  /// enforce it while typing — Flutter's maxLength counts UTF-16 units, which
+  /// would truncate an emoji-heavy memo well short of 500 characters and split
+  /// the surrogate pair. The field shows the overrun, and this refuses it.
+  ///
+  /// Throws [PropertyValidationException] on the first offending property.
+  Future<void> _validateProperties(Map<String, dynamic> properties) async {
+    final labels = ref.read(selectedEntityLabelsProvider);
+    final types = await ref.read(propertyTypesForLabelsProvider(labels).future);
+
+    for (final entry in properties.entries) {
+      if (types[entry.key] is! MemoPropertyType) continue;
+
+      final value = entry.value;
+      if (value is! String) continue;
+
+      final length = MemoPropertyType.lengthOf(value);
+      if (length > MemoPropertyType.maxLength) {
+        print(
+          '[SaveEntityAction] Memo "${entry.key}" is $length characters, '
+          'over the limit',
+        );
+        throw PropertyValidationException(
+          propertyName: entry.key,
+          length: length,
+          maxLength: MemoPropertyType.maxLength,
+        );
+      }
+    }
+  }
+
   /// Saves the entity
   Future<void> saveEntity() async {
     print('[SaveEntityAction] ===== Save started =====');
@@ -223,14 +288,24 @@ class SaveEntityAction extends _$SaveEntityAction {
         '[SaveEntityAction] Original properties: ${selectedEntity.properties.toMap()}',
       );
 
-      // Create final property map based on properties being edited and name changes
+      // The rename is already applied to the edited map by the time it gets
+      // here — the editor rewrites the key as soon as the name is committed —
+      // so the name changes are only re-applied for entries that somehow still
+      // carry the old key. Applying them unconditionally overwrote the renamed
+      // property with the null returned by removing a key that was no longer
+      // there, which saved the value away as null.
       final finalProperties = Map<String, dynamic>.from(editingProperties);
       for (final change in propertyNameChanges.entries) {
-        final oldValue = finalProperties.remove(change.key);
-        finalProperties[change.value] = oldValue;
+        if (!finalProperties.containsKey(change.key)) continue;
+        finalProperties[change.value] = finalProperties.remove(change.key);
       }
 
       print('[SaveEntityAction] Final properties: $finalProperties');
+
+      // Validated against the renamed map, so a memo renamed in the same edit
+      // is checked under the name it will actually be saved as. Throws before
+      // anything is written, leaving the database untouched.
+      await _validateProperties(finalProperties);
 
       // Update entity with new property set
       updatedEntity = selectedEntity.copyWith(

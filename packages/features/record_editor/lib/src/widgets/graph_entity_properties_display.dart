@@ -6,8 +6,11 @@
  * For commercial licensing inquiries, please contact: contact@szktty.jp
  */
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:core_graph_flutter/core_graph.dart';
 import 'package:core_themes/core_themes.dart';
 import 'package:presentation_components/presentation_components.dart';
 
@@ -104,6 +107,14 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
         );
         final currentPropertyKeys = currentEditingProperties.keys.toList();
 
+        // Resolved against the entity's own labels. Still loading, or no stack
+        // open, leaves every property untyped — which renders exactly as it did
+        // before types existed, so the panel never blocks on this.
+        final labels = ref.watch(selectedEntityLabelsProvider);
+        final resolvedTypes =
+            ref.watch(propertyTypesForLabelsProvider(labels)).value ??
+            const <String, PropertyType>{};
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -124,16 +135,24 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
                 children:
                     currentPropertyKeys.map((key) {
                       final value = currentEditingProperties[key];
+                      final isMemo = resolvedTypes[key] is MemoPropertyType;
                       return _buildEditablePropertyItem(
                         key: key,
                         value: value,
                         colorScheme: colorScheme,
+                        isMemo: isMemo,
                         onChanged: (newValue) {
                           ref
                               .read(editingEntityPropertiesProvider.notifier)
                               .updateProperty(
                                 key,
-                                _coerceToOriginalType(value, newValue),
+                                // A memo is text by definition, so its declared
+                                // type wins over whatever the current value
+                                // happens to look like — otherwise a memo whose
+                                // text reads "42" would be coerced to a number.
+                                isMemo
+                                    ? newValue
+                                    : _coerceToOriginalType(value, newValue),
                               );
                         },
                         onRemove: () {
@@ -184,6 +203,7 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
     required String key,
     required dynamic value,
     required AppColorScheme colorScheme,
+    required bool isMemo,
     required ValueChanged<String> onChanged,
     required VoidCallback onRemove,
   }) {
@@ -192,9 +212,6 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
         final editingNames = ref.watch(editingPropertyNamesProvider);
         final isEditingName = editingNames.containsKey(key);
         final editingName = editingNames[key] ?? key;
-
-        // Create the controller within the Consumer, so a new controller is not created on rebuild
-        final controller = TextEditingController(text: _formatValue(value));
 
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -228,10 +245,15 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
               ),
               const SizedBox(height: 4),
               // Property value
-              FondeTextField(
-                controller: controller,
+              _PropertyValueField(
+                // Keyed by property name so that renaming or reordering
+                // rebinds the field to the right value instead of carrying the
+                // previous property's text across.
+                key: ValueKey('property_value_$key'),
+                initialText: _formatValue(value),
+                isMemo: isMemo,
+                colorScheme: colorScheme,
                 onChanged: onChanged,
-                hintText: 'Enter value',
               ),
               const SizedBox(height: 8),
             ],
@@ -312,6 +334,18 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
       return;
     }
 
+    // Update property value being edited (change key)
+    final editingProperties = ref.read(editingEntityPropertiesProvider);
+
+    // Renaming onto a name already in use would overwrite that property's
+    // value on save, losing it silently. The edit is abandoned instead, which
+    // leaves the original name in place.
+    if (editingProperties.containsKey(trimmedName)) {
+      print('[PropertyNameEdit] Name "$trimmedName" already used, cancelling');
+      ref.read(editingPropertyNamesProvider.notifier).stopEditing(oldKey);
+      return;
+    }
+
     // Record property name change
     print(
       '[PropertyNameEdit] Recording property name change: $oldKey -> $trimmedName',
@@ -320,30 +354,44 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
         .read(editingPropertyNameChangesProvider.notifier)
         .renameProperty(oldKey, trimmedName);
 
-    // Update property value being edited (change key)
-    final editingProperties = ref.read(editingEntityPropertiesProvider);
     print(
       '[PropertyNameEdit] Current properties being edited: $editingProperties',
     );
-    final value = editingProperties[oldKey];
-    print('[PropertyNameEdit] Value of old key: $value');
+    print('[PropertyNameEdit] Value of old key: ${editingProperties[oldKey]}');
 
-    if (value != null) {
-      print(
-        '[PropertyNameEdit] Updating property with new key: $trimmedName = $value',
-      );
-      ref
-          .read(editingEntityPropertiesProvider.notifier)
-          .updateProperty(trimmedName, value);
+    // Keyed by presence, not by a null check: a property added but not yet
+    // filled in holds an empty string, and one whose value is genuinely null
+    // still has to survive being renamed.
+    if (editingProperties.containsKey(oldKey)) {
+      // Rebuilt in one pass, preserving position. Writing the new key and then
+      // calling setProperties with a copy of the map read *before* that write
+      // dropped the property altogether: the copy never had the new key, and
+      // it replaced the state that did.
+      final renamed = <String, dynamic>{};
+      for (final entry in editingProperties.entries) {
+        if (entry.key == oldKey) {
+          renamed[trimmedName] = entry.value;
+        } else {
+          renamed[entry.key] = entry.value;
+        }
+      }
 
-      // Delete old key
-      final newProperties = Map<String, dynamic>.from(editingProperties);
-      newProperties.remove(oldKey);
-      print('[PropertyNameEdit] Deleting old key: $oldKey');
-      print('[PropertyNameEdit] Updated properties: $newProperties');
-      ref
-          .read(editingEntityPropertiesProvider.notifier)
-          .setProperties(newProperties);
+      print('[PropertyNameEdit] Renamed $oldKey -> $trimmedName');
+      print('[PropertyNameEdit] Updated properties: $renamed');
+      ref.read(editingEntityPropertiesProvider.notifier).setProperties(renamed);
+
+      // Carry the type across, or a renamed memo comes back as plain text.
+      final manager = ref.read(propertyTypeManagerProvider);
+      final labels = ref.read(selectedEntityLabelsProvider);
+      if (manager != null && labels.isNotEmpty) {
+        unawaited(
+          manager
+              .renameLabelPropertyType(labels.first, oldKey, trimmedName)
+              .then((_) {
+                ref.invalidate(propertyTypesForLabelsProvider);
+              }),
+        );
+      }
     } else {
       print('[PropertyNameEdit] Warning: Value for old key not found');
     }
@@ -363,6 +411,17 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Properties saved')));
+      }
+    } on PropertyValidationException catch (e) {
+      // A dialog rather than the snackbar below: this is the user's own input
+      // to fix, and nothing was saved. A snackbar would let them walk away
+      // believing the memo was stored.
+      if (context.mounted) {
+        await showAppErrorDialog(
+          context,
+          message: e.message,
+          details: 'Shorten the memo, or split it across separate records.',
+        );
       }
     } catch (e) {
       if (context.mounted) {
@@ -395,6 +454,117 @@ class GraphEntityPropertiesDisplay extends ConsumerWidget {
   }
 }
 
+/// The value field of one property.
+///
+/// Stateful so that it owns its [TextEditingController] for as long as the
+/// property is on screen. Building the controller inside the enclosing
+/// `Consumer` recreated it on every rebuild, which reset the selection — barely
+/// visible in a one-line field, but a memo is several lines and the caret and
+/// scroll position jumped away mid-edit.
+class _PropertyValueField extends StatefulWidget {
+  const _PropertyValueField({
+    super.key,
+    required this.initialText,
+    required this.isMemo,
+    required this.colorScheme,
+    required this.onChanged,
+  });
+
+  final String initialText;
+  final bool isMemo;
+  final AppColorScheme colorScheme;
+  final ValueChanged<String> onChanged;
+
+  @override
+  State<_PropertyValueField> createState() => _PropertyValueFieldState();
+}
+
+class _PropertyValueFieldState extends State<_PropertyValueField> {
+  late final TextEditingController _controller;
+
+  /// Grapheme count of the current text, recomputed only on change.
+  late int _length;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialText);
+    _length = MemoPropertyType.lengthOf(widget.initialText);
+  }
+
+  @override
+  void didUpdateWidget(_PropertyValueField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Only adopt external text when it genuinely differs from what is in the
+    // field — assigning unconditionally would fight the user's own typing,
+    // since every keystroke comes back through this widget.
+    if (widget.initialText != oldWidget.initialText &&
+        widget.initialText != _controller.text) {
+      _controller.text = widget.initialText;
+      _length = MemoPropertyType.lengthOf(widget.initialText);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _handleChanged(String text) {
+    if (widget.isMemo) {
+      final length = MemoPropertyType.lengthOf(text);
+      if (length != _length) {
+        setState(() => _length = length);
+      }
+    }
+    widget.onChanged(text);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget.isMemo) {
+      return FondeTextField(
+        controller: _controller,
+        onChanged: _handleChanged,
+        hintText: 'Enter value',
+      );
+    }
+
+    const limit = MemoPropertyType.maxLength;
+    final isOver = _length > limit;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FondeTextField(
+          controller: _controller,
+          onChanged: _handleChanged,
+          hintText: 'Enter memo',
+          maxLines: 5,
+          // Deliberately no maxLength: it counts UTF-16 units, so it would cut
+          // an emoji-heavy memo short of 500 graphemes and split the pair.
+          // Going over is shown here and refused on save instead of being
+          // blocked mid-keystroke.
+          errorText: isOver ? '$_length / $limit characters' : null,
+        ),
+        // A gradient rather than a wall: silent while there is room, a quiet
+        // remaining-count once the memo is long enough that splitting the node
+        // is worth considering, and an error only past the limit.
+        if (!isOver && _length >= MemoPropertyType.counterThreshold)
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: AppText(
+              '${limit - _length} characters left',
+              variant: AppTextVariant.captionText,
+              color: widget.colorScheme.base.foreground.withAlpha(128),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
 /// "Add property" control: a button that turns into a name field when tapped.
 ///
 /// The new property is added with an empty value and takes effect on Save,
@@ -412,11 +582,24 @@ class _AddPropertyButton extends ConsumerStatefulWidget {
   ConsumerState<_AddPropertyButton> createState() => _AddPropertyButtonState();
 }
 
+/// The property types offered when adding a property, in menu order.
+///
+/// Type names match [GlobalPropertyTypeDefinition.typeName]. Text is first
+/// because it is the default and the common case.
+const _selectablePropertyTypes = <String, String>{
+  'text': 'Text',
+  'integer': 'Number',
+  'date': 'Date',
+  'boolean': 'Boolean',
+  'memo': 'Memo',
+};
+
 class _AddPropertyButtonState extends ConsumerState<_AddPropertyButton> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   bool _isAdding = false;
   String? _error;
+  String _typeName = 'text';
 
   @override
   void dispose() {
@@ -429,6 +612,7 @@ class _AddPropertyButtonState extends ConsumerState<_AddPropertyButton> {
     setState(() {
       _isAdding = true;
       _error = null;
+      _typeName = 'text';
       _controller.clear();
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -454,10 +638,46 @@ class _AddPropertyButtonState extends ConsumerState<_AddPropertyButton> {
       return;
     }
     ref.read(editingEntityPropertiesProvider.notifier).addProperty(name);
+    unawaited(_persistTypeDefinition(name));
     setState(() {
       _isAdding = false;
       _error = null;
     });
+  }
+
+  /// Records the chosen type against the entity's label.
+  ///
+  /// Text is deliberately not written: it is what an undefined property
+  /// already resolves to, so storing it would grow property_types.json for
+  /// every property added without changing any behaviour.
+  ///
+  /// Scoped to the first label, matching how the type is resolved on the way
+  /// back out. An entity with no labels has nothing to scope to, so the type
+  /// is dropped and the property stays untyped.
+  Future<void> _persistTypeDefinition(String propertyName) async {
+    if (_typeName == 'text') return;
+
+    final manager = ref.read(propertyTypeManagerProvider);
+    if (manager == null) return;
+
+    final labels = ref.read(selectedEntityLabelsProvider);
+    if (labels.isEmpty) return;
+
+    final now = DateTime.now();
+    await manager.setLabelPropertyType(
+      labels.first,
+      propertyName,
+      GlobalPropertyTypeDefinition(
+        typeName: _typeName,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    );
+
+    // The resolved-type map is a Future provider reading the file we just
+    // wrote, so it has to be re-read for the new property to render as its
+    // type rather than as plain text.
+    ref.invalidate(propertyTypesForLabelsProvider);
   }
 
   @override
@@ -503,6 +723,31 @@ class _AddPropertyButtonState extends ConsumerState<_AddPropertyButton> {
             ),
           ],
         ),
+        const SizedBox(height: 8),
+        // The type is chosen up front rather than changed afterwards: it
+        // decides how the value field is rendered, so picking it after typing
+        // a value would mean re-rendering the field under the user.
+        Row(
+          children: [
+            AppText(
+              'Type',
+              variant: AppTextVariant.captionText,
+              color: widget.colorScheme.base.foreground.withAlpha(180),
+            ),
+            const SizedBox(width: 8),
+            FondeDropdownMenu<String>(
+              initialSelection: _typeName,
+              dropdownMenuEntries: [
+                for (final entry in _selectablePropertyTypes.entries)
+                  DropdownMenuEntry(value: entry.key, label: entry.value),
+              ],
+              onSelected: (value) {
+                if (value == null) return;
+                setState(() => _typeName = value);
+              },
+            ),
+          ],
+        ),
         if (_error != null)
           Padding(
             padding: const EdgeInsets.only(top: 4.0),
@@ -541,18 +786,42 @@ class _PropertyNameEditorWidgetState extends State<_PropertyNameEditorWidget> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
 
+  /// Guards against committing twice.
+  ///
+  /// Enter fires onSubmitted and then drops focus, so without this the name
+  /// would be committed a second time on the way out.
+  bool _finished = false;
+
   @override
   void initState() {
     super.initState();
     print('[PropertyNameEditor] initState: ${widget.propertyKey}');
     _controller = TextEditingController(text: widget.editingName);
     _focusNode = FocusNode();
+    _focusNode.addListener(_handleFocusChange);
     _focusNode.requestFocus();
+  }
+
+  void _handleFocusChange() {
+    if (_focusNode.hasFocus || _finished) return;
+    print(
+      '[PropertyNameEditor] Focus lost: ${widget.propertyKey}, '
+      'text=${_controller.text}',
+    );
+    _finished = true;
+    widget.onFinish(_controller.text);
+  }
+
+  void _finish(String newName) {
+    if (_finished) return;
+    _finished = true;
+    widget.onFinish(newName);
   }
 
   @override
   void dispose() {
     print('[PropertyNameEditor] dispose: ${widget.propertyKey}');
+    _focusNode.removeListener(_handleFocusChange);
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -561,55 +830,48 @@ class _PropertyNameEditorWidgetState extends State<_PropertyNameEditorWidget> {
   @override
   Widget build(BuildContext context) {
     print('[PropertyNameEditor] build: ${widget.propertyKey}');
-    return Focus(
+    // The node belongs to the TextField alone. Handing the same node to a
+    // surrounding Focus made the framework reparent the node under itself —
+    // "Tried to make a child into a parent of itself" — which took the whole
+    // panel down as soon as a property name was clicked. Listening to the
+    // node directly gives the same commit-on-blur behaviour without a second
+    // widget claiming it.
+    return TextField(
+      controller: _controller,
       focusNode: _focusNode,
-      onFocusChange: (hasFocus) {
+      onSubmitted: (newName) {
         print(
-          '[PropertyNameEditor] onFocusChange: ${widget.propertyKey}, hasFocus=$hasFocus',
+          '[PropertyNameEditor] Enter pressed: ${widget.propertyKey}, newName=$newName',
         );
-        if (!hasFocus) {
-          print(
-            '[PropertyNameEditor] Focus lost: ${widget.propertyKey}, text=${_controller.text}',
-          );
-          widget.onFinish(_controller.text);
-        }
+        _finish(newName);
       },
-      child: TextField(
-        controller: _controller,
-        focusNode: _focusNode,
-        onSubmitted: (newName) {
-          print(
-            '[PropertyNameEditor] Enter pressed: ${widget.propertyKey}, newName=$newName',
-          );
-          widget.onFinish(newName);
-        },
-        decoration: InputDecoration(
-          isDense: true,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 8.0,
-            vertical: 4.0,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4.0),
-            borderSide: BorderSide(
-              color: widget.colorScheme.base.divider,
-              width: 1.0,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4.0),
-            borderSide: BorderSide(
-              color: widget.colorScheme.base.selection,
-              width: 1.5,
-            ),
+      decoration: InputDecoration(
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 4.0,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4.0),
+          borderSide: BorderSide(
+            color: widget.colorScheme.base.divider,
+            width: 1.0,
           ),
         ),
-        style: TextStyle(
-          color: widget.colorScheme.base.foreground,
-          fontSize: 12.0,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4.0),
+          borderSide: BorderSide(
+            color: widget.colorScheme.base.selection,
+            width: 1.5,
+          ),
         ),
-        autofocus: true,
       ),
+      style: TextStyle(
+        color: widget.colorScheme.base.foreground,
+        fontSize: 12.0,
+      ),
+      // No autofocus: initState already requests focus on this node, and
+      // asking twice makes the field claim focus again on every rebuild.
     );
   }
 }
