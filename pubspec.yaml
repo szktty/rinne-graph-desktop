@@ -7,7 +7,7 @@ environment:
 dependency_overrides:
   fonde_ui:
     git:
-      url: git@github.com:szktty/fonde-ui.git
+      url: https://github.com/szktty/fonde-ui.git
       ref: develop
 
 workspace:
