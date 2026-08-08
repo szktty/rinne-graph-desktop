@@ -2208,6 +2208,176 @@ List<AppCommand> _recordEditorCommands() => [
   ),
 
   AppCommand(
+    id: 'record_editor.property.rename',
+    title: 'Rename Record Editor Property',
+    category: 'record_editor',
+    description:
+        '{ from: string, to: string } — renames a property in the pending '
+        'edit, carrying its value and label-scoped type across',
+    canExecute: (ref) {
+      if (ref.read(core_stack.activeStackProvider) == null) return false;
+      return ref.read(record_editor.selectedEntityForEditorProvider) != null;
+    },
+    // Drives the same providers the name editor writes to, so this exercises
+    // the real rename path rather than a parallel one. Added because clicking
+    // a property name is otherwise unreachable from a command.
+    run: (ref, args) async {
+      final from = args['from'] as String?;
+      final to = (args['to'] as String?)?.trim();
+      if (from == null || to == null) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'from and to are required',
+        };
+      }
+      if (to.isEmpty) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'to must not be empty',
+        };
+      }
+
+      final properties = ref.read(
+        record_editor.editingEntityPropertiesProvider,
+      );
+      if (!properties.containsKey(from)) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'no such property: $from',
+        };
+      }
+      if (from != to && properties.containsKey(to)) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'property "$to" already exists',
+        };
+      }
+
+      if (from == to) {
+        return {'ok': true, 'from': from, 'to': to, 'unchanged': true};
+      }
+
+      // Rebuilt in order so the property keeps its position in the list.
+      final renamed = <String, dynamic>{};
+      for (final entry in properties.entries) {
+        renamed[entry.key == from ? to : entry.key] = entry.value;
+      }
+
+      ref
+          .read(record_editor.editingPropertyNameChangesProvider.notifier)
+          .renameProperty(from, to);
+      ref
+          .read(record_editor.editingEntityPropertiesProvider.notifier)
+          .setProperties(renamed);
+
+      // Carry the type across, or a renamed memo comes back as plain text.
+      final manager = ref.read(core_graph.propertyTypeManagerProvider);
+      final labels = ref.read(record_editor.selectedEntityLabelsProvider);
+      if (manager != null && labels.isNotEmpty) {
+        await manager.renameLabelPropertyType(labels.first, from, to);
+        ref.invalidate(core_graph.propertyTypesForLabelsProvider);
+      }
+
+      return {'ok': true, 'from': from, 'to': to};
+    },
+  ),
+
+  AppCommand(
+    id: 'record_editor.property.add',
+    title: 'Add Record Editor Property',
+    category: 'record_editor',
+    description:
+        '{ name: string, type?: string } — adds a property and, for a '
+        'non-text type, records it against the entity\'s first label',
+    canExecute: (ref) {
+      if (ref.read(core_stack.activeStackProvider) == null) return false;
+      return ref.read(record_editor.selectedEntityForEditorProvider) != null;
+    },
+    // Mirrors the type picker in the properties panel, which has no command of
+    // its own. Added for the same reason as record_editor.tab.select: the
+    // behaviour is otherwise only reachable by clicking.
+    run: (ref, args) async {
+      final name = args['name'] as String?;
+      if (name == null) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'name is required',
+        };
+      }
+
+      final typeName = (args['type'] as String?) ?? 'text';
+      const supported = {
+        'text',
+        'integer',
+        'decimal',
+        'boolean',
+        'date',
+        'memo',
+      };
+      if (!supported.contains(typeName)) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'unsupported type: $typeName',
+        };
+      }
+
+      ref
+          .read(record_editor.editingEntityPropertiesProvider.notifier)
+          .addProperty(name);
+
+      // Text is the default for an undefined property, so writing it would
+      // grow property_types.json without changing anything — same rule the
+      // picker follows.
+      if (typeName != 'text') {
+        final manager = ref.read(core_graph.propertyTypeManagerProvider);
+        if (manager == null) {
+          return {
+            'ok': false,
+            'code': CommandResultCode.commandError,
+            'error': 'no property type manager for the active stack',
+          };
+        }
+
+        final labels = ref.read(record_editor.selectedEntityLabelsProvider);
+        if (labels.isEmpty) {
+          return {
+            'ok': false,
+            'code': CommandResultCode.commandError,
+            'error': 'entity has no label to scope the type to',
+          };
+        }
+
+        final now = DateTime.now();
+        await manager.setLabelPropertyType(
+          labels.first,
+          name,
+          core_graph.GlobalPropertyTypeDefinition(
+            typeName: typeName,
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
+        ref.invalidate(core_graph.propertyTypesForLabelsProvider);
+
+        return {
+          'ok': true,
+          'name': name,
+          'type': typeName,
+          'label': labels.first,
+        };
+      }
+
+      return {'ok': true, 'name': name, 'type': typeName};
+    },
+  ),
+
+  AppCommand(
     id: 'record_editor.save',
     title: 'Save Record Editor',
     category: 'record_editor',
