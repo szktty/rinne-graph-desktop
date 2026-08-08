@@ -44,6 +44,27 @@ final delayedLoadingStateProvider = StateProvider<bool>((ref) => false);
 class EntitySelectionBridge extends _$EntitySelectionBridge {
   @override
   void build() {
+    // Property type definitions live in the stack directory, but
+    // core_graph_flutter does not depend on core_stack_flutter — it takes the
+    // path by injection. Seed it for the stack that is already open, since the
+    // listener below only fires on a subsequent change.
+    //
+    // Deferred off the build: Riverpod forbids a provider from modifying
+    // another while initialising, and seeding inline threw
+    // "Providers are not allowed to modify other providers during their
+    // initialization", which took MainAppShell down with it.
+    //
+    // Skipped when there is no stack open: null is already the provider's
+    // initial state, and setting it would still count as a change, building a
+    // manager that then races the one built for the real stack a moment later.
+    // Both wrote property_types.json's default definitions at once and left it
+    // truncated mid-object.
+    final initialStackPath =
+        ref.read(core_stack.activeStackProvider)?.directory.path;
+    if (initialStackPath != null) {
+      Future(() => _syncPropertyTypeStackPath(initialStackPath));
+    }
+
     // Monitor active stack changes and load graph
     ref.listen(core_stack.activeStackProvider, (previous, next) async {
       debugPrint(
@@ -55,6 +76,10 @@ class EntitySelectionBridge extends _$EntitySelectionBridge {
         debugPrint('[EntitySelectionBridge] Same stack, skipping reload');
         return;
       }
+
+      // Repointed before the graph loads so that no editor can resolve a
+      // property against the previous stack's type definitions.
+      _syncPropertyTypeStackPath(next?.directory.path);
 
       if (next == null) {
         // If stack is cleared, also clear unified providers
@@ -103,6 +128,17 @@ class EntitySelectionBridge extends _$EntitySelectionBridge {
         debugPrint('[EntitySelectionBridge] Showing secondary sidebar');
       }
     });
+  }
+
+  /// Points the property type providers at [stackPath].
+  ///
+  /// Null when no stack is open, which leaves every property untyped rather
+  /// than resolving against a stack that is no longer showing.
+  void _syncPropertyTypeStackPath(String? stackPath) {
+    debugPrint('[EntitySelectionBridge] Property type stack path: $stackPath');
+    ref
+        .read(core_graph.propertyTypeStackPathProvider.notifier)
+        .setStackPath(stackPath);
   }
 
   /// Loads graph data for the stack and sets it to the unified provider
