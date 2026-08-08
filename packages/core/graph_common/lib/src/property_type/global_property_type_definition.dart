@@ -6,6 +6,7 @@
  * For commercial licensing inquiries, please contact: contact@szktty.jp
  */
 
+import 'package:core_graph_common/src/model/property_type.dart';
 import 'package:meta/meta.dart';
 
 /// Global property type definition.
@@ -99,6 +100,7 @@ class GlobalPropertyTypeDefinition {
   /// List of supported type names.
   static const Set<String> _supportedTypes = {
     'text',
+    'memo',
     'integer',
     'decimal',
     'boolean',
@@ -111,6 +113,10 @@ class GlobalPropertyTypeDefinition {
   bool _validateConstraints() {
     switch (typeName) {
       case 'text':
+      // A memo's length cap is fixed by MemoPropertyType, so a definition
+      // carries no constraints of its own. Validated as text so that a
+      // hand-edited max_length is at least type-checked rather than ignored.
+      case 'memo':
         return _validateTextConstraints();
       case 'integer':
         return _validateIntegerConstraints();
@@ -206,6 +212,44 @@ class GlobalPropertyTypeDefinition {
     if (placeholder != null && placeholder is! String) return false;
 
     return true;
+  }
+
+  /// Builds the [PropertyType] this definition describes.
+  ///
+  /// Returns null for a type name this build does not know, so a stack written
+  /// by a newer version degrades to "untyped" rather than throwing.
+  ///
+  /// Deliberately not routed through `PropertyDescription.fromMap`: that path
+  /// reads `typeMap['type']` while `PropertyType.toMap()` writes `'name'`, so
+  /// its round-trip is already broken — and nothing calls it at runtime.
+  PropertyType? toPropertyType() {
+    switch (typeName) {
+      case 'text':
+        return TextPropertyType(
+          minLength: constraints['min_length'] as int?,
+          maxLength: constraints['max_length'] as int?,
+          pattern: constraints['pattern'] as String?,
+        );
+      case 'memo':
+        return const MemoPropertyType();
+      case 'integer':
+        return IntegerPropertyType(
+          min: constraints['min'] as int?,
+          max: constraints['max'] as int?,
+        );
+      case 'decimal':
+        return const DecimalPropertyType();
+      case 'boolean':
+        return const BooleanPropertyType();
+      case 'date':
+        return const DatePropertyType();
+      case 'email':
+        return const EmailPropertyType();
+      case 'any':
+        return const AnyPropertyType();
+      default:
+        return null;
+    }
   }
 
   /// Copies the definition with a new update timestamp.
