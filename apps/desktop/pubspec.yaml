@@ -59,7 +59,7 @@ dependencies:
     path: ../../packages/core/app_config
 
   # Native graph DB bridge (frb init lives in main.dart)
-  chiffondb: ^0.2.0
+  chiffondb: ^0.3.0
 
   features_stack_management:
     path: ../../packages/features/stack_management

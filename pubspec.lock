@@ -154,12 +154,13 @@ packages:
     source: hosted
     version: "2.0.4"
   chiffondb:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../chiffondb/chiffondb-dart"
-      relative: true
-    source: path
-    version: "0.2.0"
+      name: chiffondb
+      sha256: a471f314c084c9655ec462ea8adef5e4ed1c2963523baa5cd92e144b7834dd46
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   cli_config:
     dependency: transitive
     description:
@@ -476,9 +477,11 @@ packages:
   fonde_ui:
     dependency: "direct overridden"
     description:
-      path: "../fonde-ui"
-      relative: true
-    source: path
+      path: "."
+      ref: develop
+      resolved-ref: ec9a4459e109cab8b95370fa86bf785bf555a3ec
+      url: "https://github.com/szktty/fonde-ui.git"
+    source: git
     version: "0.14.0-dev"
   freezed:
     dependency: transitive
@@ -875,11 +878,13 @@ packages:
     source: hosted
     version: "3.1.6"
   plough:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../plough"
-      relative: true
-    source: path
+      path: "."
+      ref: develop
+      resolved-ref: "7e0a20b00a8bd4a8915fd875398be62f282540ba"
+      url: "https://github.com/szktty/plough.git"
+    source: git
     version: "0.8.0"
   plugin_platform_interface:
     dependency: transitive
