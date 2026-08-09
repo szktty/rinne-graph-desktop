@@ -4,5 +4,15 @@
 <dict>
 	<key>com.apple.security.get-task-allow</key>
 	<false/>
+	<!-- Required by file_picker 10.x, which refuses to open a panel unless one
+	     of the user-selected entitlements is present. It checks the entitlement
+	     directly rather than checking whether the app is sandboxed, so this is
+	     needed even though app-sandbox is off.
+
+	     Read-write rather than read-only because creating a stack asks for a
+	     directory and then writes the stack into it; read-only covers opening
+	     and linking files but would break stack creation. -->
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
 </dict>
 </plist>
