@@ -12,6 +12,7 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 
 import 'global_property_type_definition.dart';
+import 'property_type_registry.dart';
 
 /// Manager class for global property type definitions
 ///
@@ -19,17 +20,6 @@ import 'global_property_type_definition.dart';
 /// Persists using property_types.json file and provides fast access
 /// through memory cache.
 class GlobalPropertyTypeManager {
-  /// List of supported type names
-  static const Set<String> _supportedTypes = {
-    'text',
-    'integer',
-    'decimal',
-    'boolean',
-    'date',
-    'email',
-    'any',
-  };
-
   /// Constructor
   ///
   /// [stackPath] Path to stack directory
@@ -239,7 +229,8 @@ class GlobalPropertyTypeManager {
     return {
       'total_properties': _cache.length,
       'by_type': typeCount,
-      'supported_types': _supportedTypes.toList()..sort(),
+      'supported_types':
+          PropertyTypeRegistry.supportedTypeNames.toList()..sort(),
     };
   }
 

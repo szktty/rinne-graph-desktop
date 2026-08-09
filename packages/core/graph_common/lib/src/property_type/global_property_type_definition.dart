@@ -7,6 +7,7 @@
  */
 
 import 'package:core_graph_common/src/model/property_type.dart';
+import 'package:core_graph_common/src/property_type/property_type_registry.dart';
 import 'package:meta/meta.dart';
 
 /// Global property type definition.
@@ -47,11 +48,9 @@ class GlobalPropertyTypeDefinition {
   /// Update timestamp.
   final DateTime updatedAt;
 
-  /// Checks if the type name is supported.
-  ///
-  /// この定義の型名がサポートされているかどうかを返します。
+  /// Whether this definition's type name is one this build understands.
   bool isSupportedType() {
-    return _supportedTypes.contains(typeName);
+    return PropertyTypeRegistry.isSupported(typeName);
   }
 
   /// Converts to JSON format.
@@ -82,124 +81,17 @@ class GlobalPropertyTypeDefinition {
 
   /// Basic validation of the definition.
   ///
-  /// 型名、制約、UIヒントの妥当性をチェックします。
+  /// Checks the type name, the constraints and the UI hints. The per-type
+  /// constraint rules live with the type in [PropertyTypeRegistry], so an
+  /// unknown type name fails here rather than falling through as valid.
   bool isValid() {
-    // 型名の検証
     if (typeName.isEmpty) return false;
-    if (!_supportedTypes.contains(typeName)) return false;
 
-    // 制約の検証
-    if (!_validateConstraints()) return false;
+    final descriptor = PropertyTypeRegistry.lookup(typeName);
+    if (descriptor == null) return false;
+    if (!descriptor.validateConstraints(constraints)) return false;
 
-    // UIヒントの検証
-    if (!_validateUiHints()) return false;
-
-    return true;
-  }
-
-  /// List of supported type names.
-  static const Set<String> _supportedTypes = {
-    'text',
-    'memo',
-    'integer',
-    'decimal',
-    'boolean',
-    'date',
-    'email',
-    'any',
-  };
-
-  /// Validates the validity of constraints.
-  bool _validateConstraints() {
-    switch (typeName) {
-      case 'text':
-      // A memo's length cap is fixed by MemoPropertyType, so a definition
-      // carries no constraints of its own. Validated as text so that a
-      // hand-edited max_length is at least type-checked rather than ignored.
-      case 'memo':
-        return _validateTextConstraints();
-      case 'integer':
-        return _validateIntegerConstraints();
-      case 'decimal':
-        return _validateDecimalConstraints();
-      case 'date':
-        return _validateDateConstraints();
-      default:
-        return true; // Other types have no constraints.
-    }
-  }
-
-  /// Validates text type constraints.
-  bool _validateTextConstraints() {
-    final minLength = constraints['min_length'];
-    final maxLength = constraints['max_length'];
-
-    if (minLength != null && minLength is! int) return false;
-    if (maxLength != null && maxLength is! int) return false;
-    if (minLength != null &&
-        maxLength != null &&
-        (minLength as int) > (maxLength as int)) {
-      return false;
-    }
-
-    final pattern = constraints['pattern'];
-    if (pattern != null && pattern is! String) return false;
-
-    return true;
-  }
-
-  /// Validates integer type constraints.
-  bool _validateIntegerConstraints() {
-    final min = constraints['min'];
-    final max = constraints['max'];
-
-    if (min != null && min is! int) return false;
-    if (max != null && max is! int) return false;
-    if (min != null && max != null && (min as int) > (max as int)) return false;
-
-    return true;
-  }
-
-  /// Validates decimal type constraints.
-  bool _validateDecimalConstraints() {
-    final min = constraints['min'];
-    final max = constraints['max'];
-
-    if (min != null && min is! double && min is! int) return false;
-    if (max != null && max is! double && max is! int) return false;
-    if (min != null && max != null) {
-      final minValue = (min is int) ? (min).toDouble() : min as double;
-      final maxValue = (max is int) ? (max).toDouble() : max as double;
-      if (minValue > maxValue) return false;
-    }
-
-    return true;
-  }
-
-  /// Validates date type constraints.
-  bool _validateDateConstraints() {
-    final minDate = constraints['min_date'];
-    final maxDate = constraints['max_date'];
-
-    if (minDate != null) {
-      if (minDate is! String) return false;
-      try {
-        DateTime.parse(minDate);
-      } on FormatException {
-        return false;
-      }
-    }
-
-    if (maxDate != null) {
-      if (maxDate is! String) return false;
-      try {
-        DateTime.parse(maxDate);
-      } on FormatException {
-        return false;
-      }
-    }
-
-    return true;
+    return _validateUiHints();
   }
 
   /// Validates the validity of UI hints.
@@ -222,35 +114,8 @@ class GlobalPropertyTypeDefinition {
   /// Deliberately not routed through `PropertyDescription.fromMap`: that path
   /// reads `typeMap['type']` while `PropertyType.toMap()` writes `'name'`, so
   /// its round-trip is already broken — and nothing calls it at runtime.
-  PropertyType? toPropertyType() {
-    switch (typeName) {
-      case 'text':
-        return TextPropertyType(
-          minLength: constraints['min_length'] as int?,
-          maxLength: constraints['max_length'] as int?,
-          pattern: constraints['pattern'] as String?,
-        );
-      case 'memo':
-        return const MemoPropertyType();
-      case 'integer':
-        return IntegerPropertyType(
-          min: constraints['min'] as int?,
-          max: constraints['max'] as int?,
-        );
-      case 'decimal':
-        return const DecimalPropertyType();
-      case 'boolean':
-        return const BooleanPropertyType();
-      case 'date':
-        return const DatePropertyType();
-      case 'email':
-        return const EmailPropertyType();
-      case 'any':
-        return const AnyPropertyType();
-      default:
-        return null;
-    }
-  }
+  PropertyType? toPropertyType() =>
+      PropertyTypeRegistry.lookup(typeName)?.build(constraints);
 
   /// Copies the definition with a new update timestamp.
   GlobalPropertyTypeDefinition copyWithUpdatedAt(DateTime updatedAt) {

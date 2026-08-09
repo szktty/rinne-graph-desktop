@@ -196,6 +196,84 @@ Datasets are a mechanism for logically dividing and managing large graphs.
 -   📋 Stack sharing function
 -   📋 Automatic thumbnail generation
 
+## 5.4 Link URI Scheme
+
+The `link` property type stores a single URI string pointing at content that
+lives outside the graph — a Markdown file in an Obsidian vault, a Notion page,
+a PDF on disk. This exists because RinneGraph is not meant to hold everything:
+past the `memo` type's 500-character limit, the answer is either to split the
+node or to keep the body in a dedicated tool and reference it from here.
+
+### 5.4.1 Recognized Forms
+
+| Form | Example | Meaning |
+|---|---|---|
+| `rinne://stack/<path>` | `rinne://stack/notes/design.md` | A file inside this stack's directory |
+| `file://<absolute path>` | `file:///Users/me/note.md` | A file outside the stack |
+| Any other scheme | `https://…`, `obsidian://…` | A URL, opened by the OS |
+
+The kind is always derived from the URI, never stored beside it, so the two
+cannot disagree. A bare absolute path entered by the user is normalized to
+`file://` on the way in.
+
+### 5.4.1.1 One Stored Type, Three Offered Types
+
+`link` is a single persisted type name, but it is **not** presented as one.
+The property type picker offers "URL", "External file" and "File in this
+stack" as three separate choices, because that is what someone attaching
+something actually has in mind — nobody thinks "I want a link, of the URL
+variety". Grouping them under one "Link" entry would expose the storage design
+as a decision the user has to make.
+
+The three choices differ only in which input the editor opens on. The stored
+value is a URI in every case, and its kind is read back off the value, so a
+property created as "URL" that later holds a `file://` value simply presents
+as a file.
+
+The chosen variant is recorded as a `default_kind` **constraint** on the type
+definition:
+
+```json
+{ "type": "link", "constraints": { "default_kind": "externalFile" } }
+```
+
+It is a constraint rather than a UI hint because only constraints survive the
+trip back out — a resolved property type is rebuilt from them and everything
+else is dropped. It decides nothing about validity: a link that holds a value
+is classified by the value, and this only gives a still-empty property a
+sensible starting input. A definition with no `default_kind`, or with one this
+build does not recognize, simply has no preference.
+
+The `record_editor.property.add` command accepts either form: a bare `link`,
+or one of `link:url`, `link:externalFile`, `link:stackRelative`.
+
+### 5.4.2 The `rinne` Scheme
+
+`rinne://` addresses a location RinneGraph knows how to resolve. The host names
+that location; `stack` is reserved for the stack's own directory and is
+currently the only recognized host. A `rinne://` URI with an unknown host is
+refused rather than guessed at, so a link written by a future version cannot be
+silently opened as the wrong thing.
+
+Reserving the host position now is what allows named bases to be added later —
+`rinne://obsidian-vault/notes/design.md`, where `obsidian-vault` resolves to a
+per-machine absolute path held outside the stack. That indirection is the
+answer to external file paths breaking when a stack moves between machines, and
+is deliberately not implemented yet: external files are stored as absolute
+paths for now.
+
+### 5.4.3 What Is Not Indexed
+
+The contents of a link target are not searched. Keeping an external file's text
+searchable would require watching it for edits made in other applications,
+which cannot be done reliably while RinneGraph is not running, and would mean
+parsing arbitrary formats. The URI itself is ordinary text, so filenames, hosts
+and paths still match in a search.
+
+Link targets are also not checked for existence while rendering — only when the
+user opens one. A property row would otherwise touch the filesystem on every
+rebuild, and a link on a network volume would stall the editor.
+
 ## 6. Design Principles
 
 ### 6.1 Data Transparency and Portability

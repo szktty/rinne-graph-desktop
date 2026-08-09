@@ -462,3 +462,267 @@ class MemoPropertyType extends PropertyType {
     return value.toString();
   }
 }
+
+/// What a link points at, derived from the URI rather than stored alongside it.
+enum LinkKind {
+  /// A file carried inside the stack directory, addressed as
+  /// `rinne://stack/<path>`.
+  ///
+  /// Travels with the stack when it is copied, so it survives being moved to
+  /// another machine.
+  stackRelative,
+
+  /// A file outside the stack, addressed as `file:///…`.
+  ///
+  /// An absolute path, so it breaks if the stack moves to another machine.
+  /// Resolving these through a named base is a later step.
+  externalFile,
+
+  /// Anything with another scheme — `https:`, `obsidian:`, `notion:`.
+  url,
+}
+
+/// A reference to content that lives outside the graph.
+///
+/// Where [MemoPropertyType] holds a short note *in* the graph, this holds a
+/// pointer to the real thing: a Markdown file in an Obsidian vault, a Notion
+/// page, a PDF on disk. It is what makes the memo limit tenable — past 500
+/// characters the answer is no longer only "split the node", it can be "put the
+/// body outside and link to it".
+///
+/// The value is a single URI string, not a structured record, for two reasons:
+///
+///  * Property values are scalars everywhere else in the system, and staying
+///    scalar keeps this type working with the existing storage, search and
+///    validation paths untouched.
+///  * The three kinds a user distinguishes ([LinkKind]) are all derivable from
+///    the string, so the kind never has to be stored — and can never disagree
+///    with the value it describes.
+///
+/// The contents of the target are deliberately not indexed. Keeping an external
+/// file's text searchable would mean watching it for edits made in other
+/// applications, which cannot be done reliably while this app is not running.
+/// The URI itself is ordinary text, so filename, host and path still match in
+/// a search.
+class LinkPropertyType extends PropertyType {
+  /// Constructor
+  const LinkPropertyType({super.isRequired = false, this.defaultKind})
+    : super(name: 'link');
+
+  /// Which kind of link this property was created to hold.
+  ///
+  /// Only consulted while the value is empty: a link that holds something is
+  /// classified by [kindOf], which can never disagree with the value. This
+  /// exists because the picker offers the three kinds as separate choices, and
+  /// a property added as "External file" has to open on a file input rather
+  /// than defaulting to a URL.
+  ///
+  /// Null means no preference was recorded — an older definition, or one
+  /// written by the command with a bare `link` type.
+  final LinkKind? defaultKind;
+
+  /// The constraint key [defaultKind] is persisted under.
+  static const String defaultKindConstraint = 'default_kind';
+
+  /// Reads [defaultKind] back out of a definition's constraints.
+  ///
+  /// An unrecognized name yields null rather than throwing, so a definition
+  /// written by a newer build degrades to "no preference".
+  static LinkKind? kindFromName(Object? name) {
+    if (name is! String) return null;
+    for (final kind in LinkKind.values) {
+      if (kind.name == name) return kind;
+    }
+    return null;
+  }
+
+  /// Scheme identifying a link relative to something RinneGraph knows about.
+  static const String rinneScheme = 'rinne';
+
+  /// The reserved host meaning "this stack's own directory".
+  ///
+  /// Named bases (an Obsidian vault, a projects folder) will occupy the same
+  /// position later; `stack` is reserved now so those cannot collide with it.
+  static const String stackHost = 'stack';
+
+  /// Classifies [value], or returns null if it is not a usable link.
+  static LinkKind? kindOf(String value) {
+    final uri = _tryParse(value);
+    if (uri == null) return null;
+
+    if (uri.scheme == rinneScheme) {
+      return uri.host == stackHost ? LinkKind.stackRelative : null;
+    }
+    if (uri.scheme == 'file') return LinkKind.externalFile;
+    if (uri.scheme.isEmpty) return null;
+    return LinkKind.url;
+  }
+
+  /// Puts user input into the stored form, or returns null if it cannot.
+  ///
+  /// Accepts a bare absolute path — typing or pasting `/Users/me/note.md` is
+  /// natural, and a file picker hands back exactly that — and stores it as a
+  /// `file://` URI so that everything downstream sees one shape.
+  static String? normalize(String input) {
+    final trimmed = input.trim();
+    if (trimmed.isEmpty) return null;
+
+    if (trimmed.startsWith('/')) {
+      return Uri.file(trimmed).toString();
+    }
+
+    final uri = _tryParse(trimmed);
+    if (uri == null || !uri.hasScheme) return null;
+    return uri.toString();
+  }
+
+  /// The part of [value] worth showing in a list, falling back to the whole
+  /// URI when nothing shorter is meaningful.
+  ///
+  /// A link is usually recognised by its last path segment — the filename or
+  /// the page slug — and the full URI is too long to sit in a property row.
+  static String displayLabel(String value) {
+    final uri = _tryParse(value);
+    if (uri == null) return value;
+
+    final segments = uri.pathSegments.where((s) => s.isNotEmpty).toList();
+    if (segments.isNotEmpty) return Uri.decodeComponent(segments.last);
+    if (uri.host.isNotEmpty) return uri.host;
+    return value;
+  }
+
+  /// The path within the stack directory for a [LinkKind.stackRelative] link.
+  ///
+  /// Returns null for every other kind, so callers resolving against a stack
+  /// directory cannot accidentally treat an external link as a relative one.
+  static String? stackRelativePath(String value) {
+    final uri = _tryParse(value);
+    if (uri == null) return null;
+    if (uri.scheme != rinneScheme || uri.host != stackHost) return null;
+
+    // Decoded, so a filename stored with an escaped space comes back as the
+    // name the file actually has.
+    return uri.pathSegments.where((segment) => segment.isNotEmpty).join('/');
+  }
+
+  /// The value as a person would write it, with the scheme machinery removed.
+  ///
+  /// `file:///Users/me/note.md` becomes `/Users/me/note.md` and
+  /// `rinne://stack/notes/design.md` becomes `notes/design.md`. A URL is left
+  /// alone: `https://` is part of how anyone reads a web address, unlike the
+  /// two schemes above, which exist only so the value can be stored in one
+  /// field.
+  ///
+  /// This is the form the editor puts in front of the user, and
+  /// [normalizeForKind] turns it back.
+  static String editableForm(String value) {
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) return '';
+
+    switch (kindOf(trimmed)) {
+      case LinkKind.stackRelative:
+        return stackRelativePath(trimmed) ?? trimmed;
+      case LinkKind.externalFile:
+        final uri = _tryParse(trimmed);
+        if (uri == null) return trimmed;
+        try {
+          return uri.toFilePath();
+        } on UnsupportedError {
+          return trimmed;
+        }
+      case LinkKind.url:
+      case null:
+        return trimmed;
+    }
+  }
+
+  /// Turns [input] typed under [kind] back into the stored form.
+  ///
+  /// The inverse of [editableForm]: a bare path means different things
+  /// depending on the kind it was entered under, which is why the kind has to
+  /// be supplied rather than guessed.
+  static String normalizeForKind(String input, LinkKind kind) {
+    final trimmed = input.trim();
+    if (trimmed.isEmpty) return '';
+
+    switch (kind) {
+      case LinkKind.stackRelative:
+        return stackRelativeUri(trimmed);
+      case LinkKind.externalFile:
+      case LinkKind.url:
+        return normalize(trimmed) ?? trimmed;
+    }
+  }
+
+  /// Expresses [absolutePath] relative to [stackPath], or null if it is not
+  /// inside it.
+  ///
+  /// Guards the promise a stack-relative link makes: that the target travels
+  /// with the stack. A file outside the stack directory cannot keep that
+  /// promise, so it is refused here rather than stored as an absolute path
+  /// under a kind that says otherwise.
+  static String? relativeToStack(String absolutePath, String? stackPath) {
+    if (stackPath == null || stackPath.isEmpty) return null;
+
+    final root = stackPath.endsWith('/') ? stackPath : '$stackPath/';
+    if (!absolutePath.startsWith(root)) return null;
+
+    final relative = absolutePath.substring(root.length);
+    return relative.isEmpty ? null : relative;
+  }
+
+  /// Builds the stored form of a link to [relativePath] inside the stack.
+  ///
+  /// Percent-encodes each segment, so a filename with a space or a `#` in it
+  /// survives the round trip through [stackRelativePath].
+  static String stackRelativeUri(String relativePath) {
+    final trimmed = relativePath.trim();
+    final path = trimmed.startsWith('/') ? trimmed.substring(1) : trimmed;
+    return Uri(
+      scheme: rinneScheme,
+      host: stackHost,
+      pathSegments: path.split('/'),
+    ).toString();
+  }
+
+  /// Parses [value], treating a malformed URI as absent rather than throwing.
+  static Uri? _tryParse(String value) {
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) return null;
+    return Uri.tryParse(trimmed);
+  }
+
+  @override
+  bool isValid(dynamic value) {
+    if (value is! String) return false;
+    // An empty value is a property that has not been filled in yet, which the
+    // editor must be able to save — the same latitude every other type gives.
+    if (value.trim().isEmpty) return true;
+    return kindOf(value) != null;
+  }
+
+  @override
+  ValidationResult validate(dynamic value) {
+    if (value is! String) {
+      return const ValidationResult.error('Value must be a string');
+    }
+    if (value.trim().isEmpty) return ValidationResult.success;
+    if (kindOf(value) == null) {
+      return const ValidationResult.error(
+        'Value must be a URL, a file path, or a location inside this stack',
+      );
+    }
+    return ValidationResult.success;
+  }
+
+  @override
+  bool validateValue(dynamic value) {
+    return isValid(value);
+  }
+
+  @override
+  String? convertValue(dynamic value) {
+    if (value == null) return null;
+    return normalize(value.toString()) ?? value.toString();
+  }
+}

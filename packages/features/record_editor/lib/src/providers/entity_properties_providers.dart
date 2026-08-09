@@ -22,24 +22,24 @@ const _hiddenPropertyKeys = {'app_custom_id', 'app_type'};
 class PropertyValidationException implements Exception {
   const PropertyValidationException({
     required this.propertyName,
-    required this.length,
-    required this.maxLength,
+    required this.message,
+    this.details,
   });
 
   /// Name of the offending property.
   final String propertyName;
 
-  /// Length of the value in grapheme clusters — what the user counts as
-  /// characters, not UTF-16 code units.
-  final int length;
-
-  /// Limit the value exceeded.
-  final int maxLength;
-
   /// Message suitable for showing to the user as-is.
-  String get message =>
-      'The memo "$propertyName" is $length characters, over the '
-      '$maxLength character limit.';
+  ///
+  /// Carried rather than derived: the wording comes from the property type
+  /// that rejected the value, so a new type needs no case here.
+  final String message;
+
+  /// What the user can do about it, if there is a useful suggestion.
+  ///
+  /// Shown under [message] in the error dialog. Null when the message alone
+  /// says everything.
+  final String? details;
 
   @override
   String toString() => 'PropertyValidationException: $message';
@@ -225,11 +225,16 @@ class SaveEntityAction extends _$SaveEntityAction {
 
   /// Checks [properties] against the types declared for the entity's labels.
   ///
-  /// Only memos are length-checked: the limit is deliberate design rather than
-  /// a storage constraint, and it is enforced here because the editor cannot
-  /// enforce it while typing — Flutter's maxLength counts UTF-16 units, which
-  /// would truncate an emoji-heavy memo well short of 500 characters and split
-  /// the surrogate pair. The field shows the overrun, and this refuses it.
+  /// Runs each value through its declared type's own [PropertyType.validate],
+  /// so a type that rejects a value needs no case here — it only needs to say
+  /// why. This is where a memo's length limit is enforced: the editor cannot
+  /// enforce it while typing, because Flutter's maxLength counts UTF-16 units
+  /// and would truncate an emoji-heavy memo well short of 500 characters,
+  /// splitting the surrogate pair. The field shows the overrun, and this
+  /// refuses it.
+  ///
+  /// Untyped properties are skipped, as are null values — clearing a property
+  /// is not a validation failure.
   ///
   /// Throws [PropertyValidationException] on the first offending property.
   Future<void> _validateProperties(Map<String, dynamic> properties) async {
@@ -237,24 +242,38 @@ class SaveEntityAction extends _$SaveEntityAction {
     final types = await ref.read(propertyTypesForLabelsProvider(labels).future);
 
     for (final entry in properties.entries) {
-      if (types[entry.key] is! MemoPropertyType) continue;
+      final type = types[entry.key];
+      if (type == null) continue;
 
       final value = entry.value;
-      if (value is! String) continue;
+      if (value == null) continue;
 
-      final length = MemoPropertyType.lengthOf(value);
-      if (length > MemoPropertyType.maxLength) {
-        print(
-          '[SaveEntityAction] Memo "${entry.key}" is $length characters, '
-          'over the limit',
-        );
-        throw PropertyValidationException(
-          propertyName: entry.key,
-          length: length,
-          maxLength: MemoPropertyType.maxLength,
-        );
-      }
+      final result = type.validate(value);
+      if (result.isValid) continue;
+
+      final message = result.error ?? 'Value is not valid for its type.';
+      print(
+        '[SaveEntityAction] Property "${entry.key}" failed validation: '
+        '$message',
+      );
+      throw PropertyValidationException(
+        propertyName: entry.key,
+        message: 'The property "${entry.key}" is not valid. $message',
+        details: _validationHintFor(type),
+      );
     }
+  }
+
+  /// The "what to do about it" line for a type that rejected a value.
+  ///
+  /// Kept next to the validation loop rather than in the dialog, so the
+  /// suggestion travels with the failure instead of the UI having to guess
+  /// which type it came from.
+  static String? _validationHintFor(PropertyType type) {
+    if (type is MemoPropertyType) {
+      return 'Shorten the memo, or split it across separate records.';
+    }
+    return null;
   }
 
   /// Saves the entity

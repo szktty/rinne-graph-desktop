@@ -2292,7 +2292,9 @@ List<AppCommand> _recordEditorCommands() => [
     category: 'record_editor',
     description:
         '{ name: string, type?: string } — adds a property and, for a '
-        'non-text type, records it against the entity\'s first label',
+        'non-text type, records it against the entity\'s first label. '
+        'type accepts a type name, or a link variant '
+        '(link:url, link:externalFile, link:stackRelative)',
     canExecute: (ref) {
       if (ref.read(core_stack.activeStackProvider) == null) return false;
       return ref.read(record_editor.selectedEntityForEditorProvider) != null;
@@ -2310,20 +2312,24 @@ List<AppCommand> _recordEditorCommands() => [
         };
       }
 
-      final typeName = (args['type'] as String?) ?? 'text';
-      const supported = {
-        'text',
-        'integer',
-        'decimal',
-        'boolean',
-        'date',
-        'memo',
-      };
+      // Accepts either a bare type name or a picker id, so the three link
+      // entries offered in the panel ('link:url', 'link:externalFile',
+      // 'link:stackRelative') are addressable here too. They all persist as
+      // 'link', which is what a caller passing the bare name gets.
+      final requestedType = (args['type'] as String?) ?? 'text';
+      final descriptor = core_graph.PropertyTypeRegistry.lookupByPickerId(
+        requestedType,
+      );
+      final typeName = descriptor?.typeName ?? requestedType;
+
+      final supported = core_graph.PropertyTypeRegistry.selectableTypeNames;
       if (!supported.contains(typeName)) {
         return {
           'ok': false,
           'code': CommandResultCode.badParams,
-          'error': 'unsupported type: $typeName',
+          'error':
+              'unsupported type: $typeName '
+              '(expected one of ${supported.join(", ")})',
         };
       }
 
@@ -2359,6 +2365,17 @@ List<AppCommand> _recordEditorCommands() => [
           name,
           core_graph.GlobalPropertyTypeDefinition(
             typeName: typeName,
+            // Matches the picker. A constraint rather than a UI hint because
+            // that is what survives back out through toPropertyType(). Absent
+            // when the caller passed a bare 'link', which leaves a new
+            // property on the default input.
+            constraints:
+                descriptor?.initialLinkKind == null
+                    ? const {}
+                    : {
+                      core_graph.LinkPropertyType.defaultKindConstraint:
+                          descriptor!.initialLinkKind!.name,
+                    },
             createdAt: now,
             updatedAt: now,
           ),
