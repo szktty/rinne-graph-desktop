@@ -20,7 +20,11 @@ dependencies:
   
   # CSV processing
   csv: ^6.0.0
-  
+
+  # Spreadsheet (xlsx) processing. MIT, like every other dependency here — a
+  # GPL/AGPL one would make the commercial licence impossible to grant.
+  excel_community: ^2.2.1
+
   # Code generation
   freezed_annotation: ^3.0.0
   
