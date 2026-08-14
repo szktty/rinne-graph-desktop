@@ -31,6 +31,7 @@ import '../features/graph_editor/providers/link_creation_providers.dart'
 import '../providers/app_state_providers.dart';
 import '../providers/entity_selection_bridge_providers.dart'
     show graphLoadingStateProvider;
+import '../providers/entity_deletion_providers.dart';
 import '../providers/open_stacks_providers.dart';
 import '../providers/graph_providers.dart';
 import '../providers/search_providers.dart';
@@ -1886,6 +1887,64 @@ List<AppCommand> _graphCommands() => [
           .read(selectedGraphEntityIdProvider.notifier)
           .setSelectedEntityId(null, source: SelectionSource.ui);
       return {'ok': true};
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.entity.delete',
+    title: 'Delete a Node or Link',
+    category: 'graph',
+    description:
+        '{ id?: string, confirm?: boolean } — deletes the entity, or the '
+        'current selection when no id is given. Deleting a node also deletes '
+        'the links attached to it. Reports what was removed rather than '
+        'opening the confirmation dialog the menu shows, so a test can assert '
+        'the cascade without driving a dialog; pass confirm:false to find out '
+        'what a deletion would take without performing it.',
+    run: (ref, args) async {
+      final rawId = args['id'] as String?;
+      final entityId =
+          rawId != null
+              ? core_graph.EntityId.fromString(rawId)
+              : ref.read(selectedGraphEntityIdProvider);
+      if (entityId == null) {
+        return {'ok': false, 'error': 'no entity given and nothing selected'};
+      }
+
+      final actions = ref.read(entityDeletionActionsProvider);
+      final target = actions.describe(entityId);
+      if (target == null) {
+        return {
+          'ok': false,
+          'error': 'no such node or link: ${entityId.value}',
+        };
+      }
+
+      final summary = {
+        'id': target.id.value,
+        'kind': target.isNode ? 'node' : 'link',
+        'display_name': target.displayName,
+        'connected_link_count': target.connectedLinkCount,
+        'would_confirm': target.cascades,
+      };
+
+      if (args['confirm'] == false) {
+        // Reports what the storage itself holds alongside the summary, so a
+        // delete that failed can be told apart from one that reached the
+        // database but never made it back to the view.
+        final stats =
+            await ref.read(core_graph.graphContextProvider).getStatistics();
+        return {
+          'ok': true,
+          'deleted': false,
+          ...summary,
+          'storage_node_count': stats.nodeCount,
+          'storage_link_count': stats.linkCount,
+        };
+      }
+
+      final deleted = await actions.delete(target);
+      return {'ok': deleted, 'deleted': deleted, ...summary};
     },
   ),
 

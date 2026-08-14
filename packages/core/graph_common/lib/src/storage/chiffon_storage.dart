@@ -54,7 +54,22 @@ class ChiffonStorage implements GraphStorage {
   @override
   Future<void> initialize() async {
     if (_isInitialized) return;
+    // Callers that arrive while the first initialize is still running await
+    // that same run instead of starting another. Without this, the
+    // `_isInitialized` flag — only set at the very end — lets a second caller
+    // straight through to `Connection.open`, and ChiffonDB refuses to open one
+    // file twice in a process. It also means a caller can no longer proceed
+    // with half-built id maps, which made deletes fail by reporting the node
+    // as missing.
+    return _initialization ??= _initialize().whenComplete(() {
+      _initialization = null;
+    });
+  }
 
+  /// The in-flight [initialize] run, if one has not finished yet.
+  Future<void>? _initialization;
+
+  Future<void> _initialize() async {
     final file = File(_path);
     if (await file.exists()) {
       _db = await Connection.open(path: _path);
@@ -195,9 +210,50 @@ class ChiffonStorage implements GraphStorage {
     final rid = _nodeIdMap[id.value];
     if (rid == null) return false;
 
+    // ChiffonDB cascades: deleting a node also deletes every edge touching it
+    // (chiffondb-core's delete_node collects in- and out-edges). The edges are
+    // therefore gone from the database, but their entries in [_linkIdMap] would
+    // survive as RecordIds pointing at freed slots — and getLink,
+    // getLinkByCustomId, getLinkTypes and getPropertyKeys all read edges
+    // straight from that map. Collect the doomed edges *before* the delete,
+    // while the topology can still be queried, and drop them afterwards.
+    final cascadedLinkIds = await _linkIdsConnectedTo(rid);
+
     await _db!.deleteNode(rid: rid);
     _nodeIdMap.remove(id.value);
+    for (final linkId in cascadedLinkIds) {
+      _linkIdMap.remove(linkId);
+    }
     return true;
+  }
+
+  /// EntityIds of the links whose edge has [nodeRid] at either end.
+  ///
+  /// Returns a set so a self-loop — an edge whose endpoints are both
+  /// [nodeRid] — is reported once rather than twice.
+  Future<Set<String>> _linkIdsConnectedTo(RecordId nodeRid) async {
+    final connected = <String>{};
+    for (final entry in _linkIdMap.entries) {
+      final endpointsJson = await _db!.getEdgeEndpoints(rid: entry.value);
+      final endpoints = jsonDecode(endpointsJson) as Map<String, dynamic>;
+      if (_isSameRecord(endpoints['from'], nodeRid) ||
+          _isSameRecord(endpoints['to'], nodeRid)) {
+        connected.add(entry.key);
+      }
+    }
+    return connected;
+  }
+
+  /// Whether the `{"page":…,"slot":…}` object [raw] denotes [rid].
+  ///
+  /// The endpoints arrive as decoded JSON, so they are compared field by field
+  /// rather than by constructing a [RecordId] to match against.
+  bool _isSameRecord(Object? raw, RecordId rid) {
+    if (raw is! Map<String, dynamic>) return false;
+    final page = raw['page'];
+    final slot = raw['slot'];
+    if (page is! num || slot is! num) return false;
+    return page.toInt() == rid.page && slot.toInt() == rid.slot;
   }
 
   @override

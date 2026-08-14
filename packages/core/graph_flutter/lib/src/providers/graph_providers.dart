@@ -38,7 +38,21 @@ GraphStorage graphStorage(Ref ref) {
 ///
 /// This provider provides the context for the graph database.
 /// Used to share a single GraphContext instance across the entire application.
-@riverpod
+///
+/// The context does **not** own its storage and must never close it. Whoever
+/// overrides [graphStorageProvider] owns the connection and closes it — in the
+/// desktop app that is `activeStackGraphStorageProvider`, which closes it in
+/// its own `onDispose`. Closing it from here closed a connection still in use:
+/// `ChiffonStorage.close()` nulls the database handle and clears the id maps,
+/// after which a delete looked up a live entity, missed, and reported that
+/// there was nothing to delete. An `onDispose` would not even be limited to
+/// teardown — Riverpod runs it before *every* rebuild, so each change of the
+/// active stack tore down the storage the new context was about to use.
+///
+/// Kept alive so the context — and the entity caches it maintains — survives
+/// the UI that happens to be watching it. It still rebuilds when the storage
+/// changes: `ref.watch` drives that regardless of the keepAlive flag.
+@Riverpod(keepAlive: true)
 GraphContext graphContext(Ref ref) {
   final storage = ref.watch(graphStorageProvider);
   final context = GraphContext(storage: storage);
@@ -46,10 +60,6 @@ GraphContext graphContext(Ref ref) {
   // Initialization is async but executed during provider initialization
   // For actual apps, it's recommended to use the WarmUp pattern
   context.initialize();
-
-  ref.onDispose(() async {
-    await context.close();
-  });
 
   return context;
 }
