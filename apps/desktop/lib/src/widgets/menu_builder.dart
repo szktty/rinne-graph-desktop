@@ -95,7 +95,7 @@ class MenuBuilder {
       ),
 
       // 2. File menu
-      _buildFileMenu(context, ref),
+      _buildFileMenu(context, ref, navigatorKey),
 
       // 3. Edit menu
       _buildEditMenu(context),
@@ -115,7 +115,11 @@ class MenuBuilder {
   }
 
   /// Build file menu
-  static PlatformMenu _buildFileMenu(BuildContext context, WidgetRef ref) {
+  static PlatformMenu _buildFileMenu(
+    BuildContext context,
+    WidgetRef ref,
+    GlobalKey<NavigatorState> navigatorKey,
+  ) {
     return PlatformMenu(
       label: 'File',
       menus: <PlatformMenuItem>[
@@ -182,8 +186,15 @@ class MenuBuilder {
               label: 'Import',
               menus: <PlatformMenuItem>[
                 PlatformMenuItem(
-                  label: 'Import from CSV...',
-                  onSelected: () => MenuActions.handleCsvImport(context, ref),
+                  label: 'Import from Spreadsheet or CSV...',
+                  onSelected: () {
+                    // The menu's own context sits above MaterialApp and has no
+                    // Navigator, so the import's dialogs could not open from it.
+                    final navContext = navigatorKey.currentContext;
+                    if (navContext != null) {
+                      MenuActions.handleCsvImport(navContext, ref);
+                    }
+                  },
                 ),
                 const PlatformMenuItem(label: 'Import from JSON...'),
                 const PlatformMenuItem(label: 'Import Stack...'),
