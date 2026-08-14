@@ -18,7 +18,15 @@ import '../providers/search_providers.dart';
 import '../providers/selection_providers.dart';
 import '../events/selection_events.dart';
 import '../services/search_execution_service.dart';
+import 'graph_filter_tab.dart';
 import 'navigation_tab_content.dart';
+
+/// The sidebar's tabs, by the index `graphNavigatorTabProvider` stores.
+///
+/// Kept in one place because the index and the id have to agree in both
+/// directions — reading the current tab and reporting a tap — and a third tab
+/// made the pair of inline ternaries that did this before wrong.
+const Map<int, String> _tabIds = {0: 'navigation', 1: 'search', 2: 'filter'};
 
 class GraphNavigatorSidebarContent extends ConsumerWidget {
   const GraphNavigatorSidebarContent({super.key});
@@ -27,7 +35,7 @@ class GraphNavigatorSidebarContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedTab = ref.watch(graphNavigatorTabProvider);
 
-    // Tab definition (filter menu removed, only navigator and search)
+    // Tab definition
     final tabs = [
       FondeTab(
         id: 'navigation',
@@ -41,20 +49,33 @@ class GraphNavigatorSidebarContent extends ConsumerWidget {
         tooltip: 'Search',
         closeable: false,
       ),
+      FondeTab(
+        id: 'filter',
+        icon: FondeIcons.listFilter,
+        tooltip: 'Filter',
+        closeable: false,
+      ),
     ];
 
     // Tab content definition
     final contents = [
       FondeTabContent(id: 'navigation', content: NavigationTabContent()),
       FondeTabContent(id: 'search', content: _SearchTabContent()),
+      FondeTabContent(id: 'filter', content: const GraphFilterTabContent()),
     ];
 
     return FondeTabView(
       tabs: tabs,
       contents: contents,
-      selectedTabId: selectedTab == 0 ? 'navigation' : 'search',
+      selectedTabId: _tabIds[selectedTab] ?? _tabIds[0]!,
       onTabSelected: (tabId) {
-        final tabIndex = tabId == 'navigation' ? 0 : 1;
+        final tabIndex =
+            _tabIds.entries
+                .firstWhere(
+                  (entry) => entry.value == tabId,
+                  orElse: () => const MapEntry(0, 'navigation'),
+                )
+                .key;
         ref.read(graphNavigatorTabProvider.notifier).setTab(tabIndex);
       },
       tabBarHeight: 48.0,
