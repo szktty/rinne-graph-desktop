@@ -104,7 +104,7 @@ class MenuBuilder {
       _buildViewMenu(context, ref),
 
       // 5. Graph menu
-      _buildGraphMenu(),
+      _buildGraphMenu(navigatorKey, ref),
 
       // 6. Window menu
       _buildWindowMenu(),
@@ -417,11 +417,14 @@ class MenuBuilder {
   }
 
   /// Build graph menu
-  static PlatformMenu _buildGraphMenu() {
+  static PlatformMenu _buildGraphMenu(
+    GlobalKey<NavigatorState> navigatorKey,
+    WidgetRef ref,
+  ) {
     return PlatformMenu(
       label: 'Graph',
-      menus: const <PlatformMenuItem>[
-        PlatformMenuItem(
+      menus: <PlatformMenuItem>[
+        const PlatformMenuItem(
           label: 'Create Node',
           shortcut: SingleActivator(
             LogicalKeyboardKey.keyN,
@@ -429,7 +432,7 @@ class MenuBuilder {
             shift: true,
           ),
         ),
-        PlatformMenuItem(
+        const PlatformMenuItem(
           label: 'Create Link',
           shortcut: SingleActivator(
             LogicalKeyboardKey.keyL,
@@ -437,7 +440,7 @@ class MenuBuilder {
             shift: true,
           ),
         ),
-        PlatformMenuItemGroup(
+        const PlatformMenuItemGroup(
           members: <PlatformMenuItem>[
             PlatformMenuItem(
               label: 'Edit Properties',
@@ -445,7 +448,7 @@ class MenuBuilder {
             ),
           ],
         ),
-        PlatformMenuItemGroup(
+        const PlatformMenuItemGroup(
           members: <PlatformMenuItem>[
             PlatformMenuItem(
               label: 'Add to Bookmarks',
@@ -454,7 +457,7 @@ class MenuBuilder {
             PlatformMenuItem(label: 'Manage Bookmarks...'),
           ],
         ),
-        PlatformMenuItemGroup(
+        const PlatformMenuItemGroup(
           members: <PlatformMenuItem>[
             PlatformMenuItem(label: 'Save Chart as Image...'),
           ],
@@ -463,7 +466,17 @@ class MenuBuilder {
           members: <PlatformMenuItem>[
             PlatformMenuItem(
               label: 'Delete',
-              shortcut: SingleActivator(LogicalKeyboardKey.delete),
+              shortcut: const SingleActivator(LogicalKeyboardKey.delete),
+              onSelected: () {
+                // The context the menu is built with sits above MaterialApp,
+                // so it has no Navigator and neither the dialog nor the snack
+                // bar could be shown from it. Every other menu item that opens
+                // something goes through the navigator key for this reason.
+                final navContext = navigatorKey.currentContext;
+                if (navContext != null) {
+                  MenuActions.deleteSelectedEntity(navContext, ref);
+                }
+              },
             ),
           ],
         ),

@@ -7,11 +7,62 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:fonde_ui/fonde_ui.dart';
 import 'package:presentation_components/presentation_components.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../providers/entity_deletion_providers.dart';
+import '../providers/graph_providers.dart';
+
 /// A class that provides implementations for menu actions
 class MenuActions {
+  /// Deletes whatever is selected in the graph, asking first when the deletion
+  /// would take more than the selected entity with it.
+  ///
+  /// A node drags its links along — the storage cascades — so deleting one is
+  /// confirmed whenever it has any. An isolated node, and any link, is deleted
+  /// on the spot: the confirmation would cost more than the mistake it saves,
+  /// and re-drawing a single link is cheap.
+  static Future<void> deleteSelectedEntity(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final selectedId = ref.read(selectedGraphEntityIdProvider);
+    if (selectedId == null) {
+      FondeSnackBar.showInfo(
+        context: context,
+        message: '削除するノードまたはリンクを選択してください',
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
+
+    final actions = ref.read(entityDeletionActionsProvider);
+    final target = actions.describe(selectedId);
+    if (target == null) {
+      // The selection outlived the entity — nothing to delete.
+      return;
+    }
+
+    if (target.cascades) {
+      final confirmed = await showFondeConfirmationDialog(
+        context,
+        message: '「${target.displayName}」を削除しますか？',
+        warningItems: [
+          '接続している ${target.connectedLinkCount} 本のリンクも削除されます',
+          // Dropped once undo covers deletion; until then this is simply true.
+          'この操作は取り消せません',
+        ],
+        cancelLabel: 'キャンセル',
+        confirmLabel: '削除',
+        isDestructive: true,
+      );
+      if (confirmed != true) return;
+    }
+
+    await actions.delete(target);
+  }
+
   /// Displays the new stack creation dialog
   static void showCreateStackDialog(BuildContext context) {
     FondeSnackBar.showInfo(
