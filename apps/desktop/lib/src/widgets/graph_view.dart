@@ -8,6 +8,7 @@
 
 import 'dart:math' as math;
 
+import 'package:flutter/gestures.dart' show kSecondaryButton;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,6 +28,7 @@ import '../features/graph_editor/providers/modifier_key_providers.dart';
 import '../features/graph_editor/widgets/link_creation_overlay.dart';
 import 'app_node_renderer.dart';
 import 'graph_dot_grid.dart';
+import 'menu_actions.dart';
 import 'node_display_settings_panel.dart';
 import '../events/selection_events.dart';
 
@@ -62,6 +64,56 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
   GlobalKey<plough.GraphViewState> _graphViewStateKey = GlobalKey();
   Size _viewportSize = Size.zero;
   bool _escapeHandlerRegistered = false;
+
+  /// Drives the right-click menu, which is opened at the pointer rather than
+  /// against an anchor's edge.
+  final MenuController _contextMenuController = MenuController();
+
+  /// Node the right-click landed on, or null when it hit empty canvas.
+  ///
+  /// Read while the menu builds its items, so it has to outlive the gesture
+  /// that opened it.
+  core_graph.EntityId? _contextMenuNodeId;
+
+  /// Opens the node menu at a secondary-button press.
+  ///
+  /// plough deliberately ignores non-primary buttons — selecting or dragging
+  /// on a right-click would fight the menu — so secondary presses are picked
+  /// up here instead. The node under the pointer is still hit-tested through
+  /// the viewport controller, which reuses plough's own test and so respects
+  /// node shape and stacking order.
+  ///
+  /// Right-clicking a node also selects it: the menu acts on the selection,
+  /// and leaving the previous selection in place would let the menu delete
+  /// something other than the node the user aimed at.
+  void _handlePointerDown(PointerDownEvent event) {
+    ref
+        .read(altPressedProvider.notifier)
+        .set(HardwareKeyboard.instance.isAltPressed);
+
+    if (event.buttons != kSecondaryButton) return;
+    // Drawing a link takes precedence; a right-click during it would otherwise
+    // open a menu over a half-finished gesture.
+    if (ref.read(tapLinkCreationProvider).isActive) return;
+
+    final hit = _viewportController.nodeIdAt(
+      _viewportController.screenToScene(event.localPosition),
+    );
+    if (hit == null) {
+      // Empty canvas. There is nothing to act on, and showing a menu of
+      // disabled items says less than showing none.
+      if (_contextMenuController.isOpen) _contextMenuController.close();
+      return;
+    }
+
+    final nodeId = core_graph.EntityId.fromString(hit.value);
+    ref
+        .read(selectedGraphEntityIdProvider.notifier)
+        .setSelectedEntityId(nodeId, source: SelectionSource.program);
+
+    setState(() => _contextMenuNodeId = nodeId);
+    _contextMenuController.open(position: event.localPosition);
+  }
 
   /// Escape abandons an in-progress link. Alt is not tracked here — it is
   /// sampled at pointer-down instead, see the Listener in build().
@@ -342,52 +394,98 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
         }
 
         final appColorScheme = ref.watch(effectiveColorSchemeProvider);
-        return Listener(
-          // Only onTap consumes this. plough dispatches taps from behind its
-          // recognition timer, so by then the key may be up; drags run early
-          // enough to read the keyboard directly. Overwritten on every press,
-          // so it never describes an older gesture.
-          onPointerDown: (_) {
-            ref
-                .read(altPressedProvider.notifier)
-                .set(HardwareKeyboard.instance.isAltPressed);
-          },
-          child: MouseRegion(
-            opaque: false,
-            onHover: _handlePointerHover,
-            child: ColoredBox(
-              color: appColorScheme.appSpecific.graph.background,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: DotGridBackground(
-                      transformationController: _viewportController,
+        // The menu wraps the view rather than hanging off a placeholder: the
+        // position passed to MenuController.open is measured from the anchor,
+        // so the anchor has to be the widget the pointer positions are in.
+        return _wrapWithContextMenu(
+          Listener(
+            // The alt sample is only consumed by onTap. plough dispatches taps
+            // from behind its recognition timer, so by then the key may be up;
+            // drags run early enough to read the keyboard directly. Overwritten
+            // on every press, so it never describes an older gesture.
+            onPointerDown: _handlePointerDown,
+            // Presses have to arrive here wherever they land in the canvas, not
+            // only where a child happens to hit-test, so that a right-click is
+            // seen anywhere over the graph.
+            behavior: HitTestBehavior.translucent,
+            child: MouseRegion(
+              opaque: false,
+              onHover: _handlePointerHover,
+              child: ColoredBox(
+                color: appColorScheme.appSpecific.graph.background,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: DotGridBackground(
+                        transformationController: _viewportController,
+                      ),
                     ),
-                  ),
-                  Positioned.fill(
-                    child: plough.GraphViewport(
-                      controller: _viewportController,
-                      minScale: 0.5,
-                      maxScale: 3.0,
-                      canvasMode: plough.GraphViewportCanvasMode.infinite,
-                      // Node hit-test bounds are now stored in logical scene
-                      // space, so they stay valid across transform changes and
-                      // scene grows. The old onTransformChanged ->
-                      // refreshAllNodeGeometry band-aid is no longer needed.
-                      child: cache.graphView!,
+                    Positioned.fill(
+                      child: plough.GraphViewport(
+                        controller: _viewportController,
+                        minScale: 0.5,
+                        maxScale: 3.0,
+                        canvasMode: plough.GraphViewportCanvasMode.infinite,
+                        // Node hit-test bounds are now stored in logical scene
+                        // space, so they stay valid across transform changes
+                        // and scene grows. The old onTransformChanged ->
+                        // refreshAllNodeGeometry band-aid is no longer needed.
+                        child: cache.graphView!,
+                      ),
                     ),
-                  ),
-                  Positioned.fill(
-                    child: LinkCreationOverlay(
-                      viewportController: _viewportController,
+                    Positioned.fill(
+                      child: LinkCreationOverlay(
+                        viewportController: _viewportController,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  /// Wraps the graph view in the right-click menu.
+  ///
+  /// The menu anchors to [child] so the position handed to
+  /// [MenuController.open] is read in the same coordinate space as the pointer
+  /// events that produced it. The tap that dismisses the menu is consumed:
+  /// the anchor here is the whole canvas, and a click aimed at closing the
+  /// menu should not also land on whatever node is underneath.
+  Widget _wrapWithContextMenu(Widget child) {
+    final colorScheme = ref.watch(effectiveColorSchemeProvider);
+    return MenuAnchor(
+      controller: _contextMenuController,
+      consumeOutsideTap: true,
+      onClose: () {
+        if (_contextMenuNodeId != null && mounted) {
+          setState(() => _contextMenuNodeId = null);
+        }
+      },
+      menuChildren: [
+        MenuItemButton(
+          onPressed:
+              _contextMenuNodeId == null
+                  ? null
+                  : () {
+                    // Deferred past this frame: the menu is dismissing itself,
+                    // and deleting inline pulls the node out from under the
+                    // overlay that is still closing.
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (!mounted) return;
+                      MenuActions.deleteSelectedEntity(context, ref);
+                    });
+                  },
+          child: Text(
+            'Delete',
+            style: TextStyle(color: colorScheme.status.error),
+          ),
+        ),
+      ],
+      child: child,
     );
   }
 
