@@ -132,6 +132,12 @@ class InMemoryGraphStorage implements GraphStorage {
     final index = _nodes.indexWhere((node) => node.id == id);
     if (index != -1) {
       _nodes.removeAt(index);
+      // Cascade to the attached links, matching ChiffonStorage — its delete_node
+      // drops every edge touching the node. Keeping them here would leave links
+      // pointing at a node that no longer exists, which the graph model treats
+      // as impossible, and would make this storage disagree with the real one
+      // in tests.
+      _links.removeWhere((link) => link.sourceId == id || link.targetId == id);
       return true;
     }
     return false;

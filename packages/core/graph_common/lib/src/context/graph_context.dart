@@ -123,10 +123,18 @@ class GraphContext {
   }
 
   /// Delete a node
+  ///
+  /// Deleting a node also deletes every link attached to it — the storage
+  /// cascades — so the cached copies of those links are evicted too. Leaving
+  /// them behind would let [getLink] serve a link whose endpoint no longer
+  /// exists straight from the cache.
   Future<bool> deleteNode(EntityId id) async {
     final result = await storage.deleteNode(id);
     if (result) {
       _nodeCache.remove(id);
+      _linkCache.removeWhere(
+        (_, link) => link.sourceId == id || link.targetId == id,
+      );
     }
     return result;
   }
