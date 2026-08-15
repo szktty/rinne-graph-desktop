@@ -16,6 +16,7 @@ import '../providers/graph_providers.dart' as graph_providers;
 import '../providers/graph_providers.dart';
 import '../providers/selection_providers.dart';
 import '../providers/view_toolbar_providers.dart';
+import '../providers/graph_filter_providers.dart';
 import '../providers/graph_status_providers.dart';
 import '../providers/entity_selection_bridge_providers.dart';
 import '../features/graph_editor/providers/link_creation_providers.dart';
@@ -65,8 +66,14 @@ class GraphEditorScreen extends ConsumerWidget {
     // Get theme settings
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
 
-    // Get active graph
-    final activeGraph = ref.watch(core_graph.activeGraphProvider);
+    // The active graph with the sidebar's label filter applied, for the views
+    // that have no layout to preserve — the table and the entity counts. The
+    // graph view filters differently, by naming what to leave undrawn, so that
+    // a hidden node keeps the position it was laid out at; it reads the
+    // unfiltered graph itself. Everything that *writes* — creating, deleting —
+    // keeps reading activeGraphProvider, so an edit is never made against a
+    // graph with entities missing from it.
+    final activeGraph = ref.watch(filteredGraphProvider);
 
     // Get delayed loading status (displayed only if it takes more than 1 second)
     final isDelayedLoading = ref.watch(delayedLoadingStateProvider);
@@ -274,7 +281,9 @@ class _ContentAreaWidget extends StatelessWidget {
         ),
       );
     } else if (viewType == ViewType.graph) {
-      return Expanded(child: GraphViewWidget(activeGraph: activeGraph));
+      // Reads the unfiltered graph itself: it hides by leaving entities
+      // undrawn, not by being handed a graph with them removed.
+      return const Expanded(child: GraphViewWidget());
     } else if (viewType == ViewType.outline) {
       return const Expanded(child: OutlineViewWidget());
     } else {

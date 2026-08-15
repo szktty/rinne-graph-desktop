@@ -32,6 +32,7 @@ import '../providers/app_state_providers.dart';
 import '../providers/entity_selection_bridge_providers.dart'
     show graphLoadingStateProvider;
 import '../providers/entity_deletion_providers.dart';
+import '../providers/graph_filter_providers.dart';
 import '../providers/open_stacks_providers.dart';
 import '../providers/graph_providers.dart';
 import '../providers/search_providers.dart';
@@ -1220,6 +1221,138 @@ List<AppCommand> _graphCommands() => [
         'ok': true,
         'dim_enabled': ref.read(searchHighlightProvider).dimEnabled,
       };
+    },
+  ),
+
+  // ---- Label filter ----
+  //
+  // The sidebar's checkboxes are the way a person drives this; a UI test
+  // cannot tick them, so the same state is reachable here.
+  AppCommand(
+    id: 'sidebar.navigator.setTab',
+    title: 'Select a Left Sidebar Tab',
+    category: 'sidebar',
+    description:
+        '{ tab: "navigation" | "search" | "filter" } — switches the left '
+        'sidebar. Distinct from unifiedFondeSidebar.setTab, which drives a '
+        'sidebar the app does not show.',
+    run: (ref, args) async {
+      const ids = {'navigation': 0, 'search': 1, 'filter': 2};
+      final name = args['tab'] as String?;
+      final index = ids[name];
+      if (index == null) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'tab must be one of ${ids.keys.join(', ')}',
+        };
+      }
+      ref.read(graphNavigatorTabProvider.notifier).setTab(index);
+      return {'ok': true, 'tab': name};
+    },
+  ),
+  AppCommand(
+    id: 'graph.filter.state',
+    title: 'Get the Label Filter State',
+    category: 'graph',
+    description:
+        'Reports the labels and link types present in the open stack with '
+        'their counts, and which of them are hidden.',
+    canExecute: (ref) => ref.read(core_stack.activeStackProvider) != null,
+    run: (ref, args) async {
+      final counts = ref.read(graphEntityCountsProvider);
+      final filter = ref.read(graphFilterProvider);
+      return {
+        'ok': true,
+        'node_labels': counts.nodeLabels,
+        'link_types': counts.linkTypes,
+        'hidden_node_labels': filter.hiddenNodeLabels.toList()..sort(),
+        'hidden_link_types': filter.hiddenLinkTypes.toList()..sort(),
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.filter.node_label',
+    title: 'Show or Hide a Node Label',
+    category: 'graph',
+    description:
+        '{ label: string, visible?: boolean } — hides the nodes carrying '
+        '`label`, and any link that needed one of them. Omit visible to '
+        'toggle.',
+    canExecute: (ref) => ref.read(core_stack.activeStackProvider) != null,
+    run: (ref, args) async {
+      final label = args['label'] as String?;
+      if (label == null || label.isEmpty) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'label is required',
+        };
+      }
+
+      final notifier = ref.read(graphFilterProvider.notifier);
+      final visible = args['visible'] as bool?;
+      if (visible == null) {
+        notifier.toggleNodeLabel(label);
+      } else {
+        notifier.setNodeLabelVisible(label, visible);
+      }
+
+      final hidden = ref.read(graphFilterProvider).hiddenNodeLabels;
+      return {
+        'ok': true,
+        'label': label,
+        'visible': !hidden.contains(label),
+        'hidden_node_labels': hidden.toList()..sort(),
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.filter.link_type',
+    title: 'Show or Hide a Link Type',
+    category: 'graph',
+    description:
+        '{ type: string, visible?: boolean } — hides links of that type. '
+        'Their endpoints stay. Omit visible to toggle.',
+    canExecute: (ref) => ref.read(core_stack.activeStackProvider) != null,
+    run: (ref, args) async {
+      final type = args['type'] as String?;
+      if (type == null || type.isEmpty) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.badParams,
+          'error': 'type is required',
+        };
+      }
+
+      final notifier = ref.read(graphFilterProvider.notifier);
+      final visible = args['visible'] as bool?;
+      if (visible == null) {
+        notifier.toggleLinkType(type);
+      } else {
+        notifier.setLinkTypeVisible(type, visible);
+      }
+
+      final hidden = ref.read(graphFilterProvider).hiddenLinkTypes;
+      return {
+        'ok': true,
+        'type': type,
+        'visible': !hidden.contains(type),
+        'hidden_link_types': hidden.toList()..sort(),
+      };
+    },
+  ),
+
+  AppCommand(
+    id: 'graph.filter.reset',
+    title: 'Show Everything Again',
+    category: 'graph',
+    canExecute: (ref) => ref.read(core_stack.activeStackProvider) != null,
+    run: (ref, args) async {
+      ref.read(graphFilterProvider.notifier).reset();
+      return {'ok': true};
     },
   ),
 
