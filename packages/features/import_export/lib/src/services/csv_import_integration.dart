@@ -17,30 +17,43 @@ import '../dialogs/import_progress_dialog.dart';
 import 'csv_import_service.dart';
 
 class CsvImportIntegration {
+  /// Runs the import the File menu offers: pick a file, say where it goes,
+  /// watch it run.
+  ///
+  /// Handles CSV and .xlsx alike — [CsvImportService.importFileToStack] picks
+  /// the reader from the extension.
   static Future<void> handleCsvImport(
     BuildContext context,
     ProviderContainer container,
   ) async {
     try {
-      // 1. Display file selection dialog
       final filePath = await showCsvFilePickerDialog(context);
       if (filePath == null || !context.mounted) return;
 
-      // 2. Display stack name input dialog
-      final stackName = await _showStackNameDialog(context, filePath);
-      if (stackName == null || !context.mounted) return;
-
-      // 3. Choose whether to display a progress dialog or start a background task
-      final useBackgroundTask = await _showImportModeDialog(context);
-      if (useBackgroundTask == null || !context.mounted) return;
-
-      if (useBackgroundTask) {
-        // Execute as a background task
-        await _runBackgroundImportTask(context, container, filePath, stackName);
-      } else {
-        // Execute with progress dialog
-        await _runForegroundImportTask(context, container, filePath, stackName);
+      // Adding to the open stack is only offered when one is open.
+      final openStack = container.read(core_stack.activeStackProvider);
+      core_stack.Stack? targetStack;
+      if (openStack != null) {
+        final addToOpen = await _showDestinationDialog(context, openStack);
+        if (addToOpen == null || !context.mounted) return;
+        targetStack = addToOpen ? openStack : null;
       }
+
+      // A new stack needs a name; adding to one that exists does not.
+      var stackName = targetStack?.info.name ?? '';
+      if (targetStack == null) {
+        final chosen = await _showStackNameDialog(context, filePath);
+        if (chosen == null || !context.mounted) return;
+        stackName = chosen;
+      }
+
+      await _runForegroundImportTask(
+        context,
+        container,
+        filePath,
+        stackName,
+        targetStack,
+      );
     } catch (e) {
       if (context.mounted) {
         _showErrorDialog(context, 'Import Error: $e');
@@ -48,11 +61,48 @@ class CsvImportIntegration {
     }
   }
 
+  /// Asks whether the file joins the open stack or starts a new one.
+  ///
+  /// Returns true to add to [openStack], false to create, null if cancelled.
+  static Future<bool?> _showDestinationDialog(
+    BuildContext context,
+    core_stack.Stack openStack,
+  ) async {
+    return showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Where should this go?'),
+            content: Text(
+              'Add the file to the open stack "${openStack.info.name}", or '
+              'import it into a new one?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('New stack'),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Add to open stack'),
+              ),
+            ],
+          ),
+    );
+  }
+
   static Future<String?> _showStackNameDialog(
     BuildContext context,
     String filePath,
   ) async {
-    final fileName = filePath.split('/').last.replaceAll('.csv', '');
+    final fileName = filePath
+        .split('/')
+        .last
+        .replaceAll(RegExp(r'\.(csv|xlsx)$', caseSensitive: false), '');
     final controller = TextEditingController(text: fileName);
 
     return showDialog<String>(
@@ -86,36 +136,12 @@ class CsvImportIntegration {
     );
   }
 
-  static Future<bool?> _showImportModeDialog(BuildContext context) async {
-    return showDialog<bool>(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Select Import Method'),
-            content: const Text('How do you want to run the import process?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Progress Dialog'),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Background'),
-              ),
-            ],
-          ),
-    );
-  }
-
   static Future<void> _runForegroundImportTask(
     BuildContext context,
     ProviderContainer container,
     String filePath,
     String stackName,
+    core_stack.Stack? targetStack,
   ) async {
     final progressController = StreamController<double>.broadcast();
 
@@ -134,17 +160,24 @@ class CsvImportIntegration {
       },
       onBackground: () {
         Navigator.of(context).pop();
-        _runBackgroundImportTask(context, container, filePath, stackName);
+        _runBackgroundImportTask(
+          context,
+          container,
+          filePath,
+          stackName,
+          targetStack,
+        );
         completer.complete(true);
       },
     );
 
     // Execute import process
     try {
-      await CsvImportService.importCsvToStack(
+      final outcome = await CsvImportService.importFileToStack(
         filePath: filePath,
         stackName: stackName,
         container: container,
+        targetStack: targetStack,
         onProgress: (progress) {
           if (!cancelled) {
             progressController.add(progress);
@@ -155,7 +188,9 @@ class CsvImportIntegration {
       if (!cancelled) {
         progressController.add(1.0);
         if (context.mounted) {
-          _showSuccessDialog(context, stackName);
+          // The progress dialog does not close itself when the work finishes.
+          Navigator.of(context).pop();
+          _showSuccessDialog(context, outcome);
         }
       }
     } catch (e) {
@@ -168,22 +203,26 @@ class CsvImportIntegration {
     }
   }
 
+  /// Runs the import as a background task, for files big enough that the user
+  /// would rather carry on working. Reached from the progress dialog.
   static Future<void> _runBackgroundImportTask(
     BuildContext context,
     ProviderContainer container,
     String filePath,
     String stackName,
+    core_stack.Stack? targetStack,
   ) async {
     final taskRegistry = container.read(taskRegistryProvider.notifier);
 
-    final task = Task<core_stack.Stack?>(
-      name: 'CSV import: $stackName',
-      description: 'Importing stack from CSV file...',
+    final task = Task<ImportOutcome>(
+      name: 'Import: $stackName',
+      description: 'Importing ${filePath.split('/').last}...',
       executor: (taskContext) async {
-        return await CsvImportService.importCsvToStack(
+        return await CsvImportService.importFileToStack(
           filePath: filePath,
           stackName: stackName,
           container: container,
+          targetStack: targetStack,
           onProgress: (progress) {
             taskContext.updateProgress(
               TaskProgress(value: progress, message: 'Importing...'),
@@ -192,8 +231,9 @@ class CsvImportIntegration {
         );
       },
       onCompleted: (task) {
-        if (context.mounted) {
-          _showSuccessDialog(context, stackName);
+        final result = task.result.value;
+        if (context.mounted && result is TaskSuccess<ImportOutcome>) {
+          _showSuccessDialog(context, result.data);
         }
       },
       onFailed: (task) {
@@ -207,13 +247,37 @@ class CsvImportIntegration {
     task.start();
   }
 
-  static void _showSuccessDialog(BuildContext context, String stackName) {
+  /// Reports what the import did.
+  ///
+  /// The skipped counts are spelled out rather than folded into the totals: a
+  /// row that was dropped for already being in the graph looks exactly like
+  /// one that was imported unless it is named, and someone re-importing an
+  /// edited spreadsheet needs to know which happened.
+  static void _showSuccessDialog(BuildContext context, ImportOutcome outcome) {
+    final lines = <String>[
+      'Imported into "${outcome.stack.info.name}".',
+      '',
+      '${outcome.nodeRows} node rows, ${outcome.linkRows} link rows read.',
+    ];
+    if (outcome.skippedNodeRows > 0) {
+      lines.add(
+        '${outcome.skippedNodeRows} nodes were already in the stack and were '
+        'left as they were.',
+      );
+    }
+    if (outcome.skippedLinkRows > 0) {
+      lines.add(
+        '${outcome.skippedLinkRows} links were already in the stack and were '
+        'left as they were.',
+      );
+    }
+
     showDialog(
       context: context,
       builder:
           (context) => AlertDialog(
             title: const Text('Import Complete'),
-            content: Text('Import of stack "$stackName" completed.'),
+            content: Text(lines.join('\n')),
             actions: [
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),

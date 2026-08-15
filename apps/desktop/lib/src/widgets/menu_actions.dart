@@ -8,6 +8,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fonde_ui/fonde_ui.dart';
+import 'package:features_import_export/features_import_export.dart';
 import 'package:presentation_components/presentation_components.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -90,13 +91,14 @@ class MenuActions {
     );
   }
 
-  /// CSV import handler
+  /// Imports a spreadsheet or CSV file.
+  ///
+  /// The whole flow — file picker, destination, progress, result — already
+  /// lived in [CsvImportIntegration]; this is the call that was missing.
   static void handleCsvImport(BuildContext context, WidgetRef ref) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('CSV import feature is under development'),
-        duration: Duration(seconds: 2),
-      ),
+    CsvImportIntegration.handleCsvImport(
+      context,
+      ProviderScope.containerOf(context, listen: false),
     );
   }
 

@@ -16,8 +16,8 @@ Future<String?> showCsvFilePickerDialog(BuildContext context) async {
   try {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['csv'],
-      dialogTitle: 'Select CSV file',
+      allowedExtensions: ['csv', 'xlsx'],
+      dialogTitle: 'Select a spreadsheet or CSV file',
     );
 
     if (result != null && result.files.isNotEmpty) {

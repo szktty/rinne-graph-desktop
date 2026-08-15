@@ -2517,12 +2517,15 @@ List<AppCommand> _exchangeCommands() => [
   // drive: the native dialog is out of reach of the command channel.
   AppCommand(
     id: 'import.csv',
-    title: 'Import a CSV File Into a New Stack',
+    title: 'Import a CSV or Spreadsheet File',
     category: 'import',
     description:
-        '{ path: string, stack_name?: string } — parses the CSV at `path` and '
-        'creates a stack from it. Node and link CSVs are told apart by their '
-        'header. The new stack is not opened; follow with stack.open.',
+        '{ path: string, stack_name?: string, into_active_stack?: boolean } — '
+        'imports the CSV or .xlsx at `path`. Node and link tables are told '
+        'apart by their header, so one workbook can carry both; sheets that '
+        'are neither are skipped. Creates a stack unless into_active_stack is '
+        'true. A new stack is not opened; follow with stack.open. Reports how '
+        'many rows were read and how many were skipped as duplicate ids.',
     run: (ref, args) async {
       // SECURITY: accepts an arbitrary file path, same as stack.open. Debug
       // builds only until the command channel is gated on release.
@@ -2557,26 +2560,37 @@ List<AppCommand> _exchangeCommands() => [
 
       final stackName =
           args['stack_name'] as String? ??
-          path.split('/').last.replaceAll(RegExp(r'\.csv$'), '');
+          path.split('/').last.replaceAll(RegExp(r'\.(csv|xlsx)$'), '');
+
+      // Adding to the open stack is opt-in: the default stays "make a new
+      // stack", so a mistyped path cannot scribble on data already loaded.
+      final intoActive = args['into_active_stack'] == true;
+      final activeStack =
+          intoActive ? ref.read(core_stack.activeStackProvider) : null;
+      if (intoActive && activeStack == null) {
+        return {
+          'ok': false,
+          'code': CommandResultCode.commandError,
+          'error': 'into_active_stack was set but no stack is open',
+        };
+      }
 
       try {
-        final stack = await import_export.CsvImportService.importCsvToStack(
+        final outcome = await import_export.CsvImportService.importFileToStack(
           filePath: path,
           stackName: stackName,
           container: container,
+          targetStack: activeStack,
         );
-        if (stack == null) {
-          return {
-            'ok': false,
-            'code': CommandResultCode.commandError,
-            'error': 'import produced no stack',
-          };
-        }
         ref.invalidate(core_stack.availableStacksListProvider);
         return {
           'ok': true,
-          'stack_name': stack.info.name,
-          'stack_path': stack.directory.path,
+          'stack_name': outcome.stack.info.name,
+          'stack_path': outcome.stack.directory.path,
+          'node_rows': outcome.nodeRows,
+          'link_rows': outcome.linkRows,
+          'skipped_node_rows': outcome.skippedNodeRows,
+          'skipped_link_rows': outcome.skippedLinkRows,
         };
       } catch (e) {
         return {
