@@ -134,7 +134,12 @@ Map<String, int> _sortedByKey(Map<String, int> counts) {
   return {for (final key in keys) key: counts[key]!};
 }
 
-/// The graph the views render: the active graph minus what is filtered out.
+/// The active graph minus what is filtered out, for the views that render it
+/// directly.
+///
+/// The graph view does not use this: it hides through [graphHiddenIds] so that
+/// a hidden node stays in the graph and keeps its laid-out position. This is
+/// for the table and the counts, which have no such state to lose.
 ///
 /// Node and link removal are not independent. A link needs both of its
 /// endpoints, so hiding a label also takes with it every link that reached a
@@ -152,6 +157,65 @@ core_graph.Graph? filteredGraph(Ref ref) {
   if (!filter.isActive) return graph;
 
   return applyGraphFilter(graph, filter);
+}
+
+/// The ids the graph view hides, rather than the graph it draws.
+///
+/// The graph view filters by leaving entities out of the drawing, not out of
+/// the graph: plough keeps a hidden node and the position it was laid out at,
+/// so showing its label again puts it back where it was. Handing the view a
+/// graph with the nodes removed destroys the object holding that position, and
+/// the node returns at the origin — off screen, with its links trailing to
+/// nothing.
+///
+/// Only nodes and link types the user hid are listed. plough hides a link that
+/// touches a hidden node on its own, so the link set carries only links hidden
+/// by type while both endpoints remain visible.
+@riverpod
+GraphHiddenIds graphHiddenIds(Ref ref) {
+  final graph = ref.watch(core_graph.activeGraphProvider);
+  if (graph == null) return const GraphHiddenIds();
+
+  final filter = ref.watch(graphFilterProvider);
+  if (!filter.isActive) return const GraphHiddenIds();
+
+  return computeHiddenIds(graph, filter);
+}
+
+/// Ids of the entities to keep in the graph but leave undrawn.
+@immutable
+class GraphHiddenIds {
+  const GraphHiddenIds({this.nodeIds = const {}, this.linkIds = const {}});
+
+  final Set<String> nodeIds;
+  final Set<String> linkIds;
+}
+
+/// Works out which ids are hidden. Separated from the provider so it can be
+/// tested without a container.
+GraphHiddenIds computeHiddenIds(
+  core_graph.Graph graph,
+  GraphFilterState filter,
+) {
+  final nodeIds = <String>{};
+  for (final node in graph.nodes.values) {
+    // Hidden only when every label it carries is hidden. A node that also
+    // carries a visible label stays: the user asked to see that label, and
+    // dropping the node would contradict the request they made most recently.
+    final visible =
+        node.labels.isEmpty ||
+        node.labels.any((label) => !filter.hiddenNodeLabels.contains(label));
+    if (!visible) nodeIds.add(node.id.value);
+  }
+
+  final linkIds = <String>{};
+  for (final link in graph.links.values) {
+    if (filter.hiddenLinkTypes.contains(link.type)) {
+      linkIds.add(link.id.value);
+    }
+  }
+
+  return GraphHiddenIds(nodeIds: nodeIds, linkIds: linkIds);
 }
 
 /// Builds the filtered graph. Separated from the provider so it can be tested

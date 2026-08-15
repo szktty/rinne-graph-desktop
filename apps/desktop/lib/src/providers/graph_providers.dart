@@ -219,6 +219,10 @@ class GraphViewCache {
   GlobalKey<plough.GraphViewState>? graphViewStateKey;
   // Hash code of the last used AppGraph
   int? lastAppGraphHashCode;
+  // Hidden entity ids the cached GraphView was built with. Hiding does not
+  // change the graph, so lastAppGraphHashCode cannot detect it.
+  Set<String> lastHiddenNodeIds = const {};
+  Set<String> lastHiddenLinkIds = const {};
   // Registered by _AppGraphViewState so MCP commands can manipulate the viewport.
   // Null when the graph view is not mounted.
   plough.GraphViewportController? transformationController;
@@ -233,6 +237,8 @@ class GraphViewCache {
     graphView = null;
     graphViewStateKey = null;
     lastAppGraphHashCode = null;
+    lastHiddenNodeIds = const {};
+    lastHiddenLinkIds = const {};
   }
 }
 

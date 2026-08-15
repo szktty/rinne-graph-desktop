@@ -8,6 +8,7 @@
 
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show setEquals;
 import 'package:flutter/gestures.dart' show kSecondaryButton;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,10 +44,27 @@ class AppGraphView extends ConsumerStatefulWidget {
   final core_graph.Graph appGraph;
   final AppLayoutConfig layoutConfig;
 
+  /// Nodes to keep in the graph but leave undrawn.
+  ///
+  /// The label filter hides through here rather than by handing us a graph with
+  /// the nodes taken out. Removing a node destroys the object holding its
+  /// position, so showing the label again used to bring the node back at the
+  /// origin — off screen, with its links trailing to nothing. plough keeps the
+  /// hidden node and its position, and lays out only what is visible.
+  final Set<String> hiddenNodeIds;
+
+  /// Links to keep in the graph but leave undrawn.
+  ///
+  /// Only for links whose endpoints both stay visible: plough already hides a
+  /// link that touches a hidden node.
+  final Set<String> hiddenLinkIds;
+
   const AppGraphView({
     super.key,
     required this.appGraph,
     required this.layoutConfig,
+    this.hiddenNodeIds = const {},
+    this.hiddenLinkIds = const {},
   });
 
   @override
@@ -257,6 +275,13 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
     final currentGraphHashCode = widget.appGraph.hashCode;
     final graphChanged = cache.lastAppGraphHashCode != currentGraphHashCode;
 
+    // Hiding is not a graph change — the nodes stay in the graph, so the sync
+    // below has nothing to do — but the cached GraphView still has to be rebuilt
+    // to carry the new sets down to plough.
+    final hiddenChanged =
+        !setEquals(cache.lastHiddenNodeIds, widget.hiddenNodeIds) ||
+        !setEquals(cache.lastHiddenLinkIds, widget.hiddenLinkIds);
+
     // A different stack is a different graph: nothing carries over, and the
     // incremental sync below would otherwise try to turn one stack's graph into
     // another's, node by node.
@@ -358,13 +383,17 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
         // down GraphViewState and take the laid-out positions with it, so
         // gaining a single link would rearrange the whole canvas. plough picks
         // up the new graph through didUpdateWidget.
-        if (cache.graphView == null || graphChanged) {
+        if (cache.graphView == null || graphChanged || hiddenChanged) {
           cache.graphViewStateKey = _graphViewStateKey;
+          cache.lastHiddenNodeIds = widget.hiddenNodeIds;
+          cache.lastHiddenLinkIds = widget.hiddenLinkIds;
           cache.graphView = plough.GraphView(
             key: _graphViewStateKey,
             graph: ploughGraph,
             layoutStrategy: layoutStrategy,
             behavior: behavior,
+            hiddenNodeIds: widget.hiddenNodeIds.map(_nodeId).toSet(),
+            hiddenLinkIds: widget.hiddenLinkIds.map(_linkId).toSet(),
             allowSelection: true,
             allowMultiSelection: false,
             // Tapping empty canvas abandons an in-progress link. The behavior's
@@ -518,6 +547,9 @@ class _AppGraphViewState extends ConsumerState<AppGraphView>
 
   plough.GraphId _nodeId(String value) =>
       plough.GraphId(type: plough.GraphIdType.node, value: value);
+
+  plough.GraphId _linkId(String value) =>
+      plough.GraphId(type: plough.GraphIdType.link, value: value);
 
   /// Converts App's graph data model to Plough's graph data model.
   plough.Graph _convertAppGraphToPlough(core_graph.Graph coreGraph) {

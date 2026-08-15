@@ -213,3 +213,82 @@ final class FilteredGraphProvider
 }
 
 String _$filteredGraphHash() => r'4ba058f92dc040a214f581d528fa9a92c340614b';
+
+/// The ids the graph view hides, rather than the graph it draws.
+///
+/// The graph view filters by leaving entities out of the drawing, not out of
+/// the graph: plough keeps a hidden node and the position it was laid out at,
+/// so showing its label again puts it back where it was. Handing the view a
+/// graph with the nodes removed destroys the object holding that position, and
+/// the node returns at the origin — off screen, with its links trailing to
+/// nothing.
+///
+/// Only nodes and link types the user hid are listed. plough hides a link that
+/// touches a hidden node on its own, so the link set carries only links hidden
+/// by type while both endpoints remain visible.
+
+@ProviderFor(graphHiddenIds)
+final graphHiddenIdsProvider = GraphHiddenIdsProvider._();
+
+/// The ids the graph view hides, rather than the graph it draws.
+///
+/// The graph view filters by leaving entities out of the drawing, not out of
+/// the graph: plough keeps a hidden node and the position it was laid out at,
+/// so showing its label again puts it back where it was. Handing the view a
+/// graph with the nodes removed destroys the object holding that position, and
+/// the node returns at the origin — off screen, with its links trailing to
+/// nothing.
+///
+/// Only nodes and link types the user hid are listed. plough hides a link that
+/// touches a hidden node on its own, so the link set carries only links hidden
+/// by type while both endpoints remain visible.
+
+final class GraphHiddenIdsProvider
+    extends $FunctionalProvider<GraphHiddenIds, GraphHiddenIds, GraphHiddenIds>
+    with $Provider<GraphHiddenIds> {
+  /// The ids the graph view hides, rather than the graph it draws.
+  ///
+  /// The graph view filters by leaving entities out of the drawing, not out of
+  /// the graph: plough keeps a hidden node and the position it was laid out at,
+  /// so showing its label again puts it back where it was. Handing the view a
+  /// graph with the nodes removed destroys the object holding that position, and
+  /// the node returns at the origin — off screen, with its links trailing to
+  /// nothing.
+  ///
+  /// Only nodes and link types the user hid are listed. plough hides a link that
+  /// touches a hidden node on its own, so the link set carries only links hidden
+  /// by type while both endpoints remain visible.
+  GraphHiddenIdsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'graphHiddenIdsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$graphHiddenIdsHash();
+
+  @$internal
+  @override
+  $ProviderElement<GraphHiddenIds> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GraphHiddenIds create(Ref ref) {
+    return graphHiddenIds(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GraphHiddenIds value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GraphHiddenIds>(value),
+    );
+  }
+}
+
+String _$graphHiddenIdsHash() => r'81eac067fa820e58eac007395e89269a18708343';

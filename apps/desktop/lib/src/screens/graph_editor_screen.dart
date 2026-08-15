@@ -66,11 +66,13 @@ class GraphEditorScreen extends ConsumerWidget {
     // Get theme settings
     final appColorScheme = ref.watch(effectiveColorSchemeProvider);
 
-    // What the views render: the active graph with the sidebar's label filter
-    // applied. Reading the filtered graph here rather than in each view keeps
-    // the graph and the table showing the same thing. Everything that *writes*
-    // — creating, deleting — keeps reading activeGraphProvider, so an edit is
-    // never made against a graph with entities missing from it.
+    // The active graph with the sidebar's label filter applied, for the views
+    // that have no layout to preserve — the table and the entity counts. The
+    // graph view filters differently, by naming what to leave undrawn, so that
+    // a hidden node keeps the position it was laid out at; it reads the
+    // unfiltered graph itself. Everything that *writes* — creating, deleting —
+    // keeps reading activeGraphProvider, so an edit is never made against a
+    // graph with entities missing from it.
     final activeGraph = ref.watch(filteredGraphProvider);
 
     // Get delayed loading status (displayed only if it takes more than 1 second)
@@ -279,7 +281,9 @@ class _ContentAreaWidget extends StatelessWidget {
         ),
       );
     } else if (viewType == ViewType.graph) {
-      return Expanded(child: GraphViewWidget(activeGraph: activeGraph));
+      // Reads the unfiltered graph itself: it hides by leaving entities
+      // undrawn, not by being handed a graph with them removed.
+      return const Expanded(child: GraphViewWidget());
     } else if (viewType == ViewType.outline) {
       return const Expanded(child: OutlineViewWidget());
     } else {

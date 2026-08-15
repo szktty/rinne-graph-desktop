@@ -139,4 +139,74 @@ void main() {
     // Nothing the user hid describes it, so hiding it would be unexplainable.
     expect(result.nodes.keys, contains(orphan.id));
   });
+
+  // The graph view filters by naming what to leave undrawn rather than by
+  // taking nodes out of the graph, so a hidden node keeps the position it was
+  // laid out at and comes back where it was rather than at the origin.
+  group('hidden ids', () {
+    test('nothing is hidden when the filter is empty', () {
+      final hidden = computeHiddenIds(buildGraph(), const GraphFilterState());
+
+      expect(hidden.nodeIds, isEmpty);
+      expect(hidden.linkIds, isEmpty);
+    });
+
+    test('hiding a label names its nodes', () {
+      final hidden = computeHiddenIds(
+        buildGraph(),
+        const GraphFilterState(hiddenNodeLabels: {'スキル'}),
+      );
+
+      expect(hidden.nodeIds, {fire.id.value});
+    });
+
+    test('a link touching a hidden node is left to plough', () {
+      final hidden = computeHiddenIds(
+        buildGraph(),
+        const GraphFilterState(hiddenNodeLabels: {'スキル'}),
+      );
+
+      // plough hides a link whose endpoint is hidden on its own. Naming it here
+      // too would mean unhiding the label had to remember to unname the link.
+      expect(hidden.linkIds, isEmpty);
+    });
+
+    test('hiding a link type names the link but not its endpoints', () {
+      final hidden = computeHiddenIds(
+        buildGraph(),
+        const GraphFilterState(hiddenLinkTypes: {'習得'}),
+      );
+
+      expect(hidden.linkIds, {learns.id.value});
+      expect(hidden.nodeIds, isEmpty);
+    });
+
+    test('a node keeps its place while any of its labels is shown', () {
+      final hybrid = node('01000000-0000-7000-8000-000000000004', {
+        'キャラクター',
+        'スキル',
+      });
+      final graph = buildGraph().addNode(hybrid);
+
+      final hidden = computeHiddenIds(
+        graph,
+        const GraphFilterState(hiddenNodeLabels: {'スキル'}),
+      );
+
+      expect(hidden.nodeIds, isNot(contains(hybrid.id.value)));
+      expect(hidden.nodeIds, contains(fire.id.value));
+    });
+
+    test('a node with no labels at all is never hidden', () {
+      final orphan = node('01000000-0000-7000-8000-000000000005', {});
+      final graph = buildGraph().addNode(orphan);
+
+      final hidden = computeHiddenIds(
+        graph,
+        const GraphFilterState(hiddenNodeLabels: {'スキル', 'キャラクター'}),
+      );
+
+      expect(hidden.nodeIds, isNot(contains(orphan.id.value)));
+    });
+  });
 }
